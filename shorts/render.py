@@ -53,6 +53,7 @@ def render(
     bgm_volume: float = 0.15,
     style: dict | None = None,
     title_style: dict | None = None,
+    layout: str = "full",
     workdir: str | Path = ".",
 ) -> Path:
     """자막을 굽고 (있다면) BGM을 원본 음성 위에 깔아 output으로 렌더링한다."""
@@ -69,7 +70,12 @@ def render(
     )
 
     cmd: list[str] = ["ffmpeg", "-y", "-i", str(video)]
-    filters = [f"[0:v]ass={ass_path}[vout]"]
+    if layout == "letterbox":
+        # 채널 v9 구성: 원본을 가로 맞춤 → 위아래 검은 여백 → 제목은 상단 여백, 자막은 영상 위
+        base = f"[0:v]scale=1080:-2,pad=1080:1920:(ow-iw)/2:(oh-ih)/2:black[vbase];[vbase]"
+    else:
+        base = "[0:v]"
+    filters = [f"{base}ass={ass_path}[vout]"]
     maps = ["-map", "[vout]"]
 
     if bgm:

@@ -46,5 +46,25 @@
       }
     }
   },
-  "source_video_policy": "쇼츠 1편 = 고유 원본 1개. 같은 배경영상 복붙 금지 (저품질 방지). 예외적 재사용은 재컷 구간이 완전히 다를 때 사용자 승인 하에 최대 2개."
+  "source_video_policy": "쇼츠 1편 = 고유 원본 1개. 같은 배경영상 복붙 금지 (저품질 방지). 예외적 재사용은 재컷 구간이 완전히 다를 때 사용자 승인 하에 최대 2개.",
+  "style_preset_v9": {
+    "_설명": "채널 정본 스타일 (참조: youtube.com/shorts/i6r2YFPA8Qw) — 레터박스 + 손글씨",
+    "layout": "letterbox",
+    "subtitle_style": {
+      "font": "Nanum Pen",
+      "size": 88,
+      "margin_v": 560,
+      "box_opacity": 80
+    },
+    "title_style": {
+      "font": "Nanum Pen",
+      "size": 105,
+      "margin_v": 120,
+      "border_style": 1,
+      "primary_color": "&H0000D7FF",
+      "outline_color": "&H00000000",
+      "outline": 4
+    },
+    "본진_전담": "클론보이스 TTS(1.1배속)·켄번스 멀티컷·페이드팝은 Creator OS build_reel.py가 정본"
+  }
 }
