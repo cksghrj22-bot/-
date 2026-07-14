@@ -24,6 +24,16 @@ API_BASE = "https://api.elevenlabs.io/v1"
 DEFAULT_MODEL = "eleven_multilingual_v2"
 DEFAULT_SPEED = 1.1
 
+# 차노 프로페셔널 클론(31분 원본, multilingual_v2 파인튜닝 완료) 기준 나레이션 기본값.
+# stability를 낮추고 style을 살짝 줘서 '또박또박 읽는 톤' 대신 말하는 억양을 살린다.
+# secrets/elevenlabs.json의 "voice_settings"로 편별·세션별 덮어쓸 수 있다.
+DEFAULT_VOICE_SETTINGS = {
+    "stability": 0.42,
+    "similarity_boost": 0.85,
+    "style": 0.15,
+    "use_speaker_boost": True,
+}
+
 
 def load_credentials(path: str | Path) -> dict:
     """secrets/elevenlabs.json을 읽고 필수 필드를 검증한다."""
@@ -36,6 +46,7 @@ def load_credentials(path: str | Path) -> dict:
         raise ValueError(f"secrets/elevenlabs.json 누락 필드: {sorted(missing)}")
     creds.setdefault("model_id", DEFAULT_MODEL)
     creds.setdefault("speed", DEFAULT_SPEED)
+    creds["voice_settings"] = {**DEFAULT_VOICE_SETTINGS, **creds.get("voice_settings", {})}
     return creds
 
 
@@ -46,6 +57,7 @@ def build_request(
     model_id: str = DEFAULT_MODEL,
     previous_text: str | None = None,
     next_text: str | None = None,
+    voice_settings: dict | None = None,
 ) -> urllib.request.Request:
     """TTS 합성 HTTP 요청을 만든다 (전송은 synthesize가 한다 — 테스트 분리용).
 
@@ -55,7 +67,7 @@ def build_request(
     payload = {
         "text": text,
         "model_id": model_id,
-        "voice_settings": {"stability": 0.5, "similarity_boost": 0.75},
+        "voice_settings": voice_settings or dict(DEFAULT_VOICE_SETTINGS),
     }
     if previous_text:
         payload["previous_text"] = previous_text
@@ -82,6 +94,7 @@ def synthesize(
     req = build_request(
         text, creds["api_key"], creds["voice_id"], creds["model_id"],
         previous_text=previous_text, next_text=next_text,
+        voice_settings=creds.get("voice_settings"),
     )
     out = Path(out_path)
     out.parent.mkdir(parents=True, exist_ok=True)

@@ -19,6 +19,17 @@ class TestCredentials(unittest.TestCase):
         creds = tts.load_credentials(self._write({"api_key": "sk_x", "voice_id": "v1"}))
         self.assertEqual(creds["model_id"], tts.DEFAULT_MODEL)
         self.assertEqual(creds["speed"], tts.DEFAULT_SPEED)
+        self.assertEqual(creds["voice_settings"], tts.DEFAULT_VOICE_SETTINGS)
+
+    def test_voice_settings_override_merges_with_defaults(self):
+        creds = tts.load_credentials(self._write(
+            {"api_key": "sk_x", "voice_id": "v1", "voice_settings": {"stability": 0.6}}
+        ))
+        self.assertEqual(creds["voice_settings"]["stability"], 0.6)
+        self.assertEqual(
+            creds["voice_settings"]["similarity_boost"],
+            tts.DEFAULT_VOICE_SETTINGS["similarity_boost"],
+        )
 
     def test_missing_voice_id_raises(self):
         with self.assertRaises(ValueError):
