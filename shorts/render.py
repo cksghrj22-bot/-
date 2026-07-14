@@ -9,25 +9,40 @@ from pathlib import Path
 from .subtitles import Script, assign_timings, to_ass
 
 
+import re
+import shutil as _shutil
+
+
+def _ffmpeg_info(video: str | Path) -> str:
+    """ffprobe가 없는 환경 폴백: `ffmpeg -i` stderr에서 메타데이터를 읽는다."""
+    result = subprocess.run(["ffmpeg", "-hide_banner", "-i", str(video)], capture_output=True, text=True)
+    return result.stderr
+
+
 def probe_duration(video: str | Path) -> float:
-    """ffprobe로 영상 길이(초)를 얻는다."""
-    result = subprocess.run(
-        [
-            "ffprobe", "-v", "error", "-show_entries", "format=duration",
-            "-of", "json", str(video),
-        ],
-        capture_output=True, text=True, check=True,
-    )
-    return float(json.loads(result.stdout)["format"]["duration"])
+    """영상 길이(초). ffprobe 우선, 없으면 ffmpeg stderr 파싱."""
+    if _shutil.which("ffprobe"):
+        result = subprocess.run(
+            ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "json", str(video)],
+            capture_output=True, text=True, check=True,
+        )
+        return float(json.loads(result.stdout)["format"]["duration"])
+    m = re.search(r"Duration:\s*(\d+):(\d+):(\d+\.?\d*)", _ffmpeg_info(video))
+    if not m:
+        raise RuntimeError(f"영상 길이를 읽을 수 없음: {video}")
+    h, mi, s = m.groups()
+    return int(h) * 3600 + int(mi) * 60 + float(s)
 
 
 def has_audio(video: str | Path) -> bool:
-    result = subprocess.run(
-        ["ffprobe", "-v", "error", "-select_streams", "a", "-show_entries",
-         "stream=index", "-of", "json", str(video)],
-        capture_output=True, text=True, check=True,
-    )
-    return bool(json.loads(result.stdout).get("streams"))
+    if _shutil.which("ffprobe"):
+        result = subprocess.run(
+            ["ffprobe", "-v", "error", "-select_streams", "a", "-show_entries",
+             "stream=index", "-of", "json", str(video)],
+            capture_output=True, text=True, check=True,
+        )
+        return bool(json.loads(result.stdout).get("streams"))
+    return "Audio:" in _ffmpeg_info(video)
 
 
 def render(
