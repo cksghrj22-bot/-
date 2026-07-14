@@ -84,6 +84,12 @@ def cmd_briefing(args: argparse.Namespace) -> None:
     print(output.read_text(encoding="utf-8"))
 
 
+def cmd_check(args: argparse.Namespace) -> None:
+    from .check import check_all, render
+
+    print(render(check_all(args.secrets, args.index)))
+
+
 def cmd_youtube_stats(args: argparse.Namespace) -> None:
     from .youtube_stats import fetch_recent_videos, load_secrets, render_report
 
@@ -117,6 +123,11 @@ def main() -> None:
     p_vault.add_argument("path", help="vault 폴더 경로 (iCloud: ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/볼트이름)")
     p_vault.add_argument("--index", default=DEFAULT_INDEX)
     p_vault.set_defaults(func=cmd_add_vault)
+
+    p_check = sub.add_parser("check", help="모든 연동 상태 진단")
+    p_check.add_argument("--secrets", default="secrets")
+    p_check.add_argument("--index", default=DEFAULT_INDEX)
+    p_check.set_defaults(func=cmd_check)
 
     p_stats = sub.add_parser("youtube-stats", help="채널 조회수 리포트 (조합 엔진 입력)")
     p_stats.add_argument("--secrets", default="secrets")
