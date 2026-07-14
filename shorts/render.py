@@ -52,6 +52,7 @@ def render(
     bgm: str | Path | None = None,
     bgm_volume: float = 0.15,
     style: dict | None = None,
+    title_style: dict | None = None,
     workdir: str | Path = ".",
 ) -> Path:
     """자막을 굽고 (있다면) BGM을 원본 음성 위에 깔아 output으로 렌더링한다."""
@@ -62,7 +63,10 @@ def render(
     duration = probe_duration(video)
     lines = assign_timings(list(script.lines), duration)
     ass_path = Path(workdir) / f"{video.stem}.ass"
-    ass_path.write_text(to_ass(lines, style=style), encoding="utf-8")
+    ass_path.write_text(
+        to_ass(lines, style=style, title=script.title or None, title_style=title_style),
+        encoding="utf-8",
+    )
 
     cmd: list[str] = ["ffmpeg", "-y", "-i", str(video)]
     filters = [f"[0:v]ass={ass_path}[vout]"]

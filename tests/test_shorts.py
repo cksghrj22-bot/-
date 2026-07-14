@@ -53,6 +53,16 @@ class TestAss(unittest.TestCase):
         with self.assertRaises(ValueError):
             to_ass([Line("무타이밍")])
 
+    def test_title_and_opacity(self):
+        lines = [Line("본문", 0.0, 3.0)]
+        ass = to_ass(lines, style={"box_opacity": 70}, title="상단 제목")
+        self.assertIn("Style: Title,", ass)
+        self.assertIn("Dialogue: 1,0:00:00.00,0:00:03.00,Title,상단 제목", ass)
+        # 70% 불투명 = 알파 0x4D (77)
+        self.assertIn("&H4D000000", ass)
+        # 제목 박스는 노란색(FFD700 → BGR 00D7FF), 완전 불투명
+        self.assertIn("&H0000D7FF", ass)
+
 
 class TestRunner(unittest.TestCase):
     def test_find_jobs_pairs_video_and_script(self):
