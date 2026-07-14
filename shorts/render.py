@@ -55,8 +55,12 @@ def render(
     title_style: dict | None = None,
     layout: str = "full",
     workdir: str | Path = ".",
+    narration: str | Path | None = None,
 ) -> Path:
-    """자막을 굽고 (있다면) BGM을 원본 음성 위에 깔아 output으로 렌더링한다."""
+    """자막을 굽고 (있다면) BGM을 원본 음성 위에 깔아 output으로 렌더링한다.
+
+    narration이 있으면(TTS 보이스클론 트랙) 원본 음성을 대체하고 BGM은 그 아래에 깐다.
+    """
     video = Path(video)
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -78,7 +82,19 @@ def render(
     filters = [f"{base}ass={ass_path}[vout]"]
     maps = ["-map", "[vout]"]
 
-    if bgm:
+    if narration:
+        cmd += ["-i", str(narration)]
+        nar_idx = 1
+        if bgm:
+            cmd += ["-stream_loop", "-1", "-i", str(bgm)]
+            filters.append(
+                f"[{nar_idx + 1}:a]volume={bgm_volume}[bg];"
+                f"[{nar_idx}:a][bg]amix=inputs=2:normalize=0:duration=first:dropout_transition=0[aout]"
+            )
+        else:
+            filters.append(f"[{nar_idx}:a]anull[aout]")
+        maps += ["-map", "[aout]", "-shortest"]
+    elif bgm:
         cmd += ["-stream_loop", "-1", "-i", str(bgm)]
         if has_audio(video):
             filters.append(

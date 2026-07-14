@@ -74,9 +74,27 @@ def check_all(secrets_dir: str | Path = "secrets", index_path: str | Path = "dat
     else:
         results.append(("인스타그램 API", "없음", "secrets/instagram.json 없음 — Meta 앱에서 토큰 발급 필요"))
 
-    # 4) 네트워크 (뉴스·메타)
+    # 3.5) 일레븐랩스 보이스클론 TTS (코드방/백업 렌더용 — 정본은 본진 Creator OS)
+    el_file = s / "elevenlabs.json"
+    if el_file.exists():
+        try:
+            creds = json.loads(el_file.read_text(encoding="utf-8"))
+            missing = {"api_key", "voice_id"} - creds.keys()
+            if missing:
+                results.append(("일레븐랩스 TTS", "대기", f"누락 필드: {sorted(missing)}"))
+            elif _reach("https://api.elevenlabs.io/v1/models"):
+                results.append(("일레븐랩스 TTS", "OK", "키 형식 유효, 네트워크 도달"))
+            else:
+                results.append(("일레븐랩스 TTS", "차단", "키는 있으나 api.elevenlabs.io 차단 — 본진에선 사용 가능"))
+        except json.JSONDecodeError:
+            results.append(("일레븐랩스 TTS", "대기", "JSON 형식 오류"))
+    else:
+        results.append(("일레븐랩스 TTS", "없음", "secrets/elevenlabs.json 없음 — API 키+voice_id 발급 필요"))
+
+    # 4) 네트워크 (뉴스·메타·일레븐랩스)
     results.append(("네트워크: 뉴스(RSS)", "OK" if _reach("https://www.yna.co.kr") else "차단", "yna.co.kr"))
     results.append(("네트워크: 메타", "OK" if _reach("https://graph.facebook.com") else "차단", "graph.facebook.com"))
+    results.append(("네트워크: 일레븐랩스", "OK" if _reach("https://api.elevenlabs.io/v1/models") else "차단", "api.elevenlabs.io"))
 
     # 5) 지식 인덱스
     idx = Path(index_path)

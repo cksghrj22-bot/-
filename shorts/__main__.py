@@ -15,6 +15,7 @@ import shutil
 from pathlib import Path
 
 from . import render as render_mod
+from . import tts as tts_mod
 from . import upload_instagram, upload_youtube
 from .subtitles import parse_script
 
@@ -29,6 +30,7 @@ DEFAULT_CONFIG = {
     "subtitle_style": {},
     "youtube": {"enabled": True, "credentials": "secrets/youtube.json", "privacy": "private"},
     "instagram": {"enabled": False, "credentials": "secrets/instagram.json"},
+    "tts": {"enabled": True, "credentials": "secrets/elevenlabs.json"},
 }
 
 
@@ -71,10 +73,26 @@ def run(config: dict, dry_run: bool = False) -> None:
         print("처리할 영상이 없습니다.")
         return
 
+    tts_cfg = config.get("tts", {})
+    tts_creds = None
+    if tts_cfg.get("enabled"):
+        try:
+            tts_creds = tts_mod.load_credentials(tts_cfg["credentials"])
+            print("보이스클론 TTS: 켜짐 (일레븐랩스)")
+        except (FileNotFoundError, ValueError) as e:
+            print(f"보이스클론 TTS 건너뜀: {e}")
+
     for video, script_path in jobs:
         script = parse_script(script_path.read_text(encoding="utf-8"))
         title = script.title or video.stem
         print(f"렌더링: {video.name} — {title}")
+        narration = None
+        if tts_creds:
+            duration = render_mod.probe_duration(video)
+            timed_lines = render_mod.assign_timings(list(script.lines), duration)
+            narration = tts_mod.build_narration(
+                timed_lines, tts_creds, out_dir / "tts", out_dir / f"{video.stem}_narration.m4a"
+            )
         rendered = render_mod.render(
             video,
             script,
@@ -83,6 +101,7 @@ def run(config: dict, dry_run: bool = False) -> None:
             bgm_volume=config["bgm_volume"],
             style=config["subtitle_style"] or None,
             workdir=out_dir,
+            narration=narration,
         )
 
         if dry_run:

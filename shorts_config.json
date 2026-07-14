@@ -46,6 +46,11 @@
       }
     }
   },
+  "tts": {
+    "enabled": true,
+    "credentials": "secrets/elevenlabs.json",
+    "_설명": "일레븐랩스 보이스클론 나레이션 (없으면 자동 건너뜀). 정본 렌더는 본진 Creator OS build_reel.py — 이건 코드방/백업 경로. speed·model_id는 secrets/elevenlabs.json에서."
+  },
   "source_video_policy": "쇼츠 1편 = 고유 원본 1개. 같은 배경영상 복붙 금지 (저품질 방지). 예외적 재사용은 재컷 구간이 완전히 다를 때 사용자 승인 하에 최대 2개.",
   "style_preset_v9": {
     "_설명": "채널 정본 스타일 (참조: youtube.com/shorts/i6r2YFPA8Qw) — 레터박스 + 손글씨",
