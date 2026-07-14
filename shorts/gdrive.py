@@ -32,7 +32,9 @@ DEVICE_CODE_URL = "https://oauth2.googleapis.com/device/code"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
 UPLOAD_URL = "https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&supportsAllDrives=true"
 FILES_URL = "https://www.googleapis.com/drive/v3/files"
-SCOPE = "https://www.googleapis.com/auth/drive.file"
+# drive.file(앱이 만든 파일) + youtube.upload — 둘 다 기기 인증 허용 스코프.
+# 폰 승인 한 번으로 드라이브 업로드와 유튜브 일부공개 업로드를 같이 연다.
+SCOPE = "https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/youtube.upload"
 DEFAULT_SECRETS = "secrets/gdrive.json"
 FALLBACK_FOLDER_NAME = "코드방_업로드"
 

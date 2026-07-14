@@ -35,7 +35,11 @@ class TestSecrets(unittest.TestCase):
 class TestConstants(unittest.TestCase):
     def test_scope_is_device_flow_allowed(self):
         # 기기 인증이 허용하는 스코프만 사용해야 한다 (전체 drive 스코프는 거부됨)
-        self.assertEqual(gdrive.SCOPE, "https://www.googleapis.com/auth/drive.file")
+        scopes = set(gdrive.SCOPE.split())
+        self.assertEqual(scopes, {
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/youtube.upload",
+        })
 
 
 if __name__ == "__main__":
