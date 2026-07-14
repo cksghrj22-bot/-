@@ -137,14 +137,18 @@ def render_batch(
     broll_start: float = 0.0,
     preset: str = "style_preset_v9",
     only: str | None = None,
+    bgm: str | Path | None = None,
 ) -> list[Path]:
     cfg = json.loads(Path(config_path).read_text(encoding="utf-8"))
     v9 = cfg[preset]
     layout = v9.get("layout", "letterbox")
     fit = v9.get("fit", "crop")
     if layout == "dim":
-        # crop45: 채널 정본 — 원본을 4:5(1080x1350)로 확대 크롭 후 중앙 배치 + 위아래 밴드
-        bg_size = (VIDEO_W, VIDEO_H) if fit == "crop45" else (FULL_W, FULL_H)
+        # crop45: 채널 정본 — 원본을 영상 영역(video_area, 기본 4:5)으로 확대 크롭 후 중앙 배치 + 위아래 밴드
+        if fit == "crop45":
+            bg_size = tuple(v9.get("video_area", (VIDEO_W, VIDEO_H)))
+        else:
+            bg_size = (FULL_W, FULL_H)
         dim = float(v9.get("dim_opacity", 0.45))
     else:
         bg_size = (VIDEO_W, VIDEO_H)
@@ -203,6 +207,7 @@ def render_batch(
             bg, script, out_dir / f"{txt.stem}_{suffix}.mp4",
             style=v9.get("subtitle_style"), title_style=v9.get("title_style"),
             layout=render_layout, workdir=work, narration=narration,
+            bgm=bgm, bgm_volume=float(cfg.get("bgm_volume", 0.15)),
         )
         print(f"  ✅ {out.name}")
         outputs.append(out)
@@ -221,12 +226,13 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--broll-start", type=float, default=0.0, help="B롤 시작 지점(초)")
     ap.add_argument("--preset", default="style_preset_v9", help="shorts_config.json의 스타일 프리셋 키")
     ap.add_argument("--only", default=None, help="이 접두사(NN)로 시작하는 대본만 렌더")
+    ap.add_argument("--bgm", default=None, help="BGM 오디오 파일 (나레이션 아래에 낮게 깔림)")
     args = ap.parse_args(argv)
     try:
         outs = render_batch(args.scripts_dir, args.out, use_tts=not args.no_tts,
                             config_path=args.config, workdir=args.workdir,
                             broll=args.broll, broll_start=args.broll_start,
-                            preset=args.preset, only=args.only)
+                            preset=args.preset, only=args.only, bgm=args.bgm)
     except OSError as e:
         print(f"❌ 중단: {e}\n   api.elevenlabs.io 차단이면 네트워크 정책 확인 (연결지도.md), "
               f"무음 검증은 --no-tts.", file=sys.stderr)

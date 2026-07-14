@@ -77,11 +77,12 @@
     "_설명": "마인드·철학 라인 (2026-07-14 이찬호 지시) — 풀블리드 영상에 화면 전체 반투명 블랙, 그 위 흰 손글씨. 제목은 노랑으로 상단 어두운 영역에 걸침",
     "layout": "dim",
     "fit": "crop45",
+    "video_area": [1080, 1080],
     "dim_opacity": 0.45,
     "subtitle_style": {
       "font": "Gamja Flower",
       "size": 88,
-      "margin_v": 880,
+      "margin_v": 560,
       "border_style": 4,
       "primary_color": "&H00FFFFFF",
       "box_color": "000000",
@@ -91,7 +92,7 @@
     "title_style": {
       "font": "Poor Story",
       "size": 105,
-      "margin_v": 40,
+      "margin_v": 150,
       "border_style": 1,
       "primary_color": "&H0000D7FF",
       "outline_color": "&H00000000",
