@@ -156,14 +156,26 @@ def build_narration(
     out_path: str | Path,
 ) -> Path:
     """대본 줄들(start·text 필드 필요)을 합성해 자막 타이밍에 배치한 나레이션 트랙(m4a)을 만든다."""
+    import hashlib as _hashlib
+
     workdir = Path(workdir)
     workdir.mkdir(parents=True, exist_ok=True)
     lines = list(lines)
     texts = [line.text for line in lines]
+    voice_key = json.dumps(
+        [creds.get("voice_id"), creds.get("model_id"), creds.get("voice_settings")],
+        ensure_ascii=False, sort_keys=True,
+    )
     paths: list[str] = []
     for i, line in enumerate(lines):
+        # 같은 문장+같은 보이스 설정이면 재합성하지 않는다 (재렌더 반복 시 비용·시간 절약)
+        key = _hashlib.md5((voice_key + "|" + "|".join(texts) + f"|{i}").encode("utf-8")).hexdigest()[:10]
+        clip_path = workdir / f"tts_{i:02d}_{key}.mp3"
+        if clip_path.exists() and clip_path.stat().st_size > 0:
+            paths.append(str(clip_path))
+            continue
         clip = synthesize(
-            line.text, creds, workdir / f"tts_{i:02d}.mp3",
+            line.text, creds, clip_path,
             previous_text=" ".join(texts[:i]) or None,
             next_text=" ".join(texts[i + 1:]) or None,
         )

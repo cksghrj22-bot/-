@@ -81,21 +81,22 @@
       "font": "Gamja Flower",
       "size": 88,
       "margin_v": 820,
-      "border_style": 1,
+      "border_style": 4,
       "primary_color": "&H00FFFFFF",
-      "outline_color": "&H00000000",
-      "outline": 2,
-      "box_opacity": 0
+      "box_color": "000000",
+      "box_opacity": 85,
+      "outline": 3
     },
     "title_style": {
       "font": "Poor Story",
       "size": 105,
-      "margin_v": 64,
+      "margin_v": 40,
       "border_style": 1,
       "primary_color": "&H0000D7FF",
       "outline_color": "&H00000000",
       "outline": 4
     },
-    "_폰트": "제목 푸어스토리 · 자막 감자꽃 (2026-07-14 이찬호 선택)"
+    "_폰트": "제목 푸어스토리 · 자막 감자꽃 (2026-07-14 이찬호 선택)",
+    "_디자인": "채널 마인드 쇼츠 정본 (IMG_1815 레퍼런스): 노란 제목 최상단 + 어두운 화면 + 흰 글씨는 검은 박스 위"
   }
 }
