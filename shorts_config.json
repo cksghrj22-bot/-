@@ -4,7 +4,7 @@
   "output": "~/Shorts/rendered",
   "bgm": "",
   "bgm_volume": 0.15,
-  "max_shorts_per_source_video": 2,
+  "max_shorts_per_source_video": 1,
   "subtitle_style": {
     "font": "AppleSDGothicNeo-Bold",
     "size": 64,
@@ -45,5 +45,6 @@
         "line": "교육·A라인사전"
       }
     }
-  }
+  },
+  "source_video_policy": "쇼츠 1편 = 고유 원본 1개. 같은 배경영상 복붙 금지 (저품질 방지). 예외적 재사용은 재컷 구간이 완전히 다를 때 사용자 승인 하에 최대 2개."
 }
