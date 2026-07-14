@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from shorts.proof import PALETTES, find_scripts, gradient_cmd, gradient_colors
+from shorts.proof import PALETTES, find_scripts, gradient_cmd, gradient_colors, match_broll
 
 
 class TestGradient(unittest.TestCase):
@@ -41,3 +41,22 @@ class TestFindScripts(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestMatchBroll(unittest.TestCase):
+    def test_none_returns_none(self):
+        self.assertIsNone(match_broll("01_대본", None))
+
+    def test_single_file_used_directly(self):
+        with TemporaryDirectory() as d:
+            f = Path(d) / "아무영상.mp4"
+            f.touch()
+            self.assertEqual(match_broll("01_대본", f), f)
+
+    def test_directory_matches_by_prefix(self):
+        with TemporaryDirectory() as d:
+            hit = Path(d) / "01_커트장면.MOV"
+            miss = Path(d) / "02_다른편.mp4"
+            hit.touch(); miss.touch()
+            self.assertEqual(match_broll("01_대본", d), hit)
+            self.assertIsNone(match_broll("03_없는편", d))

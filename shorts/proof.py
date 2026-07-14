@@ -74,12 +74,50 @@ def find_scripts(scripts_dir: str | Path) -> list[Path]:
     return sorted(Path(scripts_dir).glob("[0-9][0-9]_*.txt"))
 
 
+BROLL_EXTS = (".mp4", ".mov", ".MOV", ".MP4")
+
+
+def match_broll(txt_stem: str, broll: str | Path | None) -> Path | None:
+    """대본에 배정할 B롤 원본을 찾는다.
+
+    broll이 파일이면 그대로(단일 편 렌더용), 폴더면 대본과 같은 NN_ 접두사의
+    영상을 찾는다. 없으면 None → 그라디언트 플레이스홀더로 렌더.
+    """
+    if broll is None:
+        return None
+    p = Path(broll)
+    if p.is_file():
+        return p
+    prefix = txt_stem[:3]  # "NN_"
+    for ext in BROLL_EXTS:
+        hits = sorted(p.glob(f"{prefix}*{ext}"))
+        if hits:
+            return hits[0]
+    return None
+
+
+def broll_bg_cmd(src: str | Path, start: float, duration: float, out_path: str | Path) -> list[str]:
+    """B롤 원본을 영상 영역(1080x1350)에 맞춰 자른 배경(mp4, 무음) 생성 ffmpeg 명령."""
+    return [
+        "ffmpeg", "-y", "-loglevel", "error",
+        "-ss", f"{start:.2f}", "-t", f"{duration:.2f}", "-i", str(src),
+        "-vf", (
+            f"scale={VIDEO_W}:{VIDEO_H}:force_original_aspect_ratio=increase,"
+            f"crop={VIDEO_W}:{VIDEO_H},fps={FPS}"
+        ),
+        "-an", "-c:v", "libx264", "-preset", "fast", "-crf", "20", "-pix_fmt", "yuv420p",
+        str(out_path),
+    ]
+
+
 def render_batch(
     scripts_dir: str | Path,
     out_dir: str | Path,
     use_tts: bool = True,
     config_path: str | Path = "shorts_config.json",
     workdir: str | Path | None = None,
+    broll: str | Path | None = None,
+    broll_start: float = 0.0,
 ) -> list[Path]:
     cfg = json.loads(Path(config_path).read_text(encoding="utf-8"))
     v9 = cfg["style_preset_v9"]
@@ -103,7 +141,11 @@ def render_batch(
         duration = max(ends) + TAIL_SECONDS
 
         bg = work / f"{txt.stem}_bg.mp4"
-        subprocess.run(gradient_cmd(gradient_colors(i, txt.stem), duration, bg), check=True)
+        src = match_broll(txt.stem, broll)
+        if src is not None:
+            subprocess.run(broll_bg_cmd(src, broll_start, duration, bg), check=True)
+        else:
+            subprocess.run(gradient_cmd(gradient_colors(i, txt.stem), duration, bg), check=True)
 
         narration = None
         if creds:
@@ -129,10 +171,14 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--no-tts", action="store_true", help="나레이션 없이 무음 시안 (검증용)")
     ap.add_argument("--config", default="shorts_config.json")
     ap.add_argument("--workdir", default=None, help="중간 파일 폴더 (기본: 임시폴더)")
+    ap.add_argument("--broll", default=None,
+                    help="배경 원본: 파일(전 편 공통) 또는 폴더(NN_ 접두사 매칭). 없으면 그라디언트")
+    ap.add_argument("--broll-start", type=float, default=0.0, help="B롤 시작 지점(초)")
     args = ap.parse_args(argv)
     try:
         outs = render_batch(args.scripts_dir, args.out, use_tts=not args.no_tts,
-                            config_path=args.config, workdir=args.workdir)
+                            config_path=args.config, workdir=args.workdir,
+                            broll=args.broll, broll_start=args.broll_start)
     except OSError as e:
         print(f"❌ 중단: {e}\n   api.elevenlabs.io 차단이면 네트워크 정책 확인 (연결지도.md), "
               f"무음 검증은 --no-tts.", file=sys.stderr)
