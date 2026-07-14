@@ -58,12 +58,44 @@ def cmd_search(args: argparse.Namespace) -> None:
         print(f"   {preview}")
 
 
+def cmd_add_vault(args: argparse.Namespace) -> None:
+    from .obsidian import load_vault
+
+    index_path = Path(args.index)
+    index = _load_or_create(index_path)
+
+    docs = list(load_vault(args.path))
+    total_chunks = 0
+    for doc in docs:
+        chunks = chunk_document(doc)
+        index.add_all(chunks)
+        total_chunks += len(chunks)
+
+    index_path.parent.mkdir(parents=True, exist_ok=True)
+    index.save(index_path)
+    print(f"옵시디언 노트 {len(docs)}건, 청크 {total_chunks}개 인덱싱 완료 → {index_path}")
+
+
 def cmd_briefing(args: argparse.Namespace) -> None:
     config = load_config(args.config)
     date_str = args.date or datetime.date.today().isoformat()
     output = generate_briefing(date_str, config)
     print(f"브리핑 생성 완료 → {output}")
     print(output.read_text(encoding="utf-8"))
+
+
+def cmd_youtube_stats(args: argparse.Namespace) -> None:
+    from .youtube_stats import fetch_recent_videos, load_secrets, render_report
+
+    key, channel = load_secrets(args.secrets)
+    videos = fetch_recent_videos(key, channel, limit=args.limit)
+    report = render_report(videos, top=args.top)
+    if args.output:
+        out = Path(args.output)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(report, encoding="utf-8")
+        print(f"리포트 저장 → {out}")
+    print(report)
 
 
 def main() -> None:
@@ -80,6 +112,18 @@ def main() -> None:
     p_search.add_argument("--index", default=DEFAULT_INDEX)
     p_search.add_argument("--top-k", type=int, default=5)
     p_search.set_defaults(func=cmd_search)
+
+    p_vault = sub.add_parser("add-vault", help="Obsidian vault를 인덱스에 추가")
+    p_vault.add_argument("path", help="vault 폴더 경로 (iCloud: ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/볼트이름)")
+    p_vault.add_argument("--index", default=DEFAULT_INDEX)
+    p_vault.set_defaults(func=cmd_add_vault)
+
+    p_stats = sub.add_parser("youtube-stats", help="채널 조회수 리포트 (조합 엔진 입력)")
+    p_stats.add_argument("--secrets", default="secrets")
+    p_stats.add_argument("--limit", type=int, default=50)
+    p_stats.add_argument("--top", type=int, default=15)
+    p_stats.add_argument("--output", default=None, help="저장할 마크다운 경로")
+    p_stats.set_defaults(func=cmd_youtube_stats)
 
     p_brief = sub.add_parser("briefing", help="피드 수집 + 인덱싱 + 아침 브리핑 생성")
     p_brief.add_argument("--date", default=None, help="YYYY-MM-DD (기본: 오늘)")

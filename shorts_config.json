@@ -12,7 +12,8 @@
   "youtube": {
     "enabled": true,
     "credentials": "secrets/youtube.json",
-    "privacy": "private"
+    "privacy": "private",
+    "publish_times_kst": ["09:00", "16:00", "23:00"]
   },
   "instagram": {
     "enabled": false,
