@@ -103,7 +103,7 @@ def match_broll(txt_stem: str, broll: str | Path | None) -> Path | None:
 
 def broll_bg_cmd(
     src: str | Path, start: float, duration: float, out_path: str | Path,
-    size: tuple[int, int] = (VIDEO_W, VIDEO_H), dim: float = 0.0,
+    size: tuple[int, int] = (VIDEO_W, VIDEO_H), dim: float = 0.0, fit: str = "crop",
 ) -> list[str]:
     """B롤 원본을 영상 영역에 맞춰 자른 배경(mp4, 무음) 생성 ffmpeg 명령.
 
@@ -111,7 +111,11 @@ def broll_bg_cmd(
     화면 전체가 불투명도 있는 블랙, 그 위에 흰 글씨. 2026-07-14 이찬호 지시).
     """
     w, h = size
-    vf = f"scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h},fps={FPS}"
+    if fit == "width":
+        # 채널 정본 규격: 원본 비율 유지, 폭 1080 맞춤 — 가로영상은 레터박스, 세로영상은 꽉 참
+        vf = f"scale={w}:-2,fps={FPS}"
+    else:
+        vf = f"scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h},fps={FPS}"
     if dim > 0:
         vf += f",drawbox=c=black@{dim}:t=fill"
     return [
@@ -137,6 +141,7 @@ def render_batch(
     cfg = json.loads(Path(config_path).read_text(encoding="utf-8"))
     v9 = cfg[preset]
     layout = v9.get("layout", "letterbox")
+    fit = v9.get("fit", "crop")
     if layout == "dim":
         bg_size = (FULL_W, FULL_H)
         dim = float(v9.get("dim_opacity", 0.45))
@@ -167,7 +172,10 @@ def render_batch(
         bg = work / f"{txt.stem}_bg.mp4"
         src = match_broll(txt.stem, broll)
         if src is not None:
-            subprocess.run(broll_bg_cmd(src, broll_start, duration, bg, size=bg_size, dim=dim), check=True)
+            subprocess.run(
+                broll_bg_cmd(src, broll_start, duration, bg, size=bg_size, dim=dim, fit=fit),
+                check=True,
+            )
         else:
             subprocess.run(gradient_cmd(gradient_colors(i, txt.stem), duration, bg, size=bg_size), check=True)
 
@@ -178,11 +186,14 @@ def render_batch(
             )
 
         suffix = "보이스시안" if narration else "시안"
+        # dim은 배경에 이미 구움. 폭맞춤(fit=width) 배경은 레터박스 패딩으로 1920을 채운다.
+        render_layout = layout
+        if layout == "dim":
+            render_layout = "letterbox" if fit == "width" else "full"
         out = render(
             bg, script, out_dir / f"{txt.stem}_{suffix}.mp4",
             style=v9.get("subtitle_style"), title_style=v9.get("title_style"),
-            layout="full" if layout == "dim" else layout,  # dim은 배경에 이미 구움
-            workdir=work, narration=narration,
+            layout=render_layout, workdir=work, narration=narration,
         )
         print(f"  ✅ {out.name}")
         outputs.append(out)
