@@ -143,7 +143,8 @@ def render_batch(
     layout = v9.get("layout", "letterbox")
     fit = v9.get("fit", "crop")
     if layout == "dim":
-        bg_size = (FULL_W, FULL_H)
+        # crop45: 채널 정본 — 원본을 4:5(1080x1350)로 확대 크롭 후 중앙 배치 + 위아래 밴드
+        bg_size = (VIDEO_W, VIDEO_H) if fit == "crop45" else (FULL_W, FULL_H)
         dim = float(v9.get("dim_opacity", 0.45))
     else:
         bg_size = (VIDEO_W, VIDEO_H)
@@ -189,7 +190,7 @@ def render_batch(
         # dim은 배경에 이미 구움. 폭맞춤(fit=width) 배경은 레터박스 패딩으로 1920을 채운다.
         render_layout = layout
         if layout == "dim":
-            render_layout = "letterbox" if fit == "width" else "full"
+            render_layout = "letterbox" if fit in ("width", "crop45") else "full"
         out = render(
             bg, script, out_dir / f"{txt.stem}_{suffix}.mp4",
             style=v9.get("subtitle_style"), title_style=v9.get("title_style"),
