@@ -33,7 +33,9 @@
 
 ## 새 세션 시작 절차 (자가 연결)
 
-1. `python3 -m pipeline check`로 연결 진단.
+1. `python3 -m pipeline check`로 연결 진단. **지식 인덱스가 "없음"이면 그 즉시 재구축**
+   (`for d in knowledge docs content briefings prompts; do python3 -m pipeline add $d; done` + 옵시디언 미러 add-vault)
+   — 인덱스 없이 일하면 기존 자산을 잊고 같은 걸 다시 만든다 (7/14 실증: 이미 있는 대본을 재구술시킴).
 2. 유튜브 키가 "없음"이면: 노션 「📱 코드방 상태판」(페이지 ID 39d93478-e92b-8196-b20f-d6741e4dafe3)의
    「🔑 세션 연결 정보」 섹션에서 키를 읽어 `secrets/youtube_api_key.txt`, `secrets/youtube_channel_id.txt`에 저장 후 재진단.
 3. 일레븐랩스가 "없음"이면: 같은 섹션의 일레븐랩스 JSON을 `secrets/elevenlabs.json`에 저장 후 재진단.
