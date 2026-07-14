@@ -105,3 +105,18 @@ class TestNarrationFilter(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestAlignLineSpans(unittest.TestCase):
+    """전체 합성의 글자 타임스탬프 → 줄별 자막 타이밍 (배속 반영)."""
+
+    def test_spans_follow_speech(self):
+        texts = ["안녕", "잘 가"]
+        chars = list("안녕\n잘 가")
+        starts = [0.0, 0.4, 0.9, 1.1, 1.5, 1.7]
+        ends = [0.4, 0.8, 1.0, 1.5, 1.7, 2.2]
+        spans = tts.align_line_spans(texts, chars, starts, ends, speed=1.1)
+        self.assertAlmostEqual(spans[0][0], 0.0)
+        self.assertAlmostEqual(spans[0][1], 0.8 / 1.1)
+        self.assertAlmostEqual(spans[1][0], 1.1 / 1.1)
+        self.assertAlmostEqual(spans[1][1], 2.2 / 1.1)

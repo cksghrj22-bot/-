@@ -23,7 +23,7 @@ from pathlib import Path
 
 from . import tts
 from .render import render
-from .subtitles import parse_script
+from .subtitles import Line, parse_script
 
 VIDEO_W, VIDEO_H = 1080, 1350  # 레터박스 안쪽 영상 영역 (4:5) — v9 정본 구성
 FULL_W, FULL_H = 1080, 1920    # 풀블리드 (dim 레이아웃: 화면 전체 반투명 블랙 + 흰 글씨)
@@ -170,6 +170,20 @@ def render_batch(
             raise ValueError(f"타이밍 없는 대본 (시안 렌더는 타이밍 필수): {txt.name}")
         duration = max(ends) + TAIL_SECONDS
 
+        narration = None
+        if creds:
+            # 전체 대본 단일 합성 + 글자 타임스탬프 → 자막을 목소리에 완전 동기화.
+            # 대본의 타이밍은 초안일 뿐, 최종 타이밍은 실제 말 속도가 정한다.
+            narration, spans = tts.build_narration_single(
+                script.lines, creds, work / txt.stem, work / f"{txt.stem}_나레이션.m4a"
+            )
+            new_lines = []
+            for j, (line, (s, e)) in enumerate(zip(script.lines, spans)):
+                nxt = spans[j + 1][0] if j + 1 < len(spans) else e + 0.4
+                new_lines.append(Line(text=line.text, start=round(s, 3), end=round(nxt, 3)))
+            script.lines = new_lines
+            duration = new_lines[-1].end + TAIL_SECONDS
+
         bg = work / f"{txt.stem}_bg.mp4"
         src = match_broll(txt.stem, broll)
         if src is not None:
@@ -179,12 +193,6 @@ def render_batch(
             )
         else:
             subprocess.run(gradient_cmd(gradient_colors(i, txt.stem), duration, bg, size=bg_size), check=True)
-
-        narration = None
-        if creds:
-            narration = tts.build_narration(
-                script.lines, creds, work / txt.stem, work / f"{txt.stem}_나레이션.m4a"
-            )
 
         suffix = "보이스시안" if narration else "시안"
         # dim은 배경에 이미 구움. 폭맞춤(fit=width) 배경은 레터박스 패딩으로 1920을 채운다.

@@ -149,6 +149,100 @@ def schedule_starts(
     return scheduled
 
 
+def synthesize_full_with_timestamps(text: str, creds: dict, timeout: int = 300) -> dict:
+    """대본 전체를 한 번에 합성하고 글자 단위 타임스탬프를 받는다.
+
+    한 요청 = 한 호흡 — 줄별 합성의 경계 끊김이 원천적으로 없다.
+    응답: {"audio_base64": ..., "alignment": {"characters": [...],
+           "character_start_times_seconds": [...], "character_end_times_seconds": [...]}}
+    """
+    body = json.dumps({
+        "text": text,
+        "model_id": creds["model_id"],
+        "voice_settings": creds.get("voice_settings") or dict(DEFAULT_VOICE_SETTINGS),
+    }).encode("utf-8")
+    req = urllib.request.Request(
+        f"{API_BASE}/text-to-speech/{creds['voice_id']}/with-timestamps?output_format=mp3_44100_128",
+        data=body,
+        headers={"xi-api-key": creds["api_key"], "Content-Type": "application/json"},
+        method="POST",
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return json.loads(r.read())
+
+
+def align_line_spans(
+    texts: list[str],
+    characters: list[str],
+    char_starts: list[float],
+    char_ends: list[float],
+    speed: float = DEFAULT_SPEED,
+) -> list[tuple[float, float]]:
+    """글자 타임스탬프에서 줄별 (시작, 끝) 초를 뽑는다 (배속 반영).
+
+    자막이 목소리와 정확히 같이 넘어가게 하는 심장부 — 늘어지는 간격이 없어진다.
+    """
+    joined = "".join(characters)
+    spans: list[tuple[float, float]] = []
+    pos = 0
+    for t in texts:
+        b = joined.index(t, pos)
+        e = b + len(t)
+        pos = e
+        spans.append((char_starts[b] / speed, char_ends[e - 1] / speed))
+    return spans
+
+
+def build_narration_single(
+    lines,
+    creds: dict,
+    workdir: str | Path,
+    out_path: str | Path,
+) -> tuple[Path, list[tuple[float, float]]]:
+    """전체 대본 단일 합성 → (나레이션 m4a 경로, 줄별 실측 타이밍) 반환.
+
+    타이밍은 배속 적용 후 기준 — 자막을 이 값으로 다시 깔면 말과 완전 동기화된다.
+    같은 대본+보이스 설정은 캐시를 재사용한다.
+    """
+    import base64
+    import hashlib as _hashlib
+
+    workdir = Path(workdir)
+    workdir.mkdir(parents=True, exist_ok=True)
+    lines = list(lines)
+    texts = [line.text for line in lines]
+    full = "\n".join(texts)
+    speed = float(creds.get("speed", DEFAULT_SPEED))
+
+    voice_key = json.dumps(
+        [creds.get("voice_id"), creds.get("model_id"), creds.get("voice_settings")],
+        ensure_ascii=False, sort_keys=True,
+    )
+    key = _hashlib.md5((voice_key + "|single|" + full).encode("utf-8")).hexdigest()[:10]
+    raw = workdir / f"nar_full_{key}.mp3"
+    meta = workdir / f"nar_full_{key}.json"
+
+    if raw.exists() and meta.exists():
+        resp_align = json.loads(meta.read_text(encoding="utf-8"))
+    else:
+        resp = synthesize_full_with_timestamps(full, creds)
+        raw.write_bytes(base64.b64decode(resp["audio_base64"]))
+        resp_align = resp["alignment"]
+        meta.write_text(json.dumps(resp_align, ensure_ascii=False), encoding="utf-8")
+
+    spans = align_line_spans(
+        texts, resp_align["characters"],
+        resp_align["character_start_times_seconds"], resp_align["character_end_times_seconds"],
+        speed,
+    )
+    out = Path(out_path)
+    subprocess.run([
+        "ffmpeg", "-y", "-loglevel", "error", "-i", str(raw),
+        "-af", f"atempo={speed}", "-c:a", "aac", "-b:a", "192k", str(out),
+    ], check=True)
+    return out, spans
+
+
 def build_narration(
     lines,
     creds: dict,
