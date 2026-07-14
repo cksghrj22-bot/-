@@ -1,0 +1,21 @@
+{
+  "inbox": "~/Shorts/inbox",
+  "done": "~/Shorts/done",
+  "output": "~/Shorts/rendered",
+  "bgm": "",
+  "bgm_volume": 0.15,
+  "subtitle_style": {
+    "font": "AppleSDGothicNeo-Bold",
+    "size": 64,
+    "margin_v": 260
+  },
+  "youtube": {
+    "enabled": true,
+    "credentials": "secrets/youtube.json",
+    "privacy": "private"
+  },
+  "instagram": {
+    "enabled": false,
+    "credentials": "secrets/instagram.json"
+  }
+}

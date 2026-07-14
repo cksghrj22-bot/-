@@ -39,9 +39,8 @@ python -m unittest discover -s tests -v
 
 ## 로드맵
 
-- [x] RSS/Atom 피드 수집기 + 아침 브리핑 생성
-- [ ] 매일 아침 자동 실행 (클라우드 트리거)
-- [ ] 유튜브 쇼츠 자동화 파이프라인 재건 → [docs/youtube-shorts-pipeline.md](docs/youtube-shorts-pipeline.md)
+- [x] RSS/Atom 피드 수집기 + 아침 브리핑 생성 (백업용 — 실서비스 브리핑은 맥스튜디오 본진이 매일 9시 발신, CLAUDE.md 참고)
+- [x] 쇼츠 자동화 파이프라인 `shorts/` → [docs/youtube-shorts-pipeline.md](docs/youtube-shorts-pipeline.md)
 - [ ] Obsidian vault 연동 (코워크에서 vault 폴더 직접 인덱싱)
 - [ ] 임베딩 기반 시맨틱 검색 (선택적 의존성)
 - [ ] 증분 업데이트 / 문서 삭제

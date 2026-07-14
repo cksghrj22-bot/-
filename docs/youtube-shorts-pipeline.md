@@ -26,7 +26,52 @@
 - 자동화: macOS launchd 또는 코워크 예약 작업으로 주기 실행.
   (업로드는 영상 파일이 Mac에 있으므로 클라우드가 아닌 로컬 실행이 맞다.)
 
+## 사용법
+
+```bash
+# Mac Studio에서, 리포지토리 클론 후:
+mkdir -p ~/Shorts/inbox
+# 영상(a.mp4)과 대사 스크립트(a.txt)를 inbox에 넣고:
+python3 -m shorts run --dry-run   # 업로드 없이 렌더링 확인
+python3 -m shorts run             # 렌더링 + 업로드 + done/ 이동
+```
+
+대사 스크립트 형식 (`영상이름.txt`):
+
+```
+# 제목: 정착 미용실 찾는 법
+# 설명: 설명 문구
+# 태그: 미용실,헤어
+00:00-00:03 첫 대사
+00:03-00:07 둘째 대사
+타이밍 생략하면 영상 길이에 맞춰 균등 배분
+```
+
+## API 키 세팅 (한 번만)
+
+### 유튜브 — `secrets/youtube.json`
+
+1. [Google Cloud Console](https://console.cloud.google.com) → 프로젝트 생성 → **YouTube Data API v3** 활성화
+2. OAuth 동의 화면 설정 → 사용자 유형 "외부", 테스트 사용자에 본인 계정 추가
+3. 사용자 인증 정보 → OAuth 클라이언트 ID 생성 (데스크톱 앱) → client_id / client_secret 확보
+4. refresh_token 발급: [OAuth Playground](https://developers.google.com/oauthplayground)에서
+   우측 설정 ⚙ → "Use your own OAuth credentials" 체크 → 위 client_id/secret 입력 →
+   scope에 `https://www.googleapis.com/auth/youtube.upload` 선택 → 승인 → refresh token 복사
+5. 리포지토리 루트에 `secrets/youtube.json` 생성:
+   `{"client_id": "...", "client_secret": "...", "refresh_token": "..."}`
+   (`secrets/`는 gitignore에 있어 커밋되지 않음 — 키는 절대 리포지토리에 올리지 않는다)
+
+### 인스타그램 — `secrets/instagram.json` (선택)
+
+1. 인스타그램 계정을 비즈니스/크리에이터로 전환하고 Facebook 페이지에 연결
+2. [Meta for Developers](https://developers.facebook.com)에서 앱 생성 → Instagram Graph API 추가
+3. 장기(60일) 액세스 토큰 + 인스타그램 비즈니스 계정 ID 확보
+4. `secrets/instagram.json`: `{"access_token": "...", "ig_user_id": "..."}`
+5. `shorts_config.json`에서 `"instagram": {"enabled": true}` 로 변경
+
 ## 상태
 
 - [x] 계획 문서화 (이 파일)
-- [ ] `shorts/` 모듈 구현 — 위 준비물이 확보되는 대로 진행
+- [x] `shorts/` 모듈 구현: 자막(ASS) 생성, ffmpeg 렌더링+BGM, 유튜브 재개형 업로드, 인스타 릴스 업로드
+- [ ] Mac Studio에서 실전 테스트 (ffmpeg 렌더링 → dry-run → 비공개 업로드 1건)
+- [ ] API 키 재발급 후 `secrets/`에 배치
