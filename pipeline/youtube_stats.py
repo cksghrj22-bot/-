@@ -7,6 +7,7 @@ API 키는 공개 데이터 조회 전용 — 업로드는 upload_youtube.py(OAu
 from __future__ import annotations
 
 import json
+import os
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -21,9 +22,19 @@ def _get(endpoint: str, params: dict) -> dict:
 
 
 def load_secrets(secrets_dir: str | Path = "secrets") -> tuple[str, str]:
+    """secrets/ 파일 우선, 없으면 환경 변수(YOUTUBE_API_KEY, YOUTUBE_CHANNEL_ID).
+
+    환경 변수는 클라우드 환경 설정에 등록해두면 모든 새 세션에 자동 주입된다.
+    """
     d = Path(secrets_dir)
-    key = (d / "youtube_api_key.txt").read_text(encoding="utf-8").strip()
-    channel = (d / "youtube_channel_id.txt").read_text(encoding="utf-8").strip()
+    key_file = d / "youtube_api_key.txt"
+    ch_file = d / "youtube_channel_id.txt"
+    key = key_file.read_text(encoding="utf-8").strip() if key_file.exists() else os.environ.get("YOUTUBE_API_KEY", "")
+    channel = ch_file.read_text(encoding="utf-8").strip() if ch_file.exists() else os.environ.get("YOUTUBE_CHANNEL_ID", "")
+    if not key or not channel:
+        raise FileNotFoundError(
+            "유튜브 자격증명 없음 — secrets/ 파일 또는 환경 변수(YOUTUBE_API_KEY, YOUTUBE_CHANNEL_ID) 필요"
+        )
     return key, channel
 
 

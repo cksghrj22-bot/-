@@ -29,10 +29,12 @@ def check_all(secrets_dir: str | Path = "secrets", index_path: str | Path = "dat
     s = Path(secrets_dir)
     results: list[tuple[str, str, str]] = []
 
-    # 1) 유튜브 조회 (API 키)
+    # 1) 유튜브 조회 (API 키) — 파일 우선, 없으면 환경 변수
+    import os
+
     key_file = s / "youtube_api_key.txt"
-    if key_file.exists():
-        key = key_file.read_text(encoding="utf-8").strip()
+    key = key_file.read_text(encoding="utf-8").strip() if key_file.exists() else os.environ.get("YOUTUBE_API_KEY", "")
+    if key:
         try:
             q = urllib.parse.urlencode({"part": "id", "id": "dQw4w9WgXcQ", "key": key})
             urllib.request.urlopen(f"https://www.googleapis.com/youtube/v3/videos?{q}", timeout=8)
@@ -42,7 +44,7 @@ def check_all(secrets_dir: str | Path = "secrets", index_path: str | Path = "dat
         except Exception:
             results.append(("유튜브 조회수 API", "차단", "네트워크 차단 (이 기기에서 googleapis 접근 불가)"))
     else:
-        results.append(("유튜브 조회수 API", "없음", f"{key_file} 없음"))
+        results.append(("유튜브 조회수 API", "없음", "secrets 파일도 YOUTUBE_API_KEY 환경 변수도 없음"))
 
     # 2) 유튜브 업로드 (OAuth)
     oauth_file = s / "youtube.json"
