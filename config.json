@@ -1,0 +1,8 @@
+{
+  "feeds": [
+    {"name": "연합뉴스 최신", "url": "https://www.yna.co.kr/rss/news.xml", "limit": 5},
+    {"name": "Hacker News", "url": "https://news.ycombinator.com/rss", "limit": 5}
+  ],
+  "briefing_dir": "briefings",
+  "index": "data/index.json"
+}

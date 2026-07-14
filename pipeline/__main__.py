@@ -3,13 +3,16 @@
 사용법:
     python -m pipeline add <파일_또는_디렉터리> [--index data/index.json]
     python -m pipeline search "질의어" [--index data/index.json] [--top-k 5]
+    python -m pipeline briefing [--date YYYY-MM-DD] [--config config.json]
 """
 
 from __future__ import annotations
 
 import argparse
+import datetime
 from pathlib import Path
 
+from .briefing import generate_briefing, load_config
 from .chunk import chunk_document
 from .index import Index
 from .ingest import load_directory, load_file
@@ -55,6 +58,14 @@ def cmd_search(args: argparse.Namespace) -> None:
         print(f"   {preview}")
 
 
+def cmd_briefing(args: argparse.Namespace) -> None:
+    config = load_config(args.config)
+    date_str = args.date or datetime.date.today().isoformat()
+    output = generate_briefing(date_str, config)
+    print(f"브리핑 생성 완료 → {output}")
+    print(output.read_text(encoding="utf-8"))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(prog="pipeline", description="지식파이프라인 CLI")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -69,6 +80,11 @@ def main() -> None:
     p_search.add_argument("--index", default=DEFAULT_INDEX)
     p_search.add_argument("--top-k", type=int, default=5)
     p_search.set_defaults(func=cmd_search)
+
+    p_brief = sub.add_parser("briefing", help="피드 수집 + 인덱싱 + 아침 브리핑 생성")
+    p_brief.add_argument("--date", default=None, help="YYYY-MM-DD (기본: 오늘)")
+    p_brief.add_argument("--config", default="config.json")
+    p_brief.set_defaults(func=cmd_briefing)
 
     args = parser.parse_args()
     args.func(args)
