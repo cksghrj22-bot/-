@@ -39,6 +39,44 @@ class TestBuildRequest(unittest.TestCase):
         self.assertEqual(body["model_id"], tts.DEFAULT_MODEL)
 
 
+class TestStitchingContext(unittest.TestCase):
+    """줄별 합성이어도 앞뒤 문맥으로 억양이 이어지게 하는 previous_text/next_text."""
+
+    def test_context_included_when_given(self):
+        req = tts.build_request(
+            "둘째 줄.", "sk_key", "voice123",
+            previous_text="첫째 줄.", next_text="셋째 줄.",
+        )
+        body = json.loads(req.data.decode("utf-8"))
+        self.assertEqual(body["previous_text"], "첫째 줄.")
+        self.assertEqual(body["next_text"], "셋째 줄.")
+
+    def test_context_omitted_when_absent(self):
+        req = tts.build_request("한 줄.", "sk_key", "voice123")
+        body = json.loads(req.data.decode("utf-8"))
+        self.assertNotIn("previous_text", body)
+        self.assertNotIn("next_text", body)
+
+
+class TestScheduleStarts(unittest.TestCase):
+    """앞 줄 나레이션이 끝나기 전에 다음 줄이 겹치지 않게 시작 시각을 민다."""
+
+    def test_no_shift_when_slots_are_wide_enough(self):
+        starts = tts.schedule_starts([0.0, 5.0], durations=[2.2, 2.2], speed=1.1)
+        self.assertEqual(starts, [0.0, 5.0])
+
+    def test_shifts_when_previous_line_would_overlap(self):
+        # 1.1배속 시 3.3초 클립 = 3.0초 점유 → 2.5초 시작 예정이던 둘째 줄은 3.0+0.12로 밀림
+        starts = tts.schedule_starts([0.0, 2.5], durations=[3.3, 1.1], speed=1.1)
+        self.assertEqual(starts[0], 0.0)
+        self.assertAlmostEqual(starts[1], 3.12, places=6)
+
+    def test_shift_cascades_to_following_lines(self):
+        starts = tts.schedule_starts([0.0, 1.0, 2.0], durations=[2.2, 2.2, 1.1], speed=1.1)
+        self.assertAlmostEqual(starts[1], 2.12, places=6)
+        self.assertAlmostEqual(starts[2], 4.24, places=6)
+
+
 class TestNarrationFilter(unittest.TestCase):
     def test_filter_places_clips_at_line_starts(self):
         f = tts.narration_filter([("a.mp3", 0.0), ("b.mp3", 2.5)], speed=1.1)
@@ -47,6 +85,11 @@ class TestNarrationFilter(unittest.TestCase):
         self.assertIn("adelay=2500|2500", f)
         self.assertIn("amix=inputs=2:normalize=0", f)
         self.assertTrue(f.endswith("[nar]"))
+
+    def test_filter_declicks_clip_edges(self):
+        f = tts.narration_filter([("a.mp3", 0.0)], speed=1.1)
+        self.assertIn("afade=t=in:st=0:d=0.02", f)
+        self.assertIn("areverse", f)
 
 
 if __name__ == "__main__":
