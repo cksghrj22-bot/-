@@ -38,7 +38,12 @@
    「🔑 세션 연결 정보」 섹션에서 키를 읽어 `secrets/youtube_api_key.txt`, `secrets/youtube_channel_id.txt`에 저장 후 재진단.
 3. 일레븐랩스가 "없음"이면: 같은 섹션의 일레븐랩스 JSON을 `secrets/elevenlabs.json`에 저장 후 재진단.
    "차단"이면 세션 시작 시 네트워크 「전체」 허용 환경(대본공장)을 선택했는지 확인 — 2026-07-14 생성됨.
-4. 진단 결과가 달라졌으면 `연결지도.md` 갱신.
+4. 드라이브·유튜브 업로드가 "없음"이면: 같은 섹션의 gdrive JSON → `secrets/gdrive.json`,
+   youtube JSON → `secrets/youtube.json` 저장 (2026-07-14 기기 인증 완료분 — 재인증 불필요).
+5. 인스타·스레드 토큰이 드라이브 「앳나운_영상」에 instagram.json/threads.json으로 있으면
+   `secrets/`로 복사 (발행 코드: shorts/upload_instagram.py, shorts/threads.py).
+6. 진단 결과가 달라졌으면 `연결지도.md` 갱신. **새 세션 재현 런북: `knowledge/프롬프트북.md` 필독.**
+7. 본진(맥스튜디오)에는 리포지토리 사본이 없다 — 본진에 파일을 전달할 땐 **구글드라이브 「앳나운_영상」 폴더가 브리지**다 (코드방이 업로드 → 본진이 읽음. 반대 방향도 동일).
 
 ## 🎬 쇼츠 제작 규격 (2026-07-14 확정 — 렌더 전 필독)
 
