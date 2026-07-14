@@ -71,5 +71,29 @@
       "outline": 4
     },
     "본진_전담": "클론보이스 TTS(1.1배속)·켄번스 멀티컷·페이드팝은 Creator OS build_reel.py가 정본"
+  },
+  "style_preset_mind": {
+    "_설명": "마인드·철학 라인 (2026-07-14 이찬호 지시) — 풀블리드 영상에 화면 전체 반투명 블랙, 그 위 흰 손글씨. 제목은 노랑으로 상단 어두운 영역에 걸침",
+    "layout": "dim",
+    "dim_opacity": 0.45,
+    "subtitle_style": {
+      "font": "Nanum Pen",
+      "size": 88,
+      "margin_v": 820,
+      "border_style": 1,
+      "primary_color": "&H00FFFFFF",
+      "outline_color": "&H00000000",
+      "outline": 2,
+      "box_opacity": 0
+    },
+    "title_style": {
+      "font": "Nanum Pen",
+      "size": 105,
+      "margin_v": 64,
+      "border_style": 1,
+      "primary_color": "&H0000D7FF",
+      "outline_color": "&H00000000",
+      "outline": 4
+    }
   }
 }

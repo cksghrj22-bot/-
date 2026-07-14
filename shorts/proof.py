@@ -26,6 +26,7 @@ from .render import render
 from .subtitles import parse_script
 
 VIDEO_W, VIDEO_H = 1080, 1350  # 레터박스 안쪽 영상 영역 (4:5) — v9 정본 구성
+FULL_W, FULL_H = 1080, 1920    # 풀블리드 (dim 레이아웃: 화면 전체 반투명 블랙 + 흰 글씨)
 FPS = 30
 TAIL_SECONDS = 0.8  # 마지막 자막 뒤 여유
 
@@ -54,12 +55,16 @@ def gradient_colors(index: int, slug: str) -> tuple[str, str]:
     return dark, light
 
 
-def gradient_cmd(colors: tuple[str, str], duration: float, out_path: str | Path) -> list[str]:
+def gradient_cmd(
+    colors: tuple[str, str], duration: float, out_path: str | Path,
+    size: tuple[int, int] = (VIDEO_W, VIDEO_H),
+) -> list[str]:
     """편별 그라디언트 배경(mp4, 무음) 생성 ffmpeg 명령. 대각 방향 + 미세한 흐름."""
     c0, c1 = colors
+    w, h = size
     src = (
-        f"gradients=s={VIDEO_W}x{VIDEO_H}:c0={c0}:c1={c1}"
-        f":x0=0:y0=0:x1={VIDEO_W}:y1={VIDEO_H}:speed=0.01:d={duration:.2f}:r={FPS}"
+        f"gradients=s={w}x{h}:c0={c0}:c1={c1}"
+        f":x0=0:y0=0:x1={w}:y1={h}:speed=0.01:d={duration:.2f}:r={FPS}"
     )
     return [
         "ffmpeg", "-y", "-loglevel", "error",
@@ -96,15 +101,23 @@ def match_broll(txt_stem: str, broll: str | Path | None) -> Path | None:
     return None
 
 
-def broll_bg_cmd(src: str | Path, start: float, duration: float, out_path: str | Path) -> list[str]:
-    """B롤 원본을 영상 영역(1080x1350)에 맞춰 자른 배경(mp4, 무음) 생성 ffmpeg 명령."""
+def broll_bg_cmd(
+    src: str | Path, start: float, duration: float, out_path: str | Path,
+    size: tuple[int, int] = (VIDEO_W, VIDEO_H), dim: float = 0.0,
+) -> list[str]:
+    """B롤 원본을 영상 영역에 맞춰 자른 배경(mp4, 무음) 생성 ffmpeg 명령.
+
+    dim > 0이면 화면 전체에 반투명 블랙을 덮는다 (마인드 라인 스타일 —
+    화면 전체가 불투명도 있는 블랙, 그 위에 흰 글씨. 2026-07-14 이찬호 지시).
+    """
+    w, h = size
+    vf = f"scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h},fps={FPS}"
+    if dim > 0:
+        vf += f",drawbox=c=black@{dim}:t=fill"
     return [
         "ffmpeg", "-y", "-loglevel", "error",
         "-ss", f"{start:.2f}", "-t", f"{duration:.2f}", "-i", str(src),
-        "-vf", (
-            f"scale={VIDEO_W}:{VIDEO_H}:force_original_aspect_ratio=increase,"
-            f"crop={VIDEO_W}:{VIDEO_H},fps={FPS}"
-        ),
+        "-vf", vf,
         "-an", "-c:v", "libx264", "-preset", "fast", "-crf", "20", "-pix_fmt", "yuv420p",
         str(out_path),
     ]
@@ -118,14 +131,25 @@ def render_batch(
     workdir: str | Path | None = None,
     broll: str | Path | None = None,
     broll_start: float = 0.0,
+    preset: str = "style_preset_v9",
+    only: str | None = None,
 ) -> list[Path]:
     cfg = json.loads(Path(config_path).read_text(encoding="utf-8"))
-    v9 = cfg["style_preset_v9"]
+    v9 = cfg[preset]
+    layout = v9.get("layout", "letterbox")
+    if layout == "dim":
+        bg_size = (FULL_W, FULL_H)
+        dim = float(v9.get("dim_opacity", 0.45))
+    else:
+        bg_size = (VIDEO_W, VIDEO_H)
+        dim = 0.0
     creds = tts.load_credentials(cfg["tts"]["credentials"]) if use_tts else None
 
     scripts = find_scripts(scripts_dir)
+    if only:
+        scripts = [s for s in scripts if s.stem.startswith(only)]
     if not scripts:
-        raise FileNotFoundError(f"대본 없음: {scripts_dir}/NN_*.txt")
+        raise FileNotFoundError(f"대본 없음: {scripts_dir}/NN_*.txt (only={only})")
 
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -143,9 +167,9 @@ def render_batch(
         bg = work / f"{txt.stem}_bg.mp4"
         src = match_broll(txt.stem, broll)
         if src is not None:
-            subprocess.run(broll_bg_cmd(src, broll_start, duration, bg), check=True)
+            subprocess.run(broll_bg_cmd(src, broll_start, duration, bg, size=bg_size, dim=dim), check=True)
         else:
-            subprocess.run(gradient_cmd(gradient_colors(i, txt.stem), duration, bg), check=True)
+            subprocess.run(gradient_cmd(gradient_colors(i, txt.stem), duration, bg, size=bg_size), check=True)
 
         narration = None
         if creds:
@@ -157,7 +181,8 @@ def render_batch(
         out = render(
             bg, script, out_dir / f"{txt.stem}_{suffix}.mp4",
             style=v9.get("subtitle_style"), title_style=v9.get("title_style"),
-            layout=v9.get("layout", "letterbox"), workdir=work, narration=narration,
+            layout="full" if layout == "dim" else layout,  # dim은 배경에 이미 구움
+            workdir=work, narration=narration,
         )
         print(f"  ✅ {out.name}")
         outputs.append(out)
@@ -174,11 +199,14 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--broll", default=None,
                     help="배경 원본: 파일(전 편 공통) 또는 폴더(NN_ 접두사 매칭). 없으면 그라디언트")
     ap.add_argument("--broll-start", type=float, default=0.0, help="B롤 시작 지점(초)")
+    ap.add_argument("--preset", default="style_preset_v9", help="shorts_config.json의 스타일 프리셋 키")
+    ap.add_argument("--only", default=None, help="이 접두사(NN)로 시작하는 대본만 렌더")
     args = ap.parse_args(argv)
     try:
         outs = render_batch(args.scripts_dir, args.out, use_tts=not args.no_tts,
                             config_path=args.config, workdir=args.workdir,
-                            broll=args.broll, broll_start=args.broll_start)
+                            broll=args.broll, broll_start=args.broll_start,
+                            preset=args.preset, only=args.only)
     except OSError as e:
         print(f"❌ 중단: {e}\n   api.elevenlabs.io 차단이면 네트워크 정책 확인 (연결지도.md), "
               f"무음 검증은 --no-tts.", file=sys.stderr)
