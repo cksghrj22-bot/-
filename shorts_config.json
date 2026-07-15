@@ -56,10 +56,10 @@
     "_설명": "채널 정본 스타일 (참조: youtube.com/shorts/i6r2YFPA8Qw) — 레터박스 + 손글씨",
     "layout": "letterbox",
     "subtitle_style": {
-      "font": "Kyobo Handwriting 2019",
+      "font": "BM JUA_TTF",
       "size": 88,
       "margin_v": 560,
-      "box_opacity": 80
+      "box_opacity": 88
     },
     "title_style": {
       "font": "Poor Story",
@@ -70,7 +70,7 @@
       "outline_color": "&H00000000",
       "outline": 4
     },
-    "_폰트": "제목 푸어스토리 · 자막 교보손글씨 2019 (2026-07-15 이찬호: 감자꽃 가독성 낮아 교체)",
+    "_폰트": "제목 푸어스토리 · 자막 배민주아(가시성 우선, 2026-07-15 교체)",
     "본진_전담": "클론보이스 TTS(1.1배속)·켄번스 멀티컷·페이드팝은 Creator OS build_reel.py가 정본"
   },
   "style_preset_mind": {
@@ -83,13 +83,13 @@
     ],
     "dim_opacity": 0.45,
     "subtitle_style": {
-      "font": "Kyobo Handwriting 2019",
+      "font": "BM JUA_TTF",
       "size": 88,
       "margin_v": 560,
       "border_style": 4,
       "primary_color": "&H00FFFFFF",
       "box_color": "000000",
-      "box_opacity": 85,
+      "box_opacity": 88,
       "outline": 3
     },
     "title_style": {
@@ -101,7 +101,7 @@
       "outline_color": "&H00000000",
       "outline": 4
     },
-    "_폰트": "제목 푸어스토리 · 자막 교보손글씨 2019 (2026-07-15 이찬호: 감자꽃 가독성 낮아 교체)",
+    "_폰트": "제목 푸어스토리 · 자막 배민주아(가시성 우선, 2026-07-15 교체)",
     "_디자인": "채널 마인드 쇼츠 정본 (IMG_1815 레퍼런스): 노란 제목 최상단 + 어두운 화면 + 흰 글씨는 검은 박스 위"
   }
 }
