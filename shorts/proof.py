@@ -101,16 +101,29 @@ def match_broll(txt_stem: str, broll: str | Path | None) -> Path | None:
     return None
 
 
+# 색보정 grade 프리셋 (2026-07-15 이찬호: 흑백 말고 부드러운 필름 필터).
+# 레퍼런스 moment.ryan(CreatorOS) 톤 = warm_film. bw는 기존 흑백(하위호환).
+GRADES: dict[str, str] = {
+    "none": "",
+    "bw": "hue=s=0",
+    "warm_film": "eq=saturation=0.90:contrast=1.06:brightness=0.02,"
+                 "colorbalance=rm=0.03:bm=-0.03:rh=0.02:bh=-0.03,"
+                 "curves=all='0/0.03 0.5/0.5 1/0.98'",
+    "clean": "eq=saturation=0.96:contrast=1.04,colorbalance=rm=0.02:bm=-0.02",
+    "cinema": "eq=saturation=0.90:contrast=1.08,"
+              "colorbalance=rs=-0.03:bs=0.04:rh=0.04:bh=-0.04,curves=all='0/0.04 1/0.96'",
+}
+
+
 def broll_bg_cmd(
     src: str | Path, start: float, duration: float, out_path: str | Path,
     size: tuple[int, int] = (VIDEO_W, VIDEO_H), dim: float = 0.0, fit: str = "crop",
-    grayscale: bool = False,
+    grade: str = "none",
 ) -> list[str]:
     """B롤 원본을 영상 영역에 맞춰 자른 배경(mp4, 무음) 생성 ffmpeg 명령.
 
-    dim > 0이면 화면 전체에 반투명 블랙을 덮는다 (마인드 라인 스타일 —
-    화면 전체가 불투명도 있는 블랙, 그 위에 흰 글씨. 2026-07-14 이찬호 지시).
-    grayscale면 무채색(흑백) 처리 — 채널 마인드 영상 톤 (레퍼런스 매칭).
+    dim > 0이면 화면 전체에 반투명 블랙을 덮는다 (마인드 라인 스타일).
+    grade = 색보정 프리셋 이름(GRADES): warm_film(기본 필름톤)·clean·cinema·bw(흑백)·none.
     """
     w, h = size
     if fit == "width":
@@ -118,8 +131,9 @@ def broll_bg_cmd(
         vf = f"scale={w}:-2,fps={FPS}"
     else:
         vf = f"scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h},fps={FPS}"
-    if grayscale:
-        vf += ",hue=s=0"
+    grade_vf = GRADES.get(grade, "")
+    if grade_vf:
+        vf += "," + grade_vf
     if dim > 0:
         vf += f",drawbox=c=black@{dim}:t=fill"
     return [
@@ -227,7 +241,7 @@ def render_batch(
         if src is not None:
             subprocess.run(
                 broll_bg_cmd(src, broll_start, duration, bg, size=bg_size, dim=dim, fit=fit,
-                             grayscale=bool(v9.get("grayscale"))),
+                             grade=v9.get("grade") or ("bw" if v9.get("grayscale") else "none")),
                 check=True,
             )
         else:
