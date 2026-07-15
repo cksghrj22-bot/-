@@ -318,9 +318,16 @@ def build_narration_single(
     workdir.mkdir(parents=True, exist_ok=True)
     lines = list(lines)
     texts = [line.text for line in lines]
-    # 줄 끝 쉼표를 떼서 합성한다 — 줄마다 쉼표가 있으면 일레븐랩스가 줄마다 쉬어 '뚝뚝'.
-    # 문장처럼 이어 흐르게 하는 게 레퍼런스 패턴. 자막엔 원래 문장부호 그대로 표시된다.
-    syn_texts = [t.rstrip(" ,，·") for t in texts]
+    # 합성 텍스트 다듬기 (자막 표시는 원문 그대로, 합성 입력만):
+    #  ① 줄 끝 쉼표 제거 → 이어지는 줄은 안 끊고 흐른다.
+    #  ② 문장이 끝나는 줄(요/죠/다 등 종결어미)엔 마침표를 붙여 → 거기서만 쉰다.
+    # 레퍼런스 패턴 = 문장 끝에만 쉼, 나머지는 흐름.
+    align_texts = [t.rstrip(" ,，·") for t in texts]  # 정렬은 말소리 기준(부호 없이)
+    _SENT_END = ("요", "죠", "다", "까", "네", "자", "라")
+    syn_texts = [
+        (a + "." if a and a[-1] in _SENT_END and not a.endswith((".", "?", "!", "…")) else a)
+        for a in align_texts
+    ]
     full = " ".join(syn_texts)
     speed = float(creds.get("speed", DEFAULT_SPEED))
     keep = float(creds.get("gap_keep", 0.14))
@@ -351,7 +358,7 @@ def build_narration_single(
             "-af", f"atempo={speed}", "-c:a", "aac", "-b:a", "192k", str(out),
         ], check=True)
         spans = align_line_spans(
-            syn_texts, resp_align["characters"],
+            align_texts, resp_align["characters"],
             resp_align["character_start_times_seconds"], resp_align["character_end_times_seconds"],
             speed,
         )
@@ -359,7 +366,7 @@ def build_narration_single(
 
     # (기본) 줄별 speech 구간을 뽑아 매 줄 사이에 line_gap을 강제 — 균일한 띄어쓰기.
     raw_spans = align_line_spans(
-        syn_texts, resp_align["characters"],
+        align_texts, resp_align["characters"],
         resp_align["character_start_times_seconds"], resp_align["character_end_times_seconds"],
         speed=1.0,
     )
