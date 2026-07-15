@@ -101,3 +101,28 @@ class TestBriefing(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestBlogSuggestion(unittest.TestCase):
+    def test_suggest_blog_picks_first_waiting_row(self):
+        from pipeline.briefing import suggest_blog
+        import tempfile
+        from pathlib import Path
+        q = Path(tempfile.mkdtemp()) / "큐.md"
+        q.write_text(
+            "| # | 제목 | 근거 | 원자 | 상태 |\n"
+            "|---|---|---|---|---|\n"
+            "| 1 | 장마철 떡짐 | 계절 | 7/16 #02 | 초안완료 |\n"
+            "| 2 | 머리 커보임 | 검색 상위 | 7/16 #01 | 대기 |\n",
+            encoding="utf-8",
+        )
+        s = suggest_blog(q)
+        self.assertIn("머리 커보임", s)
+        self.assertIn("#2", s)
+
+    def test_suggestion_appears_in_briefing(self):
+        from pipeline.briefing import render_briefing
+        text = render_briefing("2026-07-14", [], {"total_chunks": 0, "added_today": 0},
+                               blog_suggestion="#2 「머리 커보임」 — 근거: 검색 상위")
+        self.assertIn("오늘의 블로그 제안", text)
+        self.assertIn("머리 커보임", text)

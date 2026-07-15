@@ -40,6 +40,50 @@ def _get(url: str, params: dict) -> dict:
         return json.loads(r.read())
 
 
+def upload_photo(image_url: str, caption: str, creds: dict) -> str:
+    """피드에 사진 1장을 게시하고 미디어 ID를 반환한다. image_url은 공개 URL이어야 한다."""
+    token = creds["access_token"]
+    user = creds["ig_user_id"]
+    container = _post(
+        f"{GRAPH}/{user}/media",
+        {"image_url": image_url, "caption": caption, "access_token": token},
+    )
+    published = _post(
+        f"{GRAPH}/{user}/media_publish",
+        {"creation_id": container["id"], "access_token": token},
+    )
+    return published["id"]
+
+
+def upload_carousel(image_urls: list[str], caption: str, creds: dict) -> str:
+    """피드에 캐러셀(2~10장, 카드뉴스용)을 게시하고 미디어 ID를 반환한다."""
+    if not 2 <= len(image_urls) <= 10:
+        raise ValueError("캐러셀은 2~10장이어야 한다")
+    token = creds["access_token"]
+    user = creds["ig_user_id"]
+    children = []
+    for url in image_urls:
+        item = _post(
+            f"{GRAPH}/{user}/media",
+            {"image_url": url, "is_carousel_item": "true", "access_token": token},
+        )
+        children.append(item["id"])
+    container = _post(
+        f"{GRAPH}/{user}/media",
+        {
+            "media_type": "CAROUSEL",
+            "children": ",".join(children),
+            "caption": caption,
+            "access_token": token,
+        },
+    )
+    published = _post(
+        f"{GRAPH}/{user}/media_publish",
+        {"creation_id": container["id"], "access_token": token},
+    )
+    return published["id"]
+
+
 def upload_reel(video_path: str | Path, caption: str, creds: dict, timeout_sec: int = 600) -> str:
     """릴스를 업로드·게시하고 미디어 ID를 반환한다."""
     video_path = Path(video_path)
