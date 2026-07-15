@@ -318,17 +318,11 @@ def build_narration_single(
     workdir.mkdir(parents=True, exist_ok=True)
     lines = list(lines)
     texts = [line.text for line in lines]
-    # 합성 텍스트 다듬기 (자막 표시는 원문 그대로, 합성 입력만):
-    #  ① 줄 끝 쉼표 제거 → 이어지는 줄은 안 끊고 흐른다.
-    #  ② 문장이 끝나는 줄(요/죠/다 등 종결어미)엔 마침표를 붙여 → 거기서만 쉰다.
-    # 레퍼런스 패턴 = 문장 끝에만 쉼, 나머지는 흐름.
-    align_texts = [t.rstrip(" ,，·") for t in texts]  # 정렬은 말소리 기준(부호 없이)
-    _SENT_END = ("요", "죠", "다", "까", "네", "자", "라")
-    syn_texts = [
-        (a + "." if a and a[-1] in _SENT_END and not a.endswith((".", "?", "!", "…")) else a)
-        for a in align_texts
-    ]
-    full = " ".join(syn_texts)
+    # 대본의 문장부호가 라임(쉼·흐름)을 정한다 — 프롬프트북 「나레이션 라임 규약」대로 작성.
+    #   마침표(.) = 내려읽고 쉼 · 쉼표(,) = 살짝 쉼 · 부호 없음 = 다음 줄과 붙여 흐름.
+    # 코드가 부호를 조작하지 않는다 (자동 추측이 라임을 망친다). 정렬·표시 모두 원문 그대로.
+    align_texts = texts
+    full = " ".join(texts)
     speed = float(creds.get("speed", DEFAULT_SPEED))
     keep = float(creds.get("gap_keep", 0.14))
     threshold = float(creds.get("gap_threshold", 0.34))

@@ -84,7 +84,7 @@
     "dim_opacity": 0.0,
     "subtitle_style": {
       "font": "Kyobo Handwriting 2019",
-      "size": 78,
+      "size": 98,
       "margin_v": 0,
       "border_style": 4,
       "primary_color": "&H00FFFFFF",
@@ -95,7 +95,7 @@
     },
     "title_style": {
       "font": "Kyobo Handwriting 2019",
-      "size": 96,
+      "size": 128,
       "margin_v": 150,
       "border_style": 1,
       "primary_color": "&H0000D7FF",
