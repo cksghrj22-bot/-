@@ -74,6 +74,20 @@ def check_all(secrets_dir: str | Path = "secrets", index_path: str | Path = "dat
     else:
         results.append(("인스타그램 API", "없음", "secrets/instagram.json 없음 — Meta 앱에서 토큰 발급 필요"))
 
+    # 3.3) 스레드 발행 API (shorts/threads.py — secrets/threads.json)
+    th_file = s / "threads.json"
+    if th_file.exists():
+        try:
+            creds = json.loads(th_file.read_text(encoding="utf-8"))
+            if "access_token" not in creds:
+                results.append(("스레드 발행 API", "대기", "누락 필드: access_token"))
+            else:
+                results.append(("스레드 발행 API", "OK", "토큰 형식 유효 (실발행은 shorts.threads publish)"))
+        except json.JSONDecodeError:
+            results.append(("스레드 발행 API", "대기", "JSON 형식 오류"))
+    else:
+        results.append(("스레드 발행 API", "없음", "secrets/threads.json 없음 — 메타 앱 재시도(2-a) 완료 대기"))
+
     # 3.5) 일레븐랩스 보이스클론 TTS (코드방/백업 렌더용 — 정본은 본진 Creator OS)
     el_file = s / "elevenlabs.json"
     if el_file.exists():

@@ -53,9 +53,32 @@ def index_items(index: Index, results: list[FeedResult]) -> int:
     return added
 
 
-def render_briefing(date_str: str, results: list[FeedResult], stats: dict) -> str:
+def suggest_blog(queue_path: str | Path = "content/blog/큐_100편.md") -> str | None:
+    """블로그 100편 큐에서 다음 「대기」 항목 한 줄을 꺼낸다 (오늘의 블로그 제안)."""
+    p = Path(queue_path)
+    if not p.exists():
+        return None
+    for line in p.read_text(encoding="utf-8").splitlines():
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if len(cells) >= 5 and cells[0].isdigit() and cells[-1] == "대기":
+            return f"#{cells[0]} 「{cells[1]}」 — 근거: {cells[2]}"
+    return None
+
+
+def render_briefing(
+    date_str: str, results: list[FeedResult], stats: dict, blog_suggestion: str | None = None
+) -> str:
     """브리핑 마크다운 본문을 만든다."""
     lines = [f"# 아침 브리핑 — {date_str}", ""]
+
+    if blog_suggestion:
+        lines += [
+            "## 📝 오늘의 블로그 제안 (100편 프로젝트)",
+            "",
+            f"- {blog_suggestion}",
+            "- 승인(yes)하면 초안 생성(prompts/04, 사진 추천 포함) → content/blog/ 저장 → 네이버 복붙 발행",
+            "",
+        ]
 
     for result in results:
         lines.append(f"## {result.feed_name}")
@@ -92,7 +115,7 @@ def generate_briefing(date_str: str, config: dict) -> Path:
     index.save(index_path)
 
     stats = {"total_chunks": len(index.chunks), "added_today": added}
-    text = render_briefing(date_str, results, stats)
+    text = render_briefing(date_str, results, stats, blog_suggestion=suggest_blog())
 
     briefing_dir = Path(config["briefing_dir"])
     briefing_dir.mkdir(parents=True, exist_ok=True)

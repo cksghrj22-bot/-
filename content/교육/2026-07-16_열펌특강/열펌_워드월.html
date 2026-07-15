@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>열펌이란 ______다 — 실시간 워드월</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--
+  ══════════════════════════════════════════════════════════════
+  열펌의 모든 것 (7/16 특강) — QR 실시간 워드월
+  사용법: 이 파일을 현장 노트북 크롬에서 더블클릭으로 열기 → 첫 화면 안내대로
+  구글폼 링크 + 응답 시트 링크 붙여넣기 → 시작. F11로 전체화면.
+  미리보기: 주소 뒤에 ?demo=1 을 붙이면 가짜 답변으로 데모가 돈다.
+  ══════════════════════════════════════════════════════════════
+-->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  /* 프리텐다드 — 가시성 + 고급감 (2026-07-15 이찬호: "장난스럽지 않게") */
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#101014; color:#fff; font-family:'Noto Sans KR',sans-serif; height:100vh; overflow:hidden; }
+  .pen { font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em; }
+
+  header { text-align:center; padding:28px 0 8px; }
+  header h1 { font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em; font-size:72px; color:#DFC57E; line-height:1.1; }
+  header p  { color:#9aa; font-size:20px; margin-top:4px; }
+
+  .stage { display:flex; height:calc(100vh - 140px); }
+
+  .side { width:300px; min-width:300px; padding:24px; display:flex; flex-direction:column; align-items:center; gap:14px; }
+  .qrcard { background:#fff; border-radius:18px; padding:18px; cursor:pointer; }
+  .qrcard #qr img, .qrcard #qr canvas { display:block; }
+
+  /* QR 확대 (빔프로젝터용 — 카드 클릭) */
+  #qrbig { position:fixed; inset:0; background:#fff; z-index:60; display:none;
+           flex-direction:column; align-items:center; justify-content:center; gap:24px; cursor:pointer; }
+  #qrbig .url { color:#111; font-size:44px; font-weight:800; font-family:'Pretendard','Apple SD Gothic Neo',sans-serif; word-break:break-all; text-align:center; padding:0 30px; }
+  .resetbtn { background:#1a1a22; color:#8a8fa0; border:1px solid #2c2c38; border-radius:10px;
+              padding:8px 14px; font-size:13px; cursor:pointer; }
+  .resetbtn:hover { color:#cfd3dc; }
+  #qrbig .close { color:#888; font-size:18px; }
+  .side .hint { color:#cfd3dc; font-size:18px; text-align:center; line-height:1.5; }
+  .side .hint b { color:#DFC57E; }
+  .count { font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em; font-size:44px; color:#DCC389; }
+  .fallback-url { color:#DFC57E; font-size:16px; word-break:break-all; text-align:center; display:none; }
+
+  .cloud { flex:1; position:relative; overflow:hidden; }
+  .word { font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em; line-height:1.05; cursor:pointer; white-space:nowrap;
+          position:absolute; transform:translate(-50%,-50%);
+          animation:pop .5s ease; transition:left .7s ease, top .7s ease; }
+  .word small { font-size:.45em; opacity:.55; margin-left:4px; }
+  @keyframes pop { 0%{opacity:0;} 100%{opacity:1;} }
+
+  .empty { color:#556; font-size:30px; font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em;
+           position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
+
+  /* 단어 스포트라이트 (클릭 → 대화용 확대) */
+  #spot { position:fixed; inset:0; background:rgba(8,8,12,.96); display:none;
+          flex-direction:column; align-items:center; justify-content:center; gap:20px; z-index:40; }
+  #spot .big { font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em; font-size:200px; color:#DFC57E; text-align:center; line-height:1; }
+  #spot .sub { color:#9aa; font-size:26px; }
+  #spot .ask { color:#fff; font-size:34px; font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em; }
+
+  /* 질문 보기 (Q 키 또는 참여 수 클릭) */
+  #qa { position:fixed; inset:0; background:#101014; z-index:30; display:none; flex-direction:column; padding:40px 60px; }
+  #qa h2 { font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em; font-size:56px; color:#DFC57E; margin-bottom:18px; }
+  #qa .list { overflow-y:auto; display:flex; flex-direction:column; gap:14px; }
+  #qa .q { font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em; font-size:40px; color:#e8eaf0; line-height:1.25;
+           border-left:6px solid #DFC57E; padding-left:18px; animation:pop .4s ease; }
+  #qa .none { color:#556; font-size:30px; font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em; }
+  #qa .tip { color:#667; font-size:15px; margin-top:14px; }
+
+  /* 설정 오버레이 */
+  #setup { position:fixed; inset:0; background:#101014; z-index:50; display:flex; align-items:center; justify-content:center; }
+  .panel { width:min(680px, 92vw); background:#1a1a22; border:1px solid #2c2c38; border-radius:20px; padding:36px; }
+  .panel h2 { font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em; font-size:44px; color:#DFC57E; margin-bottom:6px; }
+  .panel ol { color:#cfd3dc; font-size:16px; line-height:1.7; margin:14px 0 22px 20px; }
+  .panel ol b { color:#fff; }
+  .panel label { display:block; color:#9aa; font-size:14px; margin:14px 0 6px; }
+  .panel input { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #3a3a48;
+                 background:#101018; color:#fff; font-size:15px; }
+  .panel .row { display:flex; gap:12px; margin-top:26px; }
+  .panel button { flex:1; padding:14px; border:none; border-radius:12px; font-size:18px; font-weight:700; cursor:pointer; }
+  #startBtn { background:#DFC57E; color:#111; }
+  #demoBtn  { background:#2c2c38; color:#cfd3dc; }
+  .err { color:#ff7b72; font-size:14px; margin-top:10px; min-height:18px; }
+</style>
+</head>
+<body>
+
+<div id="setup">
+  <div class="panel">
+    <h2>열펌 워드월 — 시작 전 2분 설정</h2>
+    <ol>
+      <li><b>forms.google.com</b> → 새 폼 → 질문 2개: ① <b>“열펌이란 ______다. 한 단어로!”</b> (단답형, 필수) ② <b>“열펌에서 제일 궁금한 것 or 실패했던 경험 하나”</b> (장문형, 선택)</li>
+      <li>폼의 <b>응답 탭 → 시트 아이콘</b> → 응답 스프레드시트 만들기</li>
+      <li>그 시트에서 <b>공유 → “링크가 있는 모든 사용자: 뷰어”</b>로 변경 (이게 핵심!)</li>
+      <li>아래에 폼 <b>보내기 링크</b>와 <b>시트 링크</b>를 붙여넣고 시작</li>
+    </ol>
+    <label>① 구글폼 링크 (학생들이 QR로 열 주소)</label>
+    <input id="formUrl" placeholder="https://forms.gle/... 또는 https://docs.google.com/forms/...">
+    <label>② 응답 스프레드시트 링크</label>
+    <input id="sheetUrl" placeholder="https://docs.google.com/spreadsheets/d/.../edit">
+    <div class="err" id="err"></div>
+    <div class="row">
+      <button id="startBtn" onclick="start()">▶ 워드월 시작</button>
+      <button id="demoBtn" onclick="startDemo()">데모 보기</button>
+    </div>
+  </div>
+</div>
+
+<header>
+  <h1>열펌이란 ______다</h1>
+  <p>폰으로 QR 찍고, 떠오르는 단어 하나만 보내주세요</p>
+</header>
+
+<div class="stage">
+  <div class="side">
+    <div class="qrcard" onclick="bigQR()" title="클릭하면 전체화면 QR (빔프로젝터용)"><div id="qr"></div></div>
+    <div class="fallback-url" id="fallbackUrl"></div>
+    <div class="hint">📱 카메라로 QR을 찍으면<br>바로 답할 수 있어요<br><b>익명 · 10초</b></div>
+    <div class="count" onclick="toggleQA()" style="cursor:pointer" title="클릭하면 궁금한 것 보기"><span id="count">0</span>명 참여</div>
+    <div class="hint" style="font-size:14px;color:#667">Q 키 / 참여 수 클릭 = 궁금한 것 보기</div>
+    <button class="resetbtn" onclick="resetBoard()" title="지금까지 쌓인 응답을 무시하고 새 판으로 (시트 원본은 유지)">🧹 판 비우기</button>
+  </div>
+  <div class="cloud" id="cloud"><div class="empty">첫 단어를 기다리는 중…</div></div>
+</div>
+
+<div id="qrbig" onclick="this.style.display='none'">
+  <div id="qrbigBox"></div>
+  <div class="url" id="qrbigUrl"></div>
+  <div class="close">폰으로 다 찍었으면 화면 아무 데나 클릭</div>
+</div>
+
+<div id="qa">
+  <h2>애들이 궁금한 것 — 여기서부터 시작</h2>
+  <div class="list" id="qaList"><div class="none">아직 올라온 질문이 없습니다…</div></div>
+  <div class="tip">Q 키를 다시 누르면 워드월로 돌아갑니다 · 비슷한 질문끼리 묶어 TOP 3부터 답하기</div>
+</div>
+
+<div id="spot" onclick="this.style.display='none'">
+  <div class="big" id="spotWord"></div>
+  <div class="sub" id="spotCount"></div>
+  <div class="ask">— 이렇게 쓴 분, 왜 그렇게 느꼈는지 들려주세요</div>
+</div>
+
+<script>
+'use strict';
+const LS_KEY = 'yeolpum_wordwall';
+const COLORS = ['#F0EBE0','#DCC389','#AEBFCC','#C6BFB2','#C89B7B','#A9BCA4','#E3D9C2','#B9A5C4'];
+let sheetId = null, formUrl = null, demo = false, timer = null;
+const counts = new Map();   // 정규화 단어 -> {n, label}
+let questions = [];         // 2번 문항(궁금한 것) 답변들
+let ignoreRows = 0;         // 판 비우기: 이 행 수까지의 응답은 무시 (테스트 데이터 제외용)
+let lastRowCount = 0;
+
+// 유의어 합치기 — 왼쪽 단어가 들어오면 오른쪽 단어로 집계 (자동 추측은 안 함, 여기 등록한 쌍만)
+const ALIASES = {
+  '인내': '인내심',
+  '기다리기': '기다림',
+};
+
+function normalize(s){
+  s = String(s||'').trim().replace(/\s+/g,' ');
+  s = s.replace(/[.!?~…]+$/,'');
+  if (ALIASES[s]) s = ALIASES[s];
+  if (s.length > 20) s = s.slice(0,20) + '…';
+  return s;
+}
+
+function addAnswer(raw){
+  const label = normalize(raw);
+  if (!label) return;
+  const key = label.toLowerCase();
+  const cur = counts.get(key);
+  if (cur) cur.n++; else counts.set(key, {n:1, label});
+}
+
+function renderCloud(){
+  const cloud = document.getElementById('cloud');
+  const total = [...counts.values()].reduce((a,b)=>a+b.n,0);
+  document.getElementById('count').textContent = total;
+  if (!counts.size){ cloud.innerHTML = '<div class="empty">첫 단어를 기다리는 중…</div>'; return; }
+  cloud.querySelector('.empty')?.remove();
+
+  const max = Math.max(...[...counts.values()].map(v=>v.n));
+  const W = cloud.clientWidth, H = cloud.clientHeight;
+  // 브레인스토밍 배치: 많이 나온 단어가 한가운데, 나머지가 나선으로 둘러싼다
+  const entries = [...counts.entries()].sort((a,b)=> b[1].n - a[1].n || hash(a[0]) - hash(b[0]));
+
+  const placed = [];
+  const seen = new Set();
+  for (const [key, v] of entries){
+    seen.add(key);
+    let el = cloud.querySelector(`[data-key="${CSS.escape(key)}"]`);
+    const size = 30 + (v.n / max) * 90;             // 30px ~ 120px
+    const html = v.label + (v.n > 1 ? `<small>×${v.n}</small>` : '');
+    if (!el){
+      el = document.createElement('div');
+      el.className = 'word';
+      el.dataset.key = key;
+      el.style.color = COLORS[hash(key) % COLORS.length];
+      el.onclick = () => spotlight(v.label, counts.get(key).n);
+      cloud.appendChild(el);
+    }
+    if (el.innerHTML !== html) el.innerHTML = html;
+    el.style.fontSize = size + 'px';
+
+    // 크기를 먼저 입힌 뒤 실측 → 중앙 나선을 돌며 안 겹치는 첫 자리에 놓는다
+    const w = el.offsetWidth + 26, h = el.offsetHeight + 12;
+    let ang = (hash(key) % 628) / 100;              // 단어마다 시작 각도 고정 (요동 방지)
+    let pos = null;
+    for (let step = 0; step < 800; step++){
+      const r = 3.0 * ang;
+      const x = W / 2 + r * Math.cos(ang);
+      const y = H / 2 + r * 0.62 * Math.sin(ang);   // 가로형 화면에 맞춘 타원 나선
+      const rc = { x1: x - w/2, y1: y - h/2, x2: x + w/2, y2: y + h/2 };
+      if (rc.x1 > 4 && rc.y1 > 4 && rc.x2 < W - 4 && rc.y2 < H - 4 &&
+          !placed.some(p => rc.x1 < p.x2 && rc.x2 > p.x1 && rc.y1 < p.y2 && rc.y2 > p.y1)){
+        pos = { x, y, rc }; break;
+      }
+      ang += 0.25;
+    }
+    if (!pos){ // 화면이 가득 찼을 때: 중앙 부근에 겹쳐서라도 표시
+      pos = { x: W/2, y: H/2, rc: { x1: W/2-w/2, y1: H/2-h/2, x2: W/2+w/2, y2: H/2+h/2 } };
+    }
+    placed.push(pos.rc);
+    el.style.left = pos.x + 'px';
+    el.style.top = pos.y + 'px';
+  }
+  [...cloud.querySelectorAll('.word')].forEach(el=>{ if(!seen.has(el.dataset.key)) el.remove(); });
+}
+window.addEventListener('resize', ()=>{ if (counts.size) renderCloud(); });
+
+function hash(s){ let h=0; for(const c of s) h=(h*31 + c.charCodeAt(0))>>>0; return h; }
+
+function spotlight(word, n){
+  document.getElementById('spotWord').textContent = word;
+  document.getElementById('spotCount').textContent = n + '명이 이 단어를 골랐습니다';
+  document.getElementById('spot').style.display = 'flex';
+}
+
+/* ── 구글시트 폴링 (JSONP — 공유설정 '링크 뷰어'면 동작) ── */
+window.handleGviz = function(resp){
+  try{
+    counts.clear(); questions = [];
+    const rows = resp.table.rows || [];
+    lastRowCount = rows.length;
+    rows.slice(ignoreRows).forEach(r=>{
+      // 1열=타임스탬프, 2열=단어, 3열=궁금한 것(선택)
+      const word = r.c && r.c[1];
+      if (word && word.v != null) addAnswer(word.v);
+      const q = r.c && r.c[2];
+      if (q && q.v != null && String(q.v).trim()) questions.push(String(q.v).trim());
+    });
+    renderCloud(); renderQA();
+  }catch(e){ console.warn('gviz parse', e); }
+};
+
+function poll(){
+  if (demo || !sheetId) return;
+  const old = document.getElementById('gviz-tag'); old?.remove();
+  const s = document.createElement('script');
+  s.id = 'gviz-tag';
+  s.src = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json;responseHandler:handleGviz&headers=0&_=${Date.now()}`;
+  s.onerror = ()=> console.warn('시트 접근 실패 — 공유 설정(링크 뷰어) 확인');
+  document.body.appendChild(s);
+}
+
+/* ── 질문 보기 ── */
+function renderQA(){
+  const list = document.getElementById('qaList');
+  if (!questions.length){ list.innerHTML = '<div class="none">아직 올라온 질문이 없습니다…</div>'; return; }
+  list.innerHTML = questions.slice().reverse()
+    .map(q=>`<div class="q">${q.replace(/[<>&]/g, c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]))}</div>`).join('');
+}
+function toggleQA(){
+  const qa = document.getElementById('qa');
+  qa.style.display = qa.style.display === 'flex' ? 'none' : 'flex';
+}
+
+function resetBoard(){
+  // 지금까지 쌓인 행 전부 무시 — 시트 데이터는 그대로, 화면만 새 판
+  ignoreRows = lastRowCount;
+  if (sheetId) localStorage.setItem(LS_KEY + '_ignore_' + sheetId, String(ignoreRows));
+  counts.clear(); questions = [];
+  document.getElementById('cloud').innerHTML = '<div class="empty">첫 단어를 기다리는 중…</div>';
+  document.getElementById('count').textContent = '0';
+  renderQA();
+}
+document.addEventListener('keydown', e=>{ if (e.key==='q'||e.key==='Q'||e.key==='ㅂ') toggleQA(); });
+
+/* ── QR ── */
+function bigQR(){
+  if (!formUrl) return;
+  const big = document.getElementById('qrbig');
+  const box = document.getElementById('qrbigBox');
+  box.innerHTML = '';
+  if (typeof QRCode !== 'undefined'){
+    const side = Math.min(innerHeight, innerWidth) * 0.62;
+    new QRCode(box, { text:formUrl, width:side, height:side, correctLevel:QRCode.CorrectLevel.M });
+  }
+  document.getElementById('qrbigUrl').textContent = formUrl.replace(/^https?:\/\//,'');
+  big.style.display = 'flex';
+}
+
+function drawQR(url){
+  // 빔프로젝터에서 스캔 실패 대비: 짧은 주소는 항상 노출
+  const f = document.getElementById('fallbackUrl');
+  f.style.display = 'block'; f.textContent = url.replace(/^https?:\/\//,'');
+  const box = document.getElementById('qr');
+  box.innerHTML = '';
+  if (typeof QRCode !== 'undefined'){
+    new QRCode(box, { text:url, width:220, height:220, correctLevel:QRCode.CorrectLevel.M });
+  } else {
+    // CDN 실패 시: 이미지 API → 그것도 안 되면 주소 텍스트
+    const img = new Image();
+    img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(url);
+    img.onerror = ()=>{ box.closest('.qrcard').style.display='none';
+      const f = document.getElementById('fallbackUrl'); f.style.display='block'; f.textContent = url; };
+    box.appendChild(img);
+  }
+}
+
+/* ── 시작 흐름 ── */
+function start(){
+  const f = document.getElementById('formUrl').value.trim();
+  const s = document.getElementById('sheetUrl').value.trim();
+  const m = s.match(/\/d\/([a-zA-Z0-9-_]+)/);
+  const err = document.getElementById('err');
+  if (!f){ err.textContent = '① 구글폼 링크를 붙여넣어 주세요.'; return; }
+  if (!m){ err.textContent = '② 시트 링크에서 문서 ID를 못 찾았어요 — /d/…/ 부분이 있는 전체 링크를 붙여넣어 주세요.'; return; }
+  formUrl = f; sheetId = m[1];
+  localStorage.setItem(LS_KEY, JSON.stringify({f, s}));
+  launch();
+}
+
+function launch(){
+  document.getElementById('setup').style.display = 'none';
+  ignoreRows = parseInt(localStorage.getItem(LS_KEY + '_ignore_' + sheetId) || '0', 10);
+  drawQR(formUrl);
+  poll();
+  timer = setInterval(poll, 4000);
+}
+
+/* ── 데모 모드 ── */
+const DEMO_WORDS = ['복원','온도','수분','곡선','기다림','진단','과학','뜸들이기','밸런스','텐션',
+                    '온도','수분','복원','진단','복원','인내심','물결','수분','복원','온도','디지털','곡선'];
+const DEMO_QS = ['매직 했는데 손님이 더 부스스해졌다고 해요','연화 언제 끝난 건지 아직도 모르겠어요',
+                 '같은 온도인데 왜 어떤 머리는 타요?','블리치한 머리도 열펌 되나요?'];
+function startDemo(){
+  demo = true;
+  document.getElementById('setup').style.display = 'none';
+  drawQR('https://forms.gle/demo');
+  let i = 0;
+  const t = setInterval(()=>{
+    if (i >= DEMO_WORDS.length){ clearInterval(t); return; }
+    if (i < DEMO_QS.length){ questions.push(DEMO_QS[i]); renderQA(); }
+    addAnswer(DEMO_WORDS[i++]); renderCloud();
+  }, 700);
+  if (new URLSearchParams(location.search).get('qa')) setTimeout(toggleQA, 3500);
+}
+
+/* ── 초기화 ── */
+(function init(){
+  const saved = localStorage.getItem(LS_KEY);
+  if (saved){
+    try{ const {f, s} = JSON.parse(saved);
+      document.getElementById('formUrl').value = f || '';
+      document.getElementById('sheetUrl').value = s || '';
+    }catch(e){}
+  }
+  if (new URLSearchParams(location.search).get('demo')) startDemo();
+})();
+</script>
+</body>
+</html>
