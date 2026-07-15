@@ -83,18 +83,19 @@
     ],
     "dim_opacity": 0.0,
     "subtitle_style": {
-      "font": "NanumSquareRound ExtraBold",
-      "size": 88,
-      "margin_v": 560,
+      "font": "Kyobo Handwriting 2019",
+      "size": 78,
+      "margin_v": 0,
       "border_style": 4,
       "primary_color": "&H00FFFFFF",
       "box_color": "000000",
       "box_opacity": 100,
-      "outline": 3
+      "outline": 3,
+      "alignment": 5
     },
     "title_style": {
-      "font": "NanumSquareRound ExtraBold",
-      "size": 84,
+      "font": "Kyobo Handwriting 2019",
+      "size": 96,
       "margin_v": 150,
       "border_style": 1,
       "primary_color": "&H0000D7FF",
