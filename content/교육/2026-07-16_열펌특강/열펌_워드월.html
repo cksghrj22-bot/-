@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>열펌이란 ______다 — 실시간 워드월</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--
+  ══════════════════════════════════════════════════════════════
+  열펌의 모든 것 (7/16 특강) — QR 실시간 워드월
+  사용법: 이 파일을 현장 노트북 크롬에서 더블클릭으로 열기 → 첫 화면 안내대로
+  구글폼 링크 + 응답 시트 링크 붙여넣기 → 시작. F11로 전체화면.
+  미리보기: 주소 뒤에 ?demo=1 을 붙이면 가짜 답변으로 데모가 돈다.
+  ══════════════════════════════════════════════════════════════
+-->
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#101014; color:#fff; font-family:'Noto Sans KR',sans-serif; height:100vh; overflow:hidden; }
+  .pen { font-family:'Nanum Pen Script',cursive; }
+
+  header { text-align:center; padding:28px 0 8px; }
+  header h1 { font-family:'Nanum Pen Script',cursive; font-size:72px; color:#FFD700; line-height:1.1; }
+  header p  { color:#9aa; font-size:20px; margin-top:4px; }
+
+  .stage { display:flex; height:calc(100vh - 140px); }
+
+  .side { width:300px; min-width:300px; padding:24px; display:flex; flex-direction:column; align-items:center; gap:14px; }
+  .qrcard { background:#fff; border-radius:18px; padding:18px; }
+  .qrcard #qr img, .qrcard #qr canvas { display:block; }
+  .side .hint { color:#cfd3dc; font-size:18px; text-align:center; line-height:1.5; }
+  .side .hint b { color:#FFD700; }
+  .count { font-family:'Nanum Pen Script',cursive; font-size:44px; color:#7ee787; }
+  .fallback-url { color:#FFD700; font-size:16px; word-break:break-all; text-align:center; display:none; }
+
+  .cloud { flex:1; display:flex; flex-wrap:wrap; align-content:center; justify-content:center;
+           gap:6px 22px; padding:10px 40px; overflow:hidden; }
+  .word { font-family:'Nanum Pen Script',cursive; line-height:1.05; cursor:pointer; white-space:nowrap;
+          animation:pop .5s ease; transition:transform .2s; }
+  .word:hover { transform:scale(1.12); }
+  .word small { font-size:.45em; opacity:.55; margin-left:4px; }
+  @keyframes pop { 0%{transform:scale(0); opacity:0;} 70%{transform:scale(1.25);} 100%{transform:scale(1); opacity:1;} }
+
+  .empty { color:#556; font-size:30px; font-family:'Nanum Pen Script',cursive; }
+
+  /* 단어 스포트라이트 (클릭 → 대화용 확대) */
+  #spot { position:fixed; inset:0; background:rgba(8,8,12,.96); display:none;
+          flex-direction:column; align-items:center; justify-content:center; gap:20px; z-index:40; }
+  #spot .big { font-family:'Nanum Pen Script',cursive; font-size:200px; color:#FFD700; text-align:center; line-height:1; }
+  #spot .sub { color:#9aa; font-size:26px; }
+  #spot .ask { color:#fff; font-size:34px; font-family:'Nanum Pen Script',cursive; }
+
+  /* 설정 오버레이 */
+  #setup { position:fixed; inset:0; background:#101014; z-index:50; display:flex; align-items:center; justify-content:center; }
+  .panel { width:min(680px, 92vw); background:#1a1a22; border:1px solid #2c2c38; border-radius:20px; padding:36px; }
+  .panel h2 { font-family:'Nanum Pen Script',cursive; font-size:44px; color:#FFD700; margin-bottom:6px; }
+  .panel ol { color:#cfd3dc; font-size:16px; line-height:1.7; margin:14px 0 22px 20px; }
+  .panel ol b { color:#fff; }
+  .panel label { display:block; color:#9aa; font-size:14px; margin:14px 0 6px; }
+  .panel input { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #3a3a48;
+                 background:#101018; color:#fff; font-size:15px; }
+  .panel .row { display:flex; gap:12px; margin-top:26px; }
+  .panel button { flex:1; padding:14px; border:none; border-radius:12px; font-size:18px; font-weight:700; cursor:pointer; }
+  #startBtn { background:#FFD700; color:#111; }
+  #demoBtn  { background:#2c2c38; color:#cfd3dc; }
+  .err { color:#ff7b72; font-size:14px; margin-top:10px; min-height:18px; }
+</style>
+</head>
+<body>
+
+<div id="setup">
+  <div class="panel">
+    <h2>열펌 워드월 — 시작 전 2분 설정</h2>
+    <ol>
+      <li><b>forms.google.com</b> → 새 폼 → 질문 딱 1개: <b>“열펌이란 ______다. 한 단어로!”</b> (단답형)</li>
+      <li>폼의 <b>응답 탭 → 시트 아이콘</b> → 응답 스프레드시트 만들기</li>
+      <li>그 시트에서 <b>공유 → “링크가 있는 모든 사용자: 뷰어”</b>로 변경 (이게 핵심!)</li>
+      <li>아래에 폼 <b>보내기 링크</b>와 <b>시트 링크</b>를 붙여넣고 시작</li>
+    </ol>
+    <label>① 구글폼 링크 (학생들이 QR로 열 주소)</label>
+    <input id="formUrl" placeholder="https://forms.gle/... 또는 https://docs.google.com/forms/...">
+    <label>② 응답 스프레드시트 링크</label>
+    <input id="sheetUrl" placeholder="https://docs.google.com/spreadsheets/d/.../edit">
+    <div class="err" id="err"></div>
+    <div class="row">
+      <button id="startBtn" onclick="start()">▶ 워드월 시작</button>
+      <button id="demoBtn" onclick="startDemo()">데모 보기</button>
+    </div>
+  </div>
+</div>
+
+<header>
+  <h1>열펌이란 ______다</h1>
+  <p>폰으로 QR 찍고, 떠오르는 단어 하나만 보내주세요</p>
+</header>
+
+<div class="stage">
+  <div class="side">
+    <div class="qrcard"><div id="qr"></div></div>
+    <div class="fallback-url" id="fallbackUrl"></div>
+    <div class="hint">📱 카메라로 QR을 찍으면<br>바로 답할 수 있어요<br><b>익명 · 10초</b></div>
+    <div class="count"><span id="count">0</span>명 참여</div>
+  </div>
+  <div class="cloud" id="cloud"><div class="empty">첫 단어를 기다리는 중…</div></div>
+</div>
+
+<div id="spot" onclick="this.style.display='none'">
+  <div class="big" id="spotWord"></div>
+  <div class="sub" id="spotCount"></div>
+  <div class="ask">— 이렇게 쓴 분, 왜 그렇게 느꼈는지 들려주세요</div>
+</div>
+
+<script>
+'use strict';
+const LS_KEY = 'yeolpum_wordwall';
+const COLORS = ['#FFD700','#7ee787','#79c0ff','#ff9ecb','#ffa657','#d2a8ff','#a5d6ff','#f2cc60'];
+let sheetId = null, formUrl = null, demo = false, timer = null;
+const counts = new Map();   // 정규화 단어 -> {n, label}
+
+function normalize(s){
+  s = String(s||'').trim().replace(/\s+/g,' ');
+  s = s.replace(/[.!?~…]+$/,'');
+  if (s.length > 20) s = s.slice(0,20) + '…';
+  return s;
+}
+
+function addAnswer(raw){
+  const label = normalize(raw);
+  if (!label) return;
+  const key = label.toLowerCase();
+  const cur = counts.get(key);
+  if (cur) cur.n++; else counts.set(key, {n:1, label});
+}
+
+function renderCloud(){
+  const cloud = document.getElementById('cloud');
+  const total = [...counts.values()].reduce((a,b)=>a+b.n,0);
+  document.getElementById('count').textContent = total;
+  if (!counts.size){ cloud.innerHTML = '<div class="empty">첫 단어를 기다리는 중…</div>'; return; }
+
+  const max = Math.max(...[...counts.values()].map(v=>v.n));
+  const entries = [...counts.entries()];
+  // 자리 요동을 줄이려고 키 해시로 순서 고정
+  entries.sort((a,b)=> hash(a[0]) - hash(b[0]));
+
+  const seen = new Set();
+  for (const [key, v] of entries){
+    seen.add(key);
+    let el = cloud.querySelector(`[data-key="${CSS.escape(key)}"]`);
+    const size = 30 + (v.n / max) * 90;             // 30px ~ 120px
+    const html = v.label + (v.n > 1 ? `<small>×${v.n}</small>` : '');
+    if (!el){
+      el = document.createElement('div');
+      el.className = 'word';
+      el.dataset.key = key;
+      el.style.color = COLORS[hash(key) % COLORS.length];
+      el.onclick = () => spotlight(v.label, counts.get(key).n);
+      cloud.querySelector('.empty')?.remove();
+      // 고정 순서 위치에 삽입
+      const after = [...cloud.children].find(c => hash(c.dataset.key) > hash(key));
+      cloud.insertBefore(el, after || null);
+    }
+    if (el.innerHTML !== html) el.innerHTML = html;
+    el.style.fontSize = size + 'px';
+  }
+  [...cloud.querySelectorAll('.word')].forEach(el=>{ if(!seen.has(el.dataset.key)) el.remove(); });
+}
+
+function hash(s){ let h=0; for(const c of s) h=(h*31 + c.charCodeAt(0))>>>0; return h; }
+
+function spotlight(word, n){
+  document.getElementById('spotWord').textContent = word;
+  document.getElementById('spotCount').textContent = n + '명이 이 단어를 골랐습니다';
+  document.getElementById('spot').style.display = 'flex';
+}
+
+/* ── 구글시트 폴링 (JSONP — 공유설정 '링크 뷰어'면 동작) ── */
+window.handleGviz = function(resp){
+  try{
+    counts.clear();
+    (resp.table.rows||[]).forEach(r=>{
+      // 1열=타임스탬프, 2열=첫 질문 답
+      const cell = r.c && r.c[1];
+      if (cell && cell.v != null) addAnswer(cell.v);
+    });
+    renderCloud();
+  }catch(e){ console.warn('gviz parse', e); }
+};
+
+function poll(){
+  if (demo || !sheetId) return;
+  const old = document.getElementById('gviz-tag'); old?.remove();
+  const s = document.createElement('script');
+  s.id = 'gviz-tag';
+  s.src = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json;responseHandler:handleGviz&headers=0&_=${Date.now()}`;
+  s.onerror = ()=> console.warn('시트 접근 실패 — 공유 설정(링크 뷰어) 확인');
+  document.body.appendChild(s);
+}
+
+/* ── QR ── */
+function drawQR(url){
+  const box = document.getElementById('qr');
+  box.innerHTML = '';
+  if (typeof QRCode !== 'undefined'){
+    new QRCode(box, { text:url, width:220, height:220, correctLevel:QRCode.CorrectLevel.M });
+  } else {
+    // CDN 실패 시: 이미지 API → 그것도 안 되면 주소 텍스트
+    const img = new Image();
+    img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(url);
+    img.onerror = ()=>{ box.closest('.qrcard').style.display='none';
+      const f = document.getElementById('fallbackUrl'); f.style.display='block'; f.textContent = url; };
+    box.appendChild(img);
+  }
+}
+
+/* ── 시작 흐름 ── */
+function start(){
+  const f = document.getElementById('formUrl').value.trim();
+  const s = document.getElementById('sheetUrl').value.trim();
+  const m = s.match(/\/d\/([a-zA-Z0-9-_]+)/);
+  const err = document.getElementById('err');
+  if (!f){ err.textContent = '① 구글폼 링크를 붙여넣어 주세요.'; return; }
+  if (!m){ err.textContent = '② 시트 링크에서 문서 ID를 못 찾았어요 — /d/…/ 부분이 있는 전체 링크를 붙여넣어 주세요.'; return; }
+  formUrl = f; sheetId = m[1];
+  localStorage.setItem(LS_KEY, JSON.stringify({f, s}));
+  launch();
+}
+
+function launch(){
+  document.getElementById('setup').style.display = 'none';
+  drawQR(formUrl);
+  poll();
+  timer = setInterval(poll, 4000);
+}
+
+/* ── 데모 모드 ── */
+const DEMO_WORDS = ['복원','온도','수분','곡선','기다림','진단','과학','뜸들이기','밸런스','텐션',
+                    '온도','수분','복원','진단','복원','인내심','물결','수분','복원','온도','디지털','곡선'];
+function startDemo(){
+  demo = true;
+  document.getElementById('setup').style.display = 'none';
+  drawQR('https://forms.gle/demo');
+  let i = 0;
+  const t = setInterval(()=>{
+    if (i >= DEMO_WORDS.length){ clearInterval(t); return; }
+    addAnswer(DEMO_WORDS[i++]); renderCloud();
+  }, 700);
+}
+
+/* ── 초기화 ── */
+(function init(){
+  const saved = localStorage.getItem(LS_KEY);
+  if (saved){
+    try{ const {f, s} = JSON.parse(saved);
+      document.getElementById('formUrl').value = f || '';
+      document.getElementById('sheetUrl').value = s || '';
+    }catch(e){}
+  }
+  if (new URLSearchParams(location.search).get('demo')) startDemo();
+})();
+</script>
+</body>
+</html>
