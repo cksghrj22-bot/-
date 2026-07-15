@@ -274,6 +274,32 @@ def _compress_and_tempo(raw: Path, out: Path, cuts: list[tuple[float, float]], s
     ], check=True)
 
 
+def _assemble_lines_even(
+    raw: Path, out: Path, raw_spans: list[tuple[float, float]],
+    speed: float, line_gap: float = 0.18, pad: float = 0.03,
+) -> None:
+    """줄별 speech 구간을 잘라 각 줄 뒤에 line_gap 무음을 붙여 concat → atempo → out.
+
+    모든 줄 사이 간격이 line_gap으로 균일해진다 (띄어쓰기 일정).
+    """
+    parts, labels = [], []
+    for i, (s, e) in enumerate(raw_spans):
+        a = max(0.0, s - pad)
+        b = e + pad
+        parts.append(
+            f"[0:a]atrim=start={a:.3f}:end={b:.3f},asetpts=PTS-STARTPTS,"
+            f"apad=pad_dur={line_gap:.3f}[L{i}]"
+        )
+        labels.append(f"[L{i}]")
+    parts.append(f"{''.join(labels)}concat=n={len(raw_spans)}:v=0:a=1[cat]")
+    parts.append(f"[cat]atempo={speed}[out]")
+    subprocess.run([
+        "ffmpeg", "-y", "-loglevel", "error", "-i", str(raw),
+        "-filter_complex", ";".join(parts), "-map", "[out]",
+        "-c:a", "aac", "-b:a", "192k", str(out),
+    ], check=True)
+
+
 def build_narration_single(
     lines,
     creds: dict,
@@ -314,15 +340,28 @@ def build_narration_single(
         resp_align = resp["alignment"]
         meta.write_text(json.dumps(resp_align, ensure_ascii=False), encoding="utf-8")
 
-    char_starts = resp_align["character_start_times_seconds"]
-    char_ends = resp_align["character_end_times_seconds"]
-    cuts = plan_gap_cuts(resp_align["characters"], char_starts, char_ends, keep=keep, threshold=threshold)
-    rs = [_remap_time(t, cuts) for t in char_starts]
-    re = [_remap_time(t, cuts) for t in char_ends]
-
-    spans = align_line_spans(texts, resp_align["characters"], rs, re, speed)
+    # 줄별 speech 구간을 뽑아 '일정한 쉼'으로 다시 이어붙인다.
+    # 긴 무음만 자르면(예전 방식) 일레븐랩스가 두 줄을 붙여 읽은 곳은 띄어쓰기가 사라진다.
+    # 매 줄 사이에 line_gap을 강제해 줄마다 균일하게 띄운다 (뚝뚝도, 붙음도 방지).
+    raw_spans = align_line_spans(
+        texts, resp_align["characters"],
+        resp_align["character_start_times_seconds"], resp_align["character_end_times_seconds"],
+        speed=1.0,  # raw 초 (배속 전) — 오디오에서 그대로 자르려면 원본 타임라인이어야 한다
+    )
+    line_gap = float(creds.get("line_gap", 0.18))
+    pad = float(creds.get("line_pad", 0.03))
     out = Path(out_path)
-    _compress_and_tempo(raw, out, cuts, speed)
+    _assemble_lines_even(raw, out, raw_spans, speed, line_gap=line_gap, pad=pad)
+
+    # 자막 타이밍: 조립된 오디오와 동일한 순서로 누적 계산 (배속 반영)
+    spans: list[tuple[float, float]] = []
+    cum = 0.0
+    for s, e in raw_spans:
+        a = max(0.0, s - pad)
+        seg = (e + pad) - a
+        start_f = cum / speed
+        cum += seg + line_gap
+        spans.append((round(start_f, 3), round(cum / speed, 3)))
     return out, spans
 
 
