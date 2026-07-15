@@ -133,23 +133,39 @@ def _style_line(name: str, st: dict) -> str:
     )
 
 
-def fit_title_size(text: str, base_size: int, width: int, margin: int = 70) -> int:
-    """제목이 화면 폭을 넘지 않도록 폰트 크기를 자동으로 줄인다 (짧으면 그대로).
+def _line_units(s: str) -> float:
+    """줄의 대략적 폭(폰트크기 1당). 전각(한글)≈1.0·공백≈0.4·그 외≈0.55."""
+    u = 0.0
+    for ch in s:
+        if ch == " ":
+            u += 0.4
+        elif ord(ch) > 0x2E00:
+            u += 1.0
+        else:
+            u += 0.55
+    return u
 
-    전각(한글 등)≈1.0·공백≈0.4·그 외(숫자·영문·부호)≈0.55 폭으로 추정.
+
+def fit_title(text: str, base_size: int, width: int, margin: int = 70, min_two_line: int = 84) -> tuple[int, str]:
+    """제목이 화면을 넘지 않게 (크기, 표시텍스트) 반환. 길면 2줄로 감싸 크기를 지킨다.
+
+    ① 한 줄에 들어가면 그대로. ② 안 들어가면 가운데 공백에서 2줄로 나눠 크기 확보.
+    ③ 그래도 작으면 1줄로 축소. 어떤 경우에도 폭을 넘지 않는다 (오버플로 방지).
     """
     usable = width - 2 * margin
-    units = 0.0
-    for ch in text:
-        if ch == " ":
-            units += 0.4
-        elif ord(ch) > 0x2E00:
-            units += 1.0
-        else:
-            units += 0.55
-    if units <= 0:
-        return base_size
-    return max(40, min(base_size, int(usable / units)))
+    u = _line_units(text)
+    if u <= 0 or base_size * u <= usable:
+        return base_size, text
+    spaces = [i for i, ch in enumerate(text) if ch == " "]
+    if spaces:
+        mid = len(text) / 2
+        bi = min(spaces, key=lambda i: abs(i - mid))
+        l1, l2 = text[:bi], text[bi + 1:]
+        longest = max(_line_units(l1), _line_units(l2))
+        size2 = min(base_size, int(usable / longest)) if longest > 0 else base_size
+        if size2 >= min_two_line:
+            return size2, l1 + "\\N" + l2
+    return max(40, int(usable / u)), text
 
 
 def to_ass(
@@ -172,9 +188,10 @@ def to_ass(
         tst.update(title_style)
     if style and "font" in style and not (title_style and "font" in title_style):
         tst["font"] = style["font"]  # 본문 폰트를 지정하면 제목도 따라간다
+    title_text = title
     if title:
-        # 제목이 화면 폭을 넘지 않게 자동 축소 (짧으면 설정 크기 그대로) — 오버플로 방지
-        tst["size"] = fit_title_size(title, int(tst.get("size", 96)), width)
+        # 제목이 화면을 넘지 않게: 길면 2줄로 감싸 크기 유지, 그래도 길면 축소 (오버플로 방지)
+        tst["size"], title_text = fit_title(title, int(tst.get("size", 96)), width)
 
     header = f"""[Script Info]
 ScriptType: v4.00+
@@ -197,5 +214,5 @@ Format: Layer, Start, End, Style, Text
         events.append(f"Dialogue: 0,{_ass_time(line.start)},{_ass_time(line.end)},Default,{text}")
     if title:
         end = max((l.end or 0) for l in lines) if lines else 60.0
-        events.insert(0, f"Dialogue: 1,{_ass_time(0)},{_ass_time(end)},Title,{title.replace(chr(10), ' ')}")
+        events.insert(0, f"Dialogue: 1,{_ass_time(0)},{_ass_time(end)},Title,{title_text.replace(chr(10), ' ')}")
     return header + "\n".join(events) + "\n"
