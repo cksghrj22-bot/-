@@ -15,54 +15,66 @@
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
+  /* 배민주아 (가시성 우선 — 2026-07-15 자막 폰트 결정과 통일). 로드 실패 시 나눔펜 대체 */
+  @font-face {
+    font-family: 'BMJUA';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff') format('woff');
+    font-weight: normal; font-display: swap;
+  }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { background:#101014; color:#fff; font-family:'Noto Sans KR',sans-serif; height:100vh; overflow:hidden; }
-  .pen { font-family:'Nanum Pen Script',cursive; }
+  .pen { font-family:'BMJUA','Nanum Pen Script',cursive; }
 
   header { text-align:center; padding:28px 0 8px; }
-  header h1 { font-family:'Nanum Pen Script',cursive; font-size:72px; color:#FFD700; line-height:1.1; }
+  header h1 { font-family:'BMJUA','Nanum Pen Script',cursive; font-size:72px; color:#FFD700; line-height:1.1; }
   header p  { color:#9aa; font-size:20px; margin-top:4px; }
 
   .stage { display:flex; height:calc(100vh - 140px); }
 
   .side { width:300px; min-width:300px; padding:24px; display:flex; flex-direction:column; align-items:center; gap:14px; }
-  .qrcard { background:#fff; border-radius:18px; padding:18px; }
+  .qrcard { background:#fff; border-radius:18px; padding:18px; cursor:pointer; }
   .qrcard #qr img, .qrcard #qr canvas { display:block; }
+
+  /* QR 확대 (빔프로젝터용 — 카드 클릭) */
+  #qrbig { position:fixed; inset:0; background:#fff; z-index:60; display:none;
+           flex-direction:column; align-items:center; justify-content:center; gap:24px; cursor:pointer; }
+  #qrbig .url { color:#111; font-size:44px; font-weight:800; font-family:'BMJUA',sans-serif; word-break:break-all; text-align:center; padding:0 30px; }
+  #qrbig .close { color:#888; font-size:18px; }
   .side .hint { color:#cfd3dc; font-size:18px; text-align:center; line-height:1.5; }
   .side .hint b { color:#FFD700; }
-  .count { font-family:'Nanum Pen Script',cursive; font-size:44px; color:#7ee787; }
+  .count { font-family:'BMJUA','Nanum Pen Script',cursive; font-size:44px; color:#7ee787; }
   .fallback-url { color:#FFD700; font-size:16px; word-break:break-all; text-align:center; display:none; }
 
   .cloud { flex:1; display:flex; flex-wrap:wrap; align-content:center; justify-content:center;
            gap:6px 22px; padding:10px 40px; overflow:hidden; }
-  .word { font-family:'Nanum Pen Script',cursive; line-height:1.05; cursor:pointer; white-space:nowrap;
+  .word { font-family:'BMJUA','Nanum Pen Script',cursive; line-height:1.05; cursor:pointer; white-space:nowrap;
           animation:pop .5s ease; transition:transform .2s; }
   .word:hover { transform:scale(1.12); }
   .word small { font-size:.45em; opacity:.55; margin-left:4px; }
   @keyframes pop { 0%{transform:scale(0); opacity:0;} 70%{transform:scale(1.25);} 100%{transform:scale(1); opacity:1;} }
 
-  .empty { color:#556; font-size:30px; font-family:'Nanum Pen Script',cursive; }
+  .empty { color:#556; font-size:30px; font-family:'BMJUA','Nanum Pen Script',cursive; }
 
   /* 단어 스포트라이트 (클릭 → 대화용 확대) */
   #spot { position:fixed; inset:0; background:rgba(8,8,12,.96); display:none;
           flex-direction:column; align-items:center; justify-content:center; gap:20px; z-index:40; }
-  #spot .big { font-family:'Nanum Pen Script',cursive; font-size:200px; color:#FFD700; text-align:center; line-height:1; }
+  #spot .big { font-family:'BMJUA','Nanum Pen Script',cursive; font-size:200px; color:#FFD700; text-align:center; line-height:1; }
   #spot .sub { color:#9aa; font-size:26px; }
-  #spot .ask { color:#fff; font-size:34px; font-family:'Nanum Pen Script',cursive; }
+  #spot .ask { color:#fff; font-size:34px; font-family:'BMJUA','Nanum Pen Script',cursive; }
 
   /* 질문 보기 (Q 키 또는 참여 수 클릭) */
   #qa { position:fixed; inset:0; background:#101014; z-index:30; display:none; flex-direction:column; padding:40px 60px; }
-  #qa h2 { font-family:'Nanum Pen Script',cursive; font-size:56px; color:#FFD700; margin-bottom:18px; }
+  #qa h2 { font-family:'BMJUA','Nanum Pen Script',cursive; font-size:56px; color:#FFD700; margin-bottom:18px; }
   #qa .list { overflow-y:auto; display:flex; flex-direction:column; gap:14px; }
-  #qa .q { font-family:'Nanum Pen Script',cursive; font-size:40px; color:#e8eaf0; line-height:1.25;
+  #qa .q { font-family:'BMJUA','Nanum Pen Script',cursive; font-size:40px; color:#e8eaf0; line-height:1.25;
            border-left:6px solid #FFD700; padding-left:18px; animation:pop .4s ease; }
-  #qa .none { color:#556; font-size:30px; font-family:'Nanum Pen Script',cursive; }
+  #qa .none { color:#556; font-size:30px; font-family:'BMJUA','Nanum Pen Script',cursive; }
   #qa .tip { color:#667; font-size:15px; margin-top:14px; }
 
   /* 설정 오버레이 */
   #setup { position:fixed; inset:0; background:#101014; z-index:50; display:flex; align-items:center; justify-content:center; }
   .panel { width:min(680px, 92vw); background:#1a1a22; border:1px solid #2c2c38; border-radius:20px; padding:36px; }
-  .panel h2 { font-family:'Nanum Pen Script',cursive; font-size:44px; color:#FFD700; margin-bottom:6px; }
+  .panel h2 { font-family:'BMJUA','Nanum Pen Script',cursive; font-size:44px; color:#FFD700; margin-bottom:6px; }
   .panel ol { color:#cfd3dc; font-size:16px; line-height:1.7; margin:14px 0 22px 20px; }
   .panel ol b { color:#fff; }
   .panel label { display:block; color:#9aa; font-size:14px; margin:14px 0 6px; }
@@ -105,13 +117,19 @@
 
 <div class="stage">
   <div class="side">
-    <div class="qrcard"><div id="qr"></div></div>
+    <div class="qrcard" onclick="bigQR()" title="클릭하면 전체화면 QR (빔프로젝터용)"><div id="qr"></div></div>
     <div class="fallback-url" id="fallbackUrl"></div>
     <div class="hint">📱 카메라로 QR을 찍으면<br>바로 답할 수 있어요<br><b>익명 · 10초</b></div>
     <div class="count" onclick="toggleQA()" style="cursor:pointer" title="클릭하면 궁금한 것 보기"><span id="count">0</span>명 참여</div>
     <div class="hint" style="font-size:14px;color:#667">Q 키 / 참여 수 클릭 = 궁금한 것 보기</div>
   </div>
   <div class="cloud" id="cloud"><div class="empty">첫 단어를 기다리는 중…</div></div>
+</div>
+
+<div id="qrbig" onclick="this.style.display='none'">
+  <div id="qrbigBox"></div>
+  <div class="url" id="qrbigUrl"></div>
+  <div class="close">폰으로 다 찍었으면 화면 아무 데나 클릭</div>
 </div>
 
 <div id="qa">
@@ -230,7 +248,23 @@ function toggleQA(){
 document.addEventListener('keydown', e=>{ if (e.key==='q'||e.key==='Q'||e.key==='ㅂ') toggleQA(); });
 
 /* ── QR ── */
+function bigQR(){
+  if (!formUrl) return;
+  const big = document.getElementById('qrbig');
+  const box = document.getElementById('qrbigBox');
+  box.innerHTML = '';
+  if (typeof QRCode !== 'undefined'){
+    const side = Math.min(innerHeight, innerWidth) * 0.62;
+    new QRCode(box, { text:formUrl, width:side, height:side, correctLevel:QRCode.CorrectLevel.M });
+  }
+  document.getElementById('qrbigUrl').textContent = formUrl.replace(/^https?:\/\//,'');
+  big.style.display = 'flex';
+}
+
 function drawQR(url){
+  // 빔프로젝터에서 스캔 실패 대비: 짧은 주소는 항상 노출
+  const f = document.getElementById('fallbackUrl');
+  f.style.display = 'block'; f.textContent = url.replace(/^https?:\/\//,'');
   const box = document.getElementById('qr');
   box.innerHTML = '';
   if (typeof QRCode !== 'undefined'){
