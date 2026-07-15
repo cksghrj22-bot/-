@@ -12,21 +12,17 @@
   미리보기: 주소 뒤에 ?demo=1 을 붙이면 가짜 답변으로 데모가 돈다.
   ══════════════════════════════════════════════════════════════
 -->
-<link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
-  /* 배민주아 (가시성 우선 — 2026-07-15 자막 폰트 결정과 통일). 로드 실패 시 나눔펜 대체 */
-  @font-face {
-    font-family: 'BMJUA';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff') format('woff');
-    font-weight: normal; font-display: swap;
-  }
+  /* 프리텐다드 — 가시성 + 고급감 (2026-07-15 이찬호: "장난스럽지 않게") */
   * { margin:0; padding:0; box-sizing:border-box; }
   body { background:#101014; color:#fff; font-family:'Noto Sans KR',sans-serif; height:100vh; overflow:hidden; }
-  .pen { font-family:'BMJUA','Nanum Pen Script',cursive; }
+  .pen { font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em; }
 
   header { text-align:center; padding:28px 0 8px; }
-  header h1 { font-family:'BMJUA','Nanum Pen Script',cursive; font-size:72px; color:#FFD700; line-height:1.1; }
+  header h1 { font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em; font-size:72px; color:#DFC57E; line-height:1.1; }
   header p  { color:#9aa; font-size:20px; margin-top:4px; }
 
   .stage { display:flex; height:calc(100vh - 140px); }
@@ -38,43 +34,46 @@
   /* QR 확대 (빔프로젝터용 — 카드 클릭) */
   #qrbig { position:fixed; inset:0; background:#fff; z-index:60; display:none;
            flex-direction:column; align-items:center; justify-content:center; gap:24px; cursor:pointer; }
-  #qrbig .url { color:#111; font-size:44px; font-weight:800; font-family:'BMJUA',sans-serif; word-break:break-all; text-align:center; padding:0 30px; }
+  #qrbig .url { color:#111; font-size:44px; font-weight:800; font-family:'Pretendard','Apple SD Gothic Neo',sans-serif; word-break:break-all; text-align:center; padding:0 30px; }
+  .resetbtn { background:#1a1a22; color:#8a8fa0; border:1px solid #2c2c38; border-radius:10px;
+              padding:8px 14px; font-size:13px; cursor:pointer; }
+  .resetbtn:hover { color:#cfd3dc; }
   #qrbig .close { color:#888; font-size:18px; }
   .side .hint { color:#cfd3dc; font-size:18px; text-align:center; line-height:1.5; }
-  .side .hint b { color:#FFD700; }
-  .count { font-family:'BMJUA','Nanum Pen Script',cursive; font-size:44px; color:#7ee787; }
-  .fallback-url { color:#FFD700; font-size:16px; word-break:break-all; text-align:center; display:none; }
+  .side .hint b { color:#DFC57E; }
+  .count { font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em; font-size:44px; color:#DCC389; }
+  .fallback-url { color:#DFC57E; font-size:16px; word-break:break-all; text-align:center; display:none; }
 
   .cloud { flex:1; position:relative; overflow:hidden; }
-  .word { font-family:'BMJUA','Nanum Pen Script',cursive; line-height:1.05; cursor:pointer; white-space:nowrap;
+  .word { font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em; line-height:1.05; cursor:pointer; white-space:nowrap;
           position:absolute; transform:translate(-50%,-50%);
           animation:pop .5s ease; transition:left .7s ease, top .7s ease; }
   .word small { font-size:.45em; opacity:.55; margin-left:4px; }
   @keyframes pop { 0%{opacity:0;} 100%{opacity:1;} }
 
-  .empty { color:#556; font-size:30px; font-family:'BMJUA','Nanum Pen Script',cursive;
+  .empty { color:#556; font-size:30px; font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em;
            position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
 
   /* 단어 스포트라이트 (클릭 → 대화용 확대) */
   #spot { position:fixed; inset:0; background:rgba(8,8,12,.96); display:none;
           flex-direction:column; align-items:center; justify-content:center; gap:20px; z-index:40; }
-  #spot .big { font-family:'BMJUA','Nanum Pen Script',cursive; font-size:200px; color:#FFD700; text-align:center; line-height:1; }
+  #spot .big { font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em; font-size:200px; color:#DFC57E; text-align:center; line-height:1; }
   #spot .sub { color:#9aa; font-size:26px; }
-  #spot .ask { color:#fff; font-size:34px; font-family:'BMJUA','Nanum Pen Script',cursive; }
+  #spot .ask { color:#fff; font-size:34px; font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em; }
 
   /* 질문 보기 (Q 키 또는 참여 수 클릭) */
   #qa { position:fixed; inset:0; background:#101014; z-index:30; display:none; flex-direction:column; padding:40px 60px; }
-  #qa h2 { font-family:'BMJUA','Nanum Pen Script',cursive; font-size:56px; color:#FFD700; margin-bottom:18px; }
+  #qa h2 { font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em; font-size:56px; color:#DFC57E; margin-bottom:18px; }
   #qa .list { overflow-y:auto; display:flex; flex-direction:column; gap:14px; }
-  #qa .q { font-family:'BMJUA','Nanum Pen Script',cursive; font-size:40px; color:#e8eaf0; line-height:1.25;
-           border-left:6px solid #FFD700; padding-left:18px; animation:pop .4s ease; }
-  #qa .none { color:#556; font-size:30px; font-family:'BMJUA','Nanum Pen Script',cursive; }
+  #qa .q { font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em; font-size:40px; color:#e8eaf0; line-height:1.25;
+           border-left:6px solid #DFC57E; padding-left:18px; animation:pop .4s ease; }
+  #qa .none { color:#556; font-size:30px; font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em; }
   #qa .tip { color:#667; font-size:15px; margin-top:14px; }
 
   /* 설정 오버레이 */
   #setup { position:fixed; inset:0; background:#101014; z-index:50; display:flex; align-items:center; justify-content:center; }
   .panel { width:min(680px, 92vw); background:#1a1a22; border:1px solid #2c2c38; border-radius:20px; padding:36px; }
-  .panel h2 { font-family:'BMJUA','Nanum Pen Script',cursive; font-size:44px; color:#FFD700; margin-bottom:6px; }
+  .panel h2 { font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em; font-size:44px; color:#DFC57E; margin-bottom:6px; }
   .panel ol { color:#cfd3dc; font-size:16px; line-height:1.7; margin:14px 0 22px 20px; }
   .panel ol b { color:#fff; }
   .panel label { display:block; color:#9aa; font-size:14px; margin:14px 0 6px; }
@@ -82,7 +81,7 @@
                  background:#101018; color:#fff; font-size:15px; }
   .panel .row { display:flex; gap:12px; margin-top:26px; }
   .panel button { flex:1; padding:14px; border:none; border-radius:12px; font-size:18px; font-weight:700; cursor:pointer; }
-  #startBtn { background:#FFD700; color:#111; }
+  #startBtn { background:#DFC57E; color:#111; }
   #demoBtn  { background:#2c2c38; color:#cfd3dc; }
   .err { color:#ff7b72; font-size:14px; margin-top:10px; min-height:18px; }
 </style>
@@ -122,6 +121,7 @@
     <div class="hint">📱 카메라로 QR을 찍으면<br>바로 답할 수 있어요<br><b>익명 · 10초</b></div>
     <div class="count" onclick="toggleQA()" style="cursor:pointer" title="클릭하면 궁금한 것 보기"><span id="count">0</span>명 참여</div>
     <div class="hint" style="font-size:14px;color:#667">Q 키 / 참여 수 클릭 = 궁금한 것 보기</div>
+    <button class="resetbtn" onclick="resetBoard()" title="지금까지 쌓인 응답을 무시하고 새 판으로 (시트 원본은 유지)">🧹 판 비우기</button>
   </div>
   <div class="cloud" id="cloud"><div class="empty">첫 단어를 기다리는 중…</div></div>
 </div>
@@ -147,10 +147,12 @@
 <script>
 'use strict';
 const LS_KEY = 'yeolpum_wordwall';
-const COLORS = ['#FFD700','#7ee787','#79c0ff','#ff9ecb','#ffa657','#d2a8ff','#a5d6ff','#f2cc60'];
+const COLORS = ['#F0EBE0','#DCC389','#AEBFCC','#C6BFB2','#C89B7B','#A9BCA4','#E3D9C2','#B9A5C4'];
 let sheetId = null, formUrl = null, demo = false, timer = null;
 const counts = new Map();   // 정규화 단어 -> {n, label}
 let questions = [];         // 2번 문항(궁금한 것) 답변들
+let ignoreRows = 0;         // 판 비우기: 이 행 수까지의 응답은 무시 (테스트 데이터 제외용)
+let lastRowCount = 0;
 
 function normalize(s){
   s = String(s||'').trim().replace(/\s+/g,' ');
@@ -235,7 +237,9 @@ function spotlight(word, n){
 window.handleGviz = function(resp){
   try{
     counts.clear(); questions = [];
-    (resp.table.rows||[]).forEach(r=>{
+    const rows = resp.table.rows || [];
+    lastRowCount = rows.length;
+    rows.slice(ignoreRows).forEach(r=>{
       // 1열=타임스탬프, 2열=단어, 3열=궁금한 것(선택)
       const word = r.c && r.c[1];
       if (word && word.v != null) addAnswer(word.v);
@@ -266,6 +270,16 @@ function renderQA(){
 function toggleQA(){
   const qa = document.getElementById('qa');
   qa.style.display = qa.style.display === 'flex' ? 'none' : 'flex';
+}
+
+function resetBoard(){
+  // 지금까지 쌓인 행 전부 무시 — 시트 데이터는 그대로, 화면만 새 판
+  ignoreRows = lastRowCount;
+  if (sheetId) localStorage.setItem(LS_KEY + '_ignore_' + sheetId, String(ignoreRows));
+  counts.clear(); questions = [];
+  document.getElementById('cloud').innerHTML = '<div class="empty">첫 단어를 기다리는 중…</div>';
+  document.getElementById('count').textContent = '0';
+  renderQA();
 }
 document.addEventListener('keydown', e=>{ if (e.key==='q'||e.key==='Q'||e.key==='ㅂ') toggleQA(); });
 
@@ -316,6 +330,7 @@ function start(){
 
 function launch(){
   document.getElementById('setup').style.display = 'none';
+  ignoreRows = parseInt(localStorage.getItem(LS_KEY + '_ignore_' + sheetId) || '0', 10);
   drawQR(formUrl);
   poll();
   timer = setInterval(poll, 4000);
