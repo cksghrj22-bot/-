@@ -56,7 +56,7 @@
     "_설명": "채널 정본 스타일 (참조: youtube.com/shorts/i6r2YFPA8Qw) — 레터박스 + 손글씨",
     "layout": "letterbox",
     "subtitle_style": {
-      "font": "Gamja Flower",
+      "font": "Kyobo Handwriting 2019",
       "size": 88,
       "margin_v": 560,
       "box_opacity": 80
@@ -70,17 +70,20 @@
       "outline_color": "&H00000000",
       "outline": 4
     },
-    "_폰트": "제목 푸어스토리 · 자막 감자꽃 (2026-07-14 이찬호 선택)",
+    "_폰트": "제목 푸어스토리 · 자막 교보손글씨 2019 (2026-07-15 이찬호: 감자꽃 가독성 낮아 교체)",
     "본진_전담": "클론보이스 TTS(1.1배속)·켄번스 멀티컷·페이드팝은 Creator OS build_reel.py가 정본"
   },
   "style_preset_mind": {
     "_설명": "마인드·철학 라인 (2026-07-14 이찬호 지시) — 풀블리드 영상에 화면 전체 반투명 블랙, 그 위 흰 손글씨. 제목은 노랑으로 상단 어두운 영역에 걸침",
     "layout": "dim",
     "fit": "crop45",
-    "video_area": [1080, 1080],
+    "video_area": [
+      1080,
+      1080
+    ],
     "dim_opacity": 0.45,
     "subtitle_style": {
-      "font": "Gamja Flower",
+      "font": "Kyobo Handwriting 2019",
       "size": 88,
       "margin_v": 560,
       "border_style": 4,
@@ -98,7 +101,7 @@
       "outline_color": "&H00000000",
       "outline": 4
     },
-    "_폰트": "제목 푸어스토리 · 자막 감자꽃 (2026-07-14 이찬호 선택)",
+    "_폰트": "제목 푸어스토리 · 자막 교보손글씨 2019 (2026-07-15 이찬호: 감자꽃 가독성 낮아 교체)",
     "_디자인": "채널 마인드 쇼츠 정본 (IMG_1815 레퍼런스): 노란 제목 최상단 + 어두운 화면 + 흰 글씨는 검은 박스 위"
   }
 }
