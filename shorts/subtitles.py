@@ -56,6 +56,8 @@ def parse_script(text: str) -> Script:
             else:
                 script.tags = [t.strip() for t in value.split(",") if t.strip()]
             continue
+        if line.startswith("#"):
+            continue  # 알 수 없는 주석(# 라인: 등)은 대사가 아니다 — 건너뛴다 (나레이션 오염 방지)
         timed = _TIMED_RE.match(line)
         if timed:
             script.lines.append(

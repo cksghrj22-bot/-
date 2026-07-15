@@ -120,3 +120,45 @@ class TestAlignLineSpans(unittest.TestCase):
         self.assertAlmostEqual(spans[0][1], 0.8 / 1.1)
         self.assertAlmostEqual(spans[1][0], 1.1 / 1.1)
         self.assertAlmostEqual(spans[1][1], 2.2 / 1.1)
+
+
+class TestGapCompression(unittest.TestCase):
+    """뚝뚝 끊김 제거 — 무음 글자의 긴 지속시간을 잘라내는 로직."""
+
+    def test_long_pause_char_is_cut(self):
+        # 공백 글자가 0.8초 늘어짐 → keep(0.14)만 남기고 잘라야
+        chars = list("가 나")  # '가', ' ', '나'
+        starts = [0.0, 0.5, 1.3]
+        ends = [0.5, 1.3, 1.8]  # 공백 dur=0.8
+        cuts = tts.plan_gap_cuts(chars, starts, ends, keep=0.14, threshold=0.30)
+        self.assertEqual(len(cuts), 1)
+        self.assertAlmostEqual(cuts[0][0], 0.5 + 0.14)
+        self.assertAlmostEqual(cuts[0][1], 1.3)
+
+    def test_speech_syllable_never_cut(self):
+        # 말소리 음절이 길어도(0.6초) 자르지 않는다 (공백/부호가 아님)
+        chars = list("가나")
+        starts = [0.0, 0.6]
+        ends = [0.6, 1.2]
+        cuts = tts.plan_gap_cuts(chars, starts, ends, keep=0.14, threshold=0.30)
+        self.assertEqual(cuts, [])
+
+    def test_inter_char_gap_is_cut(self):
+        chars = list("가나")
+        starts = [0.0, 1.0]
+        ends = [0.4, 1.4]  # gap 0.6
+        cuts = tts.plan_gap_cuts(chars, starts, ends, keep=0.14, threshold=0.30)
+        self.assertEqual(len(cuts), 1)
+        self.assertAlmostEqual(cuts[0][0], 0.4 + 0.14)
+        self.assertAlmostEqual(cuts[0][1], 1.0)
+
+    def test_remap_time_shifts_after_cut(self):
+        cuts = [(0.64, 1.3)]  # 0.66초 제거
+        self.assertAlmostEqual(tts._remap_time(0.5, cuts), 0.5)      # 컷 이전 — 그대로
+        self.assertAlmostEqual(tts._remap_time(1.3, cuts), 1.3 - 0.66)  # 컷 이후 — 당겨짐
+        self.assertAlmostEqual(tts._remap_time(2.0, cuts), 2.0 - 0.66)
+
+    def test_remap_monotonic_across_multiple_cuts(self):
+        cuts = [(0.5, 1.0), (2.0, 2.4)]
+        pts = [tts._remap_time(t, cuts) for t in [0.0, 0.5, 1.0, 2.0, 2.4, 3.0]]
+        self.assertEqual(pts, sorted(pts))  # 단조 비감소

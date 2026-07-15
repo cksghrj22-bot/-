@@ -27,6 +27,12 @@ class TestParseScript(unittest.TestCase):
         self.assertEqual(script.lines[1].end, 7.0)
         self.assertIsNone(script.lines[2].start)
 
+    def test_unknown_hash_comment_is_skipped(self):
+        # '# 라인:' 같은 미인식 주석은 대사가 되면 안 된다 (나레이션 오염 방지)
+        script = parse_script("# 라인: 마인드\n# 메모: 아무거나\n00:00-00:03 진짜 대사\n")
+        self.assertEqual(len(script.lines), 1)
+        self.assertEqual(script.lines[0].text, "진짜 대사")
+
 
 class TestTimings(unittest.TestCase):
     def test_assign_untimed_evenly(self):

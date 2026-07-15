@@ -193,6 +193,87 @@ def align_line_spans(
     return spans
 
 
+# 무음을 품는 글자 — 공백/문장부호. 일레븐랩스는 쉼을 '이 글자의 긴 지속시간'으로 인코딩한다
+# (글자 사이 gap이 아님 — 실측 확인). 말소리 음절은 절대 자르지 않는다.
+PAUSE_CHARS = set(" \t\n,.…·!?　")
+
+
+def plan_gap_cuts(
+    characters: list[str],
+    char_starts: list[float],
+    char_ends: list[float],
+    keep: float = 0.14,
+    threshold: float = 0.30,
+) -> list[tuple[float, float]]:
+    """늘어진 무음을 keep초만 남기고 잘라낼 (시작,끝) 구간 목록 (배속 전 raw 초).
+
+    ①공백/문장부호 글자의 긴 지속시간(진짜 원인) ②글자 사이 gap — 둘 다 대상.
+    말소리 음절(공백·부호가 아닌 글자)은 건드리지 않아 목소리가 깎이지 않는다.
+    """
+    cuts: list[tuple[float, float]] = []
+    for i, c in enumerate(characters):
+        # ① 무음 글자의 긴 지속시간
+        if c in PAUSE_CHARS:
+            dur = char_ends[i] - char_starts[i]
+            if dur > threshold:
+                cs = char_starts[i] + keep
+                ce = char_ends[i]
+                if ce > cs + 0.02:
+                    cuts.append((cs, ce))
+        # ② 글자 사이 빈 공백(gap)
+        if i + 1 < len(characters):
+            gap = char_starts[i + 1] - char_ends[i]
+            if gap > threshold:
+                cs = char_ends[i] + keep
+                ce = char_starts[i + 1]
+                if ce > cs + 0.02:
+                    cuts.append((cs, ce))
+    cuts.sort()
+    return cuts
+
+
+def _remap_time(t: float, cuts: list[tuple[float, float]]) -> float:
+    """잘라낸 구간을 반영해 raw 시각 t를 압축 후 시각으로 옮긴다."""
+    removed = 0.0
+    for cs, ce in cuts:
+        if t >= ce:
+            removed += ce - cs
+        elif t > cs:
+            removed += t - cs
+            break
+        else:
+            break
+    return t - removed
+
+
+def _compress_and_tempo(raw: Path, out: Path, cuts: list[tuple[float, float]], speed: float) -> None:
+    """raw mp3에서 cuts 구간을 제거하고 atempo 적용 → out(m4a). cuts 없으면 배속만."""
+    if not cuts:
+        subprocess.run([
+            "ffmpeg", "-y", "-loglevel", "error", "-i", str(raw),
+            "-af", f"atempo={speed}", "-c:a", "aac", "-b:a", "192k", str(out),
+        ], check=True)
+        return
+    keeps: list[tuple[float, float | None]] = []
+    prev = 0.0
+    for cs, ce in cuts:
+        keeps.append((prev, cs))
+        prev = ce
+    keeps.append((prev, None))
+    parts = []
+    for idx, (a, b) in enumerate(keeps):
+        trim = f"atrim=start={a:.3f}" + (f":end={b:.3f}" if b is not None else "")
+        parts.append(f"[0:a]{trim},asetpts=PTS-STARTPTS[k{idx}]")
+    cat_in = "".join(f"[k{idx}]" for idx in range(len(keeps)))
+    parts.append(f"{cat_in}concat=n={len(keeps)}:v=0:a=1[cat]")
+    parts.append(f"[cat]atempo={speed}[out]")
+    subprocess.run([
+        "ffmpeg", "-y", "-loglevel", "error", "-i", str(raw),
+        "-filter_complex", ";".join(parts), "-map", "[out]",
+        "-c:a", "aac", "-b:a", "192k", str(out),
+    ], check=True)
+
+
 def build_narration_single(
     lines,
     creds: dict,
@@ -201,8 +282,8 @@ def build_narration_single(
 ) -> tuple[Path, list[tuple[float, float]]]:
     """전체 대본 단일 합성 → (나레이션 m4a 경로, 줄별 실측 타이밍) 반환.
 
-    타이밍은 배속 적용 후 기준 — 자막을 이 값으로 다시 깔면 말과 완전 동기화된다.
-    같은 대본+보이스 설정은 캐시를 재사용한다.
+    합성 후 줄 사이 긴 무음을 잘라 '뚝뚝 끊김'을 없애고, 자막 타이밍을 압축된
+    오디오에 맞춰 다시 계산한다. 같은 대본+보이스 설정은 캐시를 재사용한다.
     """
     import base64
     import hashlib as _hashlib
@@ -211,8 +292,11 @@ def build_narration_single(
     workdir.mkdir(parents=True, exist_ok=True)
     lines = list(lines)
     texts = [line.text for line in lines]
-    full = "\n".join(texts)
+    # 공백으로 이어 한 문단처럼 넘긴다 (줄바꿈은 무의미 — 실측상 공백과 동일).
+    full = " ".join(texts)
     speed = float(creds.get("speed", DEFAULT_SPEED))
+    keep = float(creds.get("gap_keep", 0.14))
+    threshold = float(creds.get("gap_threshold", 0.34))
 
     voice_key = json.dumps(
         [creds.get("voice_id"), creds.get("model_id"), creds.get("voice_settings")],
@@ -230,16 +314,15 @@ def build_narration_single(
         resp_align = resp["alignment"]
         meta.write_text(json.dumps(resp_align, ensure_ascii=False), encoding="utf-8")
 
-    spans = align_line_spans(
-        texts, resp_align["characters"],
-        resp_align["character_start_times_seconds"], resp_align["character_end_times_seconds"],
-        speed,
-    )
+    char_starts = resp_align["character_start_times_seconds"]
+    char_ends = resp_align["character_end_times_seconds"]
+    cuts = plan_gap_cuts(resp_align["characters"], char_starts, char_ends, keep=keep, threshold=threshold)
+    rs = [_remap_time(t, cuts) for t in char_starts]
+    re = [_remap_time(t, cuts) for t in char_ends]
+
+    spans = align_line_spans(texts, resp_align["characters"], rs, re, speed)
     out = Path(out_path)
-    subprocess.run([
-        "ffmpeg", "-y", "-loglevel", "error", "-i", str(raw),
-        "-af", f"atempo={speed}", "-c:a", "aac", "-b:a", "192k", str(out),
-    ], check=True)
+    _compress_and_tempo(raw, out, cuts, speed)
     return out, spans
 
 
