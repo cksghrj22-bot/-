@@ -96,6 +96,24 @@ DEFAULT_STYLE = {
     "margin_v": 260,                 # 쇼츠 UI 피해서 아래에서 띄우기
 }
 
+# 하단 아웃트로 (브랜딩 줄: "SNS에 일기 쓰는 중입니다" — 얇게·작게·반투명, 마지막 몇 초만)
+# 2026-07-15 이찬호 지시: "사람 차노" 브랜딩. 저장 CTA가 아니라 조용한 상태 표시. 박스 없이 얇게.
+DEFAULT_OUTRO_STYLE = {
+    "font": "Kyobo Handwriting 2019",
+    "size": 46,
+    "primary_color": "&H00FFFFFF",   # 흰 글자
+    "outline_color": "&H00000000",
+    "box_color": "000000",
+    "box_opacity": 0,                # 박스 없음 (얇게 스며들듯)
+    "border_style": 1,               # 외곽선만
+    "outline": 1,
+    "alignment": 2,                  # 하단 중앙
+    "margin_v": 90,
+    "alpha": "80",                   # 반투명 (00=불투명, FF=투명) — "얇게"
+    "fade": [600, 400],              # 페이드 인/아웃(ms)
+    "dur": 2.8,                      # 마지막 몇 초 노출
+}
+
 # 상단 제목 (채널 스타일: 노란 박스 + 검정 글자)
 DEFAULT_TITLE_STYLE = {
     "font": "AppleSDGothicNeo-Bold",
@@ -175,10 +193,15 @@ def to_ass(
     height: int = 1920,
     title: str | None = None,
     title_style: dict | None = None,
+    outro: str | None = None,
+    outro_style: dict | None = None,
+    total_duration: float | None = None,
 ) -> str:
     """타이밍이 배정된 라인들을 ASS 자막 문서로 변환한다.
 
     title을 주면 상단 노란 박스 제목이 영상 전체에 표시된다 (채널 스타일).
+    outro를 주면 마지막 몇 초 하단에 얇은 브랜딩 줄이 페이드로 뜬다 (사람 차노).
+    total_duration = 영상 전체 길이(초). 주면 아웃트로를 영상 끝에 정확히 붙인다.
     """
     st = dict(DEFAULT_STYLE)
     if style:
@@ -188,6 +211,11 @@ def to_ass(
         tst.update(title_style)
     if style and "font" in style and not (title_style and "font" in title_style):
         tst["font"] = style["font"]  # 본문 폰트를 지정하면 제목도 따라간다
+    ost = dict(DEFAULT_OUTRO_STYLE)
+    if outro_style:
+        ost.update(outro_style)
+    if style and "font" in style and not (outro_style and "font" in outro_style):
+        ost["font"] = style["font"]  # 아웃트로도 본문 폰트를 따라간다
     title_text = title
     if title:
         # 제목은 항상 자막보다 크게(길면 2줄), 화면 폭은 안 넘김. floor = 자막 크기 + 여유.
@@ -195,6 +223,9 @@ def to_ass(
             title, int(tst.get("size", 96)), width, floor=int(st.get("size", 98)) + 2,
         )
 
+    style_lines = [_style_line('Default', st), _style_line('Title', tst)]
+    if outro:
+        style_lines.append(_style_line('Outro', ost))
     header = f"""[Script Info]
 ScriptType: v4.00+
 PlayResX: {width}
@@ -202,8 +233,7 @@ PlayResY: {height}
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
-{_style_line('Default', st)}
-{_style_line('Title', tst)}
+{chr(10).join(style_lines)}
 
 [Events]
 Format: Layer, Start, End, Style, Text
@@ -214,7 +244,15 @@ Format: Layer, Start, End, Style, Text
             raise ValueError(f"타이밍이 배정되지 않은 라인: {line.text!r} (assign_timings 먼저 호출)")
         text = line.text.replace("\n", "\\N")
         events.append(f"Dialogue: 0,{_ass_time(line.start)},{_ass_time(line.end)},Default,{text}")
+    last_end = max((l.end or 0) for l in lines) if lines else 60.0
     if title:
-        end = max((l.end or 0) for l in lines) if lines else 60.0
-        events.insert(0, f"Dialogue: 1,{_ass_time(0)},{_ass_time(end)},Title,{title_text.replace(chr(10), ' ')}")
+        events.insert(0, f"Dialogue: 1,{_ass_time(0)},{_ass_time(last_end)},Title,{title_text.replace(chr(10), ' ')}")
+    if outro:
+        vid_end = total_duration if total_duration is not None else last_end
+        dur = float(ost.get("dur", 2.8))
+        o_start = max(0.0, vid_end - dur)
+        fin, fout = (ost.get("fade") or [0, 0])[:2]
+        tag = f"{{\\fad({int(fin)},{int(fout)})\\alpha&H{ost.get('alpha', '80')}&}}"
+        otext = outro.replace("\n", "\\N")
+        events.append(f"Dialogue: 2,{_ass_time(o_start)},{_ass_time(vid_end)},Outro,{tag}{otext}")
     return header + "\n".join(events) + "\n"

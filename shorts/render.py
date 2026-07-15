@@ -56,10 +56,13 @@ def render(
     layout: str = "full",
     workdir: str | Path = ".",
     narration: str | Path | None = None,
+    outro: str | None = None,
+    outro_style: dict | None = None,
 ) -> Path:
     """자막을 굽고 (있다면) BGM을 원본 음성 위에 깔아 output으로 렌더링한다.
 
     narration이 있으면(TTS 보이스클론 트랙) 원본 음성을 대체하고 BGM은 그 아래에 깐다.
+    outro를 주면 마지막 몇 초 하단에 얇은 브랜딩 줄이 페이드로 뜬다.
     """
     video = Path(video)
     output = Path(output)
@@ -69,7 +72,8 @@ def render(
     lines = assign_timings(list(script.lines), duration)
     ass_path = Path(workdir) / f"{video.stem}.ass"
     ass_path.write_text(
-        to_ass(lines, style=style, title=script.title or None, title_style=title_style),
+        to_ass(lines, style=style, title=script.title or None, title_style=title_style,
+               outro=outro, outro_style=outro_style, total_duration=duration),
         encoding="utf-8",
     )
 

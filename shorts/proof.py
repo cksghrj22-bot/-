@@ -131,6 +131,31 @@ def broll_bg_cmd(
     ]
 
 
+BGM_EXTS = (".mp3", ".m4a", ".wav", ".aac", ".ogg", ".flac")
+
+
+def _valid_bgm(path: Path) -> bool:
+    """오디오 스트림이 정상인지 ffprobe로 확인 (깨진 파일 걸러냄)."""
+    try:
+        return probe_duration(path) > 1.0
+    except Exception:
+        return False
+
+
+def bgm_pool(bgm: str | Path | None) -> list[Path]:
+    """bgm이 폴더면 그 안의 정상 오디오 파일 목록(정렬), 파일이면 그 하나, 없으면 빈 목록.
+
+    렌더마다 다른 곡을 깔아 '지루함'을 없앤다 (2026-07-15 이찬호). 깨진 파일은 제외.
+    """
+    if bgm is None:
+        return []
+    p = Path(bgm)
+    if p.is_dir():
+        hits = sorted(f for e in BGM_EXTS for f in p.glob(f"*{e}"))
+        return [f for f in hits if _valid_bgm(f)]
+    return [p] if p.is_file() and _valid_bgm(p) else []
+
+
 def render_batch(
     scripts_dir: str | Path,
     out_dir: str | Path,
@@ -145,6 +170,8 @@ def render_batch(
 ) -> list[Path]:
     cfg = json.loads(Path(config_path).read_text(encoding="utf-8"))
     v9 = cfg[preset]
+    # BGM: 폴더면 편마다 다른 곡을 로테이션 (지루함 방지). config의 bgm_pool도 허용.
+    pool = bgm_pool(bgm if bgm is not None else v9.get("bgm_pool") or cfg.get("bgm_pool"))
     layout = v9.get("layout", "letterbox")
     fit = v9.get("fit", "crop")
     if layout == "dim":
@@ -158,6 +185,9 @@ def render_batch(
         bg_size = (VIDEO_W, VIDEO_H)
         dim = 0.0
     creds = tts.load_credentials(cfg["tts"]["credentials"]) if use_tts else None
+    # 아웃트로가 있으면 끝에 여유를 둬 얇은 마무리 줄이 충분히 보이게 한다.
+    outro_dur = float((v9.get("outro_style") or {}).get("dur", 2.6)) if v9.get("outro_text") else 0.0
+    tail = max(TAIL_SECONDS, outro_dur * 0.55) if outro_dur else TAIL_SECONDS
 
     scripts = find_scripts(scripts_dir)
     if only:
@@ -176,7 +206,7 @@ def render_batch(
         ends = [l.end for l in script.lines if l.end is not None]
         if not ends:
             raise ValueError(f"타이밍 없는 대본 (시안 렌더는 타이밍 필수): {txt.name}")
-        duration = max(ends) + TAIL_SECONDS
+        duration = max(ends) + tail
 
         narration = None
         if creds:
@@ -190,7 +220,7 @@ def render_batch(
                 nxt = spans[j + 1][0] if j + 1 < len(spans) else e + 0.4
                 new_lines.append(Line(text=line.text, start=round(s, 3), end=round(nxt, 3)))
             script.lines = new_lines
-            duration = new_lines[-1].end + TAIL_SECONDS
+            duration = new_lines[-1].end + tail
 
         bg = work / f"{txt.stem}_bg.mp4"
         src = match_broll(txt.stem, broll)
@@ -208,13 +238,15 @@ def render_batch(
         render_layout = layout
         if layout == "dim":
             render_layout = "letterbox" if fit in ("width", "crop45") else "full"
+        track = pool[(i - 1) % len(pool)] if pool else None  # 편마다 다른 곡 로테이션
         out = render(
             bg, script, out_dir / f"{txt.stem}_{suffix}.mp4",
             style=v9.get("subtitle_style"), title_style=v9.get("title_style"),
             layout=render_layout, workdir=work, narration=narration,
-            bgm=bgm, bgm_volume=float(cfg.get("bgm_volume", 0.15)),
+            bgm=track, bgm_volume=float(cfg.get("bgm_volume", 0.15)),
+            outro=v9.get("outro_text"), outro_style=v9.get("outro_style"),
         )
-        print(f"  ✅ {out.name}")
+        print(f"  ✅ {out.name}" + (f"  ♪ {track.name}" if track else ""))
         outputs.append(out)
     return outputs
 
