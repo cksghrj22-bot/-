@@ -146,11 +146,12 @@ def _line_units(s: str) -> float:
     return u
 
 
-def fit_title(text: str, base_size: int, width: int, margin: int = 70, min_two_line: int = 84) -> tuple[int, str]:
-    """제목이 화면을 넘지 않게 (크기, 표시텍스트) 반환. 길면 2줄로 감싸 크기를 지킨다.
+def fit_title(text: str, base_size: int, width: int, margin: int = 70, floor: int = 100) -> tuple[int, str]:
+    """제목이 화면을 넘지 않게 (크기, 표시텍스트) 반환.
 
-    ① 한 줄에 들어가면 그대로. ② 안 들어가면 가운데 공백에서 2줄로 나눠 크기 확보.
-    ③ 그래도 작으면 1줄로 축소. 어떤 경우에도 폭을 넘지 않는다 (오버플로 방지).
+    규칙(이찬호): **제목은 항상 자막보다 크게. 길면 2줄로(크기 유지), 절대 자막보다 작아지지 않는다.**
+    ① 한 줄에 들어가면 그대로. ② 안 들어가면 무조건 2줄로 나눠 크기 확보(대개 base 유지).
+    floor = 자막 크기(+여유) — 최소한 이보다는 크게 유지하려 한다. 폭은 절대 안 넘김.
     """
     usable = width - 2 * margin
     u = _line_units(text)
@@ -163,9 +164,8 @@ def fit_title(text: str, base_size: int, width: int, margin: int = 70, min_two_l
         l1, l2 = text[:bi], text[bi + 1:]
         longest = max(_line_units(l1), _line_units(l2))
         size2 = min(base_size, int(usable / longest)) if longest > 0 else base_size
-        if size2 >= min_two_line:
-            return size2, l1 + "\\N" + l2
-    return max(40, int(usable / u)), text
+        return size2, l1 + "\\N" + l2  # 2줄 — 짧은 제목이면 base 유지, 자막보다 큼
+    return max(floor, int(usable / u)), text
 
 
 def to_ass(
@@ -190,8 +190,10 @@ def to_ass(
         tst["font"] = style["font"]  # 본문 폰트를 지정하면 제목도 따라간다
     title_text = title
     if title:
-        # 제목이 화면을 넘지 않게: 길면 2줄로 감싸 크기 유지, 그래도 길면 축소 (오버플로 방지)
-        tst["size"], title_text = fit_title(title, int(tst.get("size", 96)), width)
+        # 제목은 항상 자막보다 크게(길면 2줄), 화면 폭은 안 넘김. floor = 자막 크기 + 여유.
+        tst["size"], title_text = fit_title(
+            title, int(tst.get("size", 96)), width, floor=int(st.get("size", 98)) + 2,
+        )
 
     header = f"""[Script Info]
 ScriptType: v4.00+
