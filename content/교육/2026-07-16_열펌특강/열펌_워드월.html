@@ -154,9 +154,16 @@ let questions = [];         // 2번 문항(궁금한 것) 답변들
 let ignoreRows = 0;         // 판 비우기: 이 행 수까지의 응답은 무시 (테스트 데이터 제외용)
 let lastRowCount = 0;
 
+// 유의어 합치기 — 왼쪽 단어가 들어오면 오른쪽 단어로 집계 (자동 추측은 안 함, 여기 등록한 쌍만)
+const ALIASES = {
+  '인내': '인내심',
+  '기다리기': '기다림',
+};
+
 function normalize(s){
   s = String(s||'').trim().replace(/\s+/g,' ');
   s = s.replace(/[.!?~…]+$/,'');
+  if (ALIASES[s]) s = ALIASES[s];
   if (s.length > 20) s = s.slice(0,20) + '…';
   return s;
 }
