@@ -133,6 +133,25 @@ def _style_line(name: str, st: dict) -> str:
     )
 
 
+def fit_title_size(text: str, base_size: int, width: int, margin: int = 70) -> int:
+    """제목이 화면 폭을 넘지 않도록 폰트 크기를 자동으로 줄인다 (짧으면 그대로).
+
+    전각(한글 등)≈1.0·공백≈0.4·그 외(숫자·영문·부호)≈0.55 폭으로 추정.
+    """
+    usable = width - 2 * margin
+    units = 0.0
+    for ch in text:
+        if ch == " ":
+            units += 0.4
+        elif ord(ch) > 0x2E00:
+            units += 1.0
+        else:
+            units += 0.55
+    if units <= 0:
+        return base_size
+    return max(40, min(base_size, int(usable / units)))
+
+
 def to_ass(
     lines: list[Line],
     style: dict | None = None,
@@ -153,6 +172,9 @@ def to_ass(
         tst.update(title_style)
     if style and "font" in style and not (title_style and "font" in title_style):
         tst["font"] = style["font"]  # 본문 폰트를 지정하면 제목도 따라간다
+    if title:
+        # 제목이 화면 폭을 넘지 않게 자동 축소 (짧으면 설정 크기 그대로) — 오버플로 방지
+        tst["size"] = fit_title_size(title, int(tst.get("size", 96)), width)
 
     header = f"""[Script Info]
 ScriptType: v4.00+

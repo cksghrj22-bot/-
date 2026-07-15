@@ -300,6 +300,80 @@ def _assemble_lines_even(
     ], check=True)
 
 
+# ── 발음 교정 사전 (합성 텍스트에만 적용, 자막 표시는 원문) ──────────────
+# 일레븐랩스가 틀리게 읽는 단어를 '소리 나는 대로' 다시 적어 교정한다. 실측(STT)으로 확인된 것만.
+# 형님이 오독을 지적하면 여기 한 줄 추가 = 이후 모든 영상에 자동 적용 (다시는 같은 실수 X).
+SYNTH_FIXES: dict[str, str] = {
+    "숱치": "숟치",        # 숱치기 → '수치기' 오독 방지 (경음/오독)
+    "숱을 쳐": "숟을 쳐",
+}
+
+# ── 문장부호별 강제 쉼(초, 배속 전) ──────────────────────────────────
+# 대본 부호가 '어디서' 쉴지를 정하고, 코드가 '얼마나' 쉴지를 보장한다.
+# (일레븐랩스가 마침표에서 안 쉬어도 코드가 최소 쉼을 넣어 '바로 붙여읽기'를 막는다.)
+PUNCT_TARGET: dict[str, float] = {".": 0.40, "?": 0.42, "!": 0.42, "…": 0.34, ",": 0.16}
+
+
+def apply_synth_fixes(text: str) -> str:
+    for a, b in SYNTH_FIXES.items():
+        text = text.replace(a, b)
+    return text
+
+
+def collect_pause_edits(
+    characters: list[str], char_starts: list[float], char_ends: list[float],
+    targets: dict[str, float],
+) -> list[tuple[float, float, float]]:
+    """문장부호 뒤 무음 구간 [rs, re]을 목표 길이 tgt로 바꿀 편집 목록 (배속 전 raw 초)."""
+    n = len(characters)
+    ws = " \t\n　"
+    edits: list[tuple[float, float, float]] = []
+    i = 0
+    while i < n:
+        if characters[i] in targets or characters[i] in ws:
+            run_start = i
+            tgt = 0.0
+            while i < n and (characters[i] in targets or characters[i] in ws):
+                if characters[i] in targets:
+                    tgt = max(tgt, targets[characters[i]])
+                i += 1
+            if tgt > 0 and run_start > 0 and i < n:
+                rs, re = char_ends[run_start - 1], char_starts[i]
+                if re > rs:
+                    edits.append((rs, re, tgt))
+        else:
+            i += 1
+    return edits
+
+
+def _remap_pause(t: float, edits: list[tuple[float, float, float]]) -> float:
+    delta = 0.0
+    for rs, re, tgt in edits:
+        if t >= re:
+            delta += tgt - (re - rs)
+    return t + delta
+
+
+def _apply_pause_edits(raw: Path, out: Path, edits: list[tuple[float, float, float]], speed: float) -> None:
+    """무음 구간을 목표 길이로 치환(concat)하고 atempo → out. 편집 없으면 배속만."""
+    if not edits:
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(raw),
+                        "-af", f"atempo={speed}", "-c:a", "aac", "-b:a", "192k", str(out)], check=True)
+        return
+    parts, labels, pos = [], [], 0.0
+    for idx, (rs, re, tgt) in enumerate(edits):
+        parts.append(f"[0:a]atrim=start={pos:.3f}:end={rs:.3f},asetpts=PTS-STARTPTS,apad=pad_dur={tgt:.3f}[s{idx}]")
+        labels.append(f"[s{idx}]")
+        pos = re
+    parts.append(f"[0:a]atrim=start={pos:.3f},asetpts=PTS-STARTPTS[s{len(edits)}]")
+    labels.append(f"[s{len(edits)}]")
+    parts.append(f"{''.join(labels)}concat=n={len(labels)}:v=0:a=1[cat]")
+    parts.append(f"[cat]atempo={speed}[out]")
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(raw),
+                    "-filter_complex", ";".join(parts), "-map", "[out]",
+                    "-c:a", "aac", "-b:a", "192k", str(out)], check=True)
+
+
 def build_narration_single(
     lines,
     creds: dict,
@@ -318,14 +392,13 @@ def build_narration_single(
     workdir.mkdir(parents=True, exist_ok=True)
     lines = list(lines)
     texts = [line.text for line in lines]
-    # 대본의 문장부호가 라임(쉼·흐름)을 정한다 — 프롬프트북 「나레이션 라임 규약」대로 작성.
-    #   마침표(.) = 내려읽고 쉼 · 쉼표(,) = 살짝 쉼 · 부호 없음 = 다음 줄과 붙여 흐름.
-    # 코드가 부호를 조작하지 않는다 (자동 추측이 라임을 망친다). 정렬·표시 모두 원문 그대로.
-    align_texts = texts
-    full = " ".join(texts)
+    # 대본 부호가 '어디서' 쉴지를, 코드가 '얼마나' 쉴지를 정한다 (prompts/06 라임 규약).
+    #   마침표=내려읽고 쉼 · 쉼표=살짝 · 부호없음=붙여 흐름. 코드가 최소 쉼을 보장(강제).
+    # 합성 텍스트엔 발음 교정(SYNTH_FIXES)만 적용 — 자막 표시는 원문 그대로.
+    syn_texts = [apply_synth_fixes(t) for t in texts]
+    full = " ".join(syn_texts)
     speed = float(creds.get("speed", DEFAULT_SPEED))
-    keep = float(creds.get("gap_keep", 0.14))
-    threshold = float(creds.get("gap_threshold", 0.34))
+    targets = creds.get("punct_targets", PUNCT_TARGET)
 
     voice_key = json.dumps(
         [creds.get("voice_id"), creds.get("model_id"), creds.get("voice_settings")],
@@ -343,38 +416,26 @@ def build_narration_single(
         resp_align = resp["alignment"]
         meta.write_text(json.dumps(resp_align, ensure_ascii=False), encoding="utf-8")
 
-    out = Path(out_path)
-    # natural_flow: 오디오를 손대지 않고 그대로(배속만) — 일레븐랩스의 자연 흐름 유지.
-    # 쉼은 대본 문장부호가 정한다 (레퍼런스처럼 문장 끝에만 쉬려면 대본을 문장으로 이어 쓴다).
-    if creds.get("natural_flow"):
-        subprocess.run([
-            "ffmpeg", "-y", "-loglevel", "error", "-i", str(raw),
-            "-af", f"atempo={speed}", "-c:a", "aac", "-b:a", "192k", str(out),
-        ], check=True)
-        spans = align_line_spans(
-            align_texts, resp_align["characters"],
-            resp_align["character_start_times_seconds"], resp_align["character_end_times_seconds"],
-            speed,
-        )
-        return out, spans
+    chars = resp_align["characters"]
+    cstart = resp_align["character_start_times_seconds"]
+    cend = resp_align["character_end_times_seconds"]
 
-    # (기본) 줄별 speech 구간을 뽑아 매 줄 사이에 line_gap을 강제 — 균일한 띄어쓰기.
-    raw_spans = align_line_spans(
-        align_texts, resp_align["characters"],
-        resp_align["character_start_times_seconds"], resp_align["character_end_times_seconds"],
-        speed=1.0,
-    )
-    line_gap = float(creds.get("line_gap", 0.18))
-    pad = float(creds.get("line_pad", 0.03))
-    _assemble_lines_even(raw, out, raw_spans, speed, line_gap=line_gap, pad=pad)
+    # 문장부호 쉼 강제: 마침표 등 뒤 무음을 목표 길이로 치환 (일레븐랩스가 안 쉬어도 코드가 보장).
+    edits = collect_pause_edits(chars, cstart, cend, targets)
+    out = Path(out_path)
+    _apply_pause_edits(raw, out, edits, speed)
+
+    # 자막 타이밍: 편집 반영해 줄별 (시작,끝) 재계산 (배속 반영). 정렬은 합성 텍스트 기준.
+    joined = "".join(chars)
     spans: list[tuple[float, float]] = []
-    cum = 0.0
-    for s, e in raw_spans:
-        a = max(0.0, s - pad)
-        seg = (e + pad) - a
-        start_f = cum / speed
-        cum += seg + line_gap
-        spans.append((round(start_f, 3), round(cum / speed, 3)))
+    pos = 0
+    for t in syn_texts:
+        b = joined.index(t, pos)
+        e = b + len(t)
+        pos = e
+        s_f = _remap_pause(cstart[b], edits) / speed
+        e_f = _remap_pause(cend[e - 1], edits) / speed
+        spans.append((round(s_f, 3), round(e_f, 3)))
     return out, spans
 
 
