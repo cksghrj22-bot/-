@@ -45,15 +45,15 @@
   .count { font-family:'BMJUA','Nanum Pen Script',cursive; font-size:44px; color:#7ee787; }
   .fallback-url { color:#FFD700; font-size:16px; word-break:break-all; text-align:center; display:none; }
 
-  .cloud { flex:1; display:flex; flex-wrap:wrap; align-content:center; justify-content:center;
-           gap:6px 22px; padding:10px 40px; overflow:hidden; }
+  .cloud { flex:1; position:relative; overflow:hidden; }
   .word { font-family:'BMJUA','Nanum Pen Script',cursive; line-height:1.05; cursor:pointer; white-space:nowrap;
-          animation:pop .5s ease; transition:transform .2s; }
-  .word:hover { transform:scale(1.12); }
+          position:absolute; transform:translate(-50%,-50%);
+          animation:pop .5s ease; transition:left .7s ease, top .7s ease; }
   .word small { font-size:.45em; opacity:.55; margin-left:4px; }
-  @keyframes pop { 0%{transform:scale(0); opacity:0;} 70%{transform:scale(1.25);} 100%{transform:scale(1); opacity:1;} }
+  @keyframes pop { 0%{opacity:0;} 100%{opacity:1;} }
 
-  .empty { color:#556; font-size:30px; font-family:'BMJUA','Nanum Pen Script',cursive; }
+  .empty { color:#556; font-size:30px; font-family:'BMJUA','Nanum Pen Script',cursive;
+           position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
 
   /* 단어 스포트라이트 (클릭 → 대화용 확대) */
   #spot { position:fixed; inset:0; background:rgba(8,8,12,.96); display:none;
@@ -172,12 +172,14 @@ function renderCloud(){
   const total = [...counts.values()].reduce((a,b)=>a+b.n,0);
   document.getElementById('count').textContent = total;
   if (!counts.size){ cloud.innerHTML = '<div class="empty">첫 단어를 기다리는 중…</div>'; return; }
+  cloud.querySelector('.empty')?.remove();
 
   const max = Math.max(...[...counts.values()].map(v=>v.n));
-  const entries = [...counts.entries()];
-  // 자리 요동을 줄이려고 키 해시로 순서 고정
-  entries.sort((a,b)=> hash(a[0]) - hash(b[0]));
+  const W = cloud.clientWidth, H = cloud.clientHeight;
+  // 브레인스토밍 배치: 많이 나온 단어가 한가운데, 나머지가 나선으로 둘러싼다
+  const entries = [...counts.entries()].sort((a,b)=> b[1].n - a[1].n || hash(a[0]) - hash(b[0]));
 
+  const placed = [];
   const seen = new Set();
   for (const [key, v] of entries){
     seen.add(key);
@@ -190,16 +192,36 @@ function renderCloud(){
       el.dataset.key = key;
       el.style.color = COLORS[hash(key) % COLORS.length];
       el.onclick = () => spotlight(v.label, counts.get(key).n);
-      cloud.querySelector('.empty')?.remove();
-      // 고정 순서 위치에 삽입
-      const after = [...cloud.children].find(c => hash(c.dataset.key) > hash(key));
-      cloud.insertBefore(el, after || null);
+      cloud.appendChild(el);
     }
     if (el.innerHTML !== html) el.innerHTML = html;
     el.style.fontSize = size + 'px';
+
+    // 크기를 먼저 입힌 뒤 실측 → 중앙 나선을 돌며 안 겹치는 첫 자리에 놓는다
+    const w = el.offsetWidth + 26, h = el.offsetHeight + 12;
+    let ang = (hash(key) % 628) / 100;              // 단어마다 시작 각도 고정 (요동 방지)
+    let pos = null;
+    for (let step = 0; step < 800; step++){
+      const r = 3.0 * ang;
+      const x = W / 2 + r * Math.cos(ang);
+      const y = H / 2 + r * 0.62 * Math.sin(ang);   // 가로형 화면에 맞춘 타원 나선
+      const rc = { x1: x - w/2, y1: y - h/2, x2: x + w/2, y2: y + h/2 };
+      if (rc.x1 > 4 && rc.y1 > 4 && rc.x2 < W - 4 && rc.y2 < H - 4 &&
+          !placed.some(p => rc.x1 < p.x2 && rc.x2 > p.x1 && rc.y1 < p.y2 && rc.y2 > p.y1)){
+        pos = { x, y, rc }; break;
+      }
+      ang += 0.25;
+    }
+    if (!pos){ // 화면이 가득 찼을 때: 중앙 부근에 겹쳐서라도 표시
+      pos = { x: W/2, y: H/2, rc: { x1: W/2-w/2, y1: H/2-h/2, x2: W/2+w/2, y2: H/2+h/2 } };
+    }
+    placed.push(pos.rc);
+    el.style.left = pos.x + 'px';
+    el.style.top = pos.y + 'px';
   }
   [...cloud.querySelectorAll('.word')].forEach(el=>{ if(!seen.has(el.dataset.key)) el.remove(); });
 }
+window.addEventListener('resize', ()=>{ if (counts.size) renderCloud(); });
 
 function hash(s){ let h=0; for(const c of s) h=(h*31 + c.charCodeAt(0))>>>0; return h; }
 
