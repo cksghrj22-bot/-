@@ -104,11 +104,13 @@ def match_broll(txt_stem: str, broll: str | Path | None) -> Path | None:
 def broll_bg_cmd(
     src: str | Path, start: float, duration: float, out_path: str | Path,
     size: tuple[int, int] = (VIDEO_W, VIDEO_H), dim: float = 0.0, fit: str = "crop",
+    grayscale: bool = False,
 ) -> list[str]:
     """B롤 원본을 영상 영역에 맞춰 자른 배경(mp4, 무음) 생성 ffmpeg 명령.
 
     dim > 0이면 화면 전체에 반투명 블랙을 덮는다 (마인드 라인 스타일 —
     화면 전체가 불투명도 있는 블랙, 그 위에 흰 글씨. 2026-07-14 이찬호 지시).
+    grayscale면 무채색(흑백) 처리 — 채널 마인드 영상 톤 (레퍼런스 매칭).
     """
     w, h = size
     if fit == "width":
@@ -116,6 +118,8 @@ def broll_bg_cmd(
         vf = f"scale={w}:-2,fps={FPS}"
     else:
         vf = f"scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h},fps={FPS}"
+    if grayscale:
+        vf += ",hue=s=0"
     if dim > 0:
         vf += f",drawbox=c=black@{dim}:t=fill"
     return [
@@ -192,7 +196,8 @@ def render_batch(
         src = match_broll(txt.stem, broll)
         if src is not None:
             subprocess.run(
-                broll_bg_cmd(src, broll_start, duration, bg, size=bg_size, dim=dim, fit=fit),
+                broll_bg_cmd(src, broll_start, duration, bg, size=bg_size, dim=dim, fit=fit,
+                             grayscale=bool(v9.get("grayscale"))),
                 check=True,
             )
         else:

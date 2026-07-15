@@ -318,8 +318,10 @@ def build_narration_single(
     workdir.mkdir(parents=True, exist_ok=True)
     lines = list(lines)
     texts = [line.text for line in lines]
-    # 공백으로 이어 한 문단처럼 넘긴다 (줄바꿈은 무의미 — 실측상 공백과 동일).
-    full = " ".join(texts)
+    # 줄 끝 쉼표를 떼서 합성한다 — 줄마다 쉼표가 있으면 일레븐랩스가 줄마다 쉬어 '뚝뚝'.
+    # 문장처럼 이어 흐르게 하는 게 레퍼런스 패턴. 자막엔 원래 문장부호 그대로 표시된다.
+    syn_texts = [t.rstrip(" ,，·") for t in texts]
+    full = " ".join(syn_texts)
     speed = float(creds.get("speed", DEFAULT_SPEED))
     keep = float(creds.get("gap_keep", 0.14))
     threshold = float(creds.get("gap_threshold", 0.34))
@@ -340,20 +342,30 @@ def build_narration_single(
         resp_align = resp["alignment"]
         meta.write_text(json.dumps(resp_align, ensure_ascii=False), encoding="utf-8")
 
-    # 줄별 speech 구간을 뽑아 '일정한 쉼'으로 다시 이어붙인다.
-    # 긴 무음만 자르면(예전 방식) 일레븐랩스가 두 줄을 붙여 읽은 곳은 띄어쓰기가 사라진다.
-    # 매 줄 사이에 line_gap을 강제해 줄마다 균일하게 띄운다 (뚝뚝도, 붙음도 방지).
+    out = Path(out_path)
+    # natural_flow: 오디오를 손대지 않고 그대로(배속만) — 일레븐랩스의 자연 흐름 유지.
+    # 쉼은 대본 문장부호가 정한다 (레퍼런스처럼 문장 끝에만 쉬려면 대본을 문장으로 이어 쓴다).
+    if creds.get("natural_flow"):
+        subprocess.run([
+            "ffmpeg", "-y", "-loglevel", "error", "-i", str(raw),
+            "-af", f"atempo={speed}", "-c:a", "aac", "-b:a", "192k", str(out),
+        ], check=True)
+        spans = align_line_spans(
+            syn_texts, resp_align["characters"],
+            resp_align["character_start_times_seconds"], resp_align["character_end_times_seconds"],
+            speed,
+        )
+        return out, spans
+
+    # (기본) 줄별 speech 구간을 뽑아 매 줄 사이에 line_gap을 강제 — 균일한 띄어쓰기.
     raw_spans = align_line_spans(
-        texts, resp_align["characters"],
+        syn_texts, resp_align["characters"],
         resp_align["character_start_times_seconds"], resp_align["character_end_times_seconds"],
-        speed=1.0,  # raw 초 (배속 전) — 오디오에서 그대로 자르려면 원본 타임라인이어야 한다
+        speed=1.0,
     )
     line_gap = float(creds.get("line_gap", 0.18))
     pad = float(creds.get("line_pad", 0.03))
-    out = Path(out_path)
     _assemble_lines_even(raw, out, raw_spans, speed, line_gap=line_gap, pad=pad)
-
-    # 자막 타이밍: 조립된 오디오와 동일한 순서로 누적 계산 (배속 반영)
     spans: list[tuple[float, float]] = []
     cum = 0.0
     for s, e in raw_spans:

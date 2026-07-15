@@ -79,9 +79,9 @@
     "fit": "crop45",
     "video_area": [
       1080,
-      1080
+      1200
     ],
-    "dim_opacity": 0.45,
+    "dim_opacity": 0.0,
     "subtitle_style": {
       "font": "NanumSquareRound ExtraBold",
       "size": 88,
@@ -89,7 +89,7 @@
       "border_style": 4,
       "primary_color": "&H00FFFFFF",
       "box_color": "000000",
-      "box_opacity": 88,
+      "box_opacity": 100,
       "outline": 3
     },
     "title_style": {
@@ -102,6 +102,7 @@
       "outline": 4
     },
     "_폰트": "제목·자막 나눔스퀘어라운드 EB (레퍼런스 cZIla2qjEXM 매칭, 2026-07-15 손글씨→고딕 교체)",
-    "_디자인": "채널 마인드 쇼츠 정본 (IMG_1815 레퍼런스): 노란 제목 최상단 + 어두운 화면 + 흰 글씨는 검은 박스 위"
+    "_디자인": "채널 마인드 쇼츠 정본 (IMG_1815 레퍼런스): 노란 제목 최상단 + 어두운 화면 + 흰 글씨는 검은 박스 위",
+    "grayscale": true
   }
 }
