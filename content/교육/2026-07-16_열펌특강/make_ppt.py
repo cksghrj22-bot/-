@@ -142,6 +142,35 @@ def split_buddy(s, cx, cy, scale=1.0):
     dline(s, cx + r * 2.15, cy, cx + r * 2.75, cy, color=GOLD, w=2.0)
 
 
+def mascot(s, cx, cy, scale=1.0):
+    """소소한 마스코트 — 손 흔드는 동그란 친구 (검정 실루엣·흰 얼굴·골드 볼터치).
+    졸라맨 DNA + Slack 일러스트 느낌. 너무 꾸미지 않고 재밌게."""
+    hr = 0.5 * scale
+    head_cy = cy - 0.5 * scale
+    body_w, body_h = 0.72 * scale, 0.66 * scale
+    body_top = head_cy + hr - 0.04 * scale
+    body_bot = body_top + body_h
+    # 다리
+    line(s, cx - 0.12 * scale, body_bot, cx - 0.12 * scale, body_bot + 0.26 * scale, color=INK, w=int(7 * scale))
+    line(s, cx + 0.12 * scale, body_bot, cx + 0.12 * scale, body_bot + 0.26 * scale, color=INK, w=int(7 * scale))
+    # 몸통 (둥근)
+    rrect(s, cx - body_w / 2, body_top, body_w, body_h, fill=INK, rad=0.45)
+    # 팔 — 왼팔 툭, 오른팔 번쩍(손 흔들기)
+    ay = body_top + 0.2 * scale
+    line(s, cx - body_w / 2, ay, cx - body_w / 2 - 0.34 * scale, ay + 0.14 * scale, color=INK, w=int(7 * scale))
+    line(s, cx + body_w / 2, ay, cx + body_w / 2 + 0.36 * scale, ay - 0.44 * scale, color=INK, w=int(7 * scale))
+    # 머리
+    disc(s, cx, head_cy, hr, fill=INK)
+    # 볼터치 (골드) — 눈 뒤에 먼저
+    disc(s, cx - 0.31 * scale, head_cy + 0.12 * scale, 0.055 * scale, fill=GOLD)
+    disc(s, cx + 0.31 * scale, head_cy + 0.12 * scale, 0.055 * scale, fill=GOLD)
+    # 눈
+    disc(s, cx - 0.17 * scale, head_cy - 0.03 * scale, 0.062 * scale, fill=BG)
+    disc(s, cx + 0.17 * scale, head_cy - 0.03 * scale, 0.062 * scale, fill=BG)
+    # 입 (작은 흰 캡슐 = 살짝 웃음)
+    rrect(s, cx - 0.1 * scale, head_cy + 0.15 * scale, 0.2 * scale, 0.07 * scale, fill=BG, rad=0.5)
+
+
 def title(s, text, size=28):
     txt(s, 0.9, 0.66, 11.5, 0.9, text, size=size, color=INK, bold=True)
     line(s, 0.9, 1.58, 12.43, 1.58, color=DIV, w=1.4)
@@ -187,11 +216,11 @@ def node(s, cx, cy, r, label, sub="", dark=False):
         txt(s, cx - r, cy - 0.2, 2*r, 0.45, label, size=16, color=col, bold=True, align=PP_ALIGN.CENTER)
 
 
-# ══ 1. 표지 ══
+# ══ 1. 표지 (소소한 마스코트) ══
 s = slide()
-txt(s, 0.9, 2.6, 11.5, 1.5, "열펌의 모든 것", size=56, color=INK, bold=True)
-txt(s, 0.92, 4.05, 8, 0.7, "분해하다", size=23, color=SUB)
-txt(s, 0.92, 6.35, 8, 0.4, "차노 · 2026. 7. 16 · 앳나운플레이스 3F", size=14, color=SUB)
+mascot(s, 6.66, 3.35, scale=1.45)
+txt(s, 0, 4.95, W, 0.6, "열펌", size=30, color=INK, bold=True, align=PP_ALIGN.CENTER)
+txt(s, 0, 6.5, W, 0.4, "차노 · 2026. 7. 16 · 앳나운플레이스 3F", size=13, color=SUB, align=PP_ALIGN.CENTER)
 txt(s, 0, H - 0.62, W, 0.35, "AT NOWN", size=11, color=SUB, bold=True, align=PP_ALIGN.CENTER, spc=2.0)
 
 # ══ 2. 열펌 = 열 | 펌 ══
@@ -243,6 +272,6 @@ split_buddy(s, 6.66, 3.7, scale=1.15)
 txt(s, 0.6, 5.1, 12.1, 1.2, "쪼갤수록, 쉬워진다", size=35, color=INK, bold=True, align=PP_ALIGN.CENTER)
 txt(s, 0, H - 0.62, W, 0.35, "AT NOWN", size=11, color=SUB, bold=True, align=PP_ALIGN.CENTER, spc=2.0)
 
-out = "content/교육/2026-07-16_열펌특강/열펌의모든것_v9.pptx"
+out = "content/교육/2026-07-16_열펌특강/열펌의모든것_v10.pptx"
 prs.save(out)
 print(f"저장: {out} · {len(prs.slides._sldIdLst)}장")
