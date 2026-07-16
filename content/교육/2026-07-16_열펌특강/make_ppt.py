@@ -177,7 +177,7 @@ txt(s, 0, H - 0.62, W, 0.35, "AT NOWN", size=11, color=SUB, bold=True, align=PP_
 
 # ══ 2. 열펌 = 열 | 펌 ══
 s = slide()
-title(s, "'열펌'을, 열과 펌으로")
+title(s, "열펌")
 txt(s, 2.7, 2.9, 3.0, 2.0, "열", size=100, color=INK, bold=True, align=PP_ALIGN.CENTER)
 dline(s, 6.2, 2.9, 6.2, 5.7, color=GOLD, w=2.0)
 txt(s, 6.7, 2.9, 3.0, 2.0, "펌", size=100, color=INK, bold=True, align=PP_ALIGN.CENTER)
@@ -185,36 +185,35 @@ footer(s)
 
 # ══ 3. 약을 쪼갠다 — 연화제·팩·환원제 ══
 s = slide()
-title(s, "약을, 쪼갠다")
+title(s, "약")
 for i, t in enumerate(["연화제", "팩", "환원제"]):
     dotcard(s, 1.55 + i * 3.5, 3.3, 3.0, 2.0, t)
 footer(s)
 
 # ══ 4. 모질과 손상도 ══
 s = slide()
-title(s, "모질과, 손상도")
+title(s, "모질 · 손상도")
 for i, t in enumerate(["모질", "손상도"]):
     dotcard(s, 2.3 + i * 4.8, 3.3, 4.0, 2.0, t)
 footer(s)
 
 # ══ 5. 제품은 점성으로 셋 — 크림·에멀전·겔 ══
 s = slide()
-title(s, "제품은, 점성으로 셋")
+title(s, "제품 · 점성")
 for i, t in enumerate(["크림", "에멀전", "겔"]):
     dotcard(s, 1.55 + i * 3.5, 3.3, 3.0, 2.0, t)
 footer(s)
 
 # ══ 6. 커트, 두 가지 — 접기 / 공간 ══
 s = slide()
-title(s, "커트는, 두 가지")
+title(s, "커트")
 for i, t in enumerate(["접는 커트", "공간을 만드는 커트"]):
     dotcard(s, 2.3 + i * 4.8, 3.3, 4.0, 2.0, t)
 footer(s)
 
 # ══ 7. 모다발 테스트 ══
 s = slide()
-title(s, "모다발 테스트")
-subline(s, "같은 모다발을 반으로 — 조건은 하나만 바꾼다")
+title(s, "모다발")
 for i, t in enumerate(["모다발 ½", "모다발 ½"]):
     dotcard(s, 2.3 + i * 4.8, 3.4, 4.0, 2.0, t)
 footer(s)
@@ -225,6 +224,6 @@ figure(s, 6.66, 4.7, scale=0.9)
 txt(s, 0.6, 5.1, 12.1, 1.2, "쪼갤수록, 쉬워진다", size=35, color=INK, bold=True, align=PP_ALIGN.CENTER)
 txt(s, 0, H - 0.62, W, 0.35, "AT NOWN", size=11, color=SUB, bold=True, align=PP_ALIGN.CENTER, spc=2.0)
 
-out = "content/교육/2026-07-16_열펌특강/열펌의모든것_v7.pptx"
+out = "content/교육/2026-07-16_열펌특강/열펌의모든것_v8.pptx"
 prs.save(out)
 print(f"저장: {out} · {len(prs.slides._sldIdLst)}장")
