@@ -91,14 +91,16 @@ def render(
         nar_idx = 1
         if bgm:
             cmd += ["-stream_loop", "-1", "-i", str(bgm)]
-            # duration=longest + 아래 -t로 영상 전체 길이(배경=나레이션+tail)를 채운다.
-            # BGM이 나레이션 뒤 아웃트로 구간까지 흐르고, 아웃트로가 잘리지 않는다.
+            # 나레이션을 영상 전체 길이(배경=나레이션+tail)만큼 무음 패딩 → amix duration=first가
+            # 영상 끝까지 이어지고, 루프 BGM이 나레이션 뒤 아웃트로 구간까지 계속 깔린다.
             filters.append(
+                f"[{nar_idx}:a]apad=whole_dur={duration:.3f}[narp];"
                 f"[{nar_idx + 1}:a]volume={bgm_volume}[bg];"
-                f"[{nar_idx}:a][bg]amix=inputs=2:normalize=0:duration=longest:dropout_transition=0[aout]"
+                f"[narp][bg]amix=inputs=2:normalize=0:duration=first:dropout_transition=0[aout]"
             )
         else:
-            filters.append(f"[{nar_idx}:a]anull[aout]")
+            # BGM 없으면 나레이션도 영상 길이만큼 패딩(뒤는 무음) → 아웃트로 구간까지 영상 유지.
+            filters.append(f"[{nar_idx}:a]apad=whole_dur={duration:.3f}[aout]")
         # -shortest 금지: 나레이션 길이로 자르면 아웃트로(배경 tail 구간)가 잘린다. 아래 -t가 배경 길이로 고정.
         maps += ["-map", "[aout]"]
     elif bgm:
