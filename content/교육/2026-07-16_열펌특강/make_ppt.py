@@ -223,7 +223,15 @@ txt(s, 0, 4.95, W, 0.6, "열펌", size=30, color=INK, bold=True, align=PP_ALIGN.
 txt(s, 0, 6.5, W, 0.4, "차노 · 2026. 7. 16 · 앳나운플레이스 3F", size=13, color=SUB, align=PP_ALIGN.CENTER)
 txt(s, 0, H - 0.62, W, 0.35, "AT NOWN", size=11, color=SUB, bold=True, align=PP_ALIGN.CENTER, spc=2.0)
 
-# ══ 2. 열펌 = 열 | 펌 ══
+# ══ 2. 펌은, 왜? (질문도 쪼갠다) ══
+s = slide("펌은 왜 하는가 — 질문부터 쪼갠다. 강사가 '왜'를 던지고 연다.")
+title(s, "펌은, 왜?")
+txt(s, 2.5, 3.0, 3.4, 2.0, "펌", size=104, color=INK, bold=True, align=PP_ALIGN.CENTER)
+dline(s, 6.66, 3.0, 6.66, 5.7, color=GOLD, w=2.0)
+txt(s, 7.1, 3.0, 3.4, 2.0, "왜?", size=104, color=GOLD, bold=True, align=PP_ALIGN.CENTER)
+footer(s)
+
+# ══ 3. 열펌 = 열 | 펌 ══
 s = slide()
 title(s, "열펌")
 txt(s, 2.7, 2.9, 3.0, 2.0, "열", size=100, color=INK, bold=True, align=PP_ALIGN.CENTER)
@@ -272,6 +280,6 @@ split_buddy(s, 6.66, 3.7, scale=1.15)
 txt(s, 0.6, 5.1, 12.1, 1.2, "쪼갤수록, 쉬워진다", size=35, color=INK, bold=True, align=PP_ALIGN.CENTER)
 txt(s, 0, H - 0.62, W, 0.35, "AT NOWN", size=11, color=SUB, bold=True, align=PP_ALIGN.CENTER, spc=2.0)
 
-out = "content/교육/2026-07-16_열펌특강/열펌의모든것_v10.pptx"
+out = "content/교육/2026-07-16_열펌특강/열펌의모든것_v11.pptx"
 prs.save(out)
 print(f"저장: {out} · {len(prs.slides._sldIdLst)}장")
