@@ -24,6 +24,7 @@ from pathlib import Path
 from . import tts
 from .render import render, probe_duration
 from .subtitles import Line, parse_script
+from .verify_render import verify as verify_render
 
 VIDEO_W, VIDEO_H = 1080, 1350  # 레터박스 안쪽 영상 영역 (4:5) — v9 정본 구성
 FULL_W, FULL_H = 1080, 1920    # 풀블리드 (dim 레이아웃: 화면 전체 반투명 블랙 + 흰 글씨)
@@ -169,6 +170,7 @@ def render_batch(
     preset: str = "style_preset_v9",
     only: str | None = None,
     bgm: str | Path | None = None,
+    verify: bool = True,
 ) -> list[Path]:
     cfg = json.loads(Path(config_path).read_text(encoding="utf-8"))
     v9 = cfg[preset]
@@ -260,6 +262,19 @@ def render_batch(
             outro=v9.get("outro_text"), outro_style=v9.get("outro_style"),
         )
         print(f"  ✅ {out.name}" + (f"  ♪ {track.name}" if track else ""))
+        # 자동 게이트: 마인드 프리셋은 렌더 직후 규격 7항목을 검사. FAIL이면 산출 거부.
+        #  — 검사기를 '기억해서 돌리는' 게 아니라 코드가 강제한다. 미검증 영상이 세션 밖으로 못 나간다.
+        if verify and v9.get("grayscale"):
+            ass_path = work / f"{bg.stem}.ass"
+            fails = verify_render(str(out), str(ass_path))
+            if fails:
+                print("  ❌ 규격검사 FAIL — 산출 거부:", file=sys.stderr)
+                for f in fails:
+                    print("     -", f, file=sys.stderr)
+                raise SystemExit(
+                    f"규격검사 실패: {out.name} — 위 항목 고쳐 재렌더 (prompts/08_렌더_체크리스트.md)"
+                )
+            print("  🔎 규격 7항목 PASS (흑백·박스·교보실렌더·BGM·아웃트로·CTA없음·해상도)")
         outputs.append(out)
     return outputs
 
@@ -277,12 +292,15 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--preset", default="style_preset_v9", help="shorts_config.json의 스타일 프리셋 키")
     ap.add_argument("--only", default=None, help="이 접두사(NN)로 시작하는 대본만 렌더")
     ap.add_argument("--bgm", default=None, help="BGM 오디오 파일 (나레이션 아래에 낮게 깔림)")
+    ap.add_argument("--no-verify", action="store_true",
+                    help="렌더 후 규격 7항목 자동검사 끄기 (기본 켜짐 — 끄지 말 것)")
     args = ap.parse_args(argv)
     try:
         outs = render_batch(args.scripts_dir, args.out, use_tts=not args.no_tts,
                             config_path=args.config, workdir=args.workdir,
                             broll=args.broll, broll_start=args.broll_start,
-                            preset=args.preset, only=args.only, bgm=args.bgm)
+                            preset=args.preset, only=args.only, bgm=args.bgm,
+                            verify=not args.no_verify)
     except OSError as e:
         print(f"❌ 중단: {e}\n   api.elevenlabs.io 차단이면 네트워크 정책 확인 (연결지도.md), "
               f"무음 검증은 --no-tts.", file=sys.stderr)
