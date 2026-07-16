@@ -91,13 +91,16 @@ def render(
         nar_idx = 1
         if bgm:
             cmd += ["-stream_loop", "-1", "-i", str(bgm)]
+            # duration=longest + 아래 -t로 영상 전체 길이(배경=나레이션+tail)를 채운다.
+            # BGM이 나레이션 뒤 아웃트로 구간까지 흐르고, 아웃트로가 잘리지 않는다.
             filters.append(
                 f"[{nar_idx + 1}:a]volume={bgm_volume}[bg];"
-                f"[{nar_idx}:a][bg]amix=inputs=2:normalize=0:duration=first:dropout_transition=0[aout]"
+                f"[{nar_idx}:a][bg]amix=inputs=2:normalize=0:duration=longest:dropout_transition=0[aout]"
             )
         else:
             filters.append(f"[{nar_idx}:a]anull[aout]")
-        maps += ["-map", "[aout]", "-shortest"]
+        # -shortest 금지: 나레이션 길이로 자르면 아웃트로(배경 tail 구간)가 잘린다. 아래 -t가 배경 길이로 고정.
+        maps += ["-map", "[aout]"]
     elif bgm:
         cmd += ["-stream_loop", "-1", "-i", str(bgm)]
         if has_audio(video):
@@ -113,6 +116,7 @@ def render(
     cmd += [
         "-filter_complex", ";".join(filters),
         *maps,
+        "-t", f"{duration:.3f}",   # 출력 길이를 배경(=나레이션+tail) 길이로 고정 → 아웃트로 온전히 보임
         "-c:v", "libx264", "-preset", "medium", "-crf", "18",
         "-c:a", "aac", "-b:a", "192k",
         str(output),
