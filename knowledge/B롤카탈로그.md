@@ -3,6 +3,21 @@
 > 미완으로 남기지 않는다. 새 대본의 배경을 고를 때 여기서 먼저 찾는다. 1편=고유 원본 1개.
 > ⚠️ 공유 안 켜진 파일은 코드방에서 다운로드 불가(로그인 페이지만 받힘) — 필요 시 보관함 링크 or 공유 토글.
 
+## 📌 07-17 배치 B롤 배정 — 박제 (편↔클립↔시작지점↔드라이브ID, 다음 세션이 안 까먹게)
+
+> 다운로드: `curl -sL "https://drive.usercontent.google.com/download?id=<ID>&export=download&confirm=t" -o <파일>` (공개공유 파일만).
+> 렌더: `python3 -m shorts.proof content/shorts/2026-07-17 --out .../보이스_시안 --preset style_preset_mind --only NN --broll <파일> --broll-start <초> --bgm <bgm> --workdir <wk>`
+
+| 편 | 대본 | B롤 클립 | 드라이브 파일ID | broll-start |
+|---|---|---|---|---|
+| 01 | 숱없어도 | IMG_9496.MOV (커트 정면·453MB) | `1iKFOiZRweKvgpRQVHOgYc4ZtxeNUT0Gd` | 113 |
+| 02 | 자기투자 | VID_20260626_075502_156.MP4 (하이록스·312MB) | `1KWFm24xMOmtq2M3wJLnqW2HeiutqlCD9` | 5 |
+| 03 | 단골 | IMG_9497.MOV (커트 옆·330MB) | `1ezsv1Ntzoa_a8Lx9j-rAoBnk7Uu3lvIP` | 40 |
+| 04 | 지적자본론(책) | ⚠️ **책 넘기는 장면 = MVI_89xx 롱테이크 중 "중간" 구간** (이찬호 지시). IMG_6238/6240은 상담 장면이라 아님. → 확정 시 여기 기입 | (확인중) | (확인중) |
+
+- **BGM**: `bgm_cos.mp3` / `bgm_piano.mp3` (동일 CreatorOS 피아노 30초). 폴더 「쇼츠_배경클립_넣는곳」 `1ZgGhMY-CBEugxy06AFCZ23lYuz89HDYI`.
+- **주의(이찬호 지시)**: 04는 처음에 엉뚱한 책 클립 썼다가, **"진짜 책 읽고 책장 넘기는 다이내믹한 장면을 중간에서 잘라 쓰라"**고 지시받음. IMG_6238/6240(상담)이 아니라 MVI 롱테이크의 독서 구간.
+
 ## ✅ 검증된 다운로드 가능 (어제 실사용)
 - **IMG_9496.MOV** (453MB, 커트 정면·117초) — 숱치기(2026-07-17/01)에 사용됨
 - **IMG_9497.MOV** (330MB, 커트 옆모습·117초) — 단골(2026-07-17/03)에 사용됨
