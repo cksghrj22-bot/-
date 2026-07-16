@@ -17,7 +17,7 @@ SUB   = RGBColor(0x80, 0x80, 0x80)   # 회색 (보조·푸터)
 CARD  = RGBColor(0xF2, 0xF1, 0xED)   # 연회색 카드
 GOLD  = RGBColor(0xB8, 0x91, 0x2E)   # 골드 점 강조
 DIV   = RGBColor(0xE4, 0xE3, 0xDF)   # 구분선
-FONT = "Apple SD Gothic Neo"
+FONT = "Noto Sans CJK KR"
 
 prs = Presentation()
 prs.slide_width, prs.slide_height = I(13.333), I(7.5)
@@ -123,13 +123,13 @@ def figure(s, cx, ground_y, scale=1.0):
     disc(s, cx, head_cy, hr, fill=INK)
 
 
-def title(s, text, size=34):
-    txt(s, 0.9, 0.62, 11.5, 0.95, text, size=size, color=INK, bold=True)
-    line(s, 0.9, 1.62, 12.43, 1.62, color=DIV, w=1.6)
+def title(s, text, size=28):
+    txt(s, 0.9, 0.66, 11.5, 0.9, text, size=size, color=INK, bold=True)
+    line(s, 0.9, 1.58, 12.43, 1.58, color=DIV, w=1.4)
 
 
 def subline(s, text):
-    txt(s, 0.9, 1.75, 11.5, 0.5, text, size=15, color=SUB)
+    txt(s, 0.9, 1.7, 11.5, 0.5, text, size=13, color=SUB)
 
 
 def footer(s):
@@ -139,21 +139,21 @@ def footer(s):
 
 
 def numbered(s, n, y, head, sub):
-    disc(s, 1.25, y + 0.28, 0.28, fill=INK)
-    txt(s, 0.97, y + 0.03, 0.56, 0.5, str(n), size=17, color=BG, bold=True, align=PP_ALIGN.CENTER)
-    txt(s, 1.9, y, 10, 0.55, head, size=24, color=INK, bold=True)
-    txt(s, 1.9, y + 0.55, 10, 0.5, sub, size=15, color=SUB)
+    disc(s, 1.25, y + 0.26, 0.25, fill=INK)
+    txt(s, 1.0, y + 0.04, 0.5, 0.45, str(n), size=15, color=BG, bold=True, align=PP_ALIGN.CENTER)
+    txt(s, 1.85, y, 10, 0.5, head, size=20, color=INK, bold=True)
+    txt(s, 1.85, y + 0.48, 10, 0.45, sub, size=13, color=SUB)
 
 
 def dotcard(s, x, y, w, h, label, sub=""):
     rrect(s, x, y, w, h, fill=CARD)
-    disc(s, x + w/2, y + 0.52, 0.07, fill=GOLD)
-    txt(s, x, y + h/2 - 0.28, w, 0.5, label, size=21, color=INK, bold=True, align=PP_ALIGN.CENTER)
+    disc(s, x + w/2, y + 0.52, 0.06, fill=GOLD)
+    txt(s, x, y + h/2 - 0.26, w, 0.5, label, size=18, color=INK, bold=True, align=PP_ALIGN.CENTER)
     if sub:
-        txt(s, x, y + h/2 + 0.22, w, 0.4, sub, size=14, color=SUB, align=PP_ALIGN.CENTER)
+        txt(s, x, y + h/2 + 0.2, w, 0.4, sub, size=12, color=SUB, align=PP_ALIGN.CENTER)
 
 
-def bigcenter(s, text, size=48):
+def bigcenter(s, text, size=42):
     txt(s, 0.6, 0, 12.1, H - 0.4, text, size=size, color=INK, bold=True,
         align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, spacing=1.2)
 
@@ -174,7 +174,7 @@ cx, cy, sz = 6.55, 3.75, 1.4
 poly(s, [(cx, cy - 0.66*sz), (cx - 0.58*sz, cy + 0.66*sz), (cx + 0.58*sz, cy + 0.66*sz)],
      fill=None, line_c=INK, w=2.4, close=True)
 line(s, cx - 1.9*sz, cy, cx - 0.5*sz, cy, color=INK, w=2.2)
-txt(s, cx - 2.5*sz, cy - 0.42, 0.9, 0.7, "?", size=44, color=INK, bold=True, align=PP_ALIGN.CENTER)
+txt(s, cx - 2.5*sz, cy - 0.42, 0.9, 0.7, "?", size=40, color=INK, bold=True, align=PP_ALIGN.CENTER)
 for i in range(4):
     t = (i - 1.5) / 1.5
     c = GOLD if i == 0 else INK
@@ -183,8 +183,8 @@ txt(s, 0, H - 0.62, W, 0.35, "AT NOWN", size=11, color=SUB, bold=True, align=PP_
 
 # ══ 2. 표지 ══
 s = slide("제목. 강사가 '오늘 이걸 쪼갭니다'로 연결.")
-txt(s, 0.9, 2.55, 11.5, 1.5, "열펌의 모든 것", size=66, color=INK, bold=True)
-txt(s, 0.92, 4.15, 8, 0.7, "분해하다", size=28, color=SUB)
+txt(s, 0.9, 2.55, 11.5, 1.5, "열펌의 모든 것", size=56, color=INK, bold=True)
+txt(s, 0.92, 4.05, 8, 0.7, "분해하다", size=23, color=SUB)
 txt(s, 0.92, 6.35, 8, 0.4, "차노 · 2026. 7. 16 · 앳나운플레이스 3F", size=14, color=SUB)
 txt(s, 0, H - 0.62, W, 0.35, "AT NOWN", size=11, color=SUB, bold=True, align=PP_ALIGN.CENTER, spc=2.0)
 
@@ -197,17 +197,17 @@ rows = [("분해", "약과 '열펌'이라는 말부터"),
         ("Q & A", "궁금한 것부터 함께"),
         ("실험", "모다발로 제품을 비교한다")]
 for i, (hd, sb) in enumerate(rows):
-    numbered(s, i + 1, 2.15 + i * 0.86, hd, sb)
-rrect(s, 0.9, H - 1.5, 11.53, 0.72, fill=CARD, rad=0.12)
-txt(s, 0.9, H - 1.34, 11.53, 0.45, "쪼개봐야, 내 것이 된다", size=20, color=INK, bold=True, align=PP_ALIGN.CENTER)
+    numbered(s, i + 1, 1.95 + i * 0.8, hd, sb)
+rrect(s, 0.9, H - 1.35, 11.53, 0.66, fill=CARD, rad=0.12)
+txt(s, 0.9, H - 1.2, 11.53, 0.42, "쪼개봐야, 내 것이 된다", size=17, color=INK, bold=True, align=PP_ALIGN.CENTER)
 footer(s)
 
 # ══ 4. '열펌' 글자 쪼개기 ══
 s = slide("'열펌'이라는 말부터 쪼갠다. 열|펌. 강사가 열은 왜/펌이란 무엇/롤러볼vs판을 말로.")
 title(s, "'열펌'이라는 말부터")
-txt(s, 2.7, 2.7, 3.0, 2.0, "열", size=120, color=INK, bold=True, align=PP_ALIGN.CENTER)
+txt(s, 2.7, 2.7, 3.0, 2.0, "열", size=100, color=INK, bold=True, align=PP_ALIGN.CENTER)
 dline(s, 6.2, 2.7, 6.2, 5.5, color=GOLD, w=2.0)
-txt(s, 6.7, 2.7, 3.0, 2.0, "펌", size=120, color=INK, bold=True, align=PP_ALIGN.CENTER)
+txt(s, 6.7, 2.7, 3.0, 2.0, "펌", size=100, color=INK, bold=True, align=PP_ALIGN.CENTER)
 footer(s)
 
 # ══ 5. 열 (게이지) ══
@@ -218,7 +218,7 @@ line(s, 1.4, by, 11.9, by, color=DIV, w=1.8)
 for off, temp, c in [(0.03, "40–55°C", INK), (0.42, "100°C +", INK), (0.80, "140°C ~", GOLD)]:
     x = 1.4 + off * 10.5
     disc(s, x, by, 0.06, fill=c)
-    txt(s, x - 1.1, by - 0.72, 2.2, 0.5, temp, size=22, color=INK, bold=True, align=PP_ALIGN.CENTER)
+    txt(s, x - 1.1, by - 0.72, 2.2, 0.5, temp, size=19, color=INK, bold=True, align=PP_ALIGN.CENTER)
 footer(s)
 
 # ══ 6. 약 (골드점 카드) ══
@@ -245,25 +245,25 @@ footer(s)
 
 # ══ 9. 커트=공간 (큰 문장) ══
 s = slide("접힐 자리를 만들면 힘이 절반. 강사가 열 100 vs 50, 손상 절반 말로.")
-bigcenter(s, "접으면, 힘이 절반", size=54)
+bigcenter(s, "접으면, 힘이 절반", size=46)
 footer(s)
 
 # ══ 10. 작용 | 반작용 ══
 s = slide("모든 가위질엔 작용과 반작용. 강사가 걷어내면 접힌다 / 너무 걷어내면 부스스 말로.")
 title(s, "작용과, 반작용")
-txt(s, 1.4, 3.3, 5.0, 1.2, "작용", size=44, color=INK, bold=True, align=PP_ALIGN.CENTER)
-txt(s, 6.0, 3.45, 1.3, 0.9, "↔", size=34, color=SUB, align=PP_ALIGN.CENTER)
-txt(s, 6.9, 3.3, 5.0, 1.2, "반작용", size=44, color=GOLD, bold=True, align=PP_ALIGN.CENTER)
+txt(s, 1.4, 3.35, 5.0, 1.2, "작용", size=38, color=INK, bold=True, align=PP_ALIGN.CENTER)
+txt(s, 6.0, 3.48, 1.3, 0.9, "↔", size=30, color=SUB, align=PP_ALIGN.CENTER)
+txt(s, 6.9, 3.35, 5.0, 1.2, "반작용", size=38, color=GOLD, bold=True, align=PP_ALIGN.CENTER)
 footer(s)
 
 # ══ 11. 이제야 보인다 (큰 문장) ══
 s = slide("'펌이 살아났다'가 아니라 '이제야 보인다'. 공간이 있어야 컬이 보인다. 강사가 말로.")
-bigcenter(s, "살아난 게 아니라,\n이제야 보이는 것", size=46)
+bigcenter(s, "살아난 게 아니라,\n이제야 보이는 것", size=40)
 footer(s)
 
 # ══ 12. Q&A (큰 문장) ══
 s = slide("Q&A. 워드월 질문을 함께 푼다.")
-bigcenter(s, "궁금한 것부터", size=54)
+bigcenter(s, "궁금한 것부터", size=46)
 footer(s)
 
 # ══ 13. 실험 (골드점 카드 — 제품) ══
@@ -289,9 +289,9 @@ footer(s)
 # ══ 15. 마무리 (졸라맨 + 큰 문장) ══
 s = slide("마무리. 쪼갤수록 쉬워진다. 개편안처럼 홀로 선 아이로 닫는다. 워드월로 한 번 더.")
 figure(s, 6.66, 4.7, scale=0.9)
-txt(s, 0.6, 5.1, 12.1, 1.2, "쪼갤수록, 쉬워진다", size=40, color=INK, bold=True, align=PP_ALIGN.CENTER)
+txt(s, 0.6, 5.1, 12.1, 1.2, "쪼갤수록, 쉬워진다", size=35, color=INK, bold=True, align=PP_ALIGN.CENTER)
 txt(s, 0, H - 0.62, W, 0.35, "AT NOWN", size=11, color=SUB, bold=True, align=PP_ALIGN.CENTER, spc=2.0)
 
-out = "content/교육/2026-07-16_열펌특강/열펌의모든것_v5.pptx"
+out = "content/교육/2026-07-16_열펌특강/열펌의모든것_v6.pptx"
 prs.save(out)
 print(f"저장: {out} · {len(prs.slides._sldIdLst)}장")
