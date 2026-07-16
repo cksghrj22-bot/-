@@ -123,6 +123,25 @@ def figure(s, cx, ground_y, scale=1.0):
     disc(s, cx, head_cy, hr, fill=INK)
 
 
+def split_buddy(s, cx, cy, scale=1.0):
+    """쪼개다 캐릭터 — 동그란 친구 하나가 둘로 사이좋게 쪼개진다.
+    검정 블롭 + 흰 눈·입 + 가운데 골드 점선 틈 + 좌우 갈라짐 모션."""
+    r = 0.62 * scale
+    gap = 0.5 * scale
+    for side in (-1, 1):
+        bx = cx + side * (r + gap / 2)
+        disc(s, bx, cy, r, fill=INK)                       # 몸
+        ey = cy - 0.10 * scale
+        disc(s, bx - 0.18 * scale, ey, 0.068 * scale, fill=BG)   # 왼눈
+        disc(s, bx + 0.18 * scale, ey, 0.068 * scale, fill=BG)   # 오른눈
+        disc(s, bx, cy + 0.19 * scale, 0.05 * scale, fill=BG)    # 입
+    # 쪼개진 자리 (골드 점선 틈)
+    dline(s, cx, cy - r - 0.22 * scale, cx, cy + r + 0.22 * scale, color=GOLD, w=2.0)
+    # 갈라짐 모션 — 좌우로 튀어나가는 작은 점선
+    dline(s, cx - r * 2.15, cy, cx - r * 2.75, cy, color=GOLD, w=2.0)
+    dline(s, cx + r * 2.15, cy, cx + r * 2.75, cy, color=GOLD, w=2.0)
+
+
 def title(s, text, size=28):
     txt(s, 0.9, 0.66, 11.5, 0.9, text, size=size, color=INK, bold=True)
     line(s, 0.9, 1.58, 12.43, 1.58, color=DIV, w=1.4)
@@ -220,10 +239,10 @@ footer(s)
 
 # ══ 8. 마무리 ══
 s = slide()
-figure(s, 6.66, 4.7, scale=0.9)
+split_buddy(s, 6.66, 3.7, scale=1.15)
 txt(s, 0.6, 5.1, 12.1, 1.2, "쪼갤수록, 쉬워진다", size=35, color=INK, bold=True, align=PP_ALIGN.CENTER)
 txt(s, 0, H - 0.62, W, 0.35, "AT NOWN", size=11, color=SUB, bold=True, align=PP_ALIGN.CENTER, spc=2.0)
 
-out = "content/교육/2026-07-16_열펌특강/열펌의모든것_v8.pptx"
+out = "content/교육/2026-07-16_열펌특강/열펌의모든것_v9.pptx"
 prs.save(out)
 print(f"저장: {out} · {len(prs.slides._sldIdLst)}장")
