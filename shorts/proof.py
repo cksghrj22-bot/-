@@ -181,9 +181,12 @@ def render_batch(
     preset: str = "style_preset_v9",
     only: str | None = None,
     bgm: str | Path | None = None,
+    grade: str | None = None,
 ) -> list[Path]:
     cfg = json.loads(Path(config_path).read_text(encoding="utf-8"))
     v9 = cfg[preset]
+    # 색보정 필터: --grade로 영상별 override (팔레트에서 골라 쓴다). 없으면 프리셋 기본.
+    grade_name = grade or v9.get("grade") or ("bw" if v9.get("grayscale") else "none")
     # BGM: 폴더면 편마다 다른 곡을 로테이션 (지루함 방지). config의 bgm_pool도 허용.
     pool = bgm_pool(bgm if bgm is not None else v9.get("bgm_pool") or cfg.get("bgm_pool"))
     layout = v9.get("layout", "letterbox")
@@ -241,7 +244,7 @@ def render_batch(
         if src is not None:
             subprocess.run(
                 broll_bg_cmd(src, broll_start, duration, bg, size=bg_size, dim=dim, fit=fit,
-                             grade=v9.get("grade") or ("bw" if v9.get("grayscale") else "none")),
+                             grade=grade_name),
                 check=True,
             )
         else:
@@ -277,13 +280,14 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--broll-start", type=float, default=0.0, help="B롤 시작 지점(초)")
     ap.add_argument("--preset", default="style_preset_v9", help="shorts_config.json의 스타일 프리셋 키")
     ap.add_argument("--only", default=None, help="이 접두사(NN)로 시작하는 대본만 렌더")
-    ap.add_argument("--bgm", default=None, help="BGM 오디오 파일 (나레이션 아래에 낮게 깔림)")
+    ap.add_argument("--bgm", default=None, help="BGM 오디오 파일/폴더 (폴더면 편별 로테이션)")
+    ap.add_argument("--grade", default=None, help="색보정 필터 override (GRADES): warm_film·clean·cinema·bw·none")
     args = ap.parse_args(argv)
     try:
         outs = render_batch(args.scripts_dir, args.out, use_tts=not args.no_tts,
                             config_path=args.config, workdir=args.workdir,
                             broll=args.broll, broll_start=args.broll_start,
-                            preset=args.preset, only=args.only, bgm=args.bgm)
+                            preset=args.preset, only=args.only, bgm=args.bgm, grade=args.grade)
     except OSError as e:
         print(f"❌ 중단: {e}\n   api.elevenlabs.io 차단이면 네트워크 정책 확인 (연결지도.md), "
               f"무음 검증은 --no-tts.", file=sys.stderr)
