@@ -29,6 +29,8 @@ VIDEO_W, VIDEO_H = 1080, 1350  # 레터박스 안쪽 영상 영역 (4:5) — v9 
 FULL_W, FULL_H = 1080, 1920    # 풀블리드 (dim 레이아웃: 화면 전체 반투명 블랙 + 흰 글씨)
 FPS = 30
 TAIL_SECONDS = 0.8  # 마지막 자막 뒤 여유
+# 이찬호 지시: 화면에 저장·좋아요·구독 같은 CTA 금지. 대본에 있으면 렌더 거부.
+BANNED_CTA = ("저장", "좋아요", "구독", "팔로우")
 
 # 편별 고유 그라디언트 팔레트 (2026-07-16 배치용 — 기존 시안과 색 조합 중복 없음)
 PALETTES: list[tuple[str, str]] = [
@@ -187,7 +189,8 @@ def render_batch(
     creds = tts.load_credentials(cfg["tts"]["credentials"]) if use_tts else None
     # 아웃트로가 있으면 끝에 여유를 둬 얇은 마무리 줄이 충분히 보이게 한다.
     outro_dur = float((v9.get("outro_style") or {}).get("dur", 2.6)) if v9.get("outro_text") else 0.0
-    tail = max(TAIL_SECONDS, outro_dur * 0.55) if outro_dur else TAIL_SECONDS
+    # 아웃트로가 마지막 자막 뒤에 온전히(겹치지 않고) 보이도록 tail을 아웃트로 길이보다 크게 준다.
+    tail = max(TAIL_SECONDS, outro_dur + 0.3) if outro_dur else TAIL_SECONDS
 
     scripts = find_scripts(scripts_dir)
     if only:
@@ -203,6 +206,14 @@ def render_batch(
     outputs: list[Path] = []
     for i, txt in enumerate(scripts, 1):
         script = parse_script(txt.read_text(encoding="utf-8"))
+        # 검문: 화면 CTA 금지 (이찬호 지시). 대본에 있으면 렌더 거부 — 같은 실수 재발 차단.
+        _joined = " ".join(l.text for l in script.lines)
+        _hit = [w for w in BANNED_CTA if w in _joined]
+        if _hit:
+            raise ValueError(
+                f"금지 CTA {_hit} 발견: {txt.name} — 대본에서 제거 후 렌더 "
+                f"(이찬호 지시: 화면에 저장·좋아요·구독 CTA 금지)"
+            )
         ends = [l.end for l in script.lines if l.end is not None]
         if not ends:
             raise ValueError(f"타이밍 없는 대본 (시안 렌더는 타이밍 필수): {txt.name}")
