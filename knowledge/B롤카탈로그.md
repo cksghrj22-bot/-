@@ -13,7 +13,7 @@
 | 01 | 숱없어도 | IMG_9496.MOV (커트 정면·453MB) | `1iKFOiZRweKvgpRQVHOgYc4ZtxeNUT0Gd` | 113 |
 | 02 | 자기투자 | VID_20260626_075502_156.MP4 (하이록스·312MB) | `1KWFm24xMOmtq2M3wJLnqW2HeiutqlCD9` | 5 |
 | 03 | 단골 | IMG_9497.MOV (커트 옆·330MB) | `1ezsv1Ntzoa_a8Lx9j-rAoBnk7Uu3lvIP` | 40 |
-| 04 | 지적자본론(책) | ⚠️ **책 넘기는 장면 = MVI_89xx 롱테이크 중 "중간" 구간** (이찬호 지시). IMG_6238/6240은 상담 장면이라 아님. → 확정 시 여기 기입 | (확인중) | (확인중) |
+| 04 | 지적자본론(책) | **MVI_8907.MP4** (2:54 롱테이크·책읽기, 「THE ART OF…」 빨간책 · RØDE 마이크) — 중간 독서 구간 | `1i7Oj4wGgIst71REQC0WzMnat6WzRvCX2` | 68 |
 
 - **BGM**: `bgm_cos.mp3` / `bgm_piano.mp3` (동일 CreatorOS 피아노 30초). 폴더 「쇼츠_배경클립_넣는곳」 `1ZgGhMY-CBEugxy06AFCZ23lYuz89HDYI`.
 - **주의(이찬호 지시)**: 04는 처음에 엉뚱한 책 클립 썼다가, **"진짜 책 읽고 책장 넘기는 다이내믹한 장면을 중간에서 잘라 쓰라"**고 지시받음. IMG_6238/6240(상담)이 아니라 MVI 롱테이크의 독서 구간.
