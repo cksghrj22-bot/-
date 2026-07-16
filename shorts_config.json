@@ -83,7 +83,7 @@
   ],
   "dim_opacity": 0.0,
   "subtitle_style": {
-   "font": "NanumSquareRound",
+   "font": "KyoboHandwriting2019",
    "size": 98,
    "margin_v": 0,
    "border_style": 4,
@@ -94,7 +94,7 @@
    "alignment": 5
   },
   "title_style": {
-   "font": "NanumSquareRound",
+   "font": "KyoboHandwriting2019",
    "size": 128,
    "margin_v": 150,
    "border_style": 1,
@@ -102,7 +102,7 @@
    "outline_color": "&H00000000",
    "outline": 4
   },
-  "_폰트": "제목·자막 나눔스퀘어라운드(NanumSquareRound, 설치본). 클라우드·본진 공통 렌더 위해 미설치 Kyobo에서 교체(2026-07-16).",
+  "_폰트": "제목·자막 교보손글씨2019 — 반드시 폰트 내부 패밀리명 그대로 'KyoboHandwriting2019'(공백 없음)로 써야 libass가 실제로 매칭한다. '.Kyobo Handwriting 2019'(공백)로 쓰면 libass가 DejaVu→중국어 WenQuanYi로 폴백해 딴 글씨가 나온다(2026-07-16 실증). 절대 나눔/노토로 바꾸지 말 것. 파일 assets/fonts/KyoboHandwriting2019.ttf 커밋됨, assets/fonts/install_fonts.sh로 세션시작 설치.",
   "_디자인": "채널 마인드 쇼츠 정본 (IMG_1815 레퍼런스): 노란 제목 최상단 + 어두운 화면 + 흰 글씨는 검은 박스 위",
   "grayscale": true,
   "outro_text": "SNS에 일기 쓰고 있어요",

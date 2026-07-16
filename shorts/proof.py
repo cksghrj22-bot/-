@@ -22,7 +22,7 @@ import tempfile
 from pathlib import Path
 
 from . import tts
-from .render import render
+from .render import render, probe_duration
 from .subtitles import Line, parse_script
 
 VIDEO_W, VIDEO_H = 1080, 1350  # 레터박스 안쪽 영상 영역 (4:5) — v9 정본 구성
@@ -174,6 +174,8 @@ def render_batch(
     v9 = cfg[preset]
     # BGM: 폴더면 편마다 다른 곡을 로테이션 (지루함 방지). config의 bgm_pool도 허용.
     pool = bgm_pool(bgm if bgm is not None else v9.get("bgm_pool") or cfg.get("bgm_pool"))
+    if bgm is not None and not pool:
+        print(f"⚠️ BGM을 못 읽어 무음으로 진행됨: {bgm} — 파일 손상/권한 확인", file=sys.stderr)
     layout = v9.get("layout", "letterbox")
     fit = v9.get("fit", "crop")
     if layout == "dim":

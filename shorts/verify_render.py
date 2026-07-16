@@ -38,10 +38,23 @@ a=open(ass,encoding="utf-8").read()
 styles={ln.split(",")[0].replace("Style: ",""):ln for ln in a.splitlines() if ln.startswith("Style:")}
 dialog=[ln for ln in a.splitlines() if ln.startswith("Dialogue:")]
 
-# 4) 폰트 NanumSquareRound (Kyobo/Apple 아님)
+# 4a) ASS 텍스트상 폰트명 KyoboHandwriting2019 — 이찬호 확정. 나눔/노토/애플 아님.
+#     반드시 공백 없는 내부 패밀리명이어야 libass가 실제 매칭한다(공백판은 DejaVu로 폴백).
 for nm in ("Default","Title"):
-    if nm in styles and "NanumSquareRound" not in styles[nm]:
-        f=styles[nm].split(",")[1]; fails.append(f"{nm} 폰트 {f} (NanumSquareRound 아님)")
+    if nm in styles and "KyoboHandwriting2019" not in styles[nm].replace(" ",""):
+        f=styles[nm].split(",")[1]; fails.append(f"{nm} 폰트 {f} (KyoboHandwriting2019 아님)")
+# 4b) 실렌더 폰트 검증 — ASS를 다시 구워 libass fontselect 로그를 본다.
+#     ASS 텍스트만 맞아도 실제 픽셀은 폴백폰트(DejaVu/WenQuanYi/Noto)일 수 있어 반드시 확인.
+fs=subprocess.run(["ffmpeg","-hide_banner","-f","lavfi","-i","color=c=black:s=1080x1920:d=1",
+  "-vf",f"ass={ass}","-frames:v","1","-f","null","-"], capture_output=True, text=True).stderr
+picked=[p.split("/")[-1] for p in re.findall(r"fontselect:.*?->\s*(\S+)", fs)]
+# 교보(Kyobo)가 실제로 선택돼야 한다. 없으면 폰트명 오타/공백으로 완전 폴백 → 치명.
+if picked and not any("Kyobo" in p for p in picked):
+    fails.append(f"실렌더 폰트 폴백! libass가 교보를 못 골랐음 → {set(picked)} — ASS 폰트명 공백 확인")
+# 한글이 중국어/일본어 CJK 폰트로 샌 경우 → 치명(딴 글씨). DejaVu만은 공백(0x20)용이라 무해.
+cjk=[p for p in picked if any(x in p.lower() for x in ("wenquanyi","wqy","noto","droid","cjk","song","gothic-cjk"))]
+if cjk:
+    fails.append(f"한글이 CJK 폰트로 폴백! {set(cjk)} — 교보 글리프 누락/폰트명 오류")
 # 5) 자막 블랙박스: Default BorderStyle=4
 if "Default" in styles and styles["Default"].split(",")[7].strip()!="4":
     fails.append("자막 블랙박스 아님 (BorderStyle≠4)")

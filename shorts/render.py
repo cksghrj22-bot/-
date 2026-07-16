@@ -22,11 +22,17 @@ def _ffmpeg_info(video: str | Path) -> str:
 def probe_duration(video: str | Path) -> float:
     """영상 길이(초). ffprobe 우선, 없으면 ffmpeg stderr 파싱."""
     if _shutil.which("ffprobe"):
+        # check=False + 실패 시 ffmpeg 파싱 폴백 — ffprobe가 간헐 실패해도 예외로 죽지 않는다.
+        # (이게 없으면 _valid_bgm이 유효 BGM을 조용히 버려 음악이 사라지는 버그가 났다.)
         result = subprocess.run(
             ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "json", str(video)],
-            capture_output=True, text=True, check=True,
+            capture_output=True, text=True,
         )
-        return float(json.loads(result.stdout)["format"]["duration"])
+        if result.returncode == 0:
+            try:
+                return float(json.loads(result.stdout)["format"]["duration"])
+            except Exception:
+                pass
     m = re.search(r"Duration:\s*(\d+):(\d+):(\d+\.?\d*)", _ffmpeg_info(video))
     if not m:
         raise RuntimeError(f"영상 길이를 읽을 수 없음: {video}")
