@@ -24,13 +24,13 @@ API_BASE = "https://api.elevenlabs.io/v1"
 DEFAULT_MODEL = "eleven_multilingual_v2"
 DEFAULT_SPEED = 1.1
 
-# 차노 프로페셔널 클론(31분 원본, multilingual_v2 파인튜닝 완료) 기준 나레이션 기본값.
-# stability를 낮추고 style을 살짝 줘서 '또박또박 읽는 톤' 대신 말하는 억양을 살린다.
-# secrets/elevenlabs.json의 "voice_settings"로 편별·세션별 덮어쓸 수 있다.
+# 차노 클론 나레이션 기본값 (2026-07-17 이찬호 'C' 선택 — 띄어쓰기 덜 어색한 톤).
+# stability 0.55·style 0.0 = 더 매끄럽고 차분, 쉼표에서 뚝뚝 끊는 느낌 완화.
+# 핵심: 대본 쉼표를 줄여야 자연스럽다(prompts/06). secrets의 "voice_settings"로 덮어쓸 수 있다.
 DEFAULT_VOICE_SETTINGS = {
-    "stability": 0.42,
+    "stability": 0.55,
     "similarity_boost": 0.85,
-    "style": 0.15,
+    "style": 0.0,
     "use_speaker_boost": True,
 }
 
