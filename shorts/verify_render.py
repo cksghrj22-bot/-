@@ -32,20 +32,30 @@ def verify(mp4: str, ass: str) -> list[str]:
     dm = re.search(r"Duration:\s*(\d+):(\d+):([\d.]+)", info)
     dur = int(dm[1]) * 3600 + int(dm[2]) * 60 + float(dm[3]) if dm else 0
 
-    # 2) 흑백: 25% 지점 중앙 500x500 채도(SATAVG) 낮아야
+    # 2) 흑백: 25% 지점 중앙 500x500 채도(SATAVG) 낮아야. ffmpeg 읽기 플레이크 방어로 빈값이면 1회 재시도.
     t = dur * 0.25
-    sat = _ff(["-ss", f"{t:.1f}", "-i", mp4, "-vframes", "1",
-               "-vf", "crop=500:500:(iw-500)/2:(ih-500)/2,signalstats,"
-                      "metadata=print:key=lavfi.signalstats.SATAVG", "-f", "null", "-"])
-    sm = re.search(r"SATAVG=([\d.]+)", sat)
-    satv = float(sm[1]) if sm else 999
+    satv = None
+    for _ in range(2):
+        sat = _ff(["-ss", f"{t:.1f}", "-i", mp4, "-vframes", "1",
+                   "-vf", "crop=500:500:(iw-500)/2:(ih-500)/2,signalstats,"
+                          "metadata=print:key=lavfi.signalstats.SATAVG", "-f", "null", "-"])
+        sm = re.search(r"SATAVG=([\d.]+)", sat)
+        if sm:
+            satv = float(sm[1])
+            break
+    if satv is None:
+        satv = 999
     if satv > 18:
         fails.append(f"흑백 아님 (중앙 채도 SATAVG={satv:.1f} > 18)")
 
-    # 3) BGM: 마지막 1.2초(나레이션 뒤 아웃트로 구간) RMS 무음 아님
-    tail = _ff(["-ss", f"{max(0, dur - 1.2):.1f}", "-i", mp4,
-                "-af", "astats=metadata=1:reset=0", "-f", "null", "-"])
-    rms = [x for x in re.findall(r"RMS level dB:\s*(-?[\d.]+|-inf)", tail) if x != "-inf"]
+    # 3) BGM: 마지막 1.2초(나레이션 뒤 아웃트로 구간) RMS 무음 아님. 빈값이면 1회 재시도(플레이크 방어).
+    rms: list[str] = []
+    for _ in range(2):
+        tail = _ff(["-ss", f"{max(0, dur - 1.2):.1f}", "-i", mp4,
+                    "-af", "astats=metadata=1:reset=0", "-f", "null", "-"])
+        rms = [x for x in re.findall(r"RMS level dB:\s*(-?[\d.]+|-inf)", tail) if x != "-inf"]
+        if rms:
+            break
     if not rms:
         fails.append("BGM 없음 (아웃트로 구간 완전 무음)")
     elif min(float(x) for x in rms) < -70:
