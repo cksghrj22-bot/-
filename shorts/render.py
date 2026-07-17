@@ -13,6 +13,12 @@ import re
 import shutil as _shutil
 
 
+# BGM을 고르게(들리게) 깔기 위한 컴프레서 체인. 피아노 루프의 조용한 구간이
+# 아웃트로에 걸려도 '안 들리는' 일이 없게 다이내믹을 눌러 소리를 끌어올린다.
+# (volume 스케일은 이 뒤에 곱해진다.)
+BGM_EVEN = "acompressor=threshold=-30dB:ratio=4:attack=20:release=300:makeup=8"
+
+
 def _ffmpeg_info(video: str | Path) -> str:
     """ffprobe가 없는 환경 폴백: `ffmpeg -i` stderr에서 메타데이터를 읽는다."""
     result = subprocess.run(["ffmpeg", "-hide_banner", "-i", str(video)], capture_output=True, text=True)
@@ -99,9 +105,11 @@ def render(
             cmd += ["-stream_loop", "-1", "-i", str(bgm)]
             # 나레이션을 영상 전체 길이(배경=나레이션+tail)만큼 무음 패딩 → amix duration=first가
             # 영상 끝까지 이어지고, 루프 BGM이 나레이션 뒤 아웃트로 구간까지 계속 깔린다.
+            # BGM은 컴프레서(acompressor)로 다이내믹을 눌러 조용한 루프 구간도 '들리게' 고르게 깐다.
+            # (2026-07-17: 06편이 피아노 루프의 조용한 구간에 걸려 아웃트로 -52dB로 안 들리던 것 방지.)
             filters.append(
                 f"[{nar_idx}:a]apad=whole_dur={duration:.3f}[narp];"
-                f"[{nar_idx + 1}:a]volume={bgm_volume}[bg];"
+                f"[{nar_idx + 1}:a]{BGM_EVEN},volume={bgm_volume}[bg];"
                 f"[narp][bg]amix=inputs=2:normalize=0:duration=first:dropout_transition=0[aout]"
             )
         else:
@@ -113,10 +121,10 @@ def render(
         cmd += ["-stream_loop", "-1", "-i", str(bgm)]
         if has_audio(video):
             filters.append(
-                f"[1:a]volume={bgm_volume}[bg];[0:a][bg]amix=inputs=2:duration=first:dropout_transition=0[aout]"
+                f"[1:a]{BGM_EVEN},volume={bgm_volume}[bg];[0:a][bg]amix=inputs=2:duration=first:dropout_transition=0[aout]"
             )
         else:
-            filters.append(f"[1:a]volume={bgm_volume}[aout]")
+            filters.append(f"[1:a]{BGM_EVEN},volume={bgm_volume}[aout]")
         maps += ["-map", "[aout]", "-shortest"]
     elif has_audio(video):
         maps += ["-map", "0:a"]

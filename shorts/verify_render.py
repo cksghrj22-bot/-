@@ -48,18 +48,23 @@ def verify(mp4: str, ass: str) -> list[str]:
     if satv > 18:
         fails.append(f"흑백 아님 (중앙 채도 SATAVG={satv:.1f} > 18)")
 
-    # 3) BGM: 마지막 1.2초(나레이션 뒤 아웃트로 구간) RMS 무음 아님. 빈값이면 1회 재시도(플레이크 방어).
+    # 3) BGM: 아웃트로(나레이션 뒤 순수 BGM 구간)가 '들리게' 깔려야 한다.
+    #    무음(-inf)뿐 아니라 너무 작아도(≈안 들림) FAIL. 정상편 아웃트로 ≈ -34dB, 안 들리던 06 = -52dB.
+    #    → 들리는 바 -45dB. 측정 빈값이면 1회 재시도(플레이크 방어).
+    AUDIBLE_DB = -45.0
     rms: list[str] = []
     for _ in range(2):
-        tail = _ff(["-ss", f"{max(0, dur - 1.2):.1f}", "-i", mp4,
+        tail = _ff(["-ss", f"{max(0, dur - 2.5):.1f}", "-i", mp4,
                     "-af", "astats=metadata=1:reset=0", "-f", "null", "-"])
         rms = [x for x in re.findall(r"RMS level dB:\s*(-?[\d.]+|-inf)", tail) if x != "-inf"]
         if rms:
             break
     if not rms:
-        fails.append("BGM 없음 (아웃트로 구간 완전 무음)")
-    elif min(float(x) for x in rms) < -70:
-        fails.append(f"BGM 의심 (tail RMS {min(float(x) for x in rms):.0f}dB)")
+        fails.append("BGM 없음 (아웃트로 완전 무음) — BGM 무조건 깔 것")
+    else:
+        worst = min(float(x) for x in rms)
+        if worst < AUDIBLE_DB:
+            fails.append(f"BGM 너무 작아 안 들림 (아웃트로 RMS {worst:.0f}dB < 들리는 기준 {AUDIBLE_DB:.0f}dB)")
 
     # ASS 기반 검사
     a = open(ass, encoding="utf-8").read()
