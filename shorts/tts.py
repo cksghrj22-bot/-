@@ -22,7 +22,9 @@ from pathlib import Path
 
 API_BASE = "https://api.elevenlabs.io/v1"
 DEFAULT_MODEL = "eleven_multilingual_v2"
-DEFAULT_SPEED = 1.1
+# 코드방 마인드 쇼츠 정본 = 1.05 (2026-07-17 이찬호 승인 목소리. 1.1=경박·1.0=느림 사이).
+# 본진 CreatorOS는 1.1이 별도 정본 — 방마다 섞지 말 것. secrets에 speed 없어도 이 기본이 나온다.
+DEFAULT_SPEED = 1.05
 
 # 차노 프로페셔널 클론(31분 원본, multilingual_v2 파인튜닝 완료) 기준 나레이션 기본값.
 # stability를 낮추고 style을 살짝 줘서 '또박또박 읽는 톤' 대신 말하는 억양을 살린다.
