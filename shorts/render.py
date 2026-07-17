@@ -16,7 +16,7 @@ import shutil as _shutil
 # BGM을 고르게(들리게) 깔기 위한 컴프레서 체인. 피아노 루프의 조용한 구간이
 # 아웃트로에 걸려도 '안 들리는' 일이 없게 다이내믹을 눌러 소리를 끌어올린다.
 # (volume 스케일은 이 뒤에 곱해진다.)
-BGM_EVEN = "acompressor=threshold=-30dB:ratio=4:attack=20:release=300:makeup=12"
+BGM_EVEN = "dynaudnorm=f=100:g=15:p=0.9,acompressor=threshold=-28dB:ratio=4:makeup=5"
 
 
 def _ffmpeg_info(video: str | Path) -> str:
