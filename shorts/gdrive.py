@@ -131,16 +131,36 @@ def ensure_fallback_folder(token: str) -> str:
     return made["id"]
 
 
+def find_in_folder(name: str, folder_id: str, token: str) -> str | None:
+    """폴더 안에서 같은 이름의(휴지통 아닌) 파일 ID를 찾는다. 없으면 None.
+    drive.file 스코프에선 앱이 만든 파일만 보이므로, 이전에 앱이 올린 산출물 덮어쓰기에 적합."""
+    q = urllib.parse.quote(f"name = '{name}' and '{folder_id}' in parents and trashed = false")
+    files = _api(f"{FILES_URL}?q={q}&fields=files(id,name)&supportsAllDrives=true"
+                 f"&includeItemsFromAllDrives=true", token).get("files", [])
+    return files[0]["id"] if files else None
+
+
 def upload_file(path: str | Path, folder_id: str | None = None,
-                secrets_path: str | Path = DEFAULT_SECRETS, name: str | None = None) -> dict:
+                secrets_path: str | Path = DEFAULT_SECRETS, name: str | None = None,
+                overwrite: bool = False) -> dict:
     """영상/파일을 드라이브에 올리고 {id, name, webViewLink}를 돌려준다.
 
     folder_id 접근이 안 되면(drive.file 권한 한계) 「코드방_업로드」 폴더로 폴백.
+    overwrite=True 면 폴더 안 같은 이름 파일의 '내용만 교체'(파일 ID·링크 유지, 중복 0).
     """
     p = Path(path)
     creds = load_secrets(secrets_path)
     token = access_token(creds)
     meta: dict = {"name": name or p.name}
+    ctype = "video/mp4" if p.suffix.lower() in (".mp4", ".mov") else "application/octet-stream"
+
+    # 덮어쓰기: 폴더에 같은 이름 있으면 그 파일 '미디어만' PATCH 교체 → 같은 링크 유지.
+    existing = None
+    if overwrite and folder_id:
+        try:
+            existing = find_in_folder(meta["name"], folder_id, token)
+        except urllib.error.HTTPError:
+            existing = None
 
     def _start_session(parent: str | None) -> str:
         m = dict(meta)
@@ -150,26 +170,44 @@ def upload_file(path: str | Path, folder_id: str | None = None,
         req = urllib.request.Request(UPLOAD_URL, data=body, method="POST", headers={
             "Authorization": f"Bearer {token}",
             "Content-Type": "application/json",
-            "X-Upload-Content-Type": "video/mp4" if p.suffix.lower() in (".mp4", ".mov") else "application/octet-stream",
+            "X-Upload-Content-Type": ctype,
             "X-Upload-Content-Length": str(p.stat().st_size),
         })
         with urllib.request.urlopen(req, timeout=60) as r:
             return r.headers["Location"]
 
-    try:
-        session = _start_session(folder_id)
-    except urllib.error.HTTPError as e:
-        if folder_id and e.code in (403, 404):
-            session = _start_session(ensure_fallback_folder(token))
-        else:
-            raise
+    def _start_update(file_id: str) -> str:
+        url = (f"https://www.googleapis.com/upload/drive/v3/files/{file_id}"
+               f"?uploadType=resumable&supportsAllDrives=true")
+        req = urllib.request.Request(url, data=b"{}", method="PATCH", headers={
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+            "X-Upload-Content-Type": ctype,
+            "X-Upload-Content-Length": str(p.stat().st_size),
+        })
+        with urllib.request.urlopen(req, timeout=60) as r:
+            return r.headers["Location"]
+
+    if existing:
+        session = _start_update(existing)
+        method = "PUT"
+    else:
+        try:
+            session = _start_session(folder_id)
+        except urllib.error.HTTPError as e:
+            if folder_id and e.code in (403, 404):
+                session = _start_session(ensure_fallback_folder(token))
+            else:
+                raise
+        method = "PUT"
 
     data = p.read_bytes()
-    req = urllib.request.Request(session, data=data, method="PUT",
+    req = urllib.request.Request(session, data=data, method=method,
                                  headers={"Content-Length": str(len(data))})
     with urllib.request.urlopen(req, timeout=1800) as r:
         uploaded = json.loads(r.read())
-    info = _api(f"{FILES_URL}/{uploaded['id']}?fields=id,name,webViewLink", token)
+    info = _api(f"{FILES_URL}/{uploaded['id']}?fields=id,name,webViewLink&supportsAllDrives=true", token)
+    info["overwritten"] = bool(existing)
     return info
 
 
@@ -183,6 +221,8 @@ def main(argv: list[str] | None = None) -> int:
     p_up.add_argument("file")
     p_up.add_argument("--folder-id", default=None)
     p_up.add_argument("--name", default=None)
+    p_up.add_argument("--overwrite", action="store_true",
+                      help="폴더 내 같은 이름 파일 내용만 교체 (링크 유지·중복0)")
     p_up.add_argument("--secrets", default=DEFAULT_SECRETS)
     args = ap.parse_args(argv)
 
@@ -205,8 +245,10 @@ def main(argv: list[str] | None = None) -> int:
         print(f"✅ 연결 완료 — {args.secrets}에 저장. 이제 upload 명령을 쓸 수 있습니다.")
         return 0
 
-    info = upload_file(args.file, folder_id=args.folder_id, secrets_path=args.secrets, name=args.name)
-    print(f"✅ 업로드 완료: {info['name']}\n🔗 {info.get('webViewLink', '(링크 없음)')}")
+    info = upload_file(args.file, folder_id=args.folder_id, secrets_path=args.secrets,
+                       name=args.name, overwrite=args.overwrite)
+    tag = "덮어씀(링크유지)" if info.get("overwritten") else "새로 올림"
+    print(f"✅ 업로드 완료[{tag}]: {info['name']}\n🔗 {info.get('webViewLink', '(링크 없음)')}")
     return 0
 
 

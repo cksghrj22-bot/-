@@ -246,13 +246,30 @@ Format: Layer, Start, End, Style, Text
         events.append(f"Dialogue: 0,{_ass_time(line.start)},{_ass_time(line.end)},Default,{text}")
     last_end = max((l.end or 0) for l in lines) if lines else 60.0
     if title:
-        events.insert(0, f"Dialogue: 1,{_ass_time(0)},{_ass_time(last_end)},Title,{title_text.replace(chr(10), ' ')}")
+        tt = title_text.replace(chr(10), "\\N")
+        if "\\N" in tt:
+            # 2줄 제목: libass 기본 행간이 넓어서, 각 줄을 \pos로 찍어 간격을 직접 좁힌다.
+            # line_gap = 폰트 크기 대비 줄 간격 비율(작을수록 촘촘). \an8=상단중앙 기준.
+            gap = int(int(tst["size"]) * float(tst.get("line_gap", 0.85)))
+            top = int(tst.get("margin_v", 110))
+            cx = width // 2
+            parts = tt.split("\\N")
+            for i, part in enumerate(parts[:2]):
+                y = top + i * gap
+                events.insert(0 + i,
+                    f"Dialogue: 1,{_ass_time(0)},{_ass_time(last_end)},Title,"
+                    f"{{\\an8\\pos({cx},{y})}}{part}")
+        else:
+            events.insert(0, f"Dialogue: 1,{_ass_time(0)},{_ass_time(last_end)},Title,{tt}")
     if outro:
         vid_end = total_duration if total_duration is not None else last_end
         dur = float(ost.get("dur", 2.8))
         o_start = max(0.0, vid_end - dur)
         fin, fout = (ost.get("fade") or [0, 0])[:2]
-        tag = f"{{\\fad({int(fin)},{int(fout)})\\alpha&H{ost.get('alpha', '80')}&}}"
+        # 글자(1a)·외곽선(3a)만 alpha 적용. 박스(BackColour=4a)는 style의 box_opacity가 제어하게
+        # 남겨둔다 → 어두운 박스는 또렷하게 깔리고 글자만 원하는 투명도. (blanket \alpha는 박스까지 투명화)
+        a = ost.get("alpha", "80")
+        tag = f"{{\\fad({int(fin)},{int(fout)})\\1a&H{a}&\\3a&H{a}&}}"
         otext = outro.replace("\n", "\\N")
         events.append(f"Dialogue: 2,{_ass_time(o_start)},{_ass_time(vid_end)},Outro,{tag}{otext}")
     return header + "\n".join(events) + "\n"
