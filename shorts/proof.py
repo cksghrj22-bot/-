@@ -185,6 +185,10 @@ def render_batch(
 ) -> list[Path]:
     cfg = json.loads(Path(config_path).read_text(encoding="utf-8"))
     v9 = cfg[preset]
+    # 🔒 정본 점검 — "이걸 하면 저걸 까먹는" 방지. 마인드 프리셋이면 렌더 전 자동 확인.
+    if preset == "style_preset_mind":
+        from . import spec
+        print(spec.format_report(cfg, set(GRADES)))
     # 색보정 필터: --grade로 영상별 override (팔레트에서 골라 쓴다). 없으면 프리셋 기본.
     grade_name = grade or v9.get("grade") or ("bw" if v9.get("grayscale") else "none")
     # BGM: 폴더면 편마다 다른 곡을 로테이션 (지루함 방지). config의 bgm_pool도 허용.
