@@ -96,11 +96,12 @@
   "title_style": {
    "font": "KyoboHandwriting2019",
    "size": 128,
-   "margin_v": 110,
+   "margin_v": 80,
    "border_style": 1,
    "primary_color": "&H0000D7FF",
    "outline_color": "&H00000000",
-   "outline": 4
+   "outline": 4,
+   "line_gap": 0.82
   },
   "_폰트": "제목·자막 교보손글씨2019 — 반드시 폰트 내부 패밀리명 그대로 'KyoboHandwriting2019'(공백 없음)로 써야 libass가 실제로 매칭한다. '.Kyobo Handwriting 2019'(공백)로 쓰면 libass가 DejaVu→중국어 WenQuanYi로 폴백해 딴 글씨가 나온다(2026-07-16 실증). 절대 나눔/노토로 바꾸지 말 것. 파일 assets/fonts/KyoboHandwriting2019.ttf 커밋됨, assets/fonts/install_fonts.sh로 세션시작 설치.",
   "_디자인": "채널 마인드 쇼츠 정본 (IMG_1815 레퍼런스): 노란 제목 최상단 + 어두운 화면 + 흰 글씨는 검은 박스 위",

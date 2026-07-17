@@ -246,7 +246,21 @@ Format: Layer, Start, End, Style, Text
         events.append(f"Dialogue: 0,{_ass_time(line.start)},{_ass_time(line.end)},Default,{text}")
     last_end = max((l.end or 0) for l in lines) if lines else 60.0
     if title:
-        events.insert(0, f"Dialogue: 1,{_ass_time(0)},{_ass_time(last_end)},Title,{title_text.replace(chr(10), ' ')}")
+        tt = title_text.replace(chr(10), "\\N")
+        if "\\N" in tt:
+            # 2줄 제목: libass 기본 행간이 넓어서, 각 줄을 \pos로 찍어 간격을 직접 좁힌다.
+            # line_gap = 폰트 크기 대비 줄 간격 비율(작을수록 촘촘). \an8=상단중앙 기준.
+            gap = int(int(tst["size"]) * float(tst.get("line_gap", 0.85)))
+            top = int(tst.get("margin_v", 110))
+            cx = width // 2
+            parts = tt.split("\\N")
+            for i, part in enumerate(parts[:2]):
+                y = top + i * gap
+                events.insert(0 + i,
+                    f"Dialogue: 1,{_ass_time(0)},{_ass_time(last_end)},Title,"
+                    f"{{\\an8\\pos({cx},{y})}}{part}")
+        else:
+            events.insert(0, f"Dialogue: 1,{_ass_time(0)},{_ass_time(last_end)},Title,{tt}")
     if outro:
         vid_end = total_duration if total_duration is not None else last_end
         dur = float(ost.get("dur", 2.8))
