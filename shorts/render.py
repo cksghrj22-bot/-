@@ -16,7 +16,7 @@ import shutil as _shutil
 # BGM을 고르게(들리게) 깔기 위한 컴프레서 체인. 피아노 루프의 조용한 구간이
 # 아웃트로에 걸려도 '안 들리는' 일이 없게 다이내믹을 눌러 소리를 끌어올린다.
 # (volume 스케일은 이 뒤에 곱해진다.)
-BGM_EVEN = "acompressor=threshold=-30dB:ratio=4:attack=20:release=300:makeup=8"
+BGM_EVEN = "acompressor=threshold=-30dB:ratio=4:attack=20:release=300:makeup=12"
 
 
 def _ffmpeg_info(video: str | Path) -> str:
@@ -95,7 +95,10 @@ def render(
         base = f"[0:v]scale=1080:-2,pad=1080:1920:(ow-iw)/2:(oh-ih)/2:black[vbase];[vbase]"
     else:
         base = "[0:v]"
-    filters = [f"{base}ass={ass_path}[vout]"]
+    # 끝 여운: 마지막에 탁 끊기지 않게 영상·소리를 스륵 페이드아웃한다 (2026-07-17 이찬호).
+    v_fade, a_fade = 1.3, 1.6
+    v_st = max(0.0, duration - v_fade)
+    filters = [f"{base}ass={ass_path},fade=t=out:st={v_st:.3f}:d={v_fade}[vout]"]
     maps = ["-map", "[vout]"]
 
     if narration:
@@ -128,6 +131,12 @@ def render(
         maps += ["-map", "[aout]", "-shortest"]
     elif has_audio(video):
         maps += ["-map", "0:a"]
+
+    # 끝 여운: 오디오도 스륵 페이드아웃 (영상 페이드와 함께 탁 끊김 방지).
+    if "[aout]" in maps:
+        a_st = max(0.0, duration - a_fade)
+        filters.append(f"[aout]afade=t=out:st={a_st:.3f}:d={a_fade}[aoutf]")
+        maps = ["[aoutf]" if m == "[aout]" else m for m in maps]
 
     cmd += [
         "-filter_complex", ";".join(filters),

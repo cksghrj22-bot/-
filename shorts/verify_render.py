@@ -50,11 +50,12 @@ def verify(mp4: str, ass: str) -> list[str]:
 
     # 3) BGM: 아웃트로(나레이션 뒤 순수 BGM 구간)가 '들리게' 깔려야 한다.
     #    무음(-inf)뿐 아니라 너무 작아도(≈안 들림) FAIL. 정상편 아웃트로 ≈ -34dB, 안 들리던 06 = -52dB.
-    #    → 들리는 바 -45dB. 측정 빈값이면 1회 재시도(플레이크 방어).
+    #    → 들리는 바 -45dB. 끝 페이드아웃(약1.6s) 때문에 맨 끝은 조용해지므로, 페이드 앞
+    #    순수 BGM 창 [dur-3.3, dur-1.8]에서 측정한다. 빈값이면 1회 재시도(플레이크 방어).
     AUDIBLE_DB = -45.0
     rms: list[str] = []
     for _ in range(2):
-        tail = _ff(["-ss", f"{max(0, dur - 2.5):.1f}", "-i", mp4,
+        tail = _ff(["-ss", f"{max(0, dur - 3.3):.1f}", "-t", "1.5", "-i", mp4,
                     "-af", "astats=metadata=1:reset=0", "-f", "null", "-"])
         rms = [x for x in re.findall(r"RMS level dB:\s*(-?[\d.]+|-inf)", tail) if x != "-inf"]
         if rms:

@@ -122,7 +122,9 @@ def broll_bg_cmd(
     else:
         vf = f"scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h},fps={FPS}"
     if grayscale:
-        vf += ",hue=s=0"
+        # 무채색 + 밝은(화이티쉬) 배경을 눌러 눈 편하게: 밝기↓·하이라이트 롤오프.
+        # (2026-07-17 이찬호: 배경이 너무 하얘서 눈이 피로 → 조금 어둡게.)
+        vf += ",hue=s=0,eq=brightness=-0.06:contrast=1.03,curves=all='0/0 0.5/0.44 1/0.82'"
     if dim > 0:
         vf += f",drawbox=c=black@{dim}:t=fill"
     return [
@@ -194,7 +196,8 @@ def render_batch(
     # 아웃트로가 있으면 끝에 여유를 둬 얇은 마무리 줄이 충분히 보이게 한다.
     outro_dur = float((v9.get("outro_style") or {}).get("dur", 2.6)) if v9.get("outro_text") else 0.0
     # 아웃트로가 마지막 자막 뒤에 온전히(겹치지 않고) 보이도록 tail을 아웃트로 길이보다 크게 준다.
-    tail = max(TAIL_SECONDS, outro_dur + 0.3) if outro_dur else TAIL_SECONDS
+    # 끝 여운: 아웃트로 뒤에 여유를 더 둬(0.3→0.9) 페이드아웃이 탁 끊기지 않고 스륵 끝나게.
+    tail = max(TAIL_SECONDS, outro_dur + 0.9) if outro_dur else TAIL_SECONDS
 
     scripts = find_scripts(scripts_dir)
     if only:
