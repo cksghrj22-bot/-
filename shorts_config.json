@@ -108,20 +108,21 @@
   "grayscale": true,
   "outro_text": "SNS에 일기 쓰고 있어요",
   "outro_style": {
-   "size": 54,
-   "alpha": "80",
+   "size": 64,
+   "alpha": "20",
    "dur": 2.6,
    "margin_v": 0,
-   "box_opacity": 0,
-   "border_style": 1,
+   "box_opacity": 60,
+   "border_style": 4,
    "outline": 1,
    "fade": [
     600,
     400
    ],
-   "alignment": 5
+   "alignment": 5,
+   "box_color": "000000"
   },
-  "_아웃트로": "마지막 2.6초 화면 중앙에 얇게 '사람 차노' 브랜딩 줄(크기54·반투명80·중앙alignment5). 저장 CTA 아님. 2026-07-16 이찬호: 문구 '쓰고 있어요'·위치 중앙·크기 46→54(조금 크게). BGM은 --bgm <폴더>로 편마다 로테이션.",
+  "_아웃트로": "마지막 2.6초 화면 중앙 '사람 차노' 브랜딩 줄(크기64·중앙alignment5·뒤에 어두운 박스 box_opacity60·글자alpha20 또렷). 저장 CTA 아님. 2026-07-17 이찬호: 흰 글자가 밝은 배경에 떠서 안 보이고 시선 분산 → 글자 키우고(54→64) 뒤에 검은 박스 깔아 눌러 또렷하게. 글자·박스 alpha 분리(\\1a·\\3a만, 박스는 box_opacity가 제어).",
   "_bgm": "렌더 시 --bgm 에 BGM 폴더를 주면 편마다 다른 곡을 깐다 (bgm_pool 로테이션). CreatorOS 곡은 드라이브 앳나운_영상 브리지로 받는다."
  }
 }

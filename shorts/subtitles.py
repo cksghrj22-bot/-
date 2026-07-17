@@ -266,7 +266,10 @@ Format: Layer, Start, End, Style, Text
         dur = float(ost.get("dur", 2.8))
         o_start = max(0.0, vid_end - dur)
         fin, fout = (ost.get("fade") or [0, 0])[:2]
-        tag = f"{{\\fad({int(fin)},{int(fout)})\\alpha&H{ost.get('alpha', '80')}&}}"
+        # 글자(1a)·외곽선(3a)만 alpha 적용. 박스(BackColour=4a)는 style의 box_opacity가 제어하게
+        # 남겨둔다 → 어두운 박스는 또렷하게 깔리고 글자만 원하는 투명도. (blanket \alpha는 박스까지 투명화)
+        a = ost.get("alpha", "80")
+        tag = f"{{\\fad({int(fin)},{int(fout)})\\1a&H{a}&\\3a&H{a}&}}"
         otext = outro.replace("\n", "\\N")
         events.append(f"Dialogue: 2,{_ass_time(o_start)},{_ass_time(vid_end)},Outro,{tag}{otext}")
     return header + "\n".join(events) + "\n"
