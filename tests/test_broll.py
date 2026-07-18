@@ -49,8 +49,11 @@ class TestPick(unittest.TestCase):
         self.assertEqual(chosen["id"], "IMG_9497")  # 덜 쓴 것
 
     def test_require_file_id는_id있는것만(self):
-        chosen = broll.pick("aerial", CATALOG, require_file_id=True)
-        self.assertIsNone(chosen)  # aerial은 아직 file_id 없음 → None
+        chosen = broll.pick("scalp", CATALOG, require_file_id=True)
+        self.assertIsNone(chosen)  # scalp(두피)은 아직 file_id 없음 → None
+        chosen2 = broll.pick("aerial", CATALOG, require_file_id=True)
+        self.assertIsNotNone(chosen2)  # aerial은 DJI 스캔 완료 → 있음
+        self.assertTrue(chosen2.get("file_id"))
 
     def test_없는_카테고리는_None(self):
         self.assertIsNone(broll.pick("존재안함", CATALOG))
@@ -63,10 +66,15 @@ class TestSelect(unittest.TestCase):
         self.assertIsNotNone(r["clip"])
         self.assertTrue(r["ready"])  # cut 클립엔 file_id 있음
 
-    def test_aerial은_아직_미준비(self):
+    def test_aerial은_DJI스캔완료(self):
         r = broll.select_for_script("브랜드와 성장의 방향", CATALOG)
         self.assertEqual(r["category"], "aerial")
-        self.assertFalse(r["ready"])  # file_id 없음 → A방 스캔 대기
+        self.assertTrue(r["ready"])  # DJI file_id 채워짐 → 렌더 가능
+
+    def test_scalp은_아직_미준비(self):
+        r = broll.select_for_script("두피 스케일링 탈모 관리", CATALOG)
+        self.assertEqual(r["category"], "scalp")
+        self.assertFalse(r["ready"])  # 두피 file_id 아직 없음 → 스캔 대기
 
 
 if __name__ == "__main__":
