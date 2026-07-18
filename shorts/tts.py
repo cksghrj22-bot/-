@@ -26,13 +26,13 @@ DEFAULT_MODEL = "eleven_multilingual_v2"
 # 본진 CreatorOS는 1.1이 별도 정본 — 방마다 섞지 말 것. secrets에 speed 없어도 이 기본이 나온다.
 DEFAULT_SPEED = 1.05
 
-# 차노 클론 나레이션 기본값 (2026-07-17 이찬호 'C' 선택 — 띄어쓰기 덜 어색한 톤).
-# stability 0.55·style 0.0 = 더 매끄럽고 차분, 쉼표에서 뚝뚝 끊는 느낌 완화.
-# 핵심: 대본 쉼표를 줄여야 자연스럽다(prompts/06). secrets의 "voice_settings"로 덮어쓸 수 있다.
+# 차노 클론 나레이션 기본값 (2026-07-18 이찬호 'B' 선택 — A/B 비교 후).
+# stability 0.42·style 0.15 = 억양 살아있고 자연스러움. 쉼표 유지(라임 06). speed 1.05.
+# 두 방 공통값. secrets의 "voice_settings"로 덮어쓸 수 있다.
 DEFAULT_VOICE_SETTINGS = {
-    "stability": 0.55,
+    "stability": 0.42,
     "similarity_boost": 0.85,
-    "style": 0.0,
+    "style": 0.15,
     "use_speaker_boost": True,
 }
 

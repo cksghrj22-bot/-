@@ -101,3 +101,12 @@
 - 여기서 브리핑 트리거/예약 루틴 생성 (규약 위반, 본진과 중복)
 - 노션 허브·브리핑 기록 페이지를 임의 수정 (본진 자동화가 쓰는 페이지다)
 - `secrets/` 내용 커밋 또는 출력
+
+## 🔄 방 자동 동기화 (2026-07-18 — 무조건)
+
+두 코드방이 병렬로 도는데 이찬호가 직접 pull 하지 않는다. **각 방(Claude)이 알아서 맞춘다:**
+- **응답(작업) 시작 전:** `git pull --rebase origin main`
+- **커밋할 때마다:** `git pull --rebase origin main && git push origin HEAD:main` (거부되면 다시 pull 후 push, 성공까지)
+- 충돌 = 최신(다른 방) 살리고 내 변경 재적용 → `python3 -m shorts.spec`·테스트 통과 후 push.
+- 큰 작업은 `knowledge/방_공유_작업로그.md` 맨 위에 한 줄 남긴다.
+- 상세/붙여넣기용: `prompts/방_자동동기화_붙여넣기.md`.
