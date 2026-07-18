@@ -2,7 +2,7 @@
 # 설명: 큰 브랜드에 얹히면 내가 그 브랜드인 줄 착각한다. 토끼가 호랑이 등에 타고 자기가 무서운 줄 아는 우화처럼. 간판이 나를 만드는 게 아니다. 땅바닥에서 시작해도 내 이름으로 선 게 진짜 힘이다. #브랜드 #자기위치 #마인드 #차노쌤
 # 태그: 브랜드,자기위치,호가호위,마인드,차노쌤
 # 라인: 마인드 (이찬호 구술 차노화 2026-07-16 · 라임 부호 prompts/06)
-# B롤: [aerial · DJI 이동/항공 · 앞으로 나아감·자기 길] — 커트 아님(2026-07-18 교체). A방: broll_catalog.json의 DJI file_id 채워 렌더. `python3 -m shorts.broll --script 이파일` 로 재확인.
+# B롤: [aerial · DJI_155319 · start 3 · id 1FNZuDKz6VOl9-yNkCYeOdzWwFwhTtcRd] — 커트 아님(2026-07-18 교체·DJI 항공/이동). 다운: curl -sL "https://drive.usercontent.google.com/download?id=1FNZuDKz6VOl9-yNkCYeOdzWwFwhTtcRd&export=download&confirm=t" -o dji07.mp4 → --broll dji07.mp4 --broll-start 3
 00:00-00:03 젊을 때, 큰 브랜드에 들어가고 싶죠.
 00:03-00:06 삼성 명함, 유명한 간판.
 00:06-00:09 근데 거기 얹히는 순간
