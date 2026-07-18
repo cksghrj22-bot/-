@@ -1,0 +1,512 @@
+{
+ "sources": {
+  "174TFm5_cJyfi-U0X3HM_JKGN3gc3avYA": "폰_자동업로드",
+  "1MBvVanqFgvBjk7hS2wjOaYN6oiaoBtlO": "코드방_인입"
+ },
+ "clips": {
+  "1VMb8g4GvpULsLr79r2D_CuuUEjRYcL_A": {
+   "name": "RMTI1474.MOV",
+   "size": 39125616,
+   "created": "2026-07-15T12:33:22.055Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1VMb8g4GvpULsLr79r2D_CuuUEjRYcL_A/view",
+   "used_in": []
+  },
+  "1kxTHQfnj_oqDN69r1tzd1X0uVm2_xUKa": {
+   "name": "IMG_9519.MOV",
+   "size": 13096727,
+   "created": "2026-07-15T12:33:23.582Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1kxTHQfnj_oqDN69r1tzd1X0uVm2_xUKa/view",
+   "used_in": []
+  },
+  "1ub2nG91EbEaXNfVHpdewAIQShAs-BQYt": {
+   "name": "KBPA9654.MP4",
+   "size": 6008977,
+   "created": "2026-07-15T12:33:24.541Z",
+   "source": "폰_자동업로드",
+   "ext": "MP4",
+   "view": "https://drive.google.com/file/d/1ub2nG91EbEaXNfVHpdewAIQShAs-BQYt/view",
+   "used_in": []
+  },
+  "1zuOK0EAwpDDPjXGeYLQcma9e0vX5tFqj": {
+   "name": "IMG_1307.MOV",
+   "size": 93506897,
+   "created": "2026-07-15T12:33:24.777Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1zuOK0EAwpDDPjXGeYLQcma9e0vX5tFqj/view",
+   "used_in": []
+  },
+  "1gGFGdt_gYQrG271N4edyxnVnIP2224KY": {
+   "name": "IMG_0047.MOV",
+   "size": 43591764,
+   "created": "2026-07-15T12:33:28.138Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1gGFGdt_gYQrG271N4edyxnVnIP2224KY/view",
+   "used_in": []
+  },
+  "1gW4l1IHW4osyJ53n6omWk-Ujsi1a085F": {
+   "name": "IMG_9618.MOV",
+   "size": 9398337,
+   "created": "2026-07-15T12:33:30.067Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1gW4l1IHW4osyJ53n6omWk-Ujsi1a085F/view",
+   "used_in": []
+  },
+  "1S_GXi8xjWNlLrKVMchyUjraLP3z_CEL0": {
+   "name": "IMG_0152.MOV",
+   "size": 16434861,
+   "created": "2026-07-15T12:33:30.799Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1S_GXi8xjWNlLrKVMchyUjraLP3z_CEL0/view",
+   "used_in": []
+  },
+  "165smYbKUsl6LIriy8BMQD8ZfwQI-OSk-": {
+   "name": "IMG_9691.MOV",
+   "size": 73593022,
+   "created": "2026-07-15T12:33:31.732Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/165smYbKUsl6LIriy8BMQD8ZfwQI-OSk-/view",
+   "used_in": []
+  },
+  "11Q0z2SxsqOLLZv0H5M2MmvcCdsdxwnr1": {
+   "name": "IMG_9375.MOV",
+   "size": 214777333,
+   "created": "2026-07-15T12:33:35.879Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/11Q0z2SxsqOLLZv0H5M2MmvcCdsdxwnr1/view",
+   "used_in": []
+  },
+  "1oGqF5g_P67AsXiINpEGPUg2pT7JNIxKz": {
+   "name": "IMG_9072.MOV",
+   "size": 42074855,
+   "created": "2026-07-15T12:33:43.465Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1oGqF5g_P67AsXiINpEGPUg2pT7JNIxKz/view",
+   "used_in": []
+  },
+  "14tD0NZbxf3xBosA0hw6ET4StBbnE5X4E": {
+   "name": "IMG_1561.MOV",
+   "size": 38831818,
+   "created": "2026-07-15T12:33:44.995Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/14tD0NZbxf3xBosA0hw6ET4StBbnE5X4E/view",
+   "used_in": []
+  },
+  "13A6jd2s0EZuSCvYxk0H3QLRQ9KGuWLRc": {
+   "name": "GRFY9525.MOV",
+   "size": 236699143,
+   "created": "2026-07-15T12:33:47.323Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/13A6jd2s0EZuSCvYxk0H3QLRQ9KGuWLRc/view",
+   "used_in": []
+  },
+  "1T8kBLhUnU1zqPFJUn9fVskOhz8h0q8Lc": {
+   "name": "IMG_9620.MOV",
+   "size": 15075353,
+   "created": "2026-07-15T12:33:56.113Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1T8kBLhUnU1zqPFJUn9fVskOhz8h0q8Lc/view",
+   "used_in": []
+  },
+  "1n2X433pj9fZDT3x5834WagHbqkTpnhic": {
+   "name": "IMG_0844.MOV",
+   "size": 42349609,
+   "created": "2026-07-15T12:33:57.198Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1n2X433pj9fZDT3x5834WagHbqkTpnhic/view",
+   "used_in": []
+  },
+  "1PSW3y4nJ_4zUC4hqpthgmC-maRKvC0Yi": {
+   "name": "IMG_1647.MOV",
+   "size": 5743287,
+   "created": "2026-07-15T12:33:59.180Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1PSW3y4nJ_4zUC4hqpthgmC-maRKvC0Yi/view",
+   "used_in": []
+  },
+  "1O60RGcMjTsAh5fLJ6ewtcB_dYF7Im3s_": {
+   "name": "LZYV8766.MOV",
+   "size": 32609252,
+   "created": "2026-07-15T12:34:00.627Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1O60RGcMjTsAh5fLJ6ewtcB_dYF7Im3s_/view",
+   "used_in": []
+  },
+  "1iqxcGEViEcW9aCxCQFzcGiT-BGBycSq9": {
+   "name": "PJQK1626.MOV",
+   "size": 57267567,
+   "created": "2026-07-15T12:34:01.896Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1iqxcGEViEcW9aCxCQFzcGiT-BGBycSq9/view",
+   "used_in": []
+  },
+  "1EReNquj3j6c9AIzzVJH9T9kD0SOG01ai": {
+   "name": "IMG_3514.MOV",
+   "size": 94163055,
+   "created": "2026-07-15T12:34:04.683Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1EReNquj3j6c9AIzzVJH9T9kD0SOG01ai/view",
+   "used_in": []
+  },
+  "1Uh3u0fpptsPQ9JkJH67oTq9jk57iiqWH": {
+   "name": "IMG_9022.MOV",
+   "size": 14994516,
+   "created": "2026-07-15T12:34:08.431Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1Uh3u0fpptsPQ9JkJH67oTq9jk57iiqWH/view",
+   "used_in": []
+  },
+  "1mLLru-cTRLKy9LFVTCE5vfrmhsmhf44O": {
+   "name": "IMG_1151.MOV",
+   "size": 116373386,
+   "created": "2026-07-15T12:34:09.220Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1mLLru-cTRLKy9LFVTCE5vfrmhsmhf44O/view",
+   "used_in": []
+  },
+  "1KeOjGM7bMzBfIStezCRn6H5CQxsHUeoL": {
+   "name": "IMG_5801.MOV",
+   "size": 17228448,
+   "created": "2026-07-15T12:34:13.513Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1KeOjGM7bMzBfIStezCRn6H5CQxsHUeoL/view",
+   "used_in": []
+  },
+  "1Lg5bYwudFsYBERBoEKtVPimPgeQ9pk6Y": {
+   "name": "BSUI4450.MOV",
+   "size": 35007661,
+   "created": "2026-07-15T12:34:14.649Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1Lg5bYwudFsYBERBoEKtVPimPgeQ9pk6Y/view",
+   "used_in": []
+  },
+  "1EOouIs3pMR4DckJY0MK5uy7KJZGV9gv1": {
+   "name": "IMG_1584.MOV",
+   "size": 16676282,
+   "created": "2026-07-15T12:34:16.405Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1EOouIs3pMR4DckJY0MK5uy7KJZGV9gv1/view",
+   "used_in": []
+  },
+  "1Ep4N2U4FXE3ZgSuPBDQh8EiAM6Q65Lyv": {
+   "name": "IMG_0204.MOV",
+   "size": 21799821,
+   "created": "2026-07-15T12:34:17.023Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1Ep4N2U4FXE3ZgSuPBDQh8EiAM6Q65Lyv/view",
+   "used_in": []
+  },
+  "1-qCPyb6Jm8ORlETRbJeVTNrXdqMtYZhe": {
+   "name": "IMG_9608.MOV",
+   "size": 24585047,
+   "created": "2026-07-15T12:34:18.020Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1-qCPyb6Jm8ORlETRbJeVTNrXdqMtYZhe/view",
+   "used_in": []
+  },
+  "1Uhwsvp9nJCUaMpE2BBMW7-7D2e-fsI2w": {
+   "name": "IMG_9615.MOV",
+   "size": 35012110,
+   "created": "2026-07-15T12:34:19.852Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1Uhwsvp9nJCUaMpE2BBMW7-7D2e-fsI2w/view",
+   "used_in": []
+  },
+  "1rZG0wm5HP_lU4NdX8S9S5R8XTUL2Qpdo": {
+   "name": "IMG_1442.MOV",
+   "size": 60229572,
+   "created": "2026-07-15T12:34:21.496Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1rZG0wm5HP_lU4NdX8S9S5R8XTUL2Qpdo/view",
+   "used_in": []
+  },
+  "1ZXKmO686t3868xgOgzcDBzXFsybx4taJ": {
+   "name": "ORHY0252.MOV",
+   "size": 102771775,
+   "created": "2026-07-15T12:34:23.887Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1ZXKmO686t3868xgOgzcDBzXFsybx4taJ/view",
+   "used_in": []
+  },
+  "1ptnBWcJL0aFUJke_Dzq1lV9Qo4BFiNgr": {
+   "name": "KCCD9006.MP4",
+   "size": 96329240,
+   "created": "2026-07-15T12:34:27.627Z",
+   "source": "폰_자동업로드",
+   "ext": "MP4",
+   "view": "https://drive.google.com/file/d/1ptnBWcJL0aFUJke_Dzq1lV9Qo4BFiNgr/view",
+   "used_in": []
+  },
+  "1JArqgvea17c1hOVWnwqJ23p0aBU4J1L0": {
+   "name": "IMG_9066.MOV",
+   "size": 151728885,
+   "created": "2026-07-15T12:34:31.127Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1JArqgvea17c1hOVWnwqJ23p0aBU4J1L0/view",
+   "used_in": []
+  },
+  "1ixlRGXOGjNiF2iKeIwlaLrtIK4ohUIf_": {
+   "name": "UXVL0001.MOV",
+   "size": 354109266,
+   "created": "2026-07-15T12:34:38.205Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1ixlRGXOGjNiF2iKeIwlaLrtIK4ohUIf_/view",
+   "used_in": []
+  },
+  "1P1YmNIfYojH4fRuPyby7bfGyv3fOcVnx": {
+   "name": "IMG_9797.MOV",
+   "size": 27479995,
+   "created": "2026-07-15T12:34:51.734Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1P1YmNIfYojH4fRuPyby7bfGyv3fOcVnx/view",
+   "used_in": []
+  },
+  "1XQFBpjf84rnpTzEBadd7lvZ4nSqTLJ_9": {
+   "name": "IMG_1431.MOV",
+   "size": 32727914,
+   "created": "2026-07-15T12:34:52.768Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1XQFBpjf84rnpTzEBadd7lvZ4nSqTLJ_9/view",
+   "used_in": []
+  },
+  "1cyFh6PxtKmPb79oCYD0yiUFdQUKUWATB": {
+   "name": "IMG_9695.MOV",
+   "size": 21429288,
+   "created": "2026-07-15T12:34:53.987Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1cyFh6PxtKmPb79oCYD0yiUFdQUKUWATB/view",
+   "used_in": []
+  },
+  "1z-eQJ6hDUVWP-KjBjSJTtMgDUWxMlCym": {
+   "name": "XODP1484.MOV",
+   "size": 325627854,
+   "created": "2026-07-15T12:34:56.512Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1z-eQJ6hDUVWP-KjBjSJTtMgDUWxMlCym/view",
+   "used_in": []
+  },
+  "1KgoNlxwHbWL-TAH1LW9yEMZfmahL2Zvz": {
+   "name": "IMG_0667.MOV",
+   "size": 12337867,
+   "created": "2026-07-15T12:35:08.339Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1KgoNlxwHbWL-TAH1LW9yEMZfmahL2Zvz/view",
+   "used_in": []
+  },
+  "1_cstAOGm-_slbjg00nJGKBnupyHgJsEW": {
+   "name": "IMG_6498.MOV",
+   "size": 28926502,
+   "created": "2026-07-15T12:35:09.601Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1_cstAOGm-_slbjg00nJGKBnupyHgJsEW/view",
+   "used_in": []
+  },
+  "1yky4ipAUiNb7Daw7voU5Hrske2TlAcMy": {
+   "name": "HXMY6077.MOV",
+   "size": 352321536,
+   "created": "2026-07-15T12:35:10.860Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1yky4ipAUiNb7Daw7voU5Hrske2TlAcMy/view",
+   "used_in": []
+  },
+  "1NO2cpSk-L7Ozzm-v9GXpVWO_q_HCaWhL": {
+   "name": "IMG_7520.MOV",
+   "size": 272583774,
+   "created": "2026-07-16T16:05:56.223Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1NO2cpSk-L7Ozzm-v9GXpVWO_q_HCaWhL/view",
+   "used_in": []
+  },
+  "1OSQXyKl09-3uYiCF4oV66YE-_ZAmoTs9": {
+   "name": "IMG_1173.MOV",
+   "size": 100419318,
+   "created": "2026-07-17T15:08:09.495Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1OSQXyKl09-3uYiCF4oV66YE-_ZAmoTs9/view",
+   "used_in": []
+  },
+  "1AOGOTtE5M1Vo7iUBbNK6yMFon7sHxnFb": {
+   "name": "IMG_1145.MOV",
+   "size": 12483741,
+   "created": "2026-07-17T15:08:13.798Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1AOGOTtE5M1Vo7iUBbNK6yMFon7sHxnFb/view",
+   "used_in": []
+  },
+  "16dhQTAfEw37XvpaH3yf1oVzBa_IiIT4m": {
+   "name": "IMG_9696.MOV",
+   "size": 13862481,
+   "created": "2026-07-17T15:08:14.341Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/16dhQTAfEw37XvpaH3yf1oVzBa_IiIT4m/view",
+   "used_in": []
+  },
+  "1nnulCpOe8wvT7ROmGtxETMA-_Beb7cEd": {
+   "name": "IMG_1425.MOV",
+   "size": 62905547,
+   "created": "2026-07-17T15:08:14.834Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1nnulCpOe8wvT7ROmGtxETMA-_Beb7cEd/view",
+   "used_in": []
+  },
+  "1dnM-et0OFF5YyiEhRh_3m2SBTdFAIBSx": {
+   "name": "NZUA1451.MP4",
+   "size": 6825683,
+   "created": "2026-07-17T16:23:05.965Z",
+   "source": "폰_자동업로드",
+   "ext": "MP4",
+   "view": "https://drive.google.com/file/d/1dnM-et0OFF5YyiEhRh_3m2SBTdFAIBSx/view",
+   "used_in": []
+  },
+  "1yXv-fhHgzJw9BydWML1_78qse_NNiMPQ": {
+   "name": "IMG_9800.MOV",
+   "size": 64536376,
+   "created": "2026-07-17T16:23:07.120Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1yXv-fhHgzJw9BydWML1_78qse_NNiMPQ/view",
+   "used_in": []
+  },
+  "1WVdNuVbSeb-81rKZGJfWYyjsi-fMC5D_": {
+   "name": "IMG_9706.MOV",
+   "size": 48219067,
+   "created": "2026-07-17T16:23:09.673Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1WVdNuVbSeb-81rKZGJfWYyjsi-fMC5D_/view",
+   "used_in": []
+  },
+  "1SGq-4M5mA4DIk_3wMxd_3tB1O7Mfr0Hr": {
+   "name": "SDND5359.MOV",
+   "size": 121131508,
+   "created": "2026-07-17T16:23:11.542Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1SGq-4M5mA4DIk_3wMxd_3tB1O7Mfr0Hr/view",
+   "used_in": []
+  },
+  "1_yPISZztT4T5SjoNsmoojk26pUswuxkf": {
+   "name": "CMNP1378.MOV",
+   "size": 60882137,
+   "created": "2026-07-17T16:23:55.223Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1_yPISZztT4T5SjoNsmoojk26pUswuxkf/view",
+   "used_in": []
+  },
+  "1jAnhyx30n1jr3MrJt_j2ONWXtB7LeBvs": {
+   "name": "IMG_4978.MOV",
+   "size": 7654162,
+   "created": "2026-07-17T16:23:58.471Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1jAnhyx30n1jr3MrJt_j2ONWXtB7LeBvs/view",
+   "used_in": []
+  },
+  "1zHKxcmiWHj9F7UmQfdH1BotWZUN6_H0e": {
+   "name": "VMHG8954.MP4",
+   "size": 36592557,
+   "created": "2026-07-17T16:23:59.931Z",
+   "source": "폰_자동업로드",
+   "ext": "MP4",
+   "view": "https://drive.google.com/file/d/1zHKxcmiWHj9F7UmQfdH1BotWZUN6_H0e/view",
+   "used_in": []
+  },
+  "1umYf25q2gAS1iVG6I28Hmt21IlcHp7ic": {
+   "name": "IMG_0054.MOV",
+   "size": 55294130,
+   "created": "2026-07-17T16:24:01.874Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1umYf25q2gAS1iVG6I28Hmt21IlcHp7ic/view",
+   "used_in": []
+  },
+  "13nVd8LG5G7POdtwh6QtohisobOBomvSp": {
+   "name": "WRLB7061.MP4",
+   "size": 84408489,
+   "created": "2026-07-17T16:24:04.221Z",
+   "source": "폰_자동업로드",
+   "ext": "MP4",
+   "view": "https://drive.google.com/file/d/13nVd8LG5G7POdtwh6QtohisobOBomvSp/view",
+   "used_in": []
+  },
+  "1XN6bJlHbrqHpAgBaHGpREilVlwBSfy8z": {
+   "name": "IMG_9681.MOV",
+   "size": 36209253,
+   "created": "2026-07-17T16:24:07.532Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1XN6bJlHbrqHpAgBaHGpREilVlwBSfy8z/view",
+   "used_in": []
+  },
+  "1S3G4UfXoXejH4GwKhBGqYovrZdZR9obD": {
+   "name": "LYLZ9165.MOV",
+   "size": 111038403,
+   "created": "2026-07-17T16:24:09.131Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1S3G4UfXoXejH4GwKhBGqYovrZdZR9obD/view",
+   "used_in": []
+  },
+  "1C1KCIV2k_R2GTFrAMIBnwlPvUZMDcdGR": {
+   "name": "MCEP6727.MOV",
+   "size": 173185086,
+   "created": "2026-07-17T16:24:13.901Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/1C1KCIV2k_R2GTFrAMIBnwlPvUZMDcdGR/view",
+   "used_in": []
+  },
+  "192LhDqRXXnyEQeUMLj50fK_jXxlZQ3kx": {
+   "name": "IMG_9079.MOV",
+   "size": 41739725,
+   "created": "2026-07-17T16:24:20.650Z",
+   "source": "폰_자동업로드",
+   "ext": "MOV",
+   "view": "https://drive.google.com/file/d/192LhDqRXXnyEQeUMLj50fK_jXxlZQ3kx/view",
+   "used_in": []
+  }
+ }
+}
