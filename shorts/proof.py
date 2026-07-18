@@ -104,16 +104,29 @@ def match_broll(txt_stem: str, broll: str | Path | None) -> Path | None:
     return None
 
 
+# 색보정 grade 프리셋 (2026-07-15 이찬호: 흑백 말고 부드러운 필름 필터).
+# 레퍼런스 moment.ryan(CreatorOS) 톤 = warm_film. bw는 기존 흑백(하위호환).
+GRADES: dict[str, str] = {
+    "none": "",
+    "bw": "hue=s=0",
+    "warm_film": "eq=saturation=0.90:contrast=1.06:brightness=0.02,"
+                 "colorbalance=rm=0.03:bm=-0.03:rh=0.02:bh=-0.03,"
+                 "curves=all='0/0.03 0.5/0.5 1/0.98'",
+    "clean": "eq=saturation=0.96:contrast=1.04,colorbalance=rm=0.02:bm=-0.02",
+    "cinema": "eq=saturation=0.90:contrast=1.08,"
+              "colorbalance=rs=-0.03:bs=0.04:rh=0.04:bh=-0.04,curves=all='0/0.04 1/0.96'",
+}
+
+
 def broll_bg_cmd(
     src: str | Path, start: float, duration: float, out_path: str | Path,
     size: tuple[int, int] = (VIDEO_W, VIDEO_H), dim: float = 0.0, fit: str = "crop",
-    grayscale: bool = False,
+    grade: str = "none",
 ) -> list[str]:
     """B롤 원본을 영상 영역에 맞춰 자른 배경(mp4, 무음) 생성 ffmpeg 명령.
 
-    dim > 0이면 화면 전체에 반투명 블랙을 덮는다 (마인드 라인 스타일 —
-    화면 전체가 불투명도 있는 블랙, 그 위에 흰 글씨. 2026-07-14 이찬호 지시).
-    grayscale면 무채색(흑백) 처리 — 채널 마인드 영상 톤 (레퍼런스 매칭).
+    dim > 0이면 화면 전체에 반투명 블랙을 덮는다 (마인드 라인 스타일).
+    grade = 색보정 프리셋 이름(GRADES): warm_film(기본 필름톤)·clean·cinema·bw(흑백)·none.
     """
     w, h = size
     if fit == "width":
@@ -121,10 +134,9 @@ def broll_bg_cmd(
         vf = f"scale={w}:-2,fps={FPS}"
     else:
         vf = f"scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h},fps={FPS}"
-    if grayscale:
-        # 무채색 + 밝은(화이티쉬) 배경을 눌러 눈 편하게: 밝기↓·하이라이트 롤오프.
-        # (2026-07-17 이찬호: 배경이 너무 하얘서 눈이 피로 → 조금 어둡게.)
-        vf += ",hue=s=0,eq=brightness=-0.06:contrast=1.03,curves=all='0/0 0.5/0.44 1/0.82'"
+    grade_vf = GRADES.get(grade, "")
+    if grade_vf:
+        vf += "," + grade_vf
     if dim > 0:
         vf += f",drawbox=c=black@{dim}:t=fill"
     return [
@@ -172,10 +184,16 @@ def render_batch(
     preset: str = "style_preset_v9",
     only: str | None = None,
     bgm: str | Path | None = None,
-    verify: bool = True,
+    grade: str | None = None,
 ) -> list[Path]:
     cfg = json.loads(Path(config_path).read_text(encoding="utf-8"))
     v9 = cfg[preset]
+    # 🔒 정본 점검 — "이걸 하면 저걸 까먹는" 방지. 마인드 프리셋이면 렌더 전 자동 확인.
+    if preset == "style_preset_mind":
+        from . import spec
+        print(spec.format_report(cfg, set(GRADES)))
+    # 색보정 필터: --grade로 영상별 override (팔레트에서 골라 쓴다). 없으면 프리셋 기본.
+    grade_name = grade or v9.get("grade") or ("bw" if v9.get("grayscale") else "none")
     # BGM: 폴더면 편마다 다른 곡을 로테이션 (지루함 방지). config의 bgm_pool도 허용.
     pool = bgm_pool(bgm if bgm is not None else v9.get("bgm_pool") or cfg.get("bgm_pool"))
     if bgm is not None and not pool:
@@ -245,7 +263,7 @@ def render_batch(
         if src is not None:
             subprocess.run(
                 broll_bg_cmd(src, broll_start, duration, bg, size=bg_size, dim=dim, fit=fit,
-                             grayscale=bool(v9.get("grayscale"))),
+                             grade=grade_name),
                 check=True,
             )
         else:
@@ -294,16 +312,14 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--broll-start", type=float, default=0.0, help="B롤 시작 지점(초)")
     ap.add_argument("--preset", default="style_preset_v9", help="shorts_config.json의 스타일 프리셋 키")
     ap.add_argument("--only", default=None, help="이 접두사(NN)로 시작하는 대본만 렌더")
-    ap.add_argument("--bgm", default=None, help="BGM 오디오 파일 (나레이션 아래에 낮게 깔림)")
-    ap.add_argument("--no-verify", action="store_true",
-                    help="렌더 후 규격 7항목 자동검사 끄기 (기본 켜짐 — 끄지 말 것)")
+    ap.add_argument("--bgm", default=None, help="BGM 오디오 파일/폴더 (폴더면 편별 로테이션)")
+    ap.add_argument("--grade", default=None, help="색보정 필터 override (GRADES): warm_film·clean·cinema·bw·none")
     args = ap.parse_args(argv)
     try:
         outs = render_batch(args.scripts_dir, args.out, use_tts=not args.no_tts,
                             config_path=args.config, workdir=args.workdir,
                             broll=args.broll, broll_start=args.broll_start,
-                            preset=args.preset, only=args.only, bgm=args.bgm,
-                            verify=not args.no_verify)
+                            preset=args.preset, only=args.only, bgm=args.bgm, grade=args.grade)
     except OSError as e:
         print(f"❌ 중단: {e}\n   api.elevenlabs.io 차단이면 네트워크 정책 확인 (연결지도.md), "
               f"무음 검증은 --no-tts.", file=sys.stderr)
