@@ -21,20 +21,20 @@ SPEC = {
     "layout": "dim",
     "fit": "crop45",
     "video_area": [1080, 1200],
-    "dim_opacity": 0.25,                       # 전체 반투명 블랙 "깔기" (2026-07-17)
-    "grade": "warm_film",                      # 기본 컬러 필터 (2026-07-15)
+    "dim_opacity": 0.0,                       # 전체 반투명 블랙 "깔기" (2026-07-17)
+    "grade": "bw",                      # 기본 컬러 필터 (2026-07-15)
     "outro_text": "SNS에 일기를 쓰고 있어요",   # 마무리 브랜딩 (2026-07-17 확정 문구)
     "subtitle": {
-        "font": "Kyobo Handwriting 2019",
+        "font": "KyoboHandwriting2019",
         "size": 98,
         "box_opacity": 100,                    # 자막 뒤 검정박스 100%
         "alignment": 5,                        # 화면 정가운데
     },
     "title": {
-        "font": "Kyobo Handwriting 2019",
+        "font": "KyoboHandwriting2019",
         "size": 128,                           # 제목 > 자막
     },
-    "outro_style": {"alpha": "80", "dur": 2.6},
+    "outro_style": {"alpha": "20", "dur": 2.6},
 }
 
 GRADE_PALETTE = {"warm_film", "clean", "cinema", "bw", "none"}  # 지우지 말 것

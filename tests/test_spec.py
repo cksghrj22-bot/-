@@ -18,11 +18,12 @@ class TestSpec(unittest.TestCase):
     def test_palette_intact(self):
         self.assertTrue(GRADE_PALETTE.issubset(set(GRADES)), "필터 팔레트에서 grade가 빠짐")
 
-    def test_detects_dim_dropped(self):
-        """dim이 꺼지면(0.0) 점검이 잡아내야 한다 (예전 실수 재현)."""
+    def test_detects_grade_changed(self):
+        """기본 필터가 정본(bw 흑백)에서 바뀌면 점검이 잡아내야 한다.
+        (2026-07-18 이찬호: 이 방=흑백이 기준. warm_film 등으로 덮이면 잡는다.)"""
         bad = json.loads(json.dumps(CONFIG))
-        bad["style_preset_mind"]["dim_opacity"] = 0.0
-        self.assertTrue(any("dim" in i for i in check_spec(bad, set(GRADES))))
+        bad["style_preset_mind"]["grade"] = "warm_film"
+        self.assertTrue(any("grade" in i or "필터" in i for i in check_spec(bad, set(GRADES))))
 
     def test_detects_outro_changed(self):
         bad = json.loads(json.dumps(CONFIG))
