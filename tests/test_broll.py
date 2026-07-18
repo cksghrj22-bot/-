@@ -49,8 +49,9 @@ class TestPick(unittest.TestCase):
         self.assertEqual(chosen["id"], "IMG_9497")  # 덜 쓴 것
 
     def test_require_file_id는_id있는것만(self):
-        chosen = broll.pick("scalp", CATALOG, require_file_id=True)
-        self.assertIsNone(chosen)  # scalp(두피)은 아직 file_id 없음 → None
+        # 합성 카탈로그: file_id 없는 카테고리는 require_file_id=True면 None (상태 비의존)
+        synthetic = {"clips": [{"id": "X", "category": "cut", "file_id": None, "start": 0, "uses": 0}]}
+        self.assertIsNone(broll.pick("cut", synthetic, require_file_id=True))
         chosen2 = broll.pick("aerial", CATALOG, require_file_id=True)
         self.assertIsNotNone(chosen2)  # aerial은 DJI 스캔 완료 → 있음
         self.assertTrue(chosen2.get("file_id"))
@@ -71,10 +72,17 @@ class TestSelect(unittest.TestCase):
         self.assertEqual(r["category"], "aerial")
         self.assertTrue(r["ready"])  # DJI file_id 채워짐 → 렌더 가능
 
-    def test_scalp은_아직_미준비(self):
+    def test_scalp도_스캔완료(self):
+        # A방 2026-07-18 두피 스캔완료 → 이제 렌더 가능
         r = broll.select_for_script("두피 스케일링 탈모 관리", CATALOG)
         self.assertEqual(r["category"], "scalp")
-        self.assertFalse(r["ready"])  # 두피 file_id 아직 없음 → 스캔 대기
+        self.assertTrue(r["ready"])
+
+    def test_file_id없으면_not_ready(self):
+        # 동작 자체(스캔 대기 표시)는 합성 카탈로그로 계속 검증 — 실카탈로그가 다 차도 유효
+        synthetic = {"clips": [{"id": "X", "category": "scalp", "file_id": None, "start": 0, "uses": 0}]}
+        r = broll.select_for_script("두피 스케일링 탈모 관리", synthetic)
+        self.assertFalse(r["ready"])
 
 
 if __name__ == "__main__":

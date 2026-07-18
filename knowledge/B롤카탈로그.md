@@ -44,6 +44,22 @@ IMG_1705/1710/1511/1794/1795/1796/1390 (보조컷) · 1777356272000_R0000729(367
 IMG_2912/4292/9562/6795/0253/2966/7461/5957/6866/2381/7471/6998/5782/4503/1243/3704/4868/4216/1549/3704 ·
 shorts1008.mov · IMG_7461 등 → **과거 시절 영상 = 임베디드 아카이브 소스**
 
+## ✅ 스캔완료 file_id 박제 (2026-07-18 A방 — broll_catalog.json에 반영, null 0)
+> B방 이관("드라이브 스캔해서 카탈로그 file_id 채워라") 수행. 이제 전 카테고리 렌더 가능.
+
+| 클립 | 카테고리 | 드라이브 파일ID | 비고 |
+|---|---|---|---|
+| MVI_8980 | cut | `1uxNorHhHkXKs0SajFY1MZ__7gy13sgi6` | 37M 인서트 (폴더 1Fzu5t2F) |
+| MVI_8991 | cut | `1-zrhAJ7ROldEJ8CqkSDogbJI14TCXwRO` | 68M 인서트 |
+| VID_074320_153 | workout | `1bwa3bkx-ab10Q1ouixhKgDLJ7OZ74Vn8` | 하이록스 946M (폴더 16XVMqMk) |
+| IMG_6238 | consult | `1Rc43gpjJoxPETvYkhogsatFJXrBmyUXG` | 상담 51M |
+| IMG_6240 | consult | `1IcNu3nv5vRunh75pcLL-rFHlKMa-xMkc` | 상담 111M |
+| IMG_0655 | scalp | `1IB5nl5e12p3SOn-ncfvVyeXsNBb7CQ7G` | 두피 52M |
+| IMG_0659 | scalp | `1UIz_r50SemcDRFCjjH1Bupl1aBzTCqaG` | 두피 102M |
+
+> aerial(DJI 4개)·cut 정면/옆·workout 팀훈련·reading 빨간책은 B방이 이미 채움. 남은 null 없음.
+> start(다이나믹 시작초)는 렌더 시 프레임 확인해 조정 — 위 신규분은 임시 0.
+
 ## 🚫 완성 릴스 (배경 재사용 금지 — 발행본)
 진짜자유란·행복이란시야다·가치로승부한다_식당·디자이너의색_배어드는것·남탓안하는사람_채용·
 쇼츠_마인드차이·쇼츠_태도가먼저·A_마인드차이·B_태도가먼저·파이프라인마인드_순서를기다리지마·
