@@ -1,0 +1,28 @@
+{
+  "_설명": "B롤 자동 선택 엔진(shorts/broll.py)이 읽는 정본 데이터. 사람이 읽는 원장은 knowledge/B롤카탈로그.md. file_id가 null인 항목은 A방이 드라이브 스캔으로 채운다.",
+  "_카테고리": {
+    "cut": "커트·숱치기·볼륨·펌·질감 — 가위/빗/와인딩 손동작",
+    "consult": "상담·단골·진단·신뢰·정착 — 상담/필기/머리 살피는 손",
+    "workout": "자기투자·지속·오래하기·태도·몸 — 운동/땀/루틴",
+    "reading": "기록·독서·지적자본론·배움 — 책/펜/수첩",
+    "aerial": "브랜드·자기위치·성장·마인드·위로·사색·우화 — 이동/풍경/항공(몽환·앞으로)",
+    "scalp": "두피·스케일링·탈모 — 두피 현장"
+  },
+  "clips": [
+    {"id": "IMG_9496", "category": "cut", "file_id": "1iKFOiZRweKvgpRQVHOgYc4ZtxeNUT0Gd", "start": 113, "note": "커트 정면·453MB·117초", "uses": 1},
+    {"id": "IMG_9497", "category": "cut", "file_id": "1ezsv1Ntzoa_a8Lx9j-rAoBnk7Uu3lvIP", "start": 40, "note": "커트 옆모습·330MB·117초", "uses": 1},
+    {"id": "MVI_8980", "category": "cut", "file_id": null, "start": 0, "note": "커트 인서트 후보 37M (폴더 1Fzu5t2F)", "uses": 0},
+    {"id": "MVI_8991", "category": "cut", "file_id": null, "start": 0, "note": "커트 인서트 후보 68M", "uses": 0},
+    {"id": "VID_075502_156", "category": "workout", "file_id": "1KWFm24xMOmtq2M3wJLnqW2HeiutqlCD9", "start": 5, "note": "하이록스 팀훈련·312MB", "uses": 1},
+    {"id": "VID_074320_153", "category": "workout", "file_id": null, "start": 0, "note": "하이록스 946M (폴더 16XVMqMk)", "uses": 0},
+    {"id": "MVI_8907", "category": "reading", "file_id": "1i7Oj4wGgIst71REQC0WzMnat6WzRvCX2", "start": 68, "note": "빨간책 롱테이크·독서구간·2:54", "uses": 1},
+    {"id": "DJI_152313", "category": "aerial", "file_id": null, "start": 0, "note": "DJI 항공·이동 (폴더 1PNVHWp) — A방 파일ID 필요", "uses": 0},
+    {"id": "DJI_153152", "category": "aerial", "file_id": null, "start": 0, "note": "DJI 항공·이동 (폴더 1PNVHWp)", "uses": 0},
+    {"id": "MVI_0050", "category": "aerial", "file_id": null, "start": 0, "note": "DJI 이동샷 (폴더 1PNVHWp)", "uses": 0},
+    {"id": "MVI_0053", "category": "aerial", "file_id": null, "start": 0, "note": "DJI 이동샷", "uses": 0},
+    {"id": "IMG_6238", "category": "consult", "file_id": null, "start": 0, "note": "상담 현장 — A방 파일ID 필요", "uses": 0},
+    {"id": "IMG_6240", "category": "consult", "file_id": null, "start": 0, "note": "상담 현장", "uses": 0},
+    {"id": "IMG_0655", "category": "scalp", "file_id": null, "start": 0, "note": "두피 시술 (0713)", "uses": 0},
+    {"id": "IMG_0659", "category": "scalp", "file_id": null, "start": 0, "note": "두피 시술", "uses": 0}
+  ]
+}
