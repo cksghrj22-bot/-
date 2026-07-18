@@ -108,7 +108,7 @@ def match_broll(txt_stem: str, broll: str | Path | None) -> Path | None:
 # 레퍼런스 moment.ryan(CreatorOS) 톤 = warm_film. bw는 기존 흑백(하위호환).
 GRADES: dict[str, str] = {
     "none": "",
-    "bw": "hue=s=0",
+    "bw": "hue=s=0,eq=brightness=-0.06:contrast=1.03,curves=all='0/0 0.5/0.44 1/0.82'",
     "warm_film": "eq=saturation=0.90:contrast=1.06:brightness=0.02,"
                  "colorbalance=rm=0.03:bm=-0.03:rh=0.02:bh=-0.03,"
                  "curves=all='0/0.03 0.5/0.5 1/0.98'",
@@ -185,6 +185,7 @@ def render_batch(
     only: str | None = None,
     bgm: str | Path | None = None,
     grade: str | None = None,
+    verify: bool = True,
 ) -> list[Path]:
     cfg = json.loads(Path(config_path).read_text(encoding="utf-8"))
     v9 = cfg[preset]
@@ -314,12 +315,14 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--only", default=None, help="이 접두사(NN)로 시작하는 대본만 렌더")
     ap.add_argument("--bgm", default=None, help="BGM 오디오 파일/폴더 (폴더면 편별 로테이션)")
     ap.add_argument("--grade", default=None, help="색보정 필터 override (GRADES): warm_film·clean·cinema·bw·none")
+    ap.add_argument("--no-verify", action="store_true", help="렌더 후 규격 자동검사 끄기 (기본 켜짐)")
     args = ap.parse_args(argv)
     try:
         outs = render_batch(args.scripts_dir, args.out, use_tts=not args.no_tts,
                             config_path=args.config, workdir=args.workdir,
                             broll=args.broll, broll_start=args.broll_start,
-                            preset=args.preset, only=args.only, bgm=args.bgm, grade=args.grade)
+                            preset=args.preset, only=args.only, bgm=args.bgm, grade=args.grade,
+                            verify=not args.no_verify)
     except OSError as e:
         print(f"❌ 중단: {e}\n   api.elevenlabs.io 차단이면 네트워크 정책 확인 (연결지도.md), "
               f"무음 검증은 --no-tts.", file=sys.stderr)
