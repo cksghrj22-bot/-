@@ -3,8 +3,8 @@
 # 태그: 위로,애니메이션,이누야샤,마인드,차노쌤
 # 라인: 마인드 (이찬호 구술+가사 인용 2026-07-17 · 라임 부호 prompts/06)
 # B롤: [travel · 런던_여행B롤 · start 31 · id 1DgOOvAeAQt8jjFOUTlRy6TRhmnq0Xu_d] — 런던 런웨이·몽환 조명("꿈꿔왔던 내일" 톤). 07과 다른 구간(거리 아님·런웨이). 세로9:16 원본. 다운: curl -sL "https://drive.usercontent.google.com/download?id=1DgOOvAeAQt8jjFOUTlRy6TRhmnq0Xu_d&export=download&confirm=t" -o london.mov → --broll london.mov --broll-start 31
-00:00-00:03 가끔은, 옛날 애니메이션 노래에서 위로받아요.
-00:03-00:06 유치할 수도 있는데, 진심으로요.
+00:00-00:03 가끔은 옛날 애니메이션 노래에서 위로받아요.
+00:03-00:06 유치할 수도 있는데 진심으로요.
 00:06-00:09 가사가 이렇거든요.
 00:09-00:12 "하루하루를 힘겹게 내걸으며
 00:12-00:15 찾아온 해결책이 잘못됐어도
