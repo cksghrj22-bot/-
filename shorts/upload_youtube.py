@@ -54,9 +54,27 @@ def build_metadata(
     privacy: str = "private",
     publish_at: str | None = None,
 ) -> dict:
-    """업로드 메타데이터를 만든다. publish_at(RFC3339)을 주면 예약 공개."""
+    """업로드 메타데이터를 만든다. publish_at(RFC3339)을 주면 예약 공개.
+
+    ⛔ 안전장치(2026-07-19 이찬호 지시 "다시 실수 안하게"): publish_at이 과거면 예외.
+    과거 시각을 주면 유튜브가 예약이 아니라 **즉시 공개**해버린다(실제 사고: 오늘을 7/18로
+    착각해 7/19로 걸었다가 이미 지나 바로 공개됨). 미래인지 코드가 강제 확인한다.
+    """
+    from datetime import datetime, timezone
     status: dict = {"privacyStatus": privacy, "selfDeclaredMadeForKids": False}
     if publish_at:
+        try:
+            t = datetime.fromisoformat(publish_at.replace("Z", "+00:00"))
+        except ValueError as e:
+            raise ValueError(f"publishAt RFC3339 형식 오류: {publish_at!r}") from e
+        if t.tzinfo is None:
+            t = t.replace(tzinfo=timezone.utc)
+        now = datetime.now(timezone.utc)
+        if t <= now:
+            raise ValueError(
+                f"publishAt이 과거입니다: {publish_at} (지금 UTC={now.isoformat(timespec='seconds')}). "
+                f"과거로 예약하면 유튜브가 즉시 공개해버림 — 미래 시각(UTC)으로 다시 주세요."
+            )
         status["privacyStatus"] = "private"  # 예약 공개는 private + publishAt 조합
         status["publishAt"] = publish_at
     return {
