@@ -324,9 +324,14 @@ def apply_synth_fixes(text: str) -> str:
 
 def collect_pause_edits(
     characters: list[str], char_starts: list[float], char_ends: list[float],
-    targets: dict[str, float],
+    targets: dict[str, float], head_grace: float = 1.2,
 ) -> list[tuple[float, float, float]]:
-    """문장부호 뒤 무음 구간 [rs, re]을 목표 길이 tgt로 바꿀 편집 목록 (배속 전 raw 초)."""
+    """문장부호 뒤 무음 구간 [rs, re]을 목표 길이 tgt로 바꿀 편집 목록 (배속 전 raw 초).
+
+    head_grace: 오디오 시작 이 시간(초) 이내에 오는 문장부호는 강제 쉼을 넣지 않는다.
+      맨 첫 마디("가끔은,")에 강제 쉼이 박히면 클론이 아직 워밍업 전이라 '뚝 끊겨' 로봇처럼
+      들린다(2026-07-18 이찬호 지적). 시작부는 자연 흐름에 맡겨 매끄럽게 연다. (prompts/06)
+    """
     n = len(characters)
     ws = " \t\n　"
     edits: list[tuple[float, float, float]] = []
@@ -341,7 +346,7 @@ def collect_pause_edits(
                 i += 1
             if tgt > 0 and run_start > 0 and i < n:
                 rs, re = char_ends[run_start - 1], char_starts[i]
-                if re > rs:
+                if re > rs and rs >= head_grace:  # 시작부(head_grace 이내) 강제 쉼 건너뜀 → 첫 마디 안 끊김
                     edits.append((rs, re, tgt))
         else:
             i += 1
