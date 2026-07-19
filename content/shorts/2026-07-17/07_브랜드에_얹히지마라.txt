@@ -3,8 +3,8 @@
 # 태그: 브랜드,자기위치,호가호위,마인드,차노쌤
 # 라인: 마인드 (이찬호 구술 차노화 2026-07-16 · 라임 부호 prompts/06)
 # B롤: [travel · 런던_여행B롤 · start 20 · id 1DgOOvAeAQt8jjFOUTlRy6TRhmnq0Xu_d] — 런던 거리·자전거 이동(앞으로 나아감·자기 길). 세로9:16 원본. 커트/DJI 아님(2026-07-18 이찬호 위임·B방 판단). 다운: curl -sL "https://drive.usercontent.google.com/download?id=1DgOOvAeAQt8jjFOUTlRy6TRhmnq0Xu_d&export=download&confirm=t" -o london.mov → --broll london.mov --broll-start 20
-00:00-00:03 젊을 때, 큰 브랜드에 들어가고 싶죠,
-00:03-00:06 삼성 명함, 유명한 간판.
+00:00-00:03 젊을 때, 큰 브랜드에 들어가고 싶죠.
+00:03-00:06 삼성 명함. 유명한 간판.
 00:06-00:09 근데 거기 얹히는 순간
 00:09-00:12 내가 그 브랜드인 줄 착각해요.
 00:12-00:15 토끼가 호랑이 등에 탔더니
