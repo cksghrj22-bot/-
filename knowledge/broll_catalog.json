@@ -144,6 +144,38 @@
       "start": 0,
       "note": "두피 시술 102MB · 스캔완료(A방 2026-07-18)",
       "uses": 0
+    },
+    {
+      "id": "TOKYO_교토강변",
+      "category": "aerial",
+      "file_id": "1kO-G5HoQcOjSEhsm_klPZQF6p8WQstOL",
+      "start": 2,
+      "note": "교토 카모가와 강변(강·다리·버드나무)·4K·무인물·차분/회복 톤·53s. 성희 없음. A-3 사우나에 사용.",
+      "uses": 1
+    },
+    {
+      "id": "TOKYO_도톤보리",
+      "category": "aerial",
+      "file_id": "1vNASoKLjv92MOV3EPZdLKlfvqdeqMXoP",
+      "start": 2,
+      "note": "오사카 도톤보리 강변 번화가(활기·많음)·4K·원경인물·40.8s. A-4 연결에 사용.",
+      "uses": 1
+    },
+    {
+      "id": "TOKYO_열차창밖",
+      "category": "aerial",
+      "file_id": "1O0rRSDWtkwD5rY5MYv3KA3SPF7Ml-81r",
+      "start": 2,
+      "note": "열차 창밖 철교·강·하늘(이동·여정)·4K·무인물·47s. 12 헤어디자이너에 사용. 다소 어수선.",
+      "uses": 1
+    },
+    {
+      "id": "TOKYO_사찰山門",
+      "category": "aerial",
+      "file_id": "1yym7gEoKhTm-MsjNSIrWCtjBRm_jMbVZ",
+      "start": 74,
+      "note": "교토 사찰 山門(웅장한 목조 절문)·4K·무인물(멀리)·173s(74s부터 사찰)·사색/지혜 톤. B-2 우화에 사용. 강변구간도 있음.",
+      "uses": 1
     }
   ],
   "_다양성규칙": "⭐우선순위 1 = 장면 다양성 (이찬호 2026-07-19): 채널이 '맨날 같은 영상'처럼 보이면 안 된다. B롤 배정 시 맥락(카테고리)보다 '다양한 장면'을 더 높은 우선순위로 둔다 — 맥락에서 크게 벗어나지만 않으면 새/다른 장면을 적극 채택. 같은 소스 반복 최소화, 도쿄 여행분 등 신규 소스 적극 발굴·투입(단 성희 부원장 제외·이찬호 본인/무인물만)."
