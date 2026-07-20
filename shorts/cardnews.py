@@ -343,7 +343,7 @@ def demo_deck() -> Deck:
         handle="@차노쌤",
         cards=[
             CardSpec("cover", kicker="HAIR DESIGNER",
-                     title="이런 디자이너로 들어가세요",
+                     title="이런 디자이너한테 가세요",
                      body="미용실에 사진, 들고 가시죠?", highlight="디자이너"),
             CardSpec("body", kicker="01",
                      title="층 위치, 길이, 가벼움.",
