@@ -308,6 +308,7 @@ def _assemble_lines_even(
 SYNTH_FIXES: dict[str, str] = {
     "숱치": "숟치",        # 숱치기 → '수치기' 오독 방지 (경음/오독)
     "숱을 쳐": "숟을 쳐",
+    "짓이겨진": "짓니겨진",  # '지시겨진' 오독 방지 (연음/오독) — 이찬호 2026-07-20 지적
 }
 
 # ── 문장부호별 강제 쉼(초, 배속 전) ──────────────────────────────────
@@ -324,13 +325,19 @@ def apply_synth_fixes(text: str) -> str:
 
 def collect_pause_edits(
     characters: list[str], char_starts: list[float], char_ends: list[float],
-    targets: dict[str, float], head_grace: float = 1.2,
+    targets: dict[str, float], head_grace: float = 1.2, max_gap: float = 0.30,
 ) -> list[tuple[float, float, float]]:
-    """문장부호 뒤 무음 구간 [rs, re]을 목표 길이 tgt로 바꿀 편집 목록 (배속 전 raw 초).
+    """무음 구간 [rs, re]을 목표 길이로 바꿀 편집 목록 (배속 전 raw 초).
 
-    head_grace: 오디오 시작 이 시간(초) 이내에 오는 문장부호는 강제 쉼을 넣지 않는다.
-      맨 첫 마디("가끔은,")에 강제 쉼이 박히면 클론이 아직 워밍업 전이라 '뚝 끊겨' 로봇처럼
-      들린다(2026-07-18 이찬호 지적). 시작부는 자연 흐름에 맡겨 매끄럽게 연다. (prompts/06)
+    두 가지를 한다:
+      1) 문장부호 뒤 무음 → 목표 길이 tgt로 (마침표 0.40 등). '어디서 얼마나' 쉴지 보장.
+      2) 부호 없는 자리의 자연 무음이 max_gap보다 길면 → max_gap으로 잘라 '촘촘'하게.
+         (일레븐랩스가 줄 사이에 제멋대로 벌리는 긴 공백을 없앤다 — 2026-07-20 이찬호
+         "미용실에선 예뻤는데 / 작심삼일 할 걸 알면 너무 띄어쓰기 길다" 지적. 부호 리듬은
+         유지하되 나머지 벌어짐만 촘촘히.)
+
+    head_grace: 오디오 시작 이 시간(초) 이내 무음은 손대지 않는다(첫 마디 워밍업 보호).
+    max_gap: 부호 없는 무음의 상한(초). 0이면 부호 없는 자리는 손대지 않음(구동작).
     """
     n = len(characters)
     ws = " \t\n　"
@@ -344,10 +351,13 @@ def collect_pause_edits(
                 if characters[i] in targets:
                     tgt = max(tgt, targets[characters[i]])
                 i += 1
-            if tgt > 0 and run_start > 0 and i < n:
+            if run_start > 0 and i < n:
                 rs, re = char_ends[run_start - 1], char_starts[i]
-                if re > rs and rs >= head_grace:  # 시작부(head_grace 이내) 강제 쉼 건너뜀 → 첫 마디 안 끊김
-                    edits.append((rs, re, tgt))
+                if re > rs and rs >= head_grace:  # 시작부는 자연 흐름에 맡김
+                    if tgt > 0:
+                        edits.append((rs, re, tgt))                    # 부호 → 목표 쉼
+                    elif max_gap > 0 and (re - rs) > max_gap:
+                        edits.append((rs, re, max_gap))                # 부호 없는 긴 무음 → 촘촘히 컷
         else:
             i += 1
     return edits

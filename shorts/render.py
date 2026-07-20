@@ -132,10 +132,15 @@ def render(
     elif has_audio(video):
         maps += ["-map", "0:a"]
 
-    # 끝 여운: 오디오도 스륵 페이드아웃 (영상 페이드와 함께 탁 끊김 방지).
+    # 끝 여운: 오디오 페이드아웃. 나레이션이 끝난 뒤 순수 BGM 꼬리(아웃트로 구간)에서
+    # 루프 BGM이 다시 시작되며 '쓸데없는 반복/드론음'이 들리던 문제(2026-07-20 이찬호 A-1 지적)를
+    # 막기 위해, 나레이션이 끝나는 지점부터 BGM을 스륵 내린다 — 꼬리에 또렷한 반복음이 남지 않게.
     if "[aout]" in maps:
-        a_st = max(0.0, duration - a_fade)
-        filters.append(f"[aout]afade=t=out:st={a_st:.3f}:d={a_fade}[aoutf]")
+        nar_end = max((l.end for l in lines if l.end is not None), default=duration)
+        # 나레이션 끝 직후부터 페이드 시작(단, 최소 a_fade는 확보). 시작 뒤 duration까지 서서히.
+        a_st = max(0.0, min(duration - a_fade, nar_end - 0.15))
+        a_dur = max(a_fade, duration - a_st)
+        filters.append(f"[aout]afade=t=out:st={a_st:.3f}:d={a_dur:.3f}[aoutf]")
         maps = ["[aoutf]" if m == "[aout]" else m for m in maps]
 
     cmd += [
