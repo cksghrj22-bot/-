@@ -356,7 +356,7 @@ def demo_deck() -> Deck:
                      body="그런 디자이너는 모질도 못 볼 확률이 커요.", highlight="안 나와요"),
             CardSpec("outro", kicker="POINT",
                      title="이 사진의 무드가 뭔지, 뭘 느끼고 골랐는지 확인하고 들어가는 사람.",
-                     body="당신의 디자이너는, 무드를 읽나요?", highlight="무드"),
+                     body="당신의 디자이너는, 무드까지 보나요?", highlight="무드"),
         ],
     )
 
