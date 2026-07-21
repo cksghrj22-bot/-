@@ -16,7 +16,10 @@ import shutil as _shutil
 # BGM을 고르게(들리게) 깔기 위한 컴프레서 체인. 피아노 루프의 조용한 구간이
 # 아웃트로에 걸려도 '안 들리는' 일이 없게 다이내믹을 눌러 소리를 끌어올린다.
 # (volume 스케일은 이 뒤에 곱해진다.)
-BGM_EVEN = "dynaudnorm=f=100:g=15:p=0.9,acompressor=threshold=-28dB:ratio=4:makeup=5"
+# BGM은 '파일 자체 음량'과 무관하게 목소리 밑에 깔려야 한다(이찬호 2026-07-21).
+# loudnorm=I=-40 으로 어떤 BGM이든 -40 LUFS로 정규화 → 목소리(≈-28 LUFS)보다 ~12dB 아래.
+# (기존 makeup+5dB가 BGM을 목소리와 맞먹게 키워 '너무 큼' 문제였음.)
+BGM_EVEN = "dynaudnorm=f=150:g=11:p=0.9,loudnorm=I=-40:TP=-3:LRA=11"
 
 
 def _ffmpeg_info(video: str | Path) -> str:
