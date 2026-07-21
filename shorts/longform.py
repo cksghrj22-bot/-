@@ -1,0 +1,150 @@
+"""롱폼 조립기 — 4K 원본 프록시(720p) + 일레븐랩스 Scribe 전사로 유튜브 롱폼을 편집한다.
+
+이찬호 2026-07-21: 「앳나운 두피케어 System」 두피 스케일링 홍보 롱폼(8~13분).
+- 원본 총 52분(뒷얘기·NG 섞임) → EDL로 알짜 구간만 골라 세그먼트로 조립.
+- 각 세그먼트: 프록시 클립 트림 + Scribe 단어 타임스탬프로 한글 자막 구움.
+- 오프닝/세그먼트 타이틀카드(앳나운 노란 제목) + BGM 언더.
+
+EDL item = {"clip": "8957", "start": 15, "end": 150, "seg": "① 두피 진단",
+            "title": "두피는 pH가 무너지면 방어력을 잃습니다"}
+"""
+from __future__ import annotations
+import json, subprocess, re
+from pathlib import Path
+from PIL import Image, ImageDraw, ImageFont
+
+W, H = 1280, 720
+FONT_HAND = "/root/.fonts/KyoboHandwriting2019.ttf"
+FONT_B = "/usr/share/fonts/truetype/nanum/NanumSquareB.ttf"
+FONT_R = "/usr/share/fonts/truetype/nanum/NanumSquareR.ttf"
+YELLOW = (245, 215, 66)
+
+
+def _wrap(draw, text, font, maxw):
+    lines, cur = [], ""
+    for ch in text:
+        if draw.textlength(cur + ch, font=font) <= maxw or not cur:
+            cur += ch
+        else:
+            lines.append(cur); cur = ch
+    if cur:
+        lines.append(cur)
+    return lines
+
+
+def title_card(main: str, sub: str, dur: float, out: Path, opening=False):
+    """다크 배경 + 노랑 제목 타이틀카드(정지영상 → dur초 클립, 무음)."""
+    img = Image.new("RGB", (W, H), (16, 16, 18))
+    d = ImageDraw.Draw(img)
+    if opening:
+        f = ImageFont.truetype(FONT_HAND, 92)
+        lines = _wrap(d, main, f, W - 160)
+        y = H // 2 - len(lines) * 60 - 30
+        for ln in lines:
+            w = d.textlength(ln, font=f); d.text(((W - w) / 2, y), ln, font=f, fill=YELLOW); y += 108
+        if sub:
+            fs = ImageFont.truetype(FONT_R, 40); w = d.textlength(sub, font=fs)
+            d.text(((W - w) / 2, y + 10), sub, font=fs, fill=(210, 210, 210))
+    else:
+        fk = ImageFont.truetype(FONT_B, 40)
+        d.text((90, 250), sub, font=fk, fill=YELLOW)          # 세그먼트 번호/라벨
+        d.line([90, 310, 230, 310], fill=YELLOW, width=5)
+        f = ImageFont.truetype(FONT_B, 58)
+        lines = _wrap(d, main, f, W - 180)
+        y = 340
+        for ln in lines:
+            d.text((90, y), ln, font=f, fill=(245, 245, 245)); y += 78
+    png = out.with_suffix(".png"); img.save(png)
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-loop", "1", "-t", f"{dur}",
+                    "-i", str(png), "-f", "lavfi", "-t", f"{dur}", "-i", "anullsrc=r=44100:cl=stereo",
+                    "-vf", f"scale={W}:{H},fps=30", "-c:v", "libx264", "-pix_fmt", "yuv420p",
+                    "-c:a", "aac", "-shortest", str(out)], check=True)
+
+
+def _ass_escape(s):
+    return s.replace("\\", "").replace("{", "(").replace("}", ")").strip()
+
+
+def build_ass(words, t0, t1, out: Path):
+    """Scribe words 중 [t0,t1] 구간을 잡아 (구간시작=0 기준) ASS 자막 생성. ~2.2초/줄 그룹."""
+    ev = []
+    cur, cs, ce = [], None, None
+    def flush():
+        nonlocal cur, cs, ce
+        if cur:
+            txt = _ass_escape("".join(cur))
+            if txt:
+                ev.append((max(0, cs - t0), ce - t0, txt))
+        cur, cs, ce = [], None, None
+    for w in words:
+        if w.get("type") != "word":
+            continue
+        s, e = w.get("start", 0), w.get("end", 0)
+        if e < t0 or s > t1:
+            continue
+        if cs is None:
+            cs = s
+        cur.append(w["text"] + (" " if not w["text"].endswith(("다", "요", "죠", "까", ".", "?", "!")) else ""))
+        ce = e
+        if (ce - cs) >= 2.2 or w["text"].endswith((".", "?", "!", "다", "요", "죠")):
+            flush()
+    flush()
+
+    def ts(t):
+        h = int(t // 3600); m = int(t % 3600 // 60); s = t % 60
+        return f"{h}:{m:02d}:{s:05.2f}"
+    head = f"""[Script Info]
+ScriptType: v4.00+
+PlayResX: {W}
+PlayResY: {H}
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: sub,NanumSquareB,44,&H00FFFFFF,&H00000000,&H96000000,1,3,0,3,2,60,60,54,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+"""
+    body = "".join(f"Dialogue: 0,{ts(s)},{ts(e)},sub,,0,0,0,,{t}\n" for s, e, t in ev)
+    out.write_text(head + body, encoding="utf-8")
+    return len(ev)
+
+
+def segment(clip_mp4: Path, stt_json: Path, start: float, end: float, out: Path, work: Path):
+    """프록시 [start,end] 트림 → 자막 구워 720p 정규화 세그먼트."""
+    words = json.loads(stt_json.read_text())["words"] if stt_json.exists() else []
+    ass = work / (out.stem + ".ass")
+    build_ass(words, start, end, ass)
+    vf = f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps=30,subtitles='{ass}'"
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{start}", "-to", f"{end}",
+                    "-i", str(clip_mp4), "-vf", vf, "-c:v", "libx264", "-pix_fmt", "yuv420p",
+                    "-c:a", "aac", "-ar", "44100", str(out)], check=True)
+
+
+def assemble(edl, proxy_dir: Path, out: Path, bgm: Path, work: Path, open_title: str):
+    work.mkdir(parents=True, exist_ok=True)
+    parts = []
+    op = work / "open.mp4"
+    title_card(open_title, "AT NOWN · 두피 스케일링", 4.0, op, opening=True)
+    parts.append(op)
+    for i, item in enumerate(edl):
+        tc = work / f"tc{i}.mp4"
+        title_card(item["title"], item["seg"], 2.6, tc)
+        parts.append(tc)
+        seg = work / f"seg{i}.mp4"
+        segment(proxy_dir / f"mvi_{item['clip']}_720.mp4",
+                proxy_dir / f"mvi_{item['clip']}_720.stt.json",
+                item["start"], item["end"], seg, work)
+        parts.append(seg)
+    # concat
+    lst = work / "concat.txt"
+    lst.write_text("".join(f"file '{p}'\n" for p in parts), encoding="utf-8")
+    body = work / "body.mp4"
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0",
+                    "-i", str(lst), "-c:v", "libx264", "-pix_fmt", "yuv420p", "-c:a", "aac", str(body)], check=True)
+    # BGM 언더(말소리 위주라 아주 낮게) + 최종
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(body),
+                    "-stream_loop", "-1", "-i", str(bgm),
+                    "-filter_complex", "[1:a]volume=0.06[b];[0:a][b]amix=inputs=2:duration=first:dropout_transition=0[a]",
+                    "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-shortest", str(out)], check=True)
+    return out
