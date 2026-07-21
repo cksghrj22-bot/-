@@ -3,3 +3,6 @@ __pycache__/
 data/
 .venv/
 secrets/
+
+# 세션 임시 작업폴더 (기기인증 코드 등 — 절대 커밋 금지)
+scratchpad/
