@@ -181,7 +181,7 @@ def render_batch(
     workdir: str | Path | None = None,
     broll: str | Path | None = None,
     broll_start: float = 0.0,
-    preset: str = "style_preset_v9",
+    preset: str = "style_preset_mind",  # 채널 표준 = 흑백(mind). 기본을 흑백으로 → 잊어도 컬러로 안 샌다.
     only: str | None = None,
     bgm: str | Path | None = None,
     grade: str | None = None,
@@ -286,9 +286,12 @@ def render_batch(
         print(f"  ✅ {out.name}" + (f"  ♪ {track.name}" if track else ""))
         # 자동 게이트: 마인드 프리셋은 렌더 직후 규격 7항목을 검사. FAIL이면 산출 거부.
         #  — 검사기를 '기억해서 돌리는' 게 아니라 코드가 강제한다. 미검증 영상이 세션 밖으로 못 나간다.
-        if verify and v9.get("grayscale"):
+        # 🔒 출력 게이트 = 무조건 실행. 프리셋이 컬러든 흑백이든 상관없이 규격을 검사한다.
+        #    (2026-07-21 사고: 기본이 컬러(v9)로 새고, 게이트가 'grayscale일 때만' 돌아 검사를 건너뜀.
+        #     → 정해놓은 표준이 조용히 무너져도 아무도 못 잡는 = 시스템 뒤흔드는 문제. 게이트를 무조건으로.)
+        if verify:
             ass_path = work / f"{bg.stem}.ass"
-            fails = verify_render(str(out), str(ass_path))
+            fails = verify_render(str(out), str(ass_path), duration=duration)
             if fails:
                 print("  ❌ 규격검사 FAIL — 산출 거부:", file=sys.stderr)
                 for f in fails:
@@ -296,7 +299,7 @@ def render_batch(
                 raise SystemExit(
                     f"규격검사 실패: {out.name} — 위 항목 고쳐 재렌더 (prompts/08_렌더_체크리스트.md)"
                 )
-            print("  🔎 규격 7항목 PASS (흑백·박스·교보실렌더·BGM·아웃트로·CTA없음·해상도)")
+            print("  🔎 규격 PASS (흑백·박스·교보실렌더·BGM·아웃트로·CTA없음·해상도·길이40~50)")
         outputs.append(out)
     return outputs
 
@@ -311,7 +314,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--broll", default=None,
                     help="배경 원본: 파일(전 편 공통) 또는 폴더(NN_ 접두사 매칭). 없으면 그라디언트")
     ap.add_argument("--broll-start", type=float, default=0.0, help="B롤 시작 지점(초)")
-    ap.add_argument("--preset", default="style_preset_v9", help="shorts_config.json의 스타일 프리셋 키")
+    ap.add_argument("--preset", default="style_preset_mind",
+                    help="shorts_config.json의 스타일 프리셋 키 (기본=흑백 mind. 컬러는 명시적으로 style_preset_v9)")
     ap.add_argument("--only", default=None, help="이 접두사(NN)로 시작하는 대본만 렌더")
     ap.add_argument("--bgm", default=None, help="BGM 오디오 파일/폴더 (폴더면 편별 로테이션)")
     ap.add_argument("--grade", default=None, help="색보정 필터 override (GRADES): warm_film·clean·cinema·bw·none")

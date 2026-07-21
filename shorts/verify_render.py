@@ -20,8 +20,20 @@ def _ff(args: list[str]) -> str:
     return r.stderr + r.stdout
 
 
-def verify(mp4: str, ass: str) -> list[str]:
-    """규격 7항목 검사. 실패 사유 리스트를 돌려준다(빈 리스트 = 통과)."""
+LEN_MIN, LEN_MAX = 38.0, 51.0  # 길이 규격 40~50초(+톨러런스). "40 넘어도 되고 50은 넘지 않게"(이찬호).
+
+
+def length_fails(dur: float) -> list[str]:
+    """길이 규격(40~50초) 검사 — ffmpeg 없이 순수 계산이라 단위테스트로 잠근다."""
+    if dur < LEN_MIN:
+        return [f"길이 {dur:.0f}초 — 너무 짧음(40~50초 목표). TTS 쉼 넣어 늘릴 것"]
+    if dur > LEN_MAX:
+        return [f"길이 {dur:.0f}초 — 50초 초과. 대본 줄일 것"]
+    return []
+
+
+def verify(mp4: str, ass: str, duration: float | None = None) -> list[str]:
+    """규격 검사. 실패 사유 리스트를 돌려준다(빈 리스트 = 통과)."""
     fails: list[str] = []
     info = subprocess.run(["ffmpeg", "-hide_banner", "-i", mp4], capture_output=True, text=True).stderr
 
@@ -31,6 +43,11 @@ def verify(mp4: str, ass: str) -> list[str]:
         fails.append(f"해상도 {m.group(1) if m else '?'} (1080x1920 아님)")
     dm = re.search(r"Duration:\s*(\d+):(\d+):([\d.]+)", info)
     dur = int(dm[1]) * 3600 + int(dm[2]) * 60 + float(dm[3]) if dm else 0
+    if duration:  # 렌더가 아는 정확한 길이를 넘겨주면 우선 사용
+        dur = duration
+
+    # 1b) 길이 40~50초 (이찬호 2026-07-21): 25초처럼 짧거나 50 넘으면 FAIL.
+    fails += length_fails(dur)
 
     # 2) 흑백: 25% 지점 중앙 500x500 채도(SATAVG) 낮아야. ffmpeg 읽기 플레이크 방어로 빈값이면 1회 재시도.
     t = dur * 0.25
