@@ -255,7 +255,7 @@ def render_batch(
             new_lines = []
             for j, (line, (s, e)) in enumerate(zip(script.lines, spans)):
                 nxt = spans[j + 1][0] if j + 1 < len(spans) else e + 0.4
-                new_lines.append(Line(text=line.text, start=round(s, 3), end=round(nxt, 3)))
+                new_lines.append(Line(text=line.text, start=round(s, 3), end=round(nxt, 3), en=line.en))
             script.lines = new_lines
             duration = new_lines[-1].end + tail
 
