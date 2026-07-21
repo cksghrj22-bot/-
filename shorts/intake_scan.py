@@ -98,16 +98,33 @@ def scan_and_register(list_files_fn, catalog_path: Path = CATALOG) -> dict:
 
 
 def _list_via_gdrive(folder_id: str = INTAKE_FOLDER_ID) -> list[dict]:
-    """gdrive.py 토큰으로 폴더 나열 — ⚠️drive.file 스코프라 앱 생성분만 보임(형님 업로드 X).
-    전체 스코프 소스가 생기면 이 함수 대신 그걸 scan_and_register에 주입한다."""
+    """gdrive.py 토큰으로 폴더를 **재귀적으로** 나열(하위폴더까지) — PhotoSync가
+    「iPhone/최근 항목」식으로 하위폴더에 넣어도 영상을 다 찾는다.
+    ⚠️drive.file 스코프면 앱 생성분만 보임(형님 업로드 X). 전체 스코프 소스가 생기면
+    그걸 scan_and_register에 주입한다."""
     from .gdrive import load_secrets, access_token
     import urllib.request, urllib.parse
     creds = load_secrets("secrets/gdrive.json")
     tok = access_token(creds)
-    q = urllib.parse.quote(f"'{folder_id}' in parents and trashed=false")
-    url = f"https://www.googleapis.com/drive/v3/files?q={q}&fields=files(id,name)&pageSize=500"
-    r = urllib.request.Request(url, headers={"Authorization": f"Bearer {tok}"})
-    return json.load(urllib.request.urlopen(r)).get("files", [])
+    FOLDER_MIME = "application/vnd.google-apps.folder"
+    out: list[dict] = []
+    stack = [folder_id]
+    seen = set()
+    while stack:
+        fid = stack.pop()
+        if fid in seen:
+            continue
+        seen.add(fid)
+        q = urllib.parse.quote(f"'{fid}' in parents and trashed=false")
+        url = (f"https://www.googleapis.com/drive/v3/files?q={q}"
+               f"&fields=files(id,name,mimeType)&pageSize=500")
+        r = urllib.request.Request(url, headers={"Authorization": f"Bearer {tok}"})
+        for f in json.load(urllib.request.urlopen(r)).get("files", []):
+            if f.get("mimeType") == FOLDER_MIME:
+                stack.append(f["id"])            # 하위폴더 재귀
+            else:
+                out.append({"id": f["id"], "name": f["name"]})
+    return out
 
 
 if __name__ == "__main__":
