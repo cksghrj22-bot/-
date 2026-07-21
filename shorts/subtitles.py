@@ -112,15 +112,16 @@ DEFAULT_STYLE = {
 # 한글(margin_v 260)보다 낮은 margin_v로 화면 더 아래에 깔린다(겹침 없음). 읽기 우선 → 또렷한 외곽+옅은 박스.
 DEFAULT_EN_STYLE = {
     "font": "AppleSDGothicNeo-Bold",  # 라틴 글리프 포함 — 영어도 안전
-    "size": 44,                       # 한글(64)보다 작게 = 보조 자막
+    "size": 42,                       # 한글(64)보다 작게 = 보조 자막
     "primary_color": "&H00F0F0F0",    # 살짝 낮춘 흰색(주자막과 위계)
     "outline_color": "&H00000000",
     "box_color": "000000",
-    "box_opacity": 55,                # 한글(65)보다 옅은 박스
-    "border_style": 4,
-    "outline": 2,
+    "box_opacity": 0,                 # 박스 없음 — 글씨만(2026-07-21 이찬호: 박스까지면 화면 복잡)
+    "border_style": 1,               # 1 = 외곽선+그림자만(박스 X)
+    "outline": 2.4,                   # 박스 없으니 외곽 두껍게 = 어떤 배경에서도 읽힘
+    "shadow": 1,                      # 옅은 그림자로 가독성 보강
     "alignment": 2,                   # 하단 중앙
-    "margin_v": 165,                  # 한글(260)보다 아래 = 한글 밑에 위치
+    "margin_v": 170,                  # 한글(260)보다 아래 = 한글 밑에 위치
 }
 
 # 하단 아웃트로 (브랜딩 줄: "SNS에 일기를 쓰고 있어요" — 얇게·작게·반투명, 마지막 몇 초만)
@@ -174,7 +175,8 @@ def _ass_time(seconds: float) -> str:
 def _style_line(name: str, st: dict) -> str:
     return (
         f"Style: {name},{st['font']},{st['size']},{st['primary_color']},{st['outline_color']},"
-        f"{_back_color(st)},1,{st['border_style']},{st['outline']},0,{st['alignment']},60,60,{st['margin_v']}"
+        f"{_back_color(st)},1,{st['border_style']},{st['outline']},{st.get('shadow', 0)},"
+        f"{st['alignment']},60,60,{st['margin_v']}"
     )
 
 
