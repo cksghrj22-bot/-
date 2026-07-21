@@ -1,20 +1,29 @@
 # 제목: 일자머리도 찰랑일 수 있어요
-# 설명: 일자머리(원랭스)가 무겁고 답답해 보이는 건 그 상태가 아직 불완전해서다. 원랭스로 잘라도 레이어드 안 낸 듯하면서 레이어드 같은 가벼움을 낼 수 있다. 사람들이 원하는 건 찰랑거림이지 레이어드 그 자체가 아니다. 외국인 유치용 영어자막 동봉. #원랭스 #일자머리 #찰랑 #onelength #haircut
+# 설명: 일자머리(원랭스)가 무겁고 답답해 보이는 건 그 상태가 아직 완성되지 않아서다. 원랭스로 잘라도 띄우고 가볍게, 레이어드 안 낸 듯 레이어드 같은 찰랑을 낼 수 있다. 사람들이 원하는 건 레이어드가 아니라 찰랑거림이다. 외국인 유치용 영어자막. #원랭스 #일자머리 #찰랑 #onelength
 # 태그: 원랭스,일자머리,찰랑,가벼움,외국인,글로벌
-# 라인: 차노 구술 2026-07-21 (볼트 근거: knowledge/차노_구술_원본/2026-07-21_레이어드_원랭스_볼륨.md). ⚠️규칙: 남 비판·자기 띄우기 금지 → 가능성 서술. 영어=한글 아래 글씨만(박스X). 48초.
-# B롤: [cut] — 원랭스 커트 후 찰랑이게 빗어내리는 손. 카탈로그 cut군.
+# 라인: 차노 구술 2026-07-21 (볼트: knowledge/차노_구술_원본/2026-07-21_레이어드_원랭스_볼륨.md). "원랭스로 잘라도 띄고 가볍게"(이찬호). ⚠️규칙: 자기띄우기·비판·창작비유 금지, 가능성 프레임, 어미 다양화. 영어=한글 아래 글씨만. 흑백(mind). 40~50초.
+# B롤: [cut] — 일자 긴머리 4컷 스티치(3767_2 빗어내림+3772 펼침+5742 만지기+3769 살피기) 45초 통. 루프 없음. 초점 정상.
 00:00-00:03 일자머리 하면 || A blunt one-length cut
-00:03-00:06 좀 무겁고, 답답해 보이죠? || can look heavy and a little stuffy, right?
-00:06-00:09 일자머리가 나빠서가 아니에요. || It's not that one-length is bad
-00:09-00:12 그 상태가, 아직 불완전해서예요. || it's just not finished yet
-00:12-00:15 사실 원랭스로 잘라도 || Even cut as one-length
-00:15-00:18 띄우고, 가볍게 할 수 있어요. || it can still lift up and stay light
-00:18-00:21 레이어드 안 낸 듯한데 || Looks like there are no layers
-00:21-00:24 레이어드 같은, 그 가벼움. || yet has that layered lightness
-00:24-00:27 우리가 레이어드를 하는 이유는 || The reason we add layers
-00:27-00:30 결국, 가벼움이거든요. || is lightness, in the end
-00:30-00:33 근데 그 가벼움은 || But that lightness
-00:33-00:36 원랭스로도, 낼 수 있어요. || can come from one-length too
-00:36-00:39 사람들이 원하는 건 || What people really want
-00:39-00:42 레이어드가 아니라 || isn't the layers
-00:42-00:45 찰랑거림이니까요. || it's the bounce
+00:03-00:06 좀 무겁고 답답해 보이죠? || can look heavy and a bit stuffy, right?
+00:06-00:09 근데 그건 || But that's not
+00:09-00:12 일자머리가 나빠서가 아니에요. || because one-length is bad.
+00:12-00:15 그 상태가 아직 || It's just that the shape
+00:15-00:18 완성되지 않은 거예요. || isn't finished yet.
+00:18-00:21 사실 원랭스로 잘라도 || Even cut as one-length,
+00:21-00:24 얼마든지 띄우고 가볍게 돼요. || it can still lift and stay light.
+00:24-00:27 레이어드를 안 낸 것 같은데 || It looks like there are no layers,
+00:27-00:30 레이어드 같은 그 가벼움. || yet it moves that light.
+00:30-00:33 우리가 레이어드를 내는 이유는 || The reason we cut layers
+00:33-00:36 결국 가벼움이거든요. || comes down to lightness.
+00:36-00:39 근데 그 가벼움은 || But that same lightness
+00:39-00:42 원랭스로도 낼 수 있어요. || can come from one-length too.
+00:42-00:45 무게를 덜고 || Take out the weight,
+00:45-00:48 끝의 결만 살리면 || wake up just the ends,
+00:48-00:51 일자머리도 찰랑입니다. || and even blunt hair flows.
+00:51-00:54 그래서 중요한 건 길이가 아니라 || So it's not about length —
+00:54-00:57 결이고 무게예요. || it's texture and weight.
+00:57-01:00 사람들이 진짜 원한 건 || What people really wanted
+01:00-01:03 레이어드가 아니라 || was never the layers.
+01:03-01:06 그 찰랑거림이었으니까요. || It was that flow.
+01:06-01:09 일자머리도 충분히, || Blunt hair, too,
+01:09-01:12 찰랑일 수 있어요. || can absolutely flow.
