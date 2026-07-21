@@ -112,7 +112,7 @@ DEFAULT_STYLE = {
 # 한글(margin_v 260)보다 낮은 margin_v로 화면 더 아래에 깔린다(겹침 없음). 읽기 우선 → 또렷한 외곽+옅은 박스.
 DEFAULT_EN_STYLE = {
     "font": "AppleSDGothicNeo-Bold",  # 라틴 글리프 포함 — 영어도 안전
-    "size": 42,                       # 한글(64)보다 작게 = 보조 자막
+    "size": 52,                       # 한글(64)보다 작게 = 보조 자막 (2026-07-21 이찬호: 영어 좀 더 크게 42→52)
     "primary_color": "&H00F0F0F0",    # 살짝 낮춘 흰색(주자막과 위계)
     "outline_color": "&H00000000",
     "box_color": "000000",
