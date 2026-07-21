@@ -51,11 +51,13 @@ class TestLengthGate(unittest.TestCase):
     """길이 40~50초 잠금 — 25초처럼 짧거나 50 넘으면 FAIL."""
 
     def test_too_short_fails(self):
-        self.assertTrue(verify_render.length_fails(25))
-        self.assertTrue(verify_render.length_fails(29))
+        # 바닥 24초 — 그 밑(잘림버그 등 파손)만 FAIL (이찬호 2026-07-21 "28초도 괜찮아")
+        self.assertTrue(verify_render.length_fails(20))
+        self.assertTrue(verify_render.length_fails(23))
 
     def test_in_range_passes(self):
-        # 30초 초과 ~ 45초 미만(+톨러런스1s) (이찬호 2026-07-21)
+        # 24초 이상 ~ 45초 미만 (이찬호 2026-07-21 "28초도 괜찮아" → 바닥 30→24)
+        self.assertEqual(verify_render.length_fails(28), [])
         self.assertEqual(verify_render.length_fails(32), [])
         self.assertEqual(verify_render.length_fails(39), [])
         self.assertEqual(verify_render.length_fails(44), [])
