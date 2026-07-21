@@ -4,7 +4,23 @@ import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from shorts.proof import PALETTES, find_scripts, gradient_cmd, gradient_colors, match_broll
+from shorts.proof import PALETTES, broll_bg_cmd, find_scripts, gradient_cmd, gradient_colors, match_broll
+
+
+class TestBrollLoop(unittest.TestCase):
+    """짧은 B롤이 나레이션보다 짧아도 잘리지 않게 루프 채움 (2026-07-21 잘림버그 잠금)."""
+
+    def test_broll_bg_cmd에_stream_loop_있음(self):
+        cmd = broll_bg_cmd("src.mp4", 1.0, 40.0, "bg.mp4")
+        self.assertIn("-stream_loop", cmd)
+        # -stream_loop 는 입력(-i) 앞에 와야 입력 루프로 동작
+        self.assertLess(cmd.index("-stream_loop"), cmd.index("-i"))
+        self.assertIn("-1", cmd[cmd.index("-stream_loop") + 1])
+
+    def test_duration_t로_길이_고정(self):
+        cmd = broll_bg_cmd("src.mp4", 2.0, 45.0, "bg.mp4")
+        self.assertIn("-t", cmd)
+        self.assertIn("45.00", cmd)
 
 
 class TestGradient(unittest.TestCase):

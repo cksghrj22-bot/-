@@ -141,7 +141,10 @@ def broll_bg_cmd(
         vf += f",drawbox=c=black@{dim}:t=fill"
     return [
         "ffmpeg", "-y", "-loglevel", "error",
-        "-ss", f"{start:.2f}", "-t", f"{duration:.2f}", "-i", str(src),
+        # -stream_loop -1: B롤이 나레이션(duration)보다 짧으면 루프해 끝까지 채운다.
+        #   (안 하면 짧은 클립에서 영상·BGM이 원본 길이로 잘림 — 2026-07-21 03 잔곱슬 12.6s→11.67s 버그)
+        #   긴 클립엔 무해(-t가 먼저 끊음). -ss는 첫 재생 시작점.
+        "-stream_loop", "-1", "-ss", f"{start:.2f}", "-t", f"{duration:.2f}", "-i", str(src),
         "-vf", vf,
         "-an", "-c:v", "libx264", "-preset", "fast", "-crf", "20", "-pix_fmt", "yuv420p",
         str(out_path),
