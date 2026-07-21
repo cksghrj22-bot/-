@@ -18,6 +18,15 @@ from dataclasses import dataclass, field
 
 _TIMED_RE = re.compile(r"^(\d{1,2}:\d{2}(?:\.\d)?)\s*-\s*(\d{1,2}:\d{2}(?:\.\d)?)\s+(.+)$")
 _META_RE = re.compile(r"^#\s*(제목|설명|태그)\s*:\s*(.*)$")
+_EN_SEP = re.compile(r"\s*\|\|\s*")  # '한글 || English' 구분자 (외국인 유치용 영어 자막)
+
+
+def _split_ko_en(text: str) -> tuple[str, str | None]:
+    """'한글 || English' → ('한글', 'English'). 구분자 없으면 (한글, None)."""
+    parts = _EN_SEP.split(text, maxsplit=1)
+    if len(parts) == 2 and parts[1].strip():
+        return parts[0].strip(), parts[1].strip()
+    return text.strip(), None
 
 
 @dataclass
@@ -25,6 +34,7 @@ class Line:
     text: str
     start: float | None = None  # 초 단위, None이면 자동 배분
     end: float | None = None
+    en: str | None = None       # 영어 자막(외국인 유치용) — 한글 아래 줄에 표시. 없으면 미표시.
 
 
 @dataclass
@@ -60,11 +70,13 @@ def parse_script(text: str) -> Script:
             continue  # 알 수 없는 주석(# 라인: 등)은 대사가 아니다 — 건너뛴다 (나레이션 오염 방지)
         timed = _TIMED_RE.match(line)
         if timed:
+            ko, en = _split_ko_en(timed.group(3))
             script.lines.append(
-                Line(text=timed.group(3).strip(), start=_parse_time(timed.group(1)), end=_parse_time(timed.group(2)))
+                Line(text=ko, start=_parse_time(timed.group(1)), end=_parse_time(timed.group(2)), en=en)
             )
         else:
-            script.lines.append(Line(text=line))
+            ko, en = _split_ko_en(line)
+            script.lines.append(Line(text=ko, en=en))
     return script
 
 
@@ -94,6 +106,21 @@ DEFAULT_STYLE = {
     "outline": 2,
     "alignment": 2,                  # 하단 중앙
     "margin_v": 260,                 # 쇼츠 UI 피해서 아래에서 띄우기
+}
+
+# 영어 자막 (외국인 유치용 · 2026-07-21 이찬호) — 한글 자막 바로 아래, 한글보다 작게·흰 글씨+반투명 박스.
+# 한글(margin_v 260)보다 낮은 margin_v로 화면 더 아래에 깔린다(겹침 없음). 읽기 우선 → 또렷한 외곽+옅은 박스.
+DEFAULT_EN_STYLE = {
+    "font": "AppleSDGothicNeo-Bold",  # 라틴 글리프 포함 — 영어도 안전
+    "size": 44,                       # 한글(64)보다 작게 = 보조 자막
+    "primary_color": "&H00F0F0F0",    # 살짝 낮춘 흰색(주자막과 위계)
+    "outline_color": "&H00000000",
+    "box_color": "000000",
+    "box_opacity": 55,                # 한글(65)보다 옅은 박스
+    "border_style": 4,
+    "outline": 2,
+    "alignment": 2,                   # 하단 중앙
+    "margin_v": 165,                  # 한글(260)보다 아래 = 한글 밑에 위치
 }
 
 # 하단 아웃트로 (브랜딩 줄: "SNS에 일기를 쓰고 있어요" — 얇게·작게·반투명, 마지막 몇 초만)
@@ -186,6 +213,32 @@ def fit_title(text: str, base_size: int, width: int, margin: int = 70, floor: in
     return max(floor, int(usable / u)), text
 
 
+def wrap_en(text: str, size: int, width: int, margin: int = 60, max_lines: int = 2) -> str:
+    """영어 자막이 화면 폭을 넘으면 단어 경계로 최대 max_lines줄까지 접는다(\\N)."""
+    usable = width - 2 * margin
+    if _line_units(text) * size <= usable:
+        return text
+    words = text.split(" ")
+    lines_out: list[str] = []
+    cur = ""
+    for w in words:
+        trial = f"{cur} {w}".strip()
+        if _line_units(trial) * size > usable and cur:
+            lines_out.append(cur)
+            cur = w
+            if len(lines_out) == max_lines - 1:
+                # 마지막 줄: 남은 단어 다 붙인다(넘쳐도 한 줄로 — 크기 축소는 호출부에서)
+                rest = " ".join(words[words.index(w):])
+                lines_out.append(rest)
+                cur = ""
+                break
+        else:
+            cur = trial
+    if cur:
+        lines_out.append(cur)
+    return "\\N".join(lines_out[:max_lines])
+
+
 def to_ass(
     lines: list[Line],
     style: dict | None = None,
@@ -196,6 +249,7 @@ def to_ass(
     outro: str | None = None,
     outro_style: dict | None = None,
     total_duration: float | None = None,
+    en_style: dict | None = None,
 ) -> str:
     """타이밍이 배정된 라인들을 ASS 자막 문서로 변환한다.
 
@@ -216,6 +270,10 @@ def to_ass(
         ost.update(outro_style)
     if style and "font" in style and not (outro_style and "font" in outro_style):
         ost["font"] = style["font"]  # 아웃트로도 본문 폰트를 따라간다
+    est = dict(DEFAULT_EN_STYLE)
+    if en_style:
+        est.update(en_style)
+    has_en = any(getattr(l, "en", None) for l in lines)
     title_text = title
     if title:
         # 제목은 항상 자막보다 크게(길면 2줄), 화면 폭은 안 넘김. floor = 자막 크기 + 여유.
@@ -226,6 +284,8 @@ def to_ass(
     style_lines = [_style_line('Default', st), _style_line('Title', tst)]
     if outro:
         style_lines.append(_style_line('Outro', ost))
+    if has_en:
+        style_lines.append(_style_line('English', est))
     header = f"""[Script Info]
 ScriptType: v4.00+
 PlayResX: {width}
@@ -244,6 +304,10 @@ Format: Layer, Start, End, Style, Text
             raise ValueError(f"타이밍이 배정되지 않은 라인: {line.text!r} (assign_timings 먼저 호출)")
         text = line.text.replace("\n", "\\N")
         events.append(f"Dialogue: 0,{_ass_time(line.start)},{_ass_time(line.end)},Default,{text}")
+        en = getattr(line, "en", None)
+        if en:
+            en_text = wrap_en(en.replace("\n", " "), int(est.get("size", 44)), width)
+            events.append(f"Dialogue: 0,{_ass_time(line.start)},{_ass_time(line.end)},English,{en_text}")
     last_end = max((l.end or 0) for l in lines) if lines else 60.0
     if title:
         tt = title_text.replace(chr(10), "\\N")

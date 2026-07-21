@@ -70,6 +70,49 @@ class TestAss(unittest.TestCase):
         self.assertIn("&H0000D7FF", ass)
 
 
+class TestEnglishSubtitle(unittest.TestCase):
+    """영어 자막(외국인 유치용) — '한글 || English' 파싱 + 한글 아래 영어 줄."""
+
+    def test_parse_splits_ko_en(self):
+        s = parse_script("00:00-00:03 흰머리도 찰랑여요 || Gray hair can flow too\n")
+        self.assertEqual(s.lines[0].text, "흰머리도 찰랑여요")
+        self.assertEqual(s.lines[0].en, "Gray hair can flow too")
+
+    def test_parse_no_separator_leaves_en_none(self):
+        s = parse_script("00:00-00:03 한글만 있어요\n")
+        self.assertIsNone(s.lines[0].en)
+
+    def test_parse_untimed_line_also_splits(self):
+        s = parse_script("한글 대사 || English line\n")
+        self.assertEqual(s.lines[0].text, "한글 대사")
+        self.assertEqual(s.lines[0].en, "English line")
+
+    def test_ass_emits_english_style_and_event(self):
+        lines = [Line("한글", 0.0, 3.0, en="Korean")]
+        ass = to_ass(lines)
+        self.assertIn("Style: English,", ass)
+        self.assertIn("Dialogue: 0,0:00:00.00,0:00:03.00,English,Korean", ass)
+        # 한글 자막(Default)도 그대로 있어야 한다
+        self.assertIn("Dialogue: 0,0:00:00.00,0:00:03.00,Default,한글", ass)
+
+    def test_no_english_style_when_absent(self):
+        ass = to_ass([Line("한글만", 0.0, 3.0)])
+        self.assertNotIn("Style: English,", ass)
+
+    def test_english_below_korean(self):
+        # 영어 margin_v(165)가 한글 margin_v(260)보다 작아야 한글 '아래'에 위치
+        from shorts.subtitles import DEFAULT_STYLE, DEFAULT_EN_STYLE
+        self.assertLess(DEFAULT_EN_STYLE["margin_v"], DEFAULT_STYLE["margin_v"])
+        self.assertLess(DEFAULT_EN_STYLE["size"], DEFAULT_STYLE["size"])
+
+    def test_long_english_wraps_two_lines(self):
+        from shorts.subtitles import wrap_en
+        long_en = "It starts with honoring the natural texture of your beautiful hair every day"
+        wrapped = wrap_en(long_en, 44, 1080)
+        self.assertIn("\\N", wrapped)
+        self.assertLessEqual(wrapped.count("\\N"), 1)  # 최대 2줄
+
+
 class TestRunner(unittest.TestCase):
     def test_find_jobs_pairs_video_and_script(self):
         with tempfile.TemporaryDirectory() as tmp:
