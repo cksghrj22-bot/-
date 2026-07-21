@@ -13,8 +13,12 @@ from pathlib import Path
 
 W, H = 1080, 1920
 
-# 위치 프리셋 → (x, y) 식. iw/ih=오버레이 크기, W/H=캔버스. 제목(상단)·자막(하단) 안 가리게 중간대.
+# 위치 프리셋 → (x, y) 식. iw/ih=오버레이 크기, W/H=캔버스.
+# ⚠️자막은 화면 하단중앙(≈y 0.45~0.56)에 박스로 온다 → 글자 안 가리려면 **상단대(upper)** 권장.
 POS = {
+    "upper-left":  ("40", "H*0.20"),          # 자막 위 — 글자 안 가림(기본 권장)
+    "upper-right": (f"{W}-w-40", "H*0.20"),
+    "upper-center":("(W-w)/2", "H*0.19"),
     "mid-left":  ("40", "H*0.30"),
     "mid-right": (f"{W}-w-40", "H*0.30"),
     "center":    ("(W-w)/2", "H*0.34"),
@@ -40,9 +44,11 @@ def build_overlay_cmd(video: str | Path, overlays: list[dict], out: str | Path) 
         pos = ov.get("pos", "mid-right")
         x_expr, y_expr = POS.get(pos, POS["mid-right"])
         tw = int(W * scale)
-        # 스케일 + 알파 페이드 in/out (투명배경 유지 위해 format rgba)
+        opacity = float(ov.get("opacity", 1.0))  # <1 이면 반투명(글자 겹쳐도 비침)
+        op_filt = f",colorchannelmixer=aa={opacity:.2f}" if opacity < 0.999 else ""
+        # 스케일 + (반투명) + 알파 페이드 in/out (투명배경 유지 위해 format rgba)
         parts.append(
-            f"[{i}:v]scale={tw}:-1,format=rgba,"
+            f"[{i}:v]scale={tw}:-1,format=rgba{op_filt},"
             f"fade=t=in:st={s:.2f}:d={fade}:alpha=1,"
             f"fade=t=out:st={e - fade:.2f}:d={fade}:alpha=1[ov{i}]"
         )
