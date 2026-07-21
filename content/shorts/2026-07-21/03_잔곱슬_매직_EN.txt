@@ -1,20 +1,31 @@
 # 제목: 장마철 잔곱슬, 매직 전에 보세요
-# 설명: 잔곱슬은 머리가 얇다는 신호. 얇은 머리에 매직을 세게 전체로 하면 두상에 달라붙어 납작해진다. 얼굴엔 크기가 있어 기본 볼륨은 남겨야 하고, 불필요한 곱슬(30~40%)만 정확히 덜어내야 매직 후에도 편하다. 12만 「잔머리 곱슬분들」 리메이크. 외국인 유치용 영어자막. #잔곱슬 #매직 #장마철 #frizz #hair
+# 설명: 잔곱슬은 머리가 얇다는 신호. 얇은 머리에 매직을 세게 전체로 하면 두상에 달라붙어 납작해진다. 얼굴엔 크기가 있어 기본 볼륨은 남겨야 하고, 불필요한 곱슬(30~40%)만 정확히 덜어내야 매직 후에도 편하다. 12만 「잔머리 곱슬분들」 리메이크. 외국인 유치용 영어자막. #잔곱슬 #매직 #장마철 #frizz
 # 태그: 잔곱슬,매직,장마철,볼륨,외국인,글로벌
-# 라인: 차노 구술 2026-07-21 (볼트: knowledge/차노_구술_원본/2026-07-21_단발비율_잔곱슬매직.md). ⚠️규칙: 자기띄우기·남비판 금지, 창작비유 금지, 가능성 프레임(없애는 게 아니라 덜어냄). 영어=한글 아래 글씨만. 흑백(mind). 40~50초.
-# B롤: [cut/scalp] — 잔곱슬/얇은 모발 살피는 손, 매직 결 잡는 손. ⚠️곱슬·매직 장면 필요(단발/커트 클립 재사용 금지).
+# 라인: 차노 구술 2026-07-21 (볼트: knowledge/차노_구술_원본/2026-07-21_단발비율_잔곱슬매직.md). ⚠️규칙: 자기띄우기·비판·창작비유 금지, 가능성 프레임(없애는 게 아니라 덜어냄), 어미 다양화. 영어=한글 아래 글씨만. 흑백(mind). 40~50초.
+# B롤: [scalp/cut] — 매직결과(IMG_3616_2 매끈한 면)+윗머리작업(IMG_3740_5) 45초 스티치. 루프 없음.
 00:00-00:03 장마철, 잔곱슬 때문에 || Rainy season, all that frizz —
-00:03-00:06 매직 고민이시죠? || thinking about straightening?
+00:03-00:06 매직 고민이시죠? || thinking of straightening?
 00:06-00:09 잔곱슬은 사실 신호예요. || Frizz is actually a signal.
 00:09-00:12 머리카락이 얇다는 뜻이거든요. || It means your hair is fine.
-00:12-00:15 얇은 머리에 매직을 세게 다 하면 || Straighten fine hair hard, all over,
-00:15-00:18 두상에 착 달라붙어 납작해져요. || and it flattens onto your head.
-00:18-00:21 얼굴엔 원래 크기가 있어서 || Your face already has volume,
-00:21-00:24 기본 볼륨은 남겨야 해요. || so some lift has to stay.
-00:24-00:27 필요한 곱슬과 아닌 걸 나눠요. || Split the frizz you need from what you don't.
-00:27-00:30 불필요한 삼사십 퍼센트만 || Just the extra thirty, forty percent —
-00:30-00:33 정확히 보고 덜어내는 거예요. || we read it and lighten it.
-00:33-00:36 그래야 매직을 하고도 || Then even after straightening,
-00:36-00:39 납작하지 않고 편해요. || it stays easy, not flat.
-00:39-00:42 잔곱슬은 없애는 게 아니라 || Frizz isn't erased —
-00:42-00:45 덜어내는 거예요. || it's lightened.
+00:12-00:15 그런데 얇은 머리에 || But on fine hair,
+00:15-00:18 매직을 세게 다 해버리면 || straightening hard and all over
+00:18-00:21 두상에 착 달라붙어요. || makes it cling to your head.
+00:21-00:24 볼륨이 죽어 납작해지죠. || The volume dies and it goes flat.
+00:24-00:27 사람 얼굴엔 || Everyone's face
+00:27-00:30 원래 크기가 있어요. || already has its own volume.
+00:30-00:33 그래서 기본 볼륨은 || So a base of lift
+00:33-00:36 반드시 남겨둬야 해요. || has to be left in.
+00:36-00:39 필요한 곱슬과 아닌 걸 || The frizz you need and the frizz you don't —
+00:39-00:42 정확히 나눕니다. || we separate them exactly.
+00:42-00:45 얇을수록 이 구분이 || The finer your hair,
+00:45-00:48 더 중요해지고요. || the more this split matters.
+00:48-00:51 불필요한 삼사십 퍼센트, || The extra thirty, forty percent —
+00:45-00:48 그것만 덜어내요. || only that gets lightened.
+00:48-00:51 그래야 매직을 하고도 || Then even after straightening,
+00:51-00:54 납작하지 않게 || it won't fall flat,
+00:54-00:57 자연스럽게 떨어져요. || it settles natural.
+00:57-01:00 그 경계만 정확히 보면 || Read that line right,
+01:00-01:03 매직이 훨씬 편해집니다. || and straightening gets easy.
+01:03-01:06 잔곱슬은 없애는 게 아니라 || Frizz isn't erased —
+01:00-01:03 딱 필요한 만큼 || just the right amount
+01:03-01:06 덜어내는 거예요. || is eased away.
