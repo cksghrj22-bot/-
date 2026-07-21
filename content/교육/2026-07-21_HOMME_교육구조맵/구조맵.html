@@ -1,0 +1,273 @@
+<title>ATNOWN HOMME 교육 구조맵</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --paper:#F4F0E6; --paper-2:#EBE5D6; --card:#FBF8F0;
+    --ink:#23201A; --ink-2:#6B6455; --ink-3:#938B78;
+    --rule:#DAD3C2; --rule-2:#C9C0AB;
+    --pen:#C4302B; --pen-soft:#F0D9D5;
+    --pass:#4A6B4E; --pass-soft:#DDE7DC;
+    --wait:#B08A2E; --wait-soft:#F0E6CC;
+    --shadow:0 1px 0 rgba(35,32,26,.04), 0 6px 18px rgba(35,32,26,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#1B1915; --paper-2:#222019; --card:#25231C;
+      --ink:#ECE6D6; --ink-2:#A79E88; --ink-3:#7E765F;
+      --rule:#38342A; --rule-2:#46402F;
+      --pen:#E5675C; --pen-soft:#3A2420;
+      --pass:#8FB48F; --pass-soft:#243024;
+      --wait:#D9B65C; --wait-soft:#332C18;
+      --shadow:0 1px 0 rgba(0,0,0,.2), 0 6px 20px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"]{
+    --paper:#F4F0E6; --paper-2:#EBE5D6; --card:#FBF8F0;
+    --ink:#23201A; --ink-2:#6B6455; --ink-3:#938B78;
+    --rule:#DAD3C2; --rule-2:#C9C0AB;
+    --pen:#C4302B; --pen-soft:#F0D9D5;
+    --pass:#4A6B4E; --pass-soft:#DDE7DC;
+    --wait:#B08A2E; --wait-soft:#F0E6CC;
+    --shadow:0 1px 0 rgba(35,32,26,.04), 0 6px 18px rgba(35,32,26,.06);
+  }
+  :root[data-theme="dark"]{
+    --paper:#1B1915; --paper-2:#222019; --card:#25231C;
+    --ink:#ECE6D6; --ink-2:#A79E88; --ink-3:#7E765F;
+    --rule:#38342A; --rule-2:#46402F;
+    --pen:#E5675C; --pen-soft:#3A2420;
+    --pass:#8FB48F; --pass-soft:#243024;
+    --wait:#D9B65C; --wait-soft:#332C18;
+    --shadow:0 1px 0 rgba(0,0,0,.2), 0 6px 20px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:system-ui,-apple-system,"Apple SD Gothic Neo","Pretendard","Malgun Gothic","Noto Sans KR",sans-serif;
+    line-height:1.5; letter-spacing:-.01em;
+    background-image:radial-gradient(var(--rule) .5px, transparent .5px);
+    background-size:22px 22px;
+  }
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+  .wrap{max-width:1120px;margin:0 auto;padding:28px 18px 72px}
+
+  /* header */
+  header{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:26px}
+  .eyebrow{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-2);font-weight:700}
+  h1{font-size:clamp(26px,6vw,40px);margin:.28em 0 .18em;font-weight:800;letter-spacing:-.02em;text-wrap:balance}
+  .sub{color:var(--ink-2);font-size:15px;max-width:60ch}
+  .brandline{display:inline-block;margin-top:12px;font-size:11px;letter-spacing:.3em;color:var(--pen);font-weight:700;border:1px solid var(--pen);padding:4px 10px;border-radius:2px}
+
+  h2{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2);font-weight:800;
+     margin:38px 0 14px;display:flex;align-items:center;gap:10px}
+  h2::before{content:"";width:20px;height:2px;background:var(--pen);display:inline-block}
+
+  /* 공정 상황판 */
+  .board{display:flex;flex-wrap:wrap;gap:10px}
+  .step{flex:1 1 190px;background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:13px 15px;box-shadow:var(--shadow);position:relative}
+  .step .n{font-size:11px;color:var(--ink-3);font-weight:700;letter-spacing:.1em}
+  .step .t{font-weight:700;margin:3px 0 8px;font-size:15px}
+  .step .who{font-size:12px;color:var(--ink-2)}
+  .tag{display:inline-block;font-size:11px;font-weight:800;padding:3px 9px;border-radius:100px;letter-spacing:.02em}
+  .tag.now{background:var(--pen-soft);color:var(--pen)}
+  .tag.wait{background:var(--wait-soft);color:var(--wait)}
+  .tag.pass{background:var(--pass-soft);color:var(--pass)}
+  .step .tag{position:absolute;top:12px;right:12px}
+
+  /* 로드맵 스파인 */
+  .roadmap-scroll{overflow-x:auto;padding:6px 2px 14px;margin:0 -2px}
+  .spine{display:grid;grid-template-columns:repeat(8,minmax(104px,1fr));gap:0;min-width:760px;position:relative}
+  .core-bracket{grid-column:1 / 7;height:26px;border:2px solid var(--pen);border-bottom:none;border-radius:8px 8px 0 0;position:relative;margin-bottom:6px}
+  .core-bracket span{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--paper);color:var(--pen);font-size:11px;font-weight:800;letter-spacing:.14em;padding:0 10px;white-space:nowrap}
+  .tail-note{grid-column:7 / 9;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;color:var(--ink-3);font-size:11px;font-weight:700;letter-spacing:.1em}
+  .node{position:relative;padding:0 6px;text-align:center}
+  .node::before{content:"";position:absolute;top:15px;left:0;right:0;height:2px;background:var(--rule-2)}
+  .node:first-child::before{left:50%}
+  .node:last-child::before{right:50%}
+  .dot{position:relative;z-index:1;width:30px;height:30px;border-radius:50%;background:var(--card);border:2px solid var(--ink);
+       display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;margin:0 auto 8px}
+  .node.core .dot{border-color:var(--pen);color:var(--pen)}
+  .node .lab{font-size:12px;font-weight:700;line-height:1.25}
+  .node .dur{font-size:11px;color:var(--ink-2);margin-top:3px}
+
+  /* 단계 카드 그리드 */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+  .stage{background:var(--card);border:1px solid var(--rule);border-radius:12px;padding:16px 17px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px}
+  .stage.core{border-left:4px solid var(--pen)}
+  .stage-hd{display:flex;align-items:baseline;justify-content:space-between;gap:8px;border-bottom:1px dashed var(--rule-2);padding-bottom:9px}
+  .stage-no{font-size:12px;font-weight:800;letter-spacing:.12em;color:var(--pen)}
+  .stage.tail .stage-no{color:var(--ink-3)}
+  .stage-nm{font-size:17px;font-weight:800;letter-spacing:-.01em}
+  .stage-dur{font-size:12px;color:var(--ink-2);white-space:nowrap}
+  .row{display:flex;gap:8px;font-size:13px}
+  .row .k{flex:0 0 46px;color:var(--ink-3);font-weight:700;font-size:11px;letter-spacing:.06em;padding-top:2px}
+  .row .v{color:var(--ink)}
+  .chips{display:flex;flex-wrap:wrap;gap:5px}
+  .chip{font-size:12px;background:var(--paper-2);border:1px solid var(--rule);border-radius:6px;padding:2px 8px;color:var(--ink)}
+  .who-chip{font-size:12px;background:transparent;border:1px solid var(--rule-2);border-radius:100px;padding:2px 9px;color:var(--ink-2);font-weight:700}
+  .test{margin-top:2px;background:var(--pen-soft);border:1px solid var(--pen);border-radius:8px;padding:8px 11px;font-size:12.5px;color:var(--ink)}
+  .test b{color:var(--pen);letter-spacing:.06em;font-size:11px}
+
+  /* 담당 배분 매트릭스 */
+  .matrix-scroll{overflow-x:auto;border:1px solid var(--rule);border-radius:12px;box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;min-width:560px;font-size:13px;background:var(--card)}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule)}
+  thead th{background:var(--paper-2);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);position:sticky;top:0}
+  tbody tr:last-child td{border-bottom:none}
+  td.stg{font-weight:800;color:var(--pen);white-space:nowrap}
+  td.tail{color:var(--ink-3)}
+  .badge{display:inline-block;font-size:11px;font-weight:800;padding:2px 8px;border-radius:6px;background:var(--wait-soft);color:var(--wait)}
+  .badge.cur{background:var(--paper-2);color:var(--ink-2)}
+
+  /* 브레인스토밍 */
+  .brain{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+  .q{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--wait);border-radius:10px;padding:13px 15px;box-shadow:var(--shadow)}
+  .q .qh{font-weight:800;font-size:14px;margin-bottom:5px}
+  .q .qb{font-size:13px;color:var(--ink-2)}
+  .q .owner{display:inline-block;margin-top:9px;font-size:11px;font-weight:800;color:var(--pen);letter-spacing:.04em}
+
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;font-size:12px;color:var(--ink-2)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+
+  footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--rule);font-size:12px;color:var(--ink-3);display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:space-between}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">ATNOWN HOMME · Intern Training</div>
+    <h1>교육 구조맵 — 6개월 인턴 시스템</h1>
+    <div class="sub">창업 초기 커리큘럼을 재건축한다. STAGE 0 → 7의 한 줄기 골격을 도식·표·상황판으로 한 화면에 잡는다. 과목 설계는 <b>이찬호 · 성희 부원장</b>, 그다음 담당 재배분 → 6개월 시스템 확정 → 공표.</div>
+    <div class="brandline">THE ART OF NOW, OWNED</div>
+  </header>
+
+  <h2>공정 상황판 — 지금 어디까지</h2>
+  <div class="board">
+    <div class="step"><span class="tag now">진행중</span><div class="n">STEP 1</div><div class="t">교육과목 설계</div><div class="who">이찬호 · 성희 부원장 (2인 확정)</div></div>
+    <div class="step"><span class="tag wait">대기</span><div class="n">STEP 2</div><div class="t">담당 재배분</div><div class="who">과목별 강사 배정 (현행 배분 재검토)</div></div>
+    <div class="step"><span class="tag wait">대기</span><div class="n">STEP 3</div><div class="t">6개월 시스템 확정</div><div class="who">기간·테스트 게이트·승급 기준 잠금</div></div>
+    <div class="step"><span class="tag wait">대기</span><div class="n">STEP 4</div><div class="t">공표</div><div class="who">스태프 대상 정식 공지 · 문서화</div></div>
+  </div>
+
+  <h2>전체 로드맵 — STAGE 0 → 7</h2>
+  <div class="roadmap-scroll">
+    <div class="spine">
+      <div class="core-bracket"><span>◄ 6개월 코어 (0 → 5) ►</span></div>
+      <div class="tail-note">병행 · 후속</div>
+      <div class="node core"><div class="dot">0</div><div class="lab">CS·마인드</div><div class="dur">1주</div></div>
+      <div class="node core"><div class="dot">0.5</div><div class="lab">CS·기본기</div><div class="dur">1개월</div></div>
+      <div class="node core"><div class="dot">1</div><div class="lab">드라이·스타일링</div><div class="dur">1개월</div></div>
+      <div class="node core"><div class="dot">2</div><div class="lab">염색·약터치</div><div class="dur">1개월</div></div>
+      <div class="node core"><div class="dot">3</div><div class="lab">다운펌</div><div class="dur">1개월</div></div>
+      <div class="node core"><div class="dot">4</div><div class="lab">와인딩</div><div class="dur">1개월</div></div>
+      <div class="node"><div class="dot">5</div><div class="lab">열펌</div><div class="dur">1개월</div></div>
+      <div class="node"><div class="dot">6·7</div><div class="lab">정규·모델워크</div><div class="dur">추후·3개월</div></div>
+    </div>
+  </div>
+  <div class="legend">
+    <span><i class="sw" style="background:var(--pen)"></i>6개월 코어 단계</span>
+    <span><i class="sw" style="background:var(--pen-soft);border:1px solid var(--pen)"></i>TEST = 다음 단계 게이트</span>
+    <span><i class="sw" style="background:var(--wait-soft)"></i>재배분/결정 대기</span>
+  </div>
+
+  <h2>단계별 상세 — 내용 · 담당 · 테스트</h2>
+  <div class="grid">
+
+    <div class="stage core">
+      <div class="stage-hd"><div><span class="stage-no">STAGE 00</span><br><span class="stage-nm">CS 및 마인드교육</span></div><span class="stage-dur">1주</span></div>
+      <div class="row"><span class="k">담당</span><span class="v"><span class="who-chip">강사 Y</span></span></div>
+      <div class="row"><span class="k">내용</span><span class="v chips"><span class="chip">앳나운옴므 세계관</span><span class="chip">왜 일하는가</span></span></div>
+      <div class="test"><b>과제</b><br>들은 것·느낀 것·깨달은 것·앞으로의 다짐 → 필사 및 발표</div>
+    </div>
+
+    <div class="stage core">
+      <div class="stage-hd"><div><span class="stage-no">STAGE 0.5</span><br><span class="stage-nm">CS 및 기본기</span></div><span class="stage-dur">1개월 (교육 2주+테스트 2주)</span></div>
+      <div class="row"><span class="k">담당</span><span class="v chips"><span class="who-chip">점장님</span><span class="who-chip">범진</span><span class="who-chip">유안</span><span class="who-chip">태원</span></span></div>
+      <div class="row"><span class="k">내용</span><span class="v chips"><span class="chip">CS 매뉴얼·리셉션</span><span class="chip">트레이·티서비스·동선</span><span class="chip">기본 약재</span><span class="chip">샴푸 5종(2인1조)</span><span class="chip">두피·모발케어</span></span></div>
+      <div class="test"><b>TEST</b><br>서비스 시뮬레이션 · 샴푸 테스트 · 고객 시뮬레이션</div>
+    </div>
+
+    <div class="stage core">
+      <div class="stage-hd"><div><span class="stage-no">STAGE 01</span><br><span class="stage-nm">남자 드라이 및 스타일링</span></div><span class="stage-dur">1개월 (2주+2주)</span></div>
+      <div class="row"><span class="k">담당</span><span class="v"><span class="who-chip">강사 Y</span></span></div>
+      <div class="row"><span class="k">내용</span><span class="v chips"><span class="chip">기본 건조·스타일링</span><span class="chip">댄디컷</span><span class="chip">슬릭백</span><span class="chip">플랫컷</span></span></div>
+      <div class="test"><b>TEST · 2주</b><br>시안 보고 동일 재현 — 3스타일 · 각 10분</div>
+    </div>
+
+    <div class="stage core">
+      <div class="stage-hd"><div><span class="stage-no">STAGE 02</span><br><span class="stage-nm">염색 및 약터치</span></div><span class="stage-dur">1개월 (2주+2주)</span></div>
+      <div class="row"><span class="k">담당</span><span class="v"><span class="who-chip">강사 Y</span></span></div>
+      <div class="row"><span class="k">내용</span><span class="v chips"><span class="chip">열펌 약터치·중화</span><span class="chip">새치커버 염색</span><span class="chip">업컬러 염색</span></span></div>
+      <div class="test"><b>TEST</b><br>약터치 25분(한통) · 염색 15분(한통)</div>
+    </div>
+
+    <div class="stage core">
+      <div class="stage-hd"><div><span class="stage-no">STAGE 03</span><br><span class="stage-nm">다운펌</span></div><span class="stage-dur">1개월 (2주+2주)</span></div>
+      <div class="row"><span class="k">담당</span><span class="v"><span class="who-chip">강사 Y</span></span></div>
+      <div class="row"><span class="k">내용</span><span class="v chips"><span class="chip">기본 다운펌</span><span class="chip">조각 다운펌 · 플랫컷</span><span class="chip">조각 다운펌 · 슬릭백</span></span></div>
+      <div class="test"><b>TEST</b><br>각 스타일당 15분</div>
+    </div>
+
+    <div class="stage core">
+      <div class="stage-hd"><div><span class="stage-no">STAGE 04</span><br><span class="stage-nm">와인딩</span></div><span class="stage-dur">1개월</span></div>
+      <div class="row"><span class="k">담당</span><span class="v"><span class="who-chip">강사 Y</span></span></div>
+      <div class="row"><span class="k">내용</span><span class="v chips"><span class="chip">기본 와인딩(60개)</span><span class="chip">쉐도우펌</span><span class="chip">텍스처펌</span></span></div>
+      <div class="test"><b>TEST</b><br>기본 25분 · 스타일(와인딩 15분→롯드아웃·스타일링 5분→브리핑)</div>
+    </div>
+
+    <div class="stage">
+      <div class="stage-hd"><div><span class="stage-no">STAGE 05</span><br><span class="stage-nm">열펌</span></div><span class="stage-dur">1개월</span></div>
+      <div class="row"><span class="k">담당</span><span class="v"><span class="who-chip">강사 서나</span></span></div>
+      <div class="row"><span class="k">내용</span><span class="v chips"><span class="chip">라인매직</span><span class="chip">아이론펌</span><span class="chip">디지털펌</span><span class="chip">모류교정</span></span></div>
+      <div class="test"><b>TEST</b><br>리프컷 가발 한통에 4항목 전부 시연 (30분)</div>
+    </div>
+
+    <div class="stage tail">
+      <div class="stage-hd"><div><span class="stage-no">STAGE 06</span><br><span class="stage-nm">앳나운 정규과정</span></div><span class="stage-dur">추후 안내</span></div>
+      <div class="row"><span class="k">담당</span><span class="v"><span class="who-chip">기본 커트·드라이</span></span></div>
+      <div class="row"><span class="k">내용</span><span class="v chips"><span class="chip">원랭스</span><span class="chip">그레쥬에이션</span><span class="chip">레이어</span></span></div>
+      <div class="test"><b>TEST</b><br>각 항목 한 통씩 완성</div>
+    </div>
+
+    <div class="stage tail">
+      <div class="stage-hd"><div><span class="stage-no">STAGE 07</span><br><span class="stage-nm">모델워크 &amp; 실전 테크닉</span></div><span class="stage-dur">3개월 · 교육과 동시</span></div>
+      <div class="row"><span class="k">담당</span><span class="v"><span class="who-chip">교육 병행</span></span></div>
+      <div class="row"><span class="k">내용</span><span class="v chips"><span class="chip">리프컷</span><span class="chip">미디엄 댄디컷</span><span class="chip">텍스처·플랫컷</span></span></div>
+      <div class="test"><b>EVALUATION</b><br>별도 테스트 없이 모델워크 컨텐츠 퀄리티로 체크 (승급시험 반영)</div>
+    </div>
+
+  </div>
+
+  <h2>담당 배분 매트릭스 — 현행 vs 재배분</h2>
+  <div class="matrix-scroll">
+    <table>
+      <thead><tr><th>단계</th><th>과목</th><th>현행 담당 (원본)</th><th>재배분</th></tr></thead>
+      <tbody>
+        <tr><td class="stg">00</td><td>CS·마인드</td><td>강사 Y</td><td><span class="badge cur">검토</span></td></tr>
+        <tr><td class="stg">0.5</td><td>CS·기본기</td><td>점장님·범진·유안·태원</td><td><span class="badge cur">검토</span></td></tr>
+        <tr><td class="stg">01</td><td>드라이·스타일링</td><td>강사 Y</td><td><span class="badge cur">검토</span></td></tr>
+        <tr><td class="stg">02</td><td>염색·약터치</td><td>강사 Y</td><td><span class="badge cur">검토</span></td></tr>
+        <tr><td class="stg">03</td><td>다운펌</td><td>강사 Y</td><td><span class="badge cur">검토</span></td></tr>
+        <tr><td class="stg">04</td><td>와인딩</td><td>강사 Y</td><td><span class="badge cur">검토</span></td></tr>
+        <tr><td class="stg">05</td><td>열펌</td><td>강사 서나</td><td><span class="badge cur">검토</span></td></tr>
+        <tr><td class="stg tail">06</td><td class="tail">정규(커트·드라이)</td><td class="tail">미정</td><td><span class="badge">배정 필요</span></td></tr>
+        <tr><td class="stg tail">07</td><td class="tail">모델워크</td><td class="tail">교육 병행</td><td><span class="badge">기준 필요</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>브레인스토밍 — 이찬호 · 성희 부원장이 채울 칸</h2>
+  <div class="brain">
+    <div class="q"><div class="qh">담당 재배분</div><div class="qb">현행은 강사 Y에 편중. 성희 부원장이 어느 과목을 직접 맡고, 어디를 위임할지.</div><span class="owner">→ 이찬호·성희</span></div>
+    <div class="q"><div class="qh">STAGE 06 기간 확정</div><div class="qb">'추후 안내'로 열려 있음. 정규과정을 6개월 코어에 넣을지, 승급 후 별도 트랙으로 뺄지.</div><span class="owner">→ 결정 필요</span></div>
+    <div class="q"><div class="qh">승급 기준</div><div class="qb">각 단계 TEST 합격선(시간·완성도)의 정량 기준. 재시험·유예 규칙.</div><span class="owner">→ 잠금 필요</span></div>
+    <div class="q"><div class="qh">마인드 교육의 무게</div><div class="qb">STAGE 00 '왜 일하는가'가 첫 관문. 필사·발표만으로 충분한지, 개편안 '홀로 선 아이' 정신을 어떻게 얹을지.</div><span class="owner">→ 이찬호</span></div>
+    <div class="q"><div class="qh">모델워크 연동</div><div class="qb">STAGE 07이 교육과 동시 진행. 콘텐츠 퀄리티를 승급시험에 반영하는 채점 방식.</div><span class="owner">→ 결정 필요</span></div>
+    <div class="q"><div class="qh">공표 형태</div><div class="qb">스태프 공지 채널·문서 포맷. 개편안 덱(PPT/PDF)으로 낼지, 상시 열람 상황판으로 둘지.</div><span class="owner">→ 이찬호</span></div>
+  </div>
+
+  <footer>
+    <span>ATNOWN HOMME · 인턴 교육 구조맵 v1</span>
+    <span>출처: ATNOWN HOMME 인턴 교육 커리큘럼(원본 12장) · 룩 정본 종이+잉크+붉은펜</span>
+  </footer>
+</div>
