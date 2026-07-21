@@ -60,6 +60,36 @@ class TestPick(unittest.TestCase):
         self.assertIsNone(broll.pick("존재안함", CATALOG))
 
 
+class TestUsableFilter(unittest.TestCase):
+    """usable:false 클립은 uses=0이어도 자동선택 제외 (2026-07-21 실내오분류·다운불가 사고방지)."""
+
+    def test_usable_false는_제외(self):
+        synthetic = {"clips": [
+            {"id": "BAD", "category": "aerial", "file_id": "x", "start": 0, "uses": 0, "usable": False},
+            {"id": "GOOD", "category": "aerial", "file_id": "y", "start": 0, "uses": 3},
+        ]}
+        chosen = broll.pick("aerial", synthetic)
+        self.assertEqual(chosen["id"], "GOOD")  # uses 많아도 usable한 것
+
+    def test_전부_usable_false면_None(self):
+        synthetic = {"clips": [
+            {"id": "BAD", "category": "cut", "file_id": "x", "start": 0, "uses": 0, "usable": False},
+        ]}
+        self.assertIsNone(broll.pick("cut", synthetic))
+
+    def test_usable_생략은_기본_사용가능(self):
+        synthetic = {"clips": [{"id": "OK", "category": "cut", "file_id": "x", "start": 0, "uses": 0}]}
+        self.assertEqual(broll.pick("cut", synthetic)["id"], "OK")
+
+    def test_실카탈로그_실내DJI_다운불가_제외됨(self):
+        # 실내 오분류 DJI 4개 + 다운불가 MVI_8980 은 어떤 카테고리 선택에도 안 뽑힘
+        banned = {"MVI_8980", "DJI_155319", "DJI_153152", "DJI_152313", "DJI_153345"}
+        for cat in {c["category"] for c in CATALOG["clips"]}:
+            chosen = broll.pick(cat, CATALOG)
+            if chosen:
+                self.assertNotIn(chosen["id"], banned)
+
+
 class TestSelect(unittest.TestCase):
     def test_end_to_end(self):
         r = broll.select_for_script("커트로 숱을 정리한다", CATALOG)

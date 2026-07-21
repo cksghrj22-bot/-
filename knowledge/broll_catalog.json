@@ -32,7 +32,8 @@
       "category": "cut",
       "file_id": "1uxNorHhHkXKs0SajFY1MZ__7gy13sgi6",
       "start": 0,
-      "note": "커트 인서트 후보 37M (폴더 1Fzu5t2F) · 스캔완료(A방 2026-07-18) · ⚠️2026-07-19 이 file_id 링크다운로드 0바이트(공유 불가) — 사용시 링크공유 재확인 필요. 대안=IMG_9497",
+      "usable": false,
+      "note": "커트 인서트 후보 37M (폴더 1Fzu5t2F) · 스캔완료(A방 2026-07-18) · ⚠️2026-07-19 이 file_id 링크다운로드 0바이트(공유 불가) — 사용시 링크공유 재확인 필요. usable=false로 자동선택 제외(2026-07-21, 다운불가). ▶링크공유 재설정되면 usable=true로. 대안=IMG_9497/가발커트.",
       "uses": 0
     },
     {
@@ -80,7 +81,8 @@
       "category": "aerial",
       "file_id": "1FNZuDKz6VOl9-yNkCYeOdzWwFwhTtcRd",
       "start": 3,
-      "note": "⚠️실내 행사영상(A방 원본확인 2026-07-18)—항공 아님. aerial용 부적합",
+      "usable": false,
+      "note": "⚠️실내 행사영상(A방 원본확인 2026-07-18)—항공 아님. aerial용 부적합. usable=false로 자동선택 제외(2026-07-21). 인물 리스크(행사 참석자).",
       "uses": 1
     },
     {
@@ -88,7 +90,8 @@
       "category": "aerial",
       "file_id": "1KYvkQKaghVlR0dLy_KeAM1vLq_XEjEdF",
       "start": 3,
-      "note": "⚠️실내 세미나영상(A방 원본확인 2026-07-18)—항공 아님. aerial용 부적합",
+      "usable": false,
+      "note": "⚠️실내 세미나영상(A방 원본확인 2026-07-18)—항공 아님. aerial용 부적합. usable=false로 자동선택 제외(2026-07-21). 인물 리스크(세미나 참석자).",
       "uses": 1
     },
     {
@@ -96,7 +99,8 @@
       "category": "aerial",
       "file_id": "1pOOpFDjtkhLAAEiY9UKjytOuDLb1THE4",
       "start": 3,
-      "note": "DJI 0012·732MB — 같은 7/6 실내세션, 항공 여부 미확인(A방 검증필요)",
+      "usable": false,
+      "note": "DJI 0012·732MB — 같은 7/6 실내세션, 항공 여부 미확인. 미검증이라 자동선택 제외(usable=false, 2026-07-21). ▶검증 후 실외/무인물이면 usable=true로. 같은 세션 155319·153152가 실내로 확인돼 이것도 실내 개연성 높음.",
       "uses": 0
     },
     {
@@ -104,7 +108,8 @@
       "category": "aerial",
       "file_id": "1CRAn_ZnKoIjTsLEFujulLF7YvMqkdLen",
       "start": 3,
-      "note": "DJI 0014·2.3GB — 같은 7/6 실내세션, 항공 여부 미확인(A방 검증필요)",
+      "usable": false,
+      "note": "DJI 0014·2.3GB — 같은 7/6 실내세션, 항공 여부 미확인. 미검증이라 자동선택 제외(usable=false, 2026-07-21). ▶검증 후 실외/무인물이면 usable=true로. 같은 세션 155319·153152가 실내로 확인돼 이것도 실내 개연성 높음.",
       "uses": 0
     },
     {

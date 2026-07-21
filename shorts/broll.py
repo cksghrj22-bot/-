@@ -58,8 +58,13 @@ def classify(text: str) -> tuple[str, dict[str, int]]:
 
 
 def pick(category: str, catalog: dict, *, require_file_id: bool = False) -> dict | None:
-    """카테고리에서 클립 하나 선택. 덜 쓴 것 → 파일ID 있는 것 우선. 없으면 None."""
-    clips = [c for c in catalog["clips"] if c["category"] == category]
+    """카테고리에서 클립 하나 선택. 덜 쓴 것 → 파일ID 있는 것 우선. 없으면 None.
+
+    `usable: false` 클립은 제외한다 — 실내 오분류·다운로드 불가·인물리스크 등
+    렌더에 부적합한 소스가 uses=0이라는 이유로 1순위 선택되는 사고를 막는다.
+    """
+    clips = [c for c in catalog["clips"]
+             if c["category"] == category and c.get("usable", True)]
     if require_file_id:
         clips = [c for c in clips if c.get("file_id")]
     if not clips:
