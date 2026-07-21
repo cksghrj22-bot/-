@@ -1,4 +1,4 @@
-"""B롤 인입 자동스캔 — 「쇼츠_배경클립_넣는곳」 폴더의 신규 영상을 broll_catalog.json에 자동 등록.
+"""B롤 인입 자동스캔 — 「코드방_B롤_인트레이」 폴더의 신규 영상을 broll_catalog.json에 자동 등록.
 
 A방 배정(2026-07-20 B방 예고): 형님이 인입 폴더(1ZgGhMY-CBEugxy06AFCZ23lYuz89HDYI)에
 촬영 원본을 대량 업로드하면, 파일명으로 카테고리를 추정해 카탈로그에 신규 등록한다.
@@ -17,7 +17,7 @@ import re
 from pathlib import Path
 
 CATALOG = Path("knowledge/broll_catalog.json")
-INTAKE_FOLDER_ID = "1ZgGhMY-CBEugxy06AFCZ23lYuz89HDYI"  # 쇼츠_배경클립_넣는곳
+INTAKE_FOLDER_ID = "1MBvVanqFgvBjk7hS2wjOaYN6oiaoBtlO"  # 코드방_B롤_인트레이 (공유 anyone-reader — 코드방이 읽을 수 있음)
 
 # 파일명 키워드 → 카테고리 (앞쪽이 우선). broll_catalog.json의 _카테고리와 일치.
 KEYWORD_CATEGORY: list[tuple[str, str]] = [
