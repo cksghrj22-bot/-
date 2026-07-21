@@ -3,7 +3,7 @@
   "done": "~/Shorts/done",
   "output": "~/Shorts/rendered",
   "bgm": "",
-  "bgm_volume": 1.0,
+  "bgm_volume": 1.2,
   "max_shorts_per_source_video": 1,
   "subtitle_style": {
     "font": "AppleSDGothicNeo-Bold",
