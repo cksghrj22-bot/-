@@ -20,15 +20,15 @@ def _ff(args: list[str]) -> str:
     return r.stderr + r.stdout
 
 
-LEN_MIN, LEN_MAX = 38.0, 51.0  # 길이 규격 40~50초(+톨러런스). "40 넘어도 되고 50은 넘지 않게"(이찬호).
+LEN_MIN, LEN_MAX = 30.0, 46.0  # 길이 규격: 30초 초과 ~ 45초 미만(+톨러런스1s). "일부러 늘리지 마"(이찬호 2026-07-21).
 
 
 def length_fails(dur: float) -> list[str]:
-    """길이 규격(40~50초) 검사 — ffmpeg 없이 순수 계산이라 단위테스트로 잠근다."""
+    """길이 규격(30초 초과~45초 미만) 검사 — ffmpeg 없이 순수 계산이라 단위테스트로 잠근다."""
     if dur < LEN_MIN:
-        return [f"길이 {dur:.0f}초 — 너무 짧음(40~50초 목표). TTS 쉼 넣어 늘릴 것"]
+        return [f"길이 {dur:.0f}초 — 30초 밑. 대본 조금 더."]
     if dur > LEN_MAX:
-        return [f"길이 {dur:.0f}초 — 50초 초과. 대본 줄일 것"]
+        return [f"길이 {dur:.0f}초 — 45초 초과. 대본 줄일 것"]
     return []
 
 

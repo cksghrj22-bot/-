@@ -52,15 +52,17 @@ class TestLengthGate(unittest.TestCase):
 
     def test_too_short_fails(self):
         self.assertTrue(verify_render.length_fails(25))
-        self.assertTrue(verify_render.length_fails(37))
+        self.assertTrue(verify_render.length_fails(29))
 
     def test_in_range_passes(self):
-        self.assertEqual(verify_render.length_fails(40), [])
-        self.assertEqual(verify_render.length_fails(45), [])
-        self.assertEqual(verify_render.length_fails(50), [])
+        # 30초 초과 ~ 45초 미만(+톨러런스1s) (이찬호 2026-07-21)
+        self.assertEqual(verify_render.length_fails(32), [])
+        self.assertEqual(verify_render.length_fails(39), [])
+        self.assertEqual(verify_render.length_fails(44), [])
 
     def test_too_long_fails(self):
-        self.assertTrue(verify_render.length_fails(55))
+        self.assertTrue(verify_render.length_fails(50))
+        self.assertTrue(verify_render.length_fails(48))
 
     def test_verify_accepts_duration_kwarg(self):
         # 렌더가 정확한 길이를 넘길 수 있어야 한다(ffmpeg 측정 플레이크 방어).
