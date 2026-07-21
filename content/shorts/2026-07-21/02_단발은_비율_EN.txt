@@ -1,33 +1,30 @@
 # 제목: 단발은 비율입니다
 # 설명: 단발하고 나이 들어 보이거나 어려 보이는 건 단발이 만든 게 아니라, 원래 가진 특징이 선명해진 것. 단발은 자신의 특징을 강조하는 커트다. 눈매·선이 직선에 가깝고 비율 장점이 많은 사람에게 특히 유리하다. 외국인 유치용 영어자막 동봉. #단발 #비율 #직선단발 #bobhaircut
 # 태그: 단발,비율,직선단발,시크,외국인,글로벌
-# 라인: 차노 구술 2026-07-21 (볼트: knowledge/차노_구술_원본/2026-07-21_단발비율_잔곱슬매직.md). ⚠️규칙: 자기띄우기·남비판 금지, 창작비유 금지, 가능성 프레임. 영어=한글 아래 글씨만. 흑백(mind). 40~50초 목표로 확장.
-# B롤: [cut] — 단발 손님 얼굴 위주(예쁜 완성 단발). IMG_3745. 이찬호 지시(2026-07-21): 단발은 손님 얼굴 위주.
+# 라인: 차노 구술 2026-07-21 (볼트: knowledge/차노_구술_원본/2026-07-21_단발비율_잔곱슬매직.md). ⚠️규칙: 자기띄우기·남비판 금지, 창작비유 금지, 가능성 프레임. 어미 반복 금지(다양하게). 영어=한글 아래 글씨만. 흑백(mind). 40~50초.
+# B롤: [cut] — 단발 시술 통영상 IMG_3739(262초). 45초 통으로 잘라 씀(루프 금지). 이찬호: 단발은 손님 얼굴 위주.
 00:00-00:03 단발하면 나이 들어 보일까 봐 || Afraid a bob makes you look older?
 00:03-00:06 망설이는 분들 많아요. || A lot of people hold back.
-00:06-00:09 근데 단발은, || But a bob —
-00:09-00:12 나이를 만들지 않아요. || it doesn't add age.
-00:12-00:15 원래 가진 특징을 || It takes what you already have
-00:15-00:18 더 선명하게 할 뿐이에요. || and just makes it clearer.
-00:18-00:21 어려 보이는 사람은 || A youthful face
-00:21-00:24 단발하면 더 어려 보이고, || looks even younger with a bob.
-00:24-00:27 성숙한 사람은 || A mature face
-00:27-00:30 더 시크해져요. || turns more chic.
-00:30-00:33 그러니까 단발은, || So in the end,
-00:33-00:36 결국 비율이에요. || a bob is about proportion.
-00:36-00:39 요즘은 직선 단발을 많이 하죠. || These days it's mostly a straight bob.
-00:39-00:42 눈매랑 선이 || And the closer your eyes
-00:42-00:45 직선에 가까울수록 || and lines run to straight,
-00:45-00:48 그 시크함이 더 살아요. || the more that chic look lives.
-00:48-00:51 단발은 그 자체로 || A bob, on its own,
-00:51-00:54 매력적인 커트예요. || is already an attractive cut.
-00:54-00:57 그래서 사실, || So honestly,
-00:57-01:00 누가 해도 좋은 디자인이에요. || it works on almost anyone.
-01:00-01:03 그래서 전체 이미지가 || So the whole look
-01:03-01:06 깔끔하게 떨어져요. || falls clean and neat.
-01:06-01:09 선이 분명해질수록 || The clearer the lines get,
-01:09-01:12 얼굴도 더 또렷해지고요. || the more your face stands out.
-01:12-01:15 짧아질수록 || And the shorter it goes,
-01:03-01:06 더 프레시해지고요. || the fresher it feels.
-01:06-01:09 그 무드를 원한다면, 단발이에요. || If that's your mood — it's the bob.
-01:09-01:12 종류는 다음 편에서. || The types, next time.
+00:06-00:09 근데 단발은 나이를 안 만들어요. || But a bob doesn't add age.
+00:09-00:12 원래 가진 특징을 || It takes what you already have
+00:12-00:15 더 선명하게 드러낼 뿐이죠. || and just draws it out.
+00:15-00:18 어려 보이는 사람은 || A youthful face
+00:18-00:21 단발하면 더 어려 보이고, || looks even younger with a bob.
+00:21-00:24 성숙한 분은 한층 시크하게 바뀌죠. || A mature face turns sharply chic.
+00:24-00:27 그러니까 단발은 결국 비율이에요. || So a bob is really about proportion.
+00:27-00:30 요즘은 직선 단발을 많이 하죠. || These days it's mostly a straight bob.
+00:30-00:33 눈매랑 얼굴선이 || The more your eyes and jawline
+00:33-00:36 직선에 가까울수록 || run close to straight,
+00:36-00:39 그 시크함이 확 삽니다. || the more that chic look pops.
+00:39-00:42 단발은 그 자체로 매력적인 커트라 || A bob is an attractive cut on its own,
+00:42-00:45 사실 누가 해도 잘 어울려요. || so honestly it suits almost anyone.
+00:45-00:48 비율이 좋은 분이라면 || If your proportions are good,
+00:48-00:51 특히 더 유리하고요. || it flatters you even more.
+00:51-00:54 전체 이미지가 깔끔하게 떨어지고 || The whole look lands clean,
+00:54-00:57 얼굴선이 또렷하게 잡혀요. || and your features stand out.
+00:57-01:00 머리가 짧아질수록 || And the shorter it goes,
+01:00-01:03 인상은 더 프레시하죠. || the fresher you read.
+01:03-01:06 그런 무드를 원한다면, || If that's the mood you want,
+01:06-01:09 단발이 답이에요. || the bob is your answer.
+01:09-01:12 종류는 여러 가지인데, || There are many kinds,
+01:12-01:15 다음 편에서 이어갈게요. || and that's for the next video.
