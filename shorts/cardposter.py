@@ -353,27 +353,18 @@ def _lf_weight() -> str:
 
 
 def _lf_expand() -> str:
-    # 컬은 옆에 — 얼굴을 감싸는 '통통한 웨이브 단발 실루엣'. 바깥 옆선만 물결(컬),
-    # 좌우로 크게 부풀어 가로 볼륨. 얼굴은 흰 타원으로 앞에 얹어 실루엣이 옆머리로 보이게.
-    BG = "#fbfbf9"
-    # 머리(뒤) 실루엣: 정수리 위로 넘어와 → 오른쪽 옆선 물결 3굽이 → 턱 밑 → 왼쪽 물결(대칭)
-    hair = (
-        "M150 62 "
-        "C 196 60, 230 78, 240 112 "        # 정수리→오른쪽 위, 바깥으로
-        "C 246 132, 228 140, 244 158 "       # 오른쪽 물결 1 (통통 바깥)
-        "C 256 178, 232 186, 242 204 "       # 오른쪽 물결 2
-        "C 236 224, 210 230, 192 220 "       # 턱 옆으로 말려 들어감
-        "C 176 232, 150 232, 150 228 "       # 턱 밑(뒤, 얼굴이 덮음)
-        "C 150 232, 124 232, 108 220 "       # 왼쪽 대칭 시작
-        "C 90 230, 64 224, 58 204 "          # 왼쪽 물결 2
-        "C 68 186, 44 178, 56 158 "          # 왼쪽 물결 1
-        "C 72 140, 54 132, 60 112 "
-        "C 70 78, 104 60, 150 62 Z"
+    # 옆에 물결컬(턱까지) — 가로 폭을 넓혀 통통한 물결. 세로 구조는 유지.
+    def _noodle(x, y):
+        # 가로 진폭 18(통통), 세로 28 두 번 물결 → 턱 라인
+        return (f'M{x} {y} q18 14 0 28 q-18 14 0 28 q18 14 0 28 q-18 14 0 28')
+    strands = (
+        _noodle(176, 92) + " " + _noodle(200, 88)        # 오른쪽 2가닥(넓게)
+        + " " + _noodle(124, 92) + " " + _noodle(100, 88)  # 왼쪽 2가닥
     )
     return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-  <path d="{hair}" fill="{BG}" stroke="#141416" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
-  <ellipse cx="150" cy="146" rx="40" ry="62" fill="{BG}" stroke="#141416" stroke-width="6"/>{_face(150,140)}
-  <text x="150" y="288" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#22242a">옆에 물결컬 = 가로로 통통</text>
+  <ellipse cx="150" cy="140" rx="42" ry="66" {STK}/>{_face(150,132)}
+  <path d="{strands}" fill="none" {STK}/>
+  <text x="150" y="286" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#22242a">옆에 물결컬 = 가로로 통통</text>
 </svg>'''
 
 
