@@ -110,39 +110,86 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     return len(ev)
 
 
-def segment(clip_mp4: Path, stt_json: Path, start: float, end: float, out: Path, work: Path):
-    """프록시 [start,end] 트림 → 자막 구워 720p 정규화 세그먼트."""
+def _title_band_png(seg_label: str, main: str, out: Path):
+    """세그먼트 상단 반투명 타이틀 밴드 PNG (하단 자막과 안 겹치게 위쪽)."""
+    img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.rectangle([0, 40, W, 214], fill=(14, 14, 16, 210))
+    d.rectangle([0, 210, W, 214], fill=(*YELLOW, 255))
+    fs = ImageFont.truetype(FONT_B, 32)
+    d.text((88, 60), seg_label, font=fs, fill=YELLOW)
+    fm = ImageFont.truetype(FONT_B, 46)
+    for j, ln in enumerate(_wrap(d, main, fm, W - 180)[:2]):
+        d.text((88, 104 + j * 54), ln, font=fm, fill=(245, 245, 245))
+    img.save(out)
+
+
+def segment(clip_mp4: Path, stt_json: Path, start: float, end: float, out: Path, work: Path,
+            seg_label: str = "", title: str = ""):
+    """프록시 [start,end] 트림 → 자막 구움 + (title 주면) 상단 타이틀 밴드 처음 4.5초 페이드 오버레이."""
     words = json.loads(stt_json.read_text())["words"] if stt_json.exists() else []
     ass = work / (out.stem + ".ass")
     build_ass(words, start, end, ass)
-    vf = f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps=30,subtitles='{ass}'"
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{start}", "-to", f"{end}",
-                    "-i", str(clip_mp4), "-vf", vf, "-c:v", "libx264", "-pix_fmt", "yuv420p",
-                    "-c:a", "aac", "-ar", "44100", str(out)], check=True)
+    base = f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps=30,subtitles='{ass}'"
+    if title:
+        band = work / (out.stem + "_band.png")
+        _title_band_png(seg_label, title, band)
+        fc = (f"[0:v]{base}[bg];"
+              f"[1:v]format=rgba,fade=t=in:st=0:d=0.4:alpha=1,fade=t=out:st=4.1:d=0.4:alpha=1[tb];"
+              f"[bg][tb]overlay=0:0:enable='between(t,0,4.5)'[v]")
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{start}", "-to", f"{end}",
+                        "-i", str(clip_mp4), "-loop", "1", "-framerate", "30", "-i", str(band),
+                        "-filter_complex", fc, "-map", "[v]", "-map", "0:a", "-shortest",
+                        "-c:v", "libx264", "-pix_fmt", "yuv420p", "-c:a", "aac", "-ar", "44100", str(out)], check=True)
+    else:
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{start}", "-to", f"{end}",
+                        "-i", str(clip_mp4), "-vf", base, "-c:v", "libx264", "-pix_fmt", "yuv420p",
+                        "-c:a", "aac", "-ar", "44100", str(out)], check=True)
+
+
+def _dur(p: Path) -> float:
+    return float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration",
+                                 "-of", "csv=p=0", str(p)], check=True, capture_output=True, text=True).stdout.strip())
+
+
+def crossfade_concat(clips: list[Path], out: Path, d: float = 0.6) -> Path:
+    """클립들을 xfade(영상)+acrossfade(오디오)로 매끄럽게 이어붙임 (하드컷·무음브레이크 없음)."""
+    durs = [_dur(c) for c in clips]
+    inputs = []
+    for c in clips:
+        inputs += ["-i", str(c)]
+    vparts, aparts = [], []
+    vlab, alab, offset = "[0:v]", "[0:a]", 0.0
+    for i in range(1, len(clips)):
+        offset += durs[i - 1] - d
+        vout, aout = f"[v{i}]", f"[a{i}]"
+        vparts.append(f"{vlab}[{i}:v]xfade=transition=fade:duration={d}:offset={offset:.3f}{vout}")
+        aparts.append(f"{alab}[{i}:a]acrossfade=d={d}{aout}")
+        vlab, alab = vout, aout
+    fc = ";".join(vparts + aparts)
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *inputs, "-filter_complex", fc,
+                    "-map", vlab, "-map", alab, "-c:v", "libx264", "-pix_fmt", "yuv420p",
+                    "-c:a", "aac", str(out)], check=True)
+    return out
 
 
 def assemble(edl, proxy_dir: Path, out: Path, bgm: Path, work: Path, open_title: str):
+    """오프닝 타이틀 + 세그먼트(상단 타이틀 오버레이) 크로스페이드 조립 + BGM 언더.
+    무음 타이틀카드를 없애 말소리가 끊기지 않고, 세그먼트 사이는 크로스페이드로 이어진다."""
     work.mkdir(parents=True, exist_ok=True)
-    parts = []
+    clips = []
     op = work / "open.mp4"
     title_card(open_title, "AT NOWN · 두피 스케일링", 4.0, op, opening=True)
-    parts.append(op)
+    clips.append(op)
     for i, item in enumerate(edl):
-        tc = work / f"tc{i}.mp4"
-        title_card(item["title"], item["seg"], 2.6, tc)
-        parts.append(tc)
         seg = work / f"seg{i}.mp4"
         segment(proxy_dir / f"mvi_{item['clip']}_720.mp4",
                 proxy_dir / f"mvi_{item['clip']}_720.stt.json",
-                item["start"], item["end"], seg, work)
-        parts.append(seg)
-    # concat
-    lst = work / "concat.txt"
-    lst.write_text("".join(f"file '{p}'\n" for p in parts), encoding="utf-8")
+                item["start"], item["end"], seg, work,
+                seg_label=item.get("seg", ""), title=item.get("title", ""))
+        clips.append(seg)
     body = work / "body.mp4"
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0",
-                    "-i", str(lst), "-c:v", "libx264", "-pix_fmt", "yuv420p", "-c:a", "aac", str(body)], check=True)
-    # BGM 언더(말소리 위주라 아주 낮게) + 최종
+    crossfade_concat(clips, body, d=0.6)
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(body),
                     "-stream_loop", "-1", "-i", str(bgm),
                     "-filter_complex", "[1:a]volume=0.06[b];[0:a][b]amix=inputs=2:duration=first:dropout_transition=0[a]",
