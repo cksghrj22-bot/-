@@ -630,15 +630,129 @@ def mix_spec() -> ZineSpec:
     )
 
 
+# ═══════════════ 디자인 맵(7 슬라이더) — 만화·손그림 버전 ═══════════════
+# 이찬호 2026-07-22: 앳나운 워크시트 1/4 '디자인 맵'을 만화 톤으로.
+# 7개 헤어 언어(쉐입·질감·컬·볼륨·채도·색온도·투명도)를 손그림 슬라이더로.
+
+@dataclass
+class SliderRow:
+    ko: str        # 쉐입
+    en: str        # SHAPE
+    left: str      # 왼쪽 극(안정)
+    right: str     # 오른쪽 극(역동)
+    pos: float     # 0(왼)~1(오) 마커 위치
+
+
+@dataclass
+class DesignMapSpec:
+    tag: str               # 우상단 "DESIGN MAP · 1/4"
+    title1: str            # 쿨 시크 단발
+    title2: str            # 이 디자인의 맵
+    subtitle: str
+    body: str
+    rows: list = field(default_factory=list)
+    footer: str = ""
+    brand: str = "AT NOWN 앳나운"
+
+
+def _slider_svg(pos: float, seed: int) -> str:
+    x = 14 + pos * 372            # 트랙 14..386
+    ticks = "".join(f'<circle cx="{14 + i*93}" cy="34" r="3.2" fill="#c9c3b6"/>' for i in range(5))
+    inner = (f'<path d="M14 34 q93 -7 186 0 q93 7 186 0" {STK_T}/>{ticks}'
+             f'<circle cx="{x:.0f}" cy="34" r="15" fill="none" stroke="#141416" stroke-width="3"/>'
+             f'<circle cx="{x:.0f}" cy="34" r="8" fill="#141416"/>')
+    return (f'<svg viewBox="0 0 400 68" xmlns="http://www.w3.org/2000/svg" '
+            f'preserveAspectRatio="none">{_rough(inner, seed, 3)}</svg>')
+
+
+def _srow_html(r: SliderRow, i: int) -> str:
+    return f'''<div class="srow">
+  <div class="slabel"><span class="sko">{r.ko}</span><span class="sen">{r.en}</span></div>
+  <div class="spoleL">{r.left}</div>
+  <div class="strack">{_slider_svg(r.pos, 30 + i)}</div>
+  <div class="spoleR">{r.right}</div>
+</div>'''
+
+
+def build_designmap(spec: DesignMapSpec) -> str:
+    faces = _font_face("KyoboPoster", FONT_HAND) + _font_face("NanumPenPoster", FONT_PEN)
+    rows = "".join(_srow_html(r, i) for i, r in enumerate(spec.rows))
+    return f'''<!doctype html><html><head><meta charset="utf-8"><style>
+{faces}
+*{{margin:0;padding:0;box-sizing:border-box}}
+html,body{{width:{W}px;height:{H}px}}
+body{{background:#faf7f0;color:#141416;position:relative;overflow:hidden;padding:60px 66px 44px}}
+body::before{{content:"";position:absolute;inset:0;opacity:.045;
+  background:repeating-linear-gradient(0deg,#000 0 1px,transparent 1px 7px)}}
+.top{{display:flex;justify-content:space-between;align-items:baseline;
+  border-bottom:4px solid #141416;padding-bottom:12px}}
+.brand{{font-family:KyoboPoster;font-size:40px;letter-spacing:1px}}
+.tag{{font-family:NanumPenPoster;font-size:30px;color:#6b6459}}
+.title{{font-family:KyoboPoster;font-size:74px;line-height:1.03;margin-top:20px}}
+.subtitle{{font-family:NanumPenPoster;font-size:33px;color:#4a4438;margin-top:10px}}
+.body{{font-family:NanumPenPoster;font-size:30px;color:#33302a;line-height:1.3;margin-top:8px;
+  max-width:900px}}
+.card{{border:4px solid #141416;border-radius:24px 30px 22px 28px;background:#fffdf6;
+  box-shadow:6px 7px 0 rgba(20,20,22,.12);margin-top:16px;padding:12px 30px 4px}}
+.srow{{display:flex;align-items:center;gap:10px;height:96px;
+  border-bottom:2px dashed #ddd6c7}}
+.srow:last-child{{border-bottom:none}}
+.slabel{{width:132px;flex:none;display:flex;flex-direction:column}}
+.sko{{font-family:KyoboPoster;font-size:38px;line-height:1}}
+.sen{{font-family:NanumPenPoster;font-size:22px;color:#8a8375;letter-spacing:1px}}
+.spoleL,.spoleR{{width:104px;flex:none;font-family:NanumPenPoster;font-size:26px;color:#33302a}}
+.spoleL{{text-align:right}}.spoleR{{text-align:left}}
+.strack{{flex:1;height:68px}}
+.strack svg{{width:100%;height:68px}}
+.footer{{text-align:center;font-family:NanumPenPoster;font-size:30px;color:#4a4438;margin-top:14px}}
+.footer b{{background:#141416;color:#faf7f0;padding:1px 10px 4px;border-radius:6px}}
+</style></head><body>
+<div class="top"><span class="brand">{spec.brand}</span><span class="tag">{spec.tag}</span></div>
+<div class="title">{spec.title1}<br>{spec.title2}</div>
+<div class="subtitle">{spec.subtitle}</div>
+<div class="body">{spec.body}</div>
+<div class="card">{rows}</div>
+<div class="footer">{spec.footer}</div>
+</body></html>'''
+
+
+def render_designmap(spec: DesignMapSpec, out_png: str) -> str:
+    return _shoot(build_designmap(spec), out_png)
+
+
+def coolchic_designmap() -> DesignMapSpec:
+    return DesignMapSpec(
+        tag="DESIGN MAP · 1/4",
+        title1="쿨 시크 단발",
+        title2="이 디자인의 맵",
+        subtitle="이 디자인을 일곱 가지 헤어 언어로 도식화했어요.",
+        body="무게감을 살짝 낮춰 차분하고 단정하게. 30대에 잘 어울리는 단발이에요. "
+             "오늘은 염색 없이 오일만으로 윤기 있고 깊이감 있게 마무리했어요.",
+        rows=[
+            SliderRow("쉐입", "SHAPE", "안정", "역동", 0.30),
+            SliderRow("질감", "TEXTURE", "부드러움", "경쾌함", 0.28),
+            SliderRow("컬", "CURL", "스트레이트", "웨이브", 0.24),
+            SliderRow("볼륨", "VOLUME", "슬릭", "풍성", 0.20),
+            SliderRow("채도", "SATURATION", "차분", "선명", 0.60),
+            SliderRow("색온도", "TEMP", "웜", "쿨", 0.46),
+            SliderRow("투명도", "TONE", "딥", "투명", 0.18),
+        ],
+        footer="기준은 출발점일 뿐이에요. 눈앞의 머릿결을 보고 — <b>직관</b>으로 디자인합니다.",
+    )
+
+
 SPECS = {"demo": demo_spec, "danbal": danbal_spec}
 ZINE_SPECS = {"mix": mix_spec}
+MAP_SPECS = {"coolchic": coolchic_designmap}
 
 if __name__ == "__main__":
     out = sys.argv[1] if len(sys.argv) > 1 else "/tmp/cardposter.png"
     which = "demo"
     if "--spec" in sys.argv:
         which = sys.argv[sys.argv.index("--spec") + 1]
-    if which in ZINE_SPECS:
+    if which in MAP_SPECS:
+        render_designmap(MAP_SPECS[which](), out)
+    elif which in ZINE_SPECS:
         render_zine(ZINE_SPECS[which](), out)
     else:
         render_poster(SPECS[which](), out)
