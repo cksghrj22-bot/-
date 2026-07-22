@@ -328,22 +328,28 @@ def _lf_jaw() -> str:
 
 
 def _lf_weight() -> str:
-    # 무게중심 — 동그라미 캐릭터 옆모습 + 코끝선(코끝~뒤통수 관통). 그 아래로 무게를 내리면 옆이 넓어짐.
+    # 무게중심 — 옆모습 + 코끝에서 사선 아래 15도 선. 그 밑으로 웨이트(무게) 잡기 → 짧아 보임.
     return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
   <!-- 동그라미 캐릭터(옆모습) -->
-  <circle cx="140" cy="130" r="58" {STK}/>
+  <circle cx="150" cy="120" r="56" {STK}/>
   <!-- 코끝(오른쪽 삐죽) -->
-  <path d="M196 128 q14 6 4 18" {STK}/>
+  <path d="M204 116 q14 6 4 18" {STK}/>
   <!-- 눈·입(옆) -->
-  <circle cx="168" cy="122" r="4" fill="#141416"/>
-  <path d="M176 150 q10 5 18 -1" {STK_T}/>
-  <!-- 코끝선: 코끝~뒤통수 관통 가로 점선 -->
-  <line x1="66" y1="134" x2="226" y2="134" {STK_T} stroke-dasharray="5 7"/>
-  <text x="234" y="139" font-family="NanumPenPoster" font-size="22" fill="#22242a">코끝선</text>
-  <!-- 코끝선 '아래'에 무게(볼륨) 얹기 + 아래 화살 -->
-  <path d="M92 150 q-16 26 -2 52 q30 18 58 8" {STK}/>
-  <path d="M104 210 l0 30 M97 232 l7 10 l7 -10" {STK_T}/>
-  <text x="150" y="286" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#22242a">코끝선 아래로 = 짧아 보임</text>
+  <circle cx="178" cy="110" r="4" fill="#141416"/>
+  <path d="M186 138 q9 5 16 -1" {STK_T}/>
+  <!-- 코끝 기준 수평 점선(각도 기준선) -->
+  <line x1="150" y1="130" x2="252" y2="130" {STK_T} stroke-dasharray="4 7"/>
+  <!-- 코끝에서 사선 아래 15도 실선(코끝 → 뒤아래로) -->
+  <line x1="208" y1="130" x2="60" y2="170" {STK}/>
+  <text x="20" y="120" font-family="NanumPenPoster" font-size="21" fill="#22242a">코끝 15° 사선</text>
+  <!-- 15도 각 표시 -->
+  <path d="M234 130 q-6 8 -13 11" {STK_T}/>
+  <text x="214" y="126" font-family="NanumPenPoster" font-size="19" fill="#6b6b6b">15°</text>
+  <!-- 사선 '아래'가 웨이트 존: 해칭 + 아래 화살 -->
+  <path d="M96 174 l-10 16 M120 176 l-10 16 M150 176 l-10 16 M180 172 l-10 16" {STK_T}/>
+  <path d="M150 196 l0 26 M143 216 l7 10 l7 -10" {STK_T}/>
+  <text x="150" y="250" text-anchor="middle" font-family="NanumPenPoster" font-size="25" fill="#141416">이 선 아래로 웨이트</text>
+  <text x="150" y="284" text-anchor="middle" font-family="NanumPenPoster" font-size="24" fill="#6b6b6b">= 얼굴이 짧아 보임</text>
 </svg>'''
 
 
@@ -1132,8 +1138,8 @@ def longface_detail_spec() -> DetailSpec:
         cards=[
             DetailCard("단발 = 짧게 자르기", "길이는\n어디서 끊나요", "기준은 턱 언저리", "lf_jaw",
                        "어디서 자르느냐가 반이에요.\n턱보다 위에서 끝나면 얼굴이 넓어 보이고,\n아래로 길게 두면 더 길어 보여요.\n긴 얼굴은 '턱 언저리'가 기준이에요."),
-            DetailCard("무게 = 숱 많이", "무게는\n아래로 내려요", "코끝선 아래로", "lf_weight",
-                       "'코끝선'은 코끝에서 뒤통수로 이은 선이에요.\n그 아래로 머리 무게를 내리면\n시선이 아래로 모여\n얼굴이 짧아 보여요."),
+            DetailCard("무게 = 숱 많이", "무게는\n아래로 내려요", "코끝 15° 사선 아래로", "lf_weight",
+                       "코끝에서 사선으로 15도 내린 선을 그어요.\n그 선 아래로 머리 무게(웨이트)를 잡으면\n시선이 아래로 모여\n얼굴이 짧아 보여요."),
             DetailCard("긴 얼굴 = 층 많이", "결은\n옆에 넣어요", "옆이 통통해져요", "lf_expand",
                        "펌으로 옆머리에 구불구불 결을 주면\n납작하던 옆이 통통해져요.\n옆으로 퍼지면\n긴 세로가 짧아 보여요."),
             DetailCard("다듬기 = 끝만 정리", "모양은\n조각이에요", "동그랗게 다듬기", "lf_trim",
