@@ -1016,19 +1016,122 @@ def mix2_spec() -> ZineSpec:
     )
 
 
+# ═══════════════ 상세 캐러셀(장마다 항목 1개 깊게) — 이찬호 2026-07-22 ═══════════════
+# "미용실 상식 뒤집기 + 긴 얼굴형은 6장으로, 장마다 1~6을 구체화(한번 더 설명)."
+@dataclass
+class DetailCard:
+    myth: str          # 통념(작게·취소선)
+    redef: str         # 재정의(크게)
+    essence: str       # 한 줄
+    doodle: str        # DOODLES/SCENES 키
+    explain: str       # 한 번 더 설명(\n 줄바꿈, 2~4줄)
+
+
+@dataclass
+class DetailSpec:
+    series: str        # 시리즈명(상단)
+    foot: str          # 하단 고정 문구
+    cards: list = field(default_factory=list)
+
+
+def _doodle_svg(key: str) -> str:
+    fn = DOODLES.get(key) or SCENES.get(key)
+    return fn(7) if fn in DOODLES.values() else (fn() if key in SCENES else "")
+
+
+def build_detail(spec: DetailSpec, card: DetailCard, idx: int, total: int) -> str:
+    faces = _font_face("KyoboPoster", FONT_HAND) + _font_face("NanumPenPoster", FONT_PEN)
+    svg = DOODLES[card.doodle](7) if card.doodle in DOODLES else SCENES[card.doodle]()
+    explain = card.explain.replace("\n", "<br>")
+    return f'''<!doctype html><html><head><meta charset="utf-8"><style>
+{faces}
+*{{margin:0;padding:0;box-sizing:border-box}}
+html,body{{width:{W}px;height:{H}px}}
+body{{background:#fbfbf9;color:#141416;position:relative;overflow:hidden}}
+.dwrap{{padding:70px 78px 56px;height:100%;display:flex;flex-direction:column}}
+.dtop{{display:flex;justify-content:space-between;align-items:center;
+  font-family:KyoboPoster;font-size:40px;color:#141416}}
+.dtop .series{{opacity:.9}}
+.dtop .pg{{font-size:34px;opacity:.55}}
+.dhandle{{position:absolute;top:70px;right:78px}}
+.dmyth{{font-family:NanumPenPoster;font-size:46px;color:#9a9a9a;margin-top:64px;
+  text-decoration:line-through;text-decoration-thickness:3px}}
+.dredef{{font-family:KyoboPoster;font-size:112px;line-height:1.04;margin-top:10px;letter-spacing:1px}}
+.dess{{font-family:NanumPenPoster;font-size:52px;color:#22242a;margin-top:20px}}
+.dbody{{flex:1;display:flex;align-items:center;justify-content:center;margin:6px 0}}
+.dbody svg{{width:400px;height:400px}}
+.dexp{{border:3px solid #141416;border-radius:22px;padding:30px 34px;position:relative;margin-top:6px}}
+.dexp .tag{{position:absolute;top:-26px;left:28px;background:#141416;color:#fbfbf9;
+  font-family:KyoboPoster;font-size:34px;padding:2px 18px 6px;border-radius:8px}}
+.dexp .txt{{font-family:NanumPenPoster;font-size:46px;line-height:1.34;color:#141416}}
+.dfoot{{text-align:center;font-family:NanumPenPoster;font-size:34px;color:#6b6b6b;margin-top:22px}}
+</style></head><body>
+<div class="dwrap">
+  <div class="dtop"><span class="series">{spec.series}</span><span class="pg">{idx} / {total}</span></div>
+  <div class="dmyth">✗ {card.myth}</div>
+  <div class="dredef">{card.redef}</div>
+  <div class="dess">{card.essence}</div>
+  <div class="dbody">{svg}</div>
+  <div class="dexp"><span class="tag">한 번 더</span><div class="txt">{explain}</div></div>
+  <div class="dfoot">{spec.foot}</div>
+</div>
+<script>
+// 재정의가 한 줄 폭을 넘으면 자동 축소
+(function(){{ var el=document.querySelector('.dredef'); var fs=112;
+  while(el.scrollWidth>{W}-156 && fs>60){{ fs-=2; el.style.fontSize=fs+'px'; }} }})();
+</script>
+</body></html>'''
+
+
+def render_detail_series(spec: DetailSpec, out_prefix: str) -> list:
+    outs = []
+    total = len(spec.cards)
+    for i, c in enumerate(spec.cards, 1):
+        out = f"{out_prefix}_{i}.png"
+        _shoot(build_detail(spec, c, i, total), out)
+        outs.append(out)
+    return outs
+
+
+def mix_detail_spec() -> DetailSpec:
+    return DetailSpec(
+        series="미용실 상식 뒤집기",
+        foot="@차노쌤 · 머리는 자르는 게 아니라 '그리는' 거예요",
+        cards=[
+            DetailCard("숱치기 = 양 덜기", "숱치기는\n공간이에요", "숨 쉴 자리를 준다", "hd_space",
+                       "숱을 친다는 건 양을 더는 게 아니에요.\n머리카락 사이에 숨 쉴 자리를 만드는 일.\n공간이 생겨야 결이 살고,\n무겁던 머리가 가벼워 보여요."),
+            DetailCard("볼륨 = 숱", "볼륨은\n모근 각도예요", "모근이 서야 산다", "hd_rootangle",
+                       "볼륨은 숱이 많아서 생기는 게 아니에요.\n모근이 서 있느냐 누웠느냐,\n그 각도가 볼륨을 정해요.\n말릴 때 뿌리를 세우면 살아나죠."),
+            DetailCard("레이어드 = 층", "레이어드는\n움직임이에요", "결에 움직임을 넣는다", "hd_layers",
+                       "레이어드는 층을 내는 기술이 아니에요.\n결에 움직임을 넣는 일이에요.\n층이 목적이 아니라,\n흔들릴 때 자연스러운 그 느낌이 목적이죠."),
+            DetailCard("단발 = 길이 자르기", "단발은\n밸런스예요", "튀어나온 곳을 조각한다", "hd_bob",
+                       "단발은 길이를 자르는 게 아니에요.\n튀어나온 곳을 조각해\n전체 밸런스를 맞추는 일.\n같은 길이도 밸런스가 다르면 인상이 달라져요."),
+            DetailCard("색 = 정하는 것", "디자이너의 색은\n스며듦이에요", "얹지 않고 배어든다", "soak",
+                       "디자이너의 색은 정하는 게 아니에요.\n(컬러 얘기가 아니에요.)\n그 사람에게 천천히 배어드는 것.\n얹지 않고 스며들 때 진짜 어울려요."),
+            DetailCard("어울림 = 얼굴형", "어울림은\n무드예요", "무드가 안 맞을 뿐", "hd_moods",
+                       "안 어울리는 얼굴형은 없어요.\n얼굴형이 문제가 아니라\n무드가 안 맞았을 뿐이에요.\n무드만 맞추면 누구나 소화해요."),
+        ],
+    )
+
+
 SPECS = {"demo": demo_spec, "danbal": danbal_spec, "longface": longface_spec}
 ZINE_SPECS = {"mix": mix_spec, "mix2": mix2_spec}
 MAP_SPECS = {"coolchic": coolchic_designmap}
+DETAIL_SPECS = {"mixdetail": mix_detail_spec}
 
 if __name__ == "__main__":
     out = sys.argv[1] if len(sys.argv) > 1 else "/tmp/cardposter.png"
     which = "demo"
     if "--spec" in sys.argv:
         which = sys.argv[sys.argv.index("--spec") + 1]
-    if which in MAP_SPECS:
+    if which in DETAIL_SPECS:
+        prefix = out[:-4] if out.endswith(".png") else out
+        outs = render_detail_series(DETAIL_SPECS[which](), prefix)
+        print("OK →", *outs, sep="\n")
+    elif which in MAP_SPECS:
         render_designmap(MAP_SPECS[which](), out)
     elif which in ZINE_SPECS:
         render_zine(ZINE_SPECS[which](), out)
     else:
         render_poster(SPECS[which](), out)
-    print("OK →", out)
+        print("OK →", out)
