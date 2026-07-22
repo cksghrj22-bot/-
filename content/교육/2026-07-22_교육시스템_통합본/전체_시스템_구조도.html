@@ -1,0 +1,67 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8">
+<title>앳나운 2026 전체 교육 시스템 구조도</title><meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+ :root{--bg:#fff;--ink:#1a1a1a;--ink2:#555;--ink3:#8a8a8a;--rule:#ddd;--rule2:#eee;--hd:#1a1a1a;--soft:#f5f5f5;--acc:#C4302B;--v:#e8e8e8;--e:#eef3ee;--n:#f3ecd9;--x:#efd9d6;}
+ @media(prefers-color-scheme:dark){:root{--bg:#161618;--ink:#ececec;--ink2:#a8a8a8;--ink3:#777;--rule:#333;--rule2:#262626;--hd:#0c0c0c;--soft:#1f1f22;--acc:#E5675C;--v:#2a2a2a;--e:#1e2a1e;--n:#2b2717;--x:#2e1c1a;}}
+ *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;line-height:1.4;letter-spacing:-.01em}
+ .wrap{max-width:1180px;margin:0 auto;padding:32px 22px 70px}
+ .eyebrow{font-size:12px;letter-spacing:.22em;color:var(--ink3);font-weight:700;text-transform:uppercase}
+ h1{font-size:clamp(24px,4.4vw,38px);font-weight:800;margin:.3em 0 .05em;letter-spacing:-.02em}
+ .ruleline{height:1px;background:var(--rule);margin:12px 0}
+ .sub{color:var(--ink2);font-size:13.5px}
+ h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);font-weight:800;margin:30px 0 10px}
+ /* 타임라인 */
+ .tl{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;overflow-x:auto} .mcell{border-radius:6px;padding:8px 4px;text-align:center;min-width:64px}
+ .mcell .mm{display:block;font-size:12px;font-weight:800} .mcell .ml{display:block;font-size:9px;color:var(--ink2);margin-top:2px;font-weight:700}
+ .mcell.v{background:var(--v)} .mcell.e{background:var(--e)} .mcell.n{background:var(--n)} .mcell.x{background:var(--x)}
+ .lv{display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap;font-size:12px;font-weight:700;color:var(--ink2)} .lv b{color:var(--ink)} .lv .arw{color:var(--acc);font-weight:800}
+ /* 팀 */
+ .teams{display:grid;grid-template-columns:repeat(4,1fr);gap:8px} @media(max-width:800px){.teams{grid-template-columns:repeat(2,1fr)}}
+ .tc{border:1px solid var(--rule);border-radius:9px;padding:10px 12px;background:var(--bg)} .tn{font-weight:800;font-size:14px} .tm{font-size:11px;color:var(--ink2);margin:1px 0 5px} .tq{font-size:18px;font-weight:800} .tq span{font-size:10px;color:var(--ink3);font-weight:600;margin-left:2px}
+ /* 채점 */
+ .scwrap{display:grid;grid-template-columns:1fr 1fr;gap:12px} @media(max-width:680px){.scwrap{grid-template-columns:1fr}}
+ .scbox{border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+ .scbox .sh{background:var(--hd);color:#fff;padding:8px 12px;font-weight:800;font-size:13px;display:flex;justify-content:space-between}
+ .sr{display:flex;justify-content:space-between;padding:7px 12px;border-bottom:1px solid var(--rule2);font-size:13px} .sr:last-child{border:none} .si{color:var(--ink)} .sp{font-weight:800}
+ /* 운영/승급 */
+ .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px} @media(max-width:680px){.grid2{grid-template-columns:1fr}}
+ .box{border:1px solid var(--rule);border-radius:10px;padding:12px 15px} .box h3{margin:0 0 7px;font-size:14px;font-weight:800} .box .r{font-size:12.5px;color:var(--ink2);margin:3px 0} .box b{color:var(--ink)}
+ .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px} .chip{font-size:11.5px;font-weight:700;background:var(--soft);border:1px solid var(--rule);border-radius:100px;padding:3px 10px}
+ .exam{background:var(--hd);color:#fff;border-radius:8px;padding:8px 12px;font-weight:800;font-size:13px;display:inline-block;margin-top:6px}
+ .pgft{text-align:center;color:var(--ink3);font-size:12px;letter-spacing:.2em;font-weight:700;margin-top:28px}
+ .del{color:var(--acc);text-decoration:line-through;font-weight:700}
+</style></head><body>
+<div class="wrap">
+ <div class="eyebrow">ATNOWN 2026 · 전체 교육 시스템 구조도</div>
+ <h1>앳나운 교육 시스템 — 한눈에</h1>
+ <div class="ruleline"></div>
+ <div class="sub"><b>뱃지 없음.</b> 연간 체계 · 7팀 과목 · 채점 · 운영 · 승급을 한 장에. 시즈 1~5 각 6개월 → 스타일리스트 → 디자이너.</div>
+
+ <h2>① 연간 교육 체계</h2>
+ <div class="tl"><div class="mcell v"><span class="mm">1월</span><span class="ml">방학</span></div><div class="mcell e"><span class="mm">2월</span><span class="ml">교육</span></div><div class="mcell e"><span class="mm">3월</span><span class="ml">교육</span></div><div class="mcell e"><span class="mm">4월</span><span class="ml">교육</span></div><div class="mcell n"><span class="mm">5월</span><span class="ml">교육·시험공지</span></div><div class="mcell x"><span class="mm">6월</span><span class="ml">시험</span></div><div class="mcell v"><span class="mm">7월</span><span class="ml">방학</span></div><div class="mcell e"><span class="mm">8월</span><span class="ml">교육</span></div><div class="mcell e"><span class="mm">9월</span><span class="ml">교육</span></div><div class="mcell e"><span class="mm">10월</span><span class="ml">교육</span></div><div class="mcell n"><span class="mm">11월</span><span class="ml">교육·시험공지</span></div><div class="mcell x"><span class="mm">12월</span><span class="ml">시험</span></div></div>
+ <div class="lv"><b>시즈1</b><span class="arw">→</span><b>시즈2</b><span class="arw">→</span><b>시즈3</b><span class="arw">→</span><b>시즈4</b><span class="arw">→</span><b>시즈5</b><span class="arw">→</span><b>스타일리스트</b><span class="arw">→</span><b>디자이너</b> · 각 6개월 · 상·하반기 시험(6월·12월)</div>
+
+ <h2>② 과목 — 7팀</h2>
+ <div class="teams"><div class="tc"><div class="tn">컬러팀</div><div class="tm">소희·라희·연교</div><div class="tq">10<span>과목</span></div></div><div class="tc"><div class="tn">맨즈팀</div><div class="tm">이한·승현·홍미</div><div class="tq">10<span>과목</span></div></div><div class="tc"><div class="tn">커트팀</div><div class="tm">창엽·차노</div><div class="tq">5<span>과목</span></div></div><div class="tc"><div class="tn">드라이팀</div><div class="tm">회주·하린</div><div class="tq">8<span>과목</span></div></div><div class="tc"><div class="tn">펌팀</div><div class="tm">차노·재아·유솔</div><div class="tq">10<span>과목</span></div></div><div class="tc"><div class="tn">업스타일팀</div><div class="tm">시은·보미</div><div class="tq">7<span>과목</span></div></div><div class="tc"><div class="tn">기본커트팀</div><div class="tm">차노·이호</div><div class="tq">7<span>과목</span></div></div></div>
+
+ <h2>③ 승급 채점</h2>
+ <div class="scwrap">
+  <div class="scbox"><div class="sh"><span>시즈 1~3</span><span>합격 75점↑</span></div><div class="sr"><span class="si">실기</span><span class="sp">45</span></div><div class="sr"><span class="si">PPT</span><span class="sp">10</span></div><div class="sr"><span class="si">팀교육</span><span class="sp">10</span></div><div class="sr"><span class="si">연습</span><span class="sp">15</span></div><div class="sr"><span class="si">교육과제</span><span class="sp">10</span></div><div class="sr"><span class="si">SNS</span><span class="sp">10</span></div></div>
+  <div class="scbox"><div class="sh"><span>시즈 4~5</span><span>합격 80점↑</span></div><div class="sr"><span class="si">실기(2과목)</span><span class="sp">30</span></div><div class="sr"><span class="si">SNS(시그니처)</span><span class="sp">30</span></div><div class="sr"><span class="si">PPT</span><span class="sp">10</span></div><div class="sr"><span class="si">교육(과제)</span><span class="sp">10</span></div><div class="sr"><span class="si">태도(지각)</span><span class="sp">10</span></div><div class="sr"><span class="si">연습</span><span class="sp">10</span></div></div>
+ </div>
+ <div class="sub" style="margin-top:8px"><span class="del">시스템 점수</span> <span class="del">교육태도</span> 삭제 · 팀교육·연습·SNS 강화 · ⚠️ 일부 배점 확정 대기</div>
+
+ <h2>④ 운영 · 승급</h2>
+ <div class="grid2">
+  <div class="box"><h3>운영 리듬</h3>
+   <div class="r"><b>교육시간</b> 07:30(빔/아이패드) · 08:00(실전) · 09:20 마무리</div>
+   <div class="r"><b>실전모델</b> 저녁 · <b>평상교육</b> 오전(수·목·금)</div>
+   <div class="r"><b>특강</b> 월 1회(총 3회) — 와이·연교·시은·재아·승현</div>
+   <div class="r"><b>장소</b> 본점·플레이스 (2인↓ 메종한남) · <b>보강</b> 5·11월</div></div>
+  <div class="box"><h3>디자이너 승급 — 5중 2</h3>
+   <div class="chips"><span class="chip">모델 100명</span><span class="chip">시그니처 60</span><span class="chip">리뷰 70</span><span class="chip">매출 500</span><span class="chip">조회수 10만</span></div>
+   <div class="r" style="margin-top:6px"><b>5개 중 2개 달성</b> → 디자이너 승급시험 응시 (수치는 4·5 포함 누적)</div>
+   <div class="exam">📕 승급 시험 · 12/14 (12월 둘째주 월)</div></div>
+ </div>
+ <div class="pgft">AT NOWN</div>
+</div></body></html>
