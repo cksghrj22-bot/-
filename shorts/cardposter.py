@@ -355,17 +355,18 @@ def _lf_weight() -> str:
 def _lf_expand() -> str:
     # 컬 = 가로 물결(얼굴 위·아래에 좌우로 흐르는 웨이브). 얼굴은 가로로 통통한 둥근 얼굴.
     # (이찬호 손그림 2026-07-22: 세로 옆가닥 X → 가로 물결선 위2·아래2)
-    def _hwave(y, x0=70, n=5, w=32, a=11):
+    def _hwave(x0, y, n=3, w=22, a=7):
         d = f'M{x0} {y} q{w//2} {-a} {w} 0'
         d += (f' t{w} 0' * (n - 1))
         return d
-    top = _hwave(48) + " " + _hwave(74)
-    bot = _hwave(230) + " " + _hwave(256)
+    # 가로 물결을 얼굴 양 옆으로(오른쪽 3줄·왼쪽 3줄), 세 높이에
+    right = " ".join(_hwave(200, y) for y in (128, 150, 172))
+    left = " ".join(_hwave(34, y) for y in (128, 150, 172))
     return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-  <path d="{top}" fill="none" {STK}/>
-  <ellipse cx="150" cy="152" rx="54" ry="52" {STK}/>{_face(150,146)}
-  <path d="{bot}" fill="none" {STK}/>
-  <text x="150" y="290" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#22242a">가로 물결컬 = 얼굴이 통통</text>
+  <ellipse cx="150" cy="150" rx="46" ry="54" {STK}/>{_face(150,143)}
+  <path d="{right}" fill="none" {STK}/>
+  <path d="{left}" fill="none" {STK}/>
+  <text x="150" y="290" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#22242a">옆에 가로 물결컬 = 통통</text>
 </svg>'''
 
 
