@@ -355,11 +355,11 @@ def _lf_weight() -> str:
 def _lf_expand() -> str:
     # 결/컬 — 옆머리를 '라면처럼 물결컬'(지글지글 웨이브 가닥)로. 펌 볼륨(이찬호 2026-07-22).
     def _noodle(x, y):
-        # 아래로 내려가는 물결컬 한 가닥 — 두 번 물결 정도만(덜 지글, 부드럽게)
-        return (f'M{x} {y} q9 11 0 22 q-9 11 0 22')
+        # 옆머리 물결컬 한 가닥 — 턱 라인까지 길게 내려오는 두 번 물결(부드럽게)
+        return (f'M{x} {y} q10 14 0 28 q-10 14 0 28 q10 14 0 28 q-10 14 0 28')
     strands = (
-        _noodle(178, 100) + " " + _noodle(196, 96) + " " + _noodle(214, 100)   # 오른쪽 3가닥
-        + " " + _noodle(122, 100) + " " + _noodle(104, 96) + " " + _noodle(86, 100)  # 왼쪽 3가닥
+        _noodle(178, 92) + " " + _noodle(196, 88) + " " + _noodle(214, 92)   # 오른쪽 3가닥
+        + " " + _noodle(122, 92) + " " + _noodle(104, 88) + " " + _noodle(86, 92)  # 왼쪽 3가닥
     )
     return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
   <ellipse cx="150" cy="140" rx="42" ry="66" {STK}/>{_face(150,132)}
