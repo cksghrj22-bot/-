@@ -341,7 +341,6 @@ def _lf_weight() -> str:
   <line x1="150" y1="130" x2="252" y2="130" {STK_T} stroke-dasharray="4 7"/>
   <!-- 코끝에서 사선 아래 15도 실선(코끝 → 뒤아래로) -->
   <line x1="208" y1="130" x2="60" y2="170" {STK}/>
-  <text x="20" y="120" font-family="NanumPenPoster" font-size="21" fill="#22242a">코끝 15° 사선</text>
   <!-- 15도 각 표시 -->
   <path d="M234 130 q-6 8 -13 11" {STK_T}/>
   <text x="214" y="126" font-family="NanumPenPoster" font-size="19" fill="#6b6b6b">15°</text>
