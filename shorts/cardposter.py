@@ -353,27 +353,19 @@ def _lf_weight() -> str:
 
 
 def _lf_expand() -> str:
-    # 옆에 물결컬 — 얼굴 바깥으로 흐르는 부드러운 곡선 컬(얼굴 안 가림). 통통·이쁘게.
-    strands = (
-        # 오른쪽 바깥 가닥(크게 통통, 부드러운 S 두 굽이)
-        "M184 90 C 214 104, 214 132, 232 152 "
-        "C 248 170, 224 186, 230 206 "
-        "C 232 216, 222 220, 212 216 "
-        # 오른쪽 안쪽 가닥
-        "M180 104 C 202 118, 202 140, 214 158 "
-        "C 224 172, 208 184, 212 202 "
-        # 왼쪽 바깥 가닥(대칭)
-        "M116 90 C 86 104, 86 132, 68 152 "
-        "C 52 170, 76 186, 70 206 "
-        "C 68 216, 78 220, 88 216 "
-        # 왼쪽 안쪽 가닥
-        "M120 104 C 98 118, 98 140, 86 158 "
-        "C 76 172, 92 184, 88 202"
-    )
+    # 컬 = 가로 물결(얼굴 위·아래에 좌우로 흐르는 웨이브). 얼굴은 가로로 통통한 둥근 얼굴.
+    # (이찬호 손그림 2026-07-22: 세로 옆가닥 X → 가로 물결선 위2·아래2)
+    def _hwave(y, x0=70, n=5, w=32, a=11):
+        d = f'M{x0} {y} q{w//2} {-a} {w} 0'
+        d += (f' t{w} 0' * (n - 1))
+        return d
+    top = _hwave(48) + " " + _hwave(74)
+    bot = _hwave(230) + " " + _hwave(256)
     return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-  <ellipse cx="150" cy="140" rx="42" ry="66" {STK}/>{_face(150,132)}
-  <path d="{strands}" fill="none" {STK}/>
-  <text x="150" y="286" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#22242a">옆에 물결컬 = 가로로 통통</text>
+  <path d="{top}" fill="none" {STK}/>
+  <ellipse cx="150" cy="152" rx="54" ry="52" {STK}/>{_face(150,146)}
+  <path d="{bot}" fill="none" {STK}/>
+  <text x="150" y="290" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#22242a">가로 물결컬 = 얼굴이 통통</text>
 </svg>'''
 
 
