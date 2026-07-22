@@ -353,19 +353,18 @@ def _lf_weight() -> str:
 
 
 def _lf_expand() -> str:
-    # 결/컬 — 옆머리가 '뽀글뽀글' 컬로 부픔(펌). 자잘한 컬 스캘럽으로 가로 볼륨(이찬호 2026-07-22).
+    # 결/컬 — 옆머리를 '라면처럼 물결컬'(지글지글 웨이브 가닥)로. 펌 볼륨(이찬호 2026-07-22).
+    def _noodle(x, y):
+        # 아래로 내려가는 물결컬 한 가닥 — 두 번 물결 정도만(덜 지글, 부드럽게)
+        return (f'M{x} {y} q9 11 0 22 q-9 11 0 22')
+    strands = (
+        _noodle(178, 100) + " " + _noodle(196, 96) + " " + _noodle(214, 100)   # 오른쪽 3가닥
+        + " " + _noodle(122, 100) + " " + _noodle(104, 96) + " " + _noodle(86, 100)  # 왼쪽 3가닥
+    )
     return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
   <ellipse cx="150" cy="140" rx="42" ry="66" {STK}/>{_face(150,132)}
-  <!-- 오른쪽 뽀글 옆머리(자잘한 컬 스캘럽 외곽) -->
-  <path d="M188 88 q26 -2 20 18 q22 0 12 20 q22 4 8 22 q18 8 0 22 q14 12 -6 20 q6 14 -16 14
-           q-2 -14 8 -22 q-16 -4 -6 -20 q-18 -6 -2 -20 q-16 -8 0 -20 q-14 -10 4 -18 q-14 -12 6 -18 z" {STK}/>
-  <!-- 왼쪽 뽀글 옆머리(대칭) -->
-  <path d="M112 88 q-26 -2 -20 18 q-22 0 -12 20 q-22 4 -8 22 q-18 8 0 22 q-14 12 6 20 q-6 14 16 14
-           q2 -14 -8 -22 q16 -4 6 -20 q18 -6 2 -20 q16 -8 0 -20 q14 -10 -4 -18 q14 -12 -6 -18 z" {STK}/>
-  <!-- 안쪽 자잘한 컬 표식 -->
-  <path d="M196 118 q8 6 0 12 M204 138 q8 6 0 12 M192 158 q8 6 0 12" {STK_T}/>
-  <path d="M104 118 q-8 6 0 12 M96 138 q-8 6 0 12 M108 158 q-8 6 0 12" {STK_T}/>
-  <text x="150" y="286" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#22242a">옆에 컬 = 가로로 통통</text>
+  <path d="{strands}" fill="none" {STK}/>
+  <text x="150" y="286" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#22242a">옆에 물결컬 = 가로로 통통</text>
 </svg>'''
 
 
