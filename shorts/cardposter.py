@@ -182,9 +182,110 @@ def _blank() -> str:
 </svg>'''
 
 
+# ─────────────── 미용(단발) 손그림 라이브러리 — 장면↔주제 매칭 ───────────────
+def _face(cx, cy, smile=True):
+    eyes = f'<circle cx="{cx-13}" cy="{cy}" r="3.5" fill="#141416"/><circle cx="{cx+13}" cy="{cy}" r="3.5" fill="#141416"/>'
+    mouth = (f'<path d="M{cx-9} {cy+18} q9 7 18 0" {STK_T}/>' if smile
+             else f'<path d="M{cx-8} {cy+20} l16 0" {STK_T}/>')
+    return eyes + mouth
+
+
+def _hair_triangle() -> str:
+    # 부한 삼각형 단발 + 삼각김밥 아이콘
+    return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <path d="M150 58 L92 214 M150 58 L208 214" {STK}/>
+  <path d="M92 214 q58 26 116 0" {STK}/>
+  <path d="M150 58 q-34 2 -40 46 M150 58 q34 2 40 46" {STK_T}/>
+  <path d="M124 150 q0 44 26 58 q26 -14 26 -58" {STK_T}/>
+  {_face(150,150)}
+  <g transform="translate(224,52)"><path d="M0 44 L24 2 L48 44 Z" {STK_T}/>
+    <rect x="13" y="30" width="22" height="14" rx="2" {STK_T}/></g>
+  <text x="150" y="250" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#22242a">삼각형 ≠ 면</text>
+</svg>'''
+
+
+def _hair_slim() -> str:
+    # 부한 두상(점선 둥근 가이드) → 화살표 → 슬림
+    return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- 왼쪽: 퍼진 머리 + 둥근 두상 가이드 -->
+  <circle cx="72" cy="120" r="46" stroke-dasharray="5 9" {STK_T}/>
+  <path d="M30 128 q-4 -66 42 -70 q46 4 42 70" {STK}/>
+  <path d="M30 128 q8 34 20 50 M114 128 q-8 34 -20 50" {STK_T}/>
+  <path d="M54 138 q0 34 18 46 q18 -12 18 -46" {STK_T}/>{_face(72,138,False)}
+  <!-- 화살표 -->
+  <path d="M126 150 l40 0 M158 140 l10 10 l-10 10" {STK}/>
+  <!-- 오른쪽: 슬림 -->
+  <path d="M196 126 q-2 -64 40 -66 q42 2 40 66 q-6 40 -40 52 q-34 -12 -40 -52" {STK}/>
+  {_face(236,140)}
+  <text x="150" y="250" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#22242a">면 정리 = 슬림</text>
+</svg>'''
+
+
+def _hair_air() -> str:
+    # 공기감 — 가위 + 머리카락 '사이' 공간
+    strands = ""
+    for i, x in enumerate((150, 178, 206, 234)):
+        strands += f'<path d="M{x} 60 q-8 70 4 150" {STK_T}/>'
+    airs = ""
+    for x, y in ((166, 110), (194, 150), (222, 120), (180, 200), (210, 190)):
+        airs += f'<path d="M{x} {y} q10 -8 8 6" {STK_T}/>'
+    return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- 가위 -->
+  <g transform="translate(40,120) rotate(-18)">
+    <circle cx="0" cy="-16" r="15" {STK}/><circle cx="0" cy="20" r="15" {STK}/>
+    <path d="M12 -6 L74 34 M12 10 L74 -30" {STK}/></g>
+  {strands}{airs}
+  <text x="150" y="250" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#22242a">'사이'를 자른다</text>
+</svg>'''
+
+
+def _hair_mood() -> str:
+    # 무드 — 직선(차가움) vs 곡선(부드러움) 두 얼굴
+    return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- 왼: 직선 단발 -->
+  <path d="M40 78 L40 176 L112 176 L112 78" {STK}/>
+  <path d="M40 78 L112 78" {STK}/>
+  <path d="M58 120 q0 44 18 52 q18 -8 18 -52" {STK_T}/>{_face(76,120,False)}
+  <text x="76" y="204" text-anchor="middle" font-family="NanumPenPoster" font-size="24" fill="#22242a">직선=차갑게</text>
+  <!-- 우: 곡선 단발 -->
+  <path d="M188 76 q-24 4 -24 54 q0 44 24 56 M260 76 q24 4 24 54 q0 44 -24 56" {STK}/>
+  <path d="M188 76 q36 -14 72 0" {STK}/>
+  <path d="M206 120 q0 44 18 52 q18 -8 18 -52" {STK_T}/>{_face(224,120)}
+  <text x="224" y="204" text-anchor="middle" font-family="NanumPenPoster" font-size="24" fill="#22242a">곡선=부드럽게</text>
+</svg>'''
+
+
+def _hair_texture() -> str:
+    # 결 — 흐르는 웨이브 결(유행이 내 것이 되는 지점)
+    waves = ""
+    for i, y in enumerate((80, 116, 152, 188)):
+        waves += f'<path d="M46 {y} q34 -20 68 0 q34 20 68 0 q34 -20 68 0" {STK}/>'
+    return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  {waves}
+  <path d="M228 96 l18 -6 M232 128 l18 0 M228 160 l18 6" {STK_T}/>
+  <text x="150" y="244" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#22242a">결이 곧 유행</text>
+</svg>'''
+
+
+def _hair_verdict() -> str:
+    # 판정 — 얼굴 + 손거울 + 말풍선 "면?"
+    return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <path d="M96 108 q-24 4 -24 52 q0 44 24 56 q-2 30 -2 30 M204 108 q24 4 24 52 q0 44 -24 56"
+        {STK}/>
+  <path d="M96 108 q54 -18 108 0" {STK}/>
+  <path d="M120 150 q0 46 30 60 q30 -14 30 -60" {STK_T}/>{_face(150,150)}
+  <!-- 말풍선 면? -->
+  <g><ellipse cx="238" cy="72" rx="42" ry="30" {STK}/>
+    <path d="M214 96 l-6 20 l24 -12" {STK}/>
+    <text x="238" y="84" font-family="KyoboPoster" font-size="40" fill="#141416" text-anchor="middle">면?</text></g>
+</svg>'''
+
+
 SCENES = {
     "wall": _wall, "jeer": _jeer, "tally": _tally,
     "shame_run": _shame_run, "mix": _mix, "blank": _blank,
+    "hair_triangle": _hair_triangle, "hair_slim": _hair_slim, "hair_air": _hair_air,
+    "hair_mood": _hair_mood, "hair_texture": _hair_texture, "hair_verdict": _hair_verdict,
 }
 
 
@@ -245,7 +346,7 @@ body{{background:#fbfbf9;color:#141416;position:relative;overflow:hidden}}
   padding-top:4px}}
 .htxt{{font-family:KyoboPoster;font-size:40px;line-height:1;white-space:nowrap}}
 .pbody{{display:flex;gap:8px;align-items:center}}
-.ptext{{font-family:NanumPenPoster;font-size:33px;line-height:1.22;flex:1;color:#22242a}}
+.ptext{{font-family:NanumPenPoster;font-size:31px;line-height:1.26;flex:1;color:#22242a}}
 .part{{width:196px;height:196px;flex:none;position:relative}}
 .part svg{{width:196px;height:196px}}
 .note{{position:absolute;bottom:-2px;left:0;right:0;text-align:center;
@@ -317,7 +418,36 @@ def demo_spec() -> PosterSpec:
     )
 
 
+# ── 단발 카드(차노 재정의) — 조회수 검증 주제(단발 170만·숏컷)를 카드로 ──
+def danbal_spec() -> PosterSpec:
+    return PosterSpec(
+        title="단발 실패 안 하는 법",
+        panels=[
+            Panel("1", "끝이 아니라 '면'을 본다",
+                  "단발했는데 부해 보였다면\n끝을 잘못 잘라서가\n아니에요.\n옆면이 '면'이 아니라\n'삼각형'이라서예요.", "hair_triangle"),
+            Panel("2", "면이 정리되면 슬림해진다",
+                  "두상은 둥근데\n머리가 퍼지면 각이 생겨요.\n같은 길이도 면을 다듬으면\n한 톤 슬림해집니다.", "hair_slim"),
+            Panel("3", "가벼움 = 공기를 자른 것",
+                  "숱을 덜어내는 게 아니라\n머리카락 '사이'를\n디자인해요.\n공간이 생기면\n같은 숱도 가벼워집니다.", "hair_air"),
+            Panel("4", "얼굴형이 아니라 '무드'",
+                  "안 어울리는 얼굴은 없어요.\n무드가 안 맞는 단발이\n있을 뿐.\n직선이 강하면 차갑고\n곡선이 남으면 부드러워요.", "hair_mood"),
+            Panel("5", "유행 단발은 '결'로 산다",
+                  "웬디컷·허쉬컷이\n어울리려면\n레이어가 아니라 '결'이에요.\n결이 살면 유행이\n내 것이 됩니다.", "hair_texture"),
+            Panel("6", "상담 때 이걸 물어보세요",
+                  "\"끝을 다듬을까요,\n면을 다듬을까요?\"\n이 한마디가\n단발의 성패를 가릅니다.", "hair_verdict"),
+        ],
+        banner="단발 실패, 끝이 아니라 면에 있습니다",
+        closer_hand="당신의 단발, <b>면</b>을 봤나요?",
+        closer_sub="저장했다가, 상담 때 무드부터 물어보세요.",
+    )
+
+
+SPECS = {"demo": demo_spec, "danbal": danbal_spec}
+
 if __name__ == "__main__":
     out = sys.argv[1] if len(sys.argv) > 1 else "/tmp/cardposter.png"
-    render_poster(demo_spec(), out)
+    which = "demo"
+    if "--spec" in sys.argv:
+        which = sys.argv[sys.argv.index("--spec") + 1]
+    render_poster(SPECS[which](), out)
     print("OK →", out)
