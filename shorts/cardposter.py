@@ -662,12 +662,12 @@ def _hd_bob(seed) -> str:
 
 
 def _d_soak(seed) -> str:
-    # 색=스며듦 — 머리카락 한 올에 색이 '배어든다'(위→아래 옅어짐)
-    dots = "".join(f'<circle cx="58" cy="{48+i*13}" r="{4-i*0.5:.1f}" fill="#141416"/>' for i in range(5))
-    inner = (f'<path d="M50 26 q8 46 4 96" {DCS}/><path d="M66 26 q-6 46 0 96" {DCS}/>'
-             f'{dots}'
-             f'<path d="M92 34 q10 14 10 22 a10 10 0 1 1 -20 0 q0 -8 10 -22 z" {DCS}/>'
-             f'<path d="M84 60 l-14 -4" {DCS_T}/>')
+    # 디자이너의 색=스며듦 — 잉크 한 방울이 '번져 배어든다'(헤어컬러 아님)
+    inner = (f'<path d="M70 22 q14 20 14 30 a14 14 0 1 1 -28 0 q0 -10 14 -30 z" {DCS}/>'
+             f'<path d="M44 78 a26 9 0 0 0 52 0" {DCS_T}/>'
+             f'<path d="M34 94 a36 12 0 0 0 72 0" {DCS_T}/>'
+             f'<path d="M26 110 a44 14 0 0 0 88 0" {DCS_T}/>'
+             f'<circle cx="70" cy="52" r="2.6" fill="#141416"/>')
     return f'<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">{inner}</svg>'
 
 
@@ -808,8 +808,8 @@ def mix_spec() -> ZineSpec:
                       "결에 움직임을 넣기", "hd_layers", 96, 524, 340, 4.5),
             ZineBlock("단발 = 길이 자르기", "단발 = 길이 밸런스",
                       "튀어나온 곳을 조각해요", "hd_bob", 648, 622, 372, -5),
-            ZineBlock("색 = 정하는 것", "색 = 스며드는 것",
-                      "결에 배어들게", "soak", 34, 812, 344, -2.5),
+            ZineBlock("색 = 정하는 것", "디자이너의 색 = 스며듦",
+                      "얹지 않고 배어들죠", "soak", 34, 812, 392, -2.5),
             ZineBlock("어울림 = 얼굴형", "어울림 = 무드 밸런스",
                       "무드가 안 맞을 뿐", "hd_moods", 648, 905, 372, 3.5),
         ],
