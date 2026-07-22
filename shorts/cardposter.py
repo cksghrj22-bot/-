@@ -356,13 +356,30 @@ def _lf_dry() -> str:
 </svg>'''
 
 
+def _lf_trim() -> str:
+    # 불필요한 부피 정리 — 옆으로 뜬 부피를 커트/펌으로 덜어냄
+    return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="150" cy="152" rx="48" ry="72" {STK}/>{_face(150,142)}
+  <!-- 옆으로 뜬 불필요한 부피(점선=덜어낼 부분) -->
+  <path d="M102 120 q-44 22 -34 74" {STK_T} stroke-dasharray="6 8"/>
+  <path d="M198 120 q44 22 34 74" {STK_T} stroke-dasharray="6 8"/>
+  <!-- 정리된 라인(실선) -->
+  <path d="M104 120 q-20 30 -8 66" {STK}/><path d="M196 120 q20 30 8 66" {STK}/>
+  <!-- 가위(덜어냄) -->
+  <g transform="translate(232,150) rotate(20)">
+    <circle cx="0" cy="-13" r="12" {STK}/><circle cx="0" cy="13" r="12" {STK}/>
+    <path d="M10 -4 L54 20 M10 4 L54 -20" {STK}/></g>
+  <text x="150" y="256" text-anchor="middle" font-family="NanumPenPoster" font-size="27" fill="#22242a">뜬 부피는 덜어낸다</text>
+</svg>'''
+
+
 SCENES = {
     "wall": _wall, "jeer": _jeer, "tally": _tally,
     "shame_run": _shame_run, "mix": _mix, "blank": _blank,
     "hair_triangle": _hair_triangle, "hair_slim": _hair_slim, "hair_air": _hair_air,
     "hair_mood": _hair_mood, "hair_texture": _hair_texture, "hair_verdict": _hair_verdict,
     "lf_vertical": _lf_vertical, "lf_cut": _lf_cut, "lf_jaw": _lf_jaw,
-    "lf_weight": _lf_weight, "lf_expand": _lf_expand, "lf_dry": _lf_dry,
+    "lf_weight": _lf_weight, "lf_expand": _lf_expand, "lf_dry": _lf_dry, "lf_trim": _lf_trim,
 }
 
 
@@ -935,26 +952,26 @@ def coolchic_designmap() -> DesignMapSpec:
 
 
 def longface_spec() -> PosterSpec:
-    # 인스타 11p '긴 얼굴형 단발 공식' 내용만 6칸으로 압축(차노 보이스)
+    # 인스타 11p '긴 얼굴형 단발 공식' — 실제 5가지 방법(4·6·7·8·9p)으로 구성 + 정리
     return PosterSpec(
         title="긴 얼굴형 단발 공식",
         panels=[
-            Panel("1", "일자단발 = 세로선",
-                  "긴 얼굴에 일자단발은\n세로로 이어져\n더 길어 보여요.", "lf_vertical"),
-            Panel("2", "세로를 끊고, 가로를",
-                  "단발은 짧게 자르는 게\n아니라\n'비율'을 끊는 디자인.", "lf_cut"),
-            Panel("3", "기준은 '턱선'",
-                  "턱선 위 길이 = 가로선.\n턱선 아래로 내려가면\n세로선(길어 보임).", "lf_jaw"),
-            Panel("4", "무게중심을 낮춘다",
-                  "광대 밑~턱 바로 위.\n무게중심이 낮을수록\n긴 얼굴이 짧아 보여요.", "lf_weight"),
-            Panel("5", "가로로 확장한다",
-                  "볼륨이 부족하면 펌으로.\n옆으로 퍼지는 볼륨이\n핵심이에요.", "lf_expand"),
-            Panel("6", "말리기로 완성",
-                  "뿌리를 흔들고\n사선 위로 넘겨 말리면\n실루엣이 가로로 커져요.", "lf_dry"),
+            Panel("1", "길이만 바꿔도 비율이 달라져요",
+                  "단발은 비율을 끊는 디자인.\n턱선 위 = 가로선,\n턱선 아래 = 세로선\n(길어 보일 수 있어요).", "lf_jaw"),
+            Panel("2", "무게중심을 낮춘다",
+                  "무게중심이 낮을수록\n긴 얼굴이 짧아 보여요.\n(광대 밑 ~ 턱 바로 위)", "lf_weight"),
+            Panel("3", "가로로 확장한다",
+                  "볼륨이 부족하면 펌으로.\n가로로 퍼지는 볼륨이\n핵심이에요.", "lf_expand"),
+            Panel("4", "불필요한 부피는 정리한다",
+                  "옆으로 뜬 부피는\n커트·펌으로\n정리해요.", "lf_trim"),
+            Panel("5", "말리는 방향이 실루엣을 바꿔요",
+                  "말릴 때 방향이 바뀌면\n실루엣도 바뀌어요.\n①뿌리를 흔들어 말리기\n②사선 위로 넘기기.", "lf_dry"),
+            Panel("6", "세로를 끊고, 가로를",
+                  "긴 얼굴이라\n포기하지 마세요.\n비율부터 보면 됩니다.", "lf_cut"),
         ],
-        banner="세로를 끊고, 가로를 만든다",
+        banner="긴 얼굴형 = 세로를 끊고, 가로를 만든다",
         closer_hand="단발은 길이가 아니라 <b>인상</b>을 설계하는 일.",
-        closer_sub="긴 얼굴형이라 포기했다면 — 비율부터 보세요.",
+        closer_sub="저장했다가, 상담 때 '비율'부터 물어보세요.",
     )
 
 
