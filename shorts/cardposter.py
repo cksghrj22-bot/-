@@ -298,15 +298,21 @@ def _lf_vertical() -> str:
 
 
 def _lf_cut() -> str:
-    # 세로를 끊고 가로를 만든다
+    # 밸런스 도식 — 세로선을 코끝 아래 가로선이 끊음(O). 너무 위서 끊으면 아래 세로 남음(주의).
     return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-  <ellipse cx="150" cy="142" rx="56" ry="78" {STK}/>{_face(150,130)}
-  <line x1="150" y1="58" x2="150" y2="150" {STK_T} stroke-dasharray="5 8"/>
-  <path d="M132 96 l36 30 M168 96 l-36 30" {STK}/>
-  <path d="M54 196 L246 196" {STK}/>
-  <path d="M54 196 l20 -12 M54 196 l20 12" {STK}/>
-  <path d="M246 196 l-20 -12 M246 196 l-20 12" {STK}/>
-  <text x="150" y="240" text-anchor="middle" font-family="NanumPenPoster" font-size="25" fill="#22242a">가로를 만든다</text>
+  <!-- 왼: 코끝 아래서 끊음 = 시선 끊김(좋음) -->
+  <ellipse cx="80" cy="140" rx="32" ry="66" {STK}/>
+  <line x1="80" y1="80" x2="80" y2="180" {STK_T} stroke-dasharray="5 7"/>
+  <line x1="48" y1="182" x2="112" y2="182" {STK}/>
+  <path d="M96 168 l7 7 l12 -13" {STK_T}/>
+  <text x="80" y="224" text-anchor="middle" font-family="NanumPenPoster" font-size="22" fill="#22242a">코끝 아래=끊김 O</text>
+  <!-- 우: 너무 위서 끊음 = 아래 세로 남음(주의) -->
+  <ellipse cx="220" cy="140" rx="32" ry="66" {STK}/>
+  <line x1="188" y1="128" x2="252" y2="128" {STK_T}/>
+  <line x1="220" y1="130" x2="220" y2="204" {STK}/>
+  <path d="M234 146 l16 16 M250 146 l-16 16" {STK_T}/>
+  <text x="220" y="224" text-anchor="middle" font-family="NanumPenPoster" font-size="22" fill="#22242a">너무 위=세로 남음</text>
+  <text x="150" y="252" text-anchor="middle" font-family="NanumPenPoster" font-size="24" fill="#22242a">끊는 위치가 밸런스</text>
 </svg>'''
 
 
@@ -317,20 +323,27 @@ def _lf_jaw() -> str:
   <line x1="88" y1="192" x2="212" y2="192" {STK}/>
   <text x="232" y="198" font-family="NanumPenPoster" font-size="27" fill="#22242a">턱선</text>
   <path d="M110 168 l9 9 l18 -20" {STK_T}/>
-  <text x="150" y="256" text-anchor="middle" font-family="NanumPenPoster" font-size="23" fill="#22242a">위=가로 · 아래=세로</text>
+  <text x="150" y="256" text-anchor="middle" font-family="NanumPenPoster" font-size="23" fill="#22242a">위는 넓게·아래는 길게</text>
 </svg>'''
 
 
 def _lf_weight() -> str:
-    # 무게중심 낮추기 (광대 밑~턱 위)
-    hatch = "".join(f'<line x1="{100+i*14}" y1="180" x2="{86+i*14}" y2="212" {STK_T}/>' for i in range(8))
+    # 무게중심 — 동그라미 캐릭터 옆모습 + 코끝선(코끝~뒤통수 관통). 그 아래로 무게를 내리면 옆이 넓어짐.
     return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-  <ellipse cx="150" cy="140" rx="56" ry="82" {STK}/>{_face(150,120)}
-  <line x1="92" y1="178" x2="208" y2="178" {STK_T} stroke-dasharray="4 7"/>
-  <line x1="104" y1="214" x2="196" y2="214" {STK_T} stroke-dasharray="4 7"/>
-  {hatch}
-  <path d="M240 176 l0 40 M233 204 l7 12 l7 -12" {STK_T}/>
-  <text x="150" y="266" text-anchor="middle" font-family="NanumPenPoster" font-size="23" fill="#22242a">광대 밑~턱 위</text>
+  <!-- 동그라미 캐릭터(옆모습) -->
+  <circle cx="140" cy="130" r="58" {STK}/>
+  <!-- 코끝(오른쪽 삐죽) -->
+  <path d="M196 128 q14 6 4 18" {STK}/>
+  <!-- 눈·입(옆) -->
+  <circle cx="168" cy="122" r="4" fill="#141416"/>
+  <path d="M176 150 q10 5 18 -1" {STK_T}/>
+  <!-- 코끝선: 코끝~뒤통수 관통 가로 점선 -->
+  <line x1="66" y1="134" x2="226" y2="134" {STK_T} stroke-dasharray="5 7"/>
+  <text x="234" y="139" font-family="NanumPenPoster" font-size="22" fill="#22242a">코끝선</text>
+  <!-- 코끝선 '아래'에 무게(볼륨) 얹기 + 아래 화살 -->
+  <path d="M92 150 q-16 26 -2 52 q30 18 58 8" {STK}/>
+  <path d="M104 210 l0 30 M97 232 l7 10 l7 -10" {STK_T}/>
+  <text x="150" y="286" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#22242a">코끝선 아래로 = 짧아 보임</text>
 </svg>'''
 
 
@@ -342,17 +355,17 @@ def _lf_expand() -> str:
   <path d="M202 112 q46 26 36 84 q-40 26 -44 -4" {STK}/>
   <path d="M60 158 l-28 0 M38 149 l-9 9 l9 9" {STK}/>
   <path d="M240 158 l28 0 M262 149 l9 9 l-9 9" {STK}/>
-  <text x="150" y="282" text-anchor="middle" font-family="NanumPenPoster" font-size="27" fill="#22242a">옆으로 퍼지는 볼륨</text>
+  <text x="150" y="282" text-anchor="middle" font-family="NanumPenPoster" font-size="27" fill="#22242a">옆을 통통하게</text>
 </svg>'''
 
 
 def _lf_dry() -> str:
-    # 말리기 — 사선 위로 넘겨
+    # 말리기 — 비스듬히 앞으로
     return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
   <ellipse cx="150" cy="150" rx="54" ry="78" {STK}/>{_face(150,140)}
   <path d="M112 108 L64 60 M64 60 l4 26 M64 60 l26 4" {STK}/>
   <path d="M188 108 L236 60 M236 60 l-4 26 M236 60 l-26 4" {STK}/>
-  <text x="150" y="288" text-anchor="middle" font-family="NanumPenPoster" font-size="27" fill="#22242a">사선 위로 넘겨</text>
+  <text x="150" y="288" text-anchor="middle" font-family="NanumPenPoster" font-size="27" fill="#22242a">비스듬히 앞으로</text>
 </svg>'''
 
 
@@ -369,7 +382,7 @@ def _lf_trim() -> str:
   <g transform="translate(232,150) rotate(20)">
     <circle cx="0" cy="-13" r="12" {STK}/><circle cx="0" cy="13" r="12" {STK}/>
     <path d="M10 -4 L54 20 M10 4 L54 -20" {STK}/></g>
-  <text x="150" y="256" text-anchor="middle" font-family="NanumPenPoster" font-size="27" fill="#22242a">뜬 부피는 덜어낸다</text>
+  <text x="150" y="256" text-anchor="middle" font-family="NanumPenPoster" font-size="27" fill="#22242a">튀어나온 곳 다듬기</text>
 </svg>'''
 
 
@@ -956,22 +969,22 @@ def longface_spec() -> PosterSpec:
     return PosterSpec(
         title="긴 얼굴형 단발 공식",
         panels=[
-            Panel("1", "길이만 바꿔도 비율이 달라져요",
-                  "단발은 비율을 끊는 디자인.\n턱선 위 = 가로선,\n턱선 아래 = 세로선\n(길어 보일 수 있어요).", "lf_jaw"),
-            Panel("2", "무게중심을 낮춘다",
-                  "무게중심이 낮을수록\n긴 얼굴이 짧아 보여요.\n(광대 밑 ~ 턱 바로 위)", "lf_weight"),
-            Panel("3", "가로로 확장한다",
-                  "볼륨이 부족하면 펌으로.\n가로로 퍼지는 볼륨이\n핵심이에요.", "lf_expand"),
-            Panel("4", "불필요한 부피는 정리한다",
-                  "옆으로 뜬 부피는\n커트·펌으로\n정리해요.", "lf_trim"),
-            Panel("5", "말리는 방향이 실루엣을 바꿔요",
-                  "말릴 때 방향이 바뀌면\n실루엣도 바뀌어요.\n①뿌리를 흔들어 말리기\n②사선 위로 넘기기.", "lf_dry"),
-            Panel("6", "세로를 끊고, 가로를",
-                  "긴 얼굴이라\n포기하지 마세요.\n비율부터 보면 됩니다.", "lf_cut"),
+            Panel("1", "길이 — 어디서 자르나",
+                  "턱보다 위에서 끝나면\n얼굴이 넓어 보이고,\n아래로 길면\n더 길어 보여요.", "lf_jaw"),
+            Panel("2", "무게 — 아래로 내리기",
+                  "'코끝선'(코끝~뒤통수)\n그 아래로 머리 무게를\n내리면\n얼굴이 짧아 보여요.", "lf_weight"),
+            Panel("3", "결 — 옆에 웨이브",
+                  "펌으로 옆머리에\n구불구불 결을 주면\n옆이 통통해져\n얼굴이 짧아 보여요.", "lf_expand"),
+            Panel("4", "모양 — 머리 조각하기",
+                  "튀어나온 곳은 덜고\n모양을 동그랗게\n다듬어요.", "lf_trim"),
+            Panel("5", "말리기 — 뿌리 세워서",
+                  "머리 뿌리를 비벼 세우고\n비스듬히 앞으로\n말리면\n옆 볼륨이 살아요.", "lf_dry"),
+            Panel("6", "가로선이 시선을 끊어요",
+                  "세로로 긴 선을\n코끝 아래 가로선이\n끊어줘요.\n너무 위서 끊으면\n아래 세로가 또 생겨요.", "lf_cut"),
         ],
-        banner="긴 얼굴형 = 세로를 끊고, 가로를 만든다",
-        closer_hand="단발은 길이가 아니라 <b>인상</b>을 설계하는 일.",
-        closer_sub="저장했다가, 상담 때 '비율'부터 물어보세요.",
+        banner="긴 얼굴 = 옆으로 퍼뜨리면 짧아 보여요",
+        closer_hand="단발은 길이가 아니라 <b>인상</b>을 그리는 일.",
+        closer_sub="저장했다가, 상담 때 보여주세요.",
     )
 
 
