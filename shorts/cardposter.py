@@ -1147,10 +1147,34 @@ def longface_detail_spec() -> DetailSpec:
     )
 
 
+def mix2_detail_spec() -> DetailSpec:
+    # 관리편 부가설명 — 전부 차노 실제 대본 출처(막 만든 것 아님)
+    return DetailSpec(
+        series="머리 관리 상식 뒤집기",
+        foot="@차노쌤 · 잘 자른 머리도 집에서 못 살리면 반이에요",
+        cover=mix2_spec(),   # 1번=처음 그 관리편 6칸 카드 그대로
+        cards=[
+            DetailCard("펌 = 약 세기", "펌은\n순서예요", "약이 아니라 순서에 타요", "steps",
+                       "펌이 상하는 건 약이 세서가 아니에요.\n약을 올리고 푸는 '순서'에 타요.\n같은 약도 순서가 맞으면\n덜 상하고 결이 살아요."),
+            DetailCard("앞머리 = 길이", "앞머리는\n각도예요", "5cm도 각도로 갈려요", "angle",
+                       "앞머리는 길이 문제가 아니에요.\n5cm를 어느 각도로 두느냐로\n인상이 확 달라져요.\n길이보다 각도를 먼저 봐요."),
+            DetailCard("두피 = 감는 법", "두피는\n말리는 법이에요", "고민 절반은 말리기", "drop",
+                       "두피 고민의 절반은 감는 게 아니라\n'말리는 법'에서 갈려요.\n뿌리를 세워 말리면\n볼륨도 두피도 편해져요."),
+            DetailCard("재현 = 미용실 손", "재현은\n방향이에요", "집에선 방향이 답", "dir",
+                       "미용실 날만 예쁜 건 손이 아니라\n'방향'을 몰라서예요.\n드라이 방향만 맞추면\n집에서도 그 모양이 나와요."),
+            DetailCard("유행컷 = 따라하기", "유행컷은\n내 결이에요", "내 결에 얹는 것", "wave",
+                       "유행컷은 그대로 따라하는 게 아니에요.\n내 결 위에 얹는 거예요.\n웬디컷·허쉬컷도\n내 결에 맞아야 어울려요."),
+            DetailCard("커트 = 기술", "커트는\n생각이에요", "생각으로 갈려요", "think",
+                       "같은 가위질도 생각이 달라요.\n어디를 왜 덜지 먼저 그리고 잘라요.\n기술이 아니라 생각이\n결과를 가릅니다."),
+        ],
+    )
+
+
 SPECS = {"demo": demo_spec, "danbal": danbal_spec, "longface": longface_spec}
 ZINE_SPECS = {"mix": mix_spec, "mix2": mix2_spec}
 MAP_SPECS = {"coolchic": coolchic_designmap}
-DETAIL_SPECS = {"mixdetail": mix_detail_spec, "longfacedetail": longface_detail_spec}
+DETAIL_SPECS = {"mixdetail": mix_detail_spec, "longfacedetail": longface_detail_spec,
+                "mix2detail": mix2_detail_spec}
 
 if __name__ == "__main__":
     out = sys.argv[1] if len(sys.argv) > 1 else "/tmp/cardposter.png"
