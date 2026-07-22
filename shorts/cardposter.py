@@ -355,14 +355,17 @@ def _lf_weight() -> str:
 def _lf_expand() -> str:
     # 컬 = 가로 물결(얼굴 위·아래에 좌우로 흐르는 웨이브). 얼굴은 가로로 통통한 둥근 얼굴.
     # (이찬호 손그림 2026-07-22: 세로 옆가닥 X → 가로 물결선 위2·아래2)
-    def _vwave(x, y0, n=3, h=32, a=9):
-        # 위→아래로 부드럽게 흐르는 세로 물결 한 줄
-        d = f'M{x} {y0} q{-a} {h//2} 0 {h}'
-        d += (f' t0 {h}' * (n - 1))
+    def _vwave(x, y0, n=3, h=34, a=16):
+        # 위→아래로 확실히 들어갔다 나왔다(둥근 컬). 지그재그 X, 큰 둥근 물결.
+        d = f'M{x} {y0}'
+        s = -1
+        for _ in range(n):
+            d += f' c {a*s} {h*0.28:.0f}, {a*s} {h*0.72:.0f}, 0 {h}'
+            s *= -1
         return d
-    # 얼굴 양 옆으로 세로 물결 2줄씩(손그림대로 — 세로)
-    right = " ".join(_vwave(x, 102) for x in (206, 230))
-    left = " ".join(_vwave(x, 102) for x in (94, 70))
+    # 얼굴 양 옆으로 세로 둥근 컬 2줄씩(손그림대로 — 세로)
+    right = " ".join(_vwave(x, 100) for x in (212, 238))
+    left = " ".join(_vwave(x, 100) for x in (88, 62))
     return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
   <ellipse cx="150" cy="150" rx="46" ry="52" {STK}/>{_face(150,143)}
   <path d="{right}" fill="none" {STK}/>
