@@ -1091,7 +1091,8 @@ def render_detail_series(spec: DetailSpec, out_prefix: str) -> list:
     start = 1
     if spec.cover:
         out = f"{out_prefix}_1.png"
-        _shoot(build_zine(spec.cover), out)   # 처음 그 카드 그대로(구조 안 바꿈)
+        cover_html = build_zine(spec.cover) if isinstance(spec.cover, ZineSpec) else build_html(spec.cover)
+        _shoot(cover_html, out)   # 처음 그 카드 그대로(구조 안 바꿈)
         outs.append(out)
         start = 2
     for off, c in enumerate(spec.cards):
@@ -1124,10 +1125,32 @@ def mix_detail_spec() -> DetailSpec:
     )
 
 
+def longface_detail_spec() -> DetailSpec:
+    return DetailSpec(
+        series="긴 얼굴형 단발 공식",
+        foot="@차노쌤 · 단발은 길이가 아니라 인상을 그리는 일",
+        cover=longface_spec(),   # 1번=처음 그 긴얼굴 카드(공식 6칸) 그대로
+        cards=[
+            DetailCard("단발 = 짧게 자르기", "길이는\n어디서 끊나예요", "기준은 턱 언저리", "lf_jaw",
+                       "어디서 자르느냐가 반이에요.\n턱보다 위에서 끝나면 얼굴이 넓어 보이고,\n아래로 길게 두면 더 길어 보여요.\n긴 얼굴은 '턱 언저리'가 기준이에요."),
+            DetailCard("무게 = 숱 많이", "무게는\n아래로 내려요", "코끝선 아래로", "lf_weight",
+                       "'코끝선'은 코끝에서 뒤통수로 이은 선이에요.\n그 아래로 머리 무게를 내리면\n시선이 아래로 모여\n얼굴이 짧아 보여요."),
+            DetailCard("긴 얼굴 = 층 많이", "결은\n옆에 넣어요", "옆이 통통해져요", "lf_expand",
+                       "펌으로 옆머리에 구불구불 결을 주면\n납작하던 옆이 통통해져요.\n옆으로 퍼지면\n긴 세로가 짧아 보여요."),
+            DetailCard("다듬기 = 끝만 정리", "모양은\n조각이에요", "동그랗게 다듬기", "lf_trim",
+                       "튀어나온 곳은 덜어내고\n전체를 동그란 모양으로 다듬어요.\n각지면 더 길어 보이고,\n둥글면 부드럽고 짧아 보여요."),
+            DetailCard("볼륨 = 미용실에서만", "말리기는\n뿌리부터예요", "뿌리 세워 앞으로", "lf_dry",
+                       "머리 뿌리를 비벼 세우고\n비스듬히 앞으로 말려요.\n집에서 이 방향만 지켜도\n옆 볼륨이 살아나요."),
+            DetailCard("짧게만 = 정답", "밸런스는\n가로선이에요", "코끝 아래서 끊기", "lf_cut",
+                       "세로로 긴 선을\n코끝 아래 가로선이 끊어줘요.\n너무 위에서 끊으면 아래 세로가 또 생겨요.\n끊는 위치가 밸런스예요."),
+        ],
+    )
+
+
 SPECS = {"demo": demo_spec, "danbal": danbal_spec, "longface": longface_spec}
 ZINE_SPECS = {"mix": mix_spec, "mix2": mix2_spec}
 MAP_SPECS = {"coolchic": coolchic_designmap}
-DETAIL_SPECS = {"mixdetail": mix_detail_spec}
+DETAIL_SPECS = {"mixdetail": mix_detail_spec, "longfacedetail": longface_detail_spec}
 
 if __name__ == "__main__":
     out = sys.argv[1] if len(sys.argv) > 1 else "/tmp/cardposter.png"
