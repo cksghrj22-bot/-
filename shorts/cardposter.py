@@ -577,8 +577,32 @@ def _d_moods(seed) -> str:
     return f'<svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">{_rough(inner, seed)}</svg>'
 
 
+def _d_steps(seed) -> str:
+    # 순서 1·2·3
+    inner = (f'<circle cx="26" cy="40" r="15" {STK}/><text x="26" y="49" text-anchor="middle" font-family="KyoboPoster" font-size="22" fill="#141416">1</text>'
+             f'<circle cx="65" cy="66" r="15" {STK}/><text x="65" y="75" text-anchor="middle" font-family="KyoboPoster" font-size="22" fill="#141416">2</text>'
+             f'<circle cx="104" cy="92" r="15" {STK}/><text x="104" y="101" text-anchor="middle" font-family="KyoboPoster" font-size="22" fill="#141416">3</text>'
+             f'<path d="M40 49 l12 8 M79 75 l12 8" {STK_T}/>')
+    return f'<svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">{_rough(inner, seed)}</svg>'
+
+
+def _d_dir(seed) -> str:
+    # 방향 — 휘는 화살표
+    inner = f'<path d="M16 96 q10 -66 84 -60" {STK}/><path d="M100 36 l4 22 l-22 -6" {STK}/>'
+    return f'<svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">{_rough(inner, seed)}</svg>'
+
+
+def _d_think(seed) -> str:
+    # 생각 — 전구
+    inner = (f'<path d="M65 20 a30 30 0 0 1 20 52 q-6 6 -6 16 l-28 0 q0 -10 -6 -16 a30 30 0 0 1 20 -52 z" {STK}/>'
+             f'<path d="M52 96 l26 0 M56 108 l18 0" {STK_T}/>'
+             f'<path d="M65 34 q-12 6 -12 22" {STK_T}/>')
+    return f'<svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">{_rough(inner, seed)}</svg>'
+
+
 DOODLES = {"scissors": _d_scissors, "angle": _d_angle, "wave": _d_wave,
-           "triface": _d_triface, "drop": _d_drop, "moods": _d_moods}
+           "triface": _d_triface, "drop": _d_drop, "moods": _d_moods,
+           "steps": _d_steps, "dir": _d_dir, "think": _d_think}
 
 
 def _arrow(seed) -> str:
@@ -838,8 +862,32 @@ def longface_spec() -> PosterSpec:
     )
 
 
+def mix2_spec() -> ZineSpec:
+    # 미용실 상식 뒤집기 ② — 관리·재현 편(형님 실제 재정의만)
+    return ZineSpec(
+        title="머리 관리 상식 뒤집기",
+        blocks=[
+            ZineBlock("펌 = 약 세기", "펌 = 순서",
+                      "약이 아니라\n순서에 타요.", "steps", 40, 232, 356, -3.5),
+            ZineBlock("앞머리 = 길이", "앞머리 = 각도",
+                      "5cm도 각도로\n인상이 달라져요.", "angle", 676, 330, 344, 3),
+            ZineBlock("두피 = 감는 법", "두피 = 말리는 법",
+                      "고민 절반은\n말리기예요.", "drop", 96, 524, 340, 4.5),
+            ZineBlock("재현 = 미용실 손", "재현 = 방향",
+                      "집에선 방향이\n답이에요.", "dir", 648, 622, 360, -5),
+            ZineBlock("유행컷 = 따라하기", "유행컷 = 내 결",
+                      "내 결에\n얹는 거예요.", "wave", 34, 812, 344, -2.5),
+            ZineBlock("커트 = 기술", "커트 = 생각",
+                      "같은 가위질도\n생각으로 갈려요.", "think", 660, 905, 352, 3.5),
+        ],
+        arrows=[(410, 372, 20), (438, 636, 24), (404, 920, 16)],
+        banner="잘 자른 머리도, 집에서 못 살리면 반이에요",
+        closer_sub="당신의 머리 — 미용실 날만 예쁜가요, 매일 예쁜가요?",
+    )
+
+
 SPECS = {"demo": demo_spec, "danbal": danbal_spec, "longface": longface_spec}
-ZINE_SPECS = {"mix": mix_spec}
+ZINE_SPECS = {"mix": mix_spec, "mix2": mix2_spec}
 MAP_SPECS = {"coolchic": coolchic_designmap}
 
 if __name__ == "__main__":
