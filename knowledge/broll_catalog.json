@@ -17,7 +17,7 @@
       "file_id": "1iKFOiZRweKvgpRQVHOgYc4ZtxeNUT0Gd",
       "start": 113,
       "note": "커트 정면·453MB·117초",
-      "uses": 1
+      "uses": 2
     },
     {
       "id": "IMG_9497",
@@ -42,8 +42,9 @@
       "category": "cut",
       "file_id": "1-zrhAJ7ROldEJ8CqkSDogbJI14TCXwRO",
       "start": 0,
-      "note": "커트 인서트 후보 68M (폴더 1Fzu5t2F) · 스캔완료(A방 2026-07-18) ·⚠️2026-07-20 curl 다운 간헐 실패(892K 잘림)—재시도 필요",
-      "uses": 0
+      "note": "커트 인서트 후보 68M (폴더 1Fzu5t2F) · 스캔완료(A방 2026-07-18) ·⚠️2026-07-20 curl 다운 간헐 실패(892K 잘림)—재시도 필요 ⛔file_id 죽음(다운불가) 2026-07-22",
+      "uses": 0,
+      "usable": false
     },
     {
       "id": "VID_075502_156",
@@ -127,7 +128,7 @@
       "file_id": "1Rc43gpjJoxPETvYkhogsatFJXrBmyUXG",
       "start": 0,
       "note": "상담 현장 51MB · 스캔완료(A방 2026-07-18)",
-      "uses": 0
+      "uses": 1
     },
     {
       "id": "IMG_6240",
@@ -135,7 +136,7 @@
       "file_id": "1IcNu3nv5vRunh75pcLL-rFHlKMa-xMkc",
       "start": 0,
       "note": "상담 현장 111MB · 스캔완료(A방 2026-07-18)",
-      "uses": 1,
+      "uses": 3,
       "사용편": [
         "11 상담"
       ]
@@ -146,7 +147,7 @@
       "file_id": "1IB5nl5e12p3SOn-ncfvVyeXsNBb7CQ7G",
       "start": 0,
       "note": "두피 시술 (0713) 52MB · 스캔완료(A방 2026-07-18)",
-      "uses": 0
+      "uses": 1
     },
     {
       "id": "IMG_0659",
@@ -154,7 +155,7 @@
       "file_id": "1UIz_r50SemcDRFCjjH1Bupl1aBzTCqaG",
       "start": 0,
       "note": "두피 시술 102MB · 스캔완료(A방 2026-07-18)",
-      "uses": 0
+      "uses": 1
     },
     {
       "id": "TOKYO_교토강변",
@@ -178,7 +179,7 @@
       "file_id": "1O0rRSDWtkwD5rY5MYv3KA3SPF7Ml-81r",
       "start": 2,
       "note": "열차 창밖 철교·강·하늘(이동·여정)·4K·무인물·47s. 12 헤어디자이너에 사용. 다소 어수선.",
-      "uses": 1
+      "uses": 2
     },
     {
       "id": "TOKYO_사찰山門",
@@ -205,7 +206,7 @@
       "file_id": "1bnmHz8iw3qdnNg2ZI21t5V0LSBAWqxiu",
       "start": 20,
       "note": "가발 커트 빗질·섹션 나누기·1080p·364s·무인물(손만)·살롱. 커트/커트설계 대사용. 코드방_인입 0720.",
-      "uses": 1,
+      "uses": 2,
       "사용편": [
         "13 디자이너한테"
       ]
@@ -216,7 +217,7 @@
       "file_id": "1DGeiaamadrF8HKBzRe-HoKiYnifAlGQ0",
       "start": 30,
       "note": "가발 커트 가위로 곡면 깎기·1080p·337s·무인물(손만)·살롱. A라인/커트 대사용. 코드방_인입 0720.",
-      "uses": 1,
+      "uses": 2,
       "사용편": [
         "0721-01 원랭스"
       ]
