@@ -735,11 +735,26 @@ def _hd_moods(seed) -> str:
     return f'<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">{inner}</svg>'
 
 
+def _hd_shaggy(seed) -> str:
+    # 유행컷 = 샤기컷처럼 층 많은 스타일 — 촘촘한 레이어 + 뾰족한 끝 + 시스루 앞머리
+    inner = (f'<path d="M36 62 q34 -36 68 0" {DCS}/>'
+             # 왼쪽 층 2겹(짧은→긴, 뾰족 끝)
+             f'<path d="M41 60 q-11 14 -5 27 l4 -8 l4 9" {DCS}/>'
+             f'<path d="M47 66 q-9 24 -3 40 l5 -11 l6 11" {DCS}/>'
+             # 오른쪽 층 2겹(대칭)
+             f'<path d="M99 60 q11 14 5 27 l-4 -8 l-4 9" {DCS}/>'
+             f'<path d="M93 66 q9 24 3 40 l-5 -11 l-6 11" {DCS}/>'
+             # 시스루 앞머리(뾰족 몇 올)
+             f'<path d="M57 56 l-2 15 M66 54 l-1 17 M75 54 l1 17 M84 56 l2 15" {DCS_T}/>'
+             + _dface(70, 86))
+    return f'<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">{inner}</svg>'
+
+
 DOODLES = {"scissors": _d_scissors, "angle": _d_angle, "wave": _d_wave,
            "triface": _d_triface, "drop": _d_drop, "moods": _d_moods,
            "steps": _d_steps, "dir": _d_dir, "think": _d_think,
            "hd_space": _hd_space, "hd_rootangle": _hd_rootangle, "hd_layers": _hd_layers,
-           "hd_bob": _hd_bob, "soak": _d_soak, "hd_moods": _hd_moods}
+           "hd_bob": _hd_bob, "soak": _d_soak, "hd_moods": _hd_moods, "shaggy": _hd_shaggy}
 
 
 def _arrow(seed) -> str:
@@ -1020,7 +1035,7 @@ def mix2_spec() -> ZineSpec:
             ZineBlock("재현 = 미용실 손", "재현 = 말리는 법",
                       "전방 15도로\n앞으로.", "dir", 648, 622, 360, -5),
             ZineBlock("유행컷 = 따라하기", "유행컷 = 조금만",
-                      "사진에만 있어요.\n조금만 섞어요.", "wave", 34, 812, 356, -2.5),
+                      "사진에만 있어요.\n조금만 섞어요.", "shaggy", 34, 812, 356, -2.5),
             ZineBlock("커트 = 기술", "커트 = 무드",
                       "층이 아니라\n무드를 읽어요.", "think", 660, 905, 352, 3.5),
         ],
@@ -1176,7 +1191,7 @@ def mix2_detail_spec() -> DetailSpec:
                        "두피도 얼굴처럼 피부예요.\n알면서도 관리는 잘 안 하죠.\n여름엔 특히 꼭 챙기고,\n먼저 내 두피부터 관찰해요."),
             DetailCard("재현 = 미용실 손", "재현은\n말리는 법이에요", "전방 15도 앞으로", "dir",
                        "집에서 안 되는 건 손이 아니에요.\n말리는 법이 달라서예요.\n전방 15도로, 가르마 없이,\n모근을 비비면서 말려요."),
-            DetailCard("유행컷 = 따라하기", "유행컷은\n조금만 섞어요", "사진에만 있어요", "wave",
+            DetailCard("유행컷 = 따라하기", "유행컷은\n조금만 섞어요", "사진에만 있어요", "shaggy",
                        "맥시멀한 유행컷은 사진에만 있어요.\n그대로 하면 손질이 안 돼\n망한 머리로 나가요.\n성향·손질 감당만큼만 섞어요."),
             DetailCard("커트 = 기술", "커트는\n무드예요", "사진의 무드를 읽어요", "think",
                        "같은 레이어드도 무드로 갈려요.\n가벼움·무거움만 읽는 게 아니라\n손님이 가져온 사진의 무드까지\n읽어야 뭘 원하는지 알아요."),
