@@ -746,29 +746,33 @@ def _hd_perm(seed) -> str:
 
 
 def _hd_emphasis(seed) -> str:
-    # 앞머리 = 강조 — 정면 얼굴, 일직선 앞머리 // 평행한 직선 눈매(쌍꺼풀 없는 일자 눈)
+    # 앞머리 = 강조 — 정면 얼굴, 앞머리는 '딱 직선 하나', 눈은 눈동자까지
     inner = (f'<circle cx="70" cy="82" r="32" {DCS}/>'
-             # 일직선 앞머리(가로 직선)
-             f'<path d="M42 64 l56 0" {DCS}/>'
-             f'<path d="M50 64 l-2 8 M60 64 l-1 9 M70 64 l0 9 M80 64 l1 9 M90 64 l2 8" {DCS_T}/>'
-             # 직선 눈매(앞머리와 평행) + 정면 응시
-             f'<path d="M52 80 l14 0" {DCS}/><path d="M74 80 l14 0" {DCS}/>'
+             # 앞머리: 직선 하나만
+             f'<path d="M42 62 l56 0" {DCS}/>'
+             # 눈 + 눈동자(정면 응시)
+             f'<circle cx="58" cy="80" r="6.5" {DCS_T}/><circle cx="58" cy="80" r="2.8" fill="#141416"/>'
+             f'<circle cx="82" cy="80" r="6.5" {DCS_T}/><circle cx="82" cy="80" r="2.8" fill="#141416"/>'
+             # 입
              f'<path d="M62 98 q8 5 16 0" {DCS_T}/>'
-             # 강조 반짝(눈매 강조)
-             f'<path d="M46 74 l-8 -3 M94 74 l8 -3" {DCS_T}/>')
+             # 강조 반짝
+             f'<path d="M44 74 l-8 -3 M96 74 l8 -3" {DCS_T}/>')
     return f'<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">{inner}</svg>'
 
 
 def _hd_scalp(seed) -> str:
-    # 두피 = 피부 — 얼굴(피부) + 머리카락 나는 두피(살), 두 살을 점선으로 '같다'
-    inner = (f'<circle cx="74" cy="88" r="27" {DCS}/>{_dface(74,86)}'
-             # 두피 라인(머리카락 나는 살)
-             f'<path d="M52 68 q22 -16 44 0" {DCS}/>'
-             f'<path d="M60 62 l-2 -13 M70 59 l0 -14 M80 62 l2 -13 M90 66 l3 -12" {DCS}/>'
-             # 점선: 두피 살(모근) → 얼굴 피부 (같은 피부)
-             f'<path d="M55 74 q-24 12 -3 34" fill="none" stroke="#141416" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="1.5 8"/>'
-             f'<circle cx="55" cy="74" r="3.2" fill="#141416"/>'
-             f'<circle cx="52" cy="102" r="3.2" fill="#141416"/>')
+    # 두피 = 피부 — 사람 얼굴(피부) + 머리카락(뿌리 살에 닿음), 두피살↔얼굴피부 점선 'SAME'
+    inner = (f'<circle cx="80" cy="90" r="26" {DCS}/>{_dface(80,88)}'
+             # 두피 라인 + 머리카락(뿌리가 살로)
+             f'<path d="M60 72 q20 -15 40 0" {DCS}/>'
+             f'<path d="M66 66 l-2 -12 M76 63 l0 -13 M86 66 l2 -12 M95 70 l3 -11" {DCS}/>'
+             f'<path d="M65 71 l-1 5 M76 69 l0 5 M87 71 l1 5" {DCS_T}/>'   # 뿌리(살에 닿음)
+             # 점선: 두피 살(모근) → 얼굴 피부(볼) = 같은 피부
+             f'<path d="M62 76 q-28 14 -4 34" fill="none" stroke="#141416" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="1.5 8"/>'
+             f'<circle cx="62" cy="76" r="3.2" fill="#141416"/>'
+             f'<circle cx="58" cy="106" r="3.2" fill="#141416"/>'
+             # SAME (영어 라벨)
+             f'<text x="10" y="66" font-family="NanumPenPoster" font-size="17" fill="#141416">SAME</text>')
     return f'<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">{inner}</svg>'
 
 
