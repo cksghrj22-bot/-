@@ -1032,6 +1032,7 @@ class DetailSpec:
     series: str        # 시리즈명(상단)
     foot: str          # 하단 고정 문구
     cards: list = field(default_factory=list)
+    cover: object = None   # 1번(표지)=원본 요약 카드(ZineSpec). 부가설명은 2번부터.
 
 
 def _doodle_svg(key: str) -> str:
@@ -1084,9 +1085,17 @@ body{{background:#fbfbf9;color:#141416;position:relative;overflow:hidden}}
 
 
 def render_detail_series(spec: DetailSpec, out_prefix: str) -> list:
+    """1번=원본 요약 만화카드(그 시작을 잃지 않음) + 2번부터 부가설명."""
     outs = []
-    total = len(spec.cards)
-    for i, c in enumerate(spec.cards, 1):
+    total = len(spec.cards) + (1 if spec.cover else 0)
+    start = 1
+    if spec.cover:
+        out = f"{out_prefix}_1.png"
+        _shoot(build_zine(spec.cover), out)   # 처음 그 카드 그대로(구조 안 바꿈)
+        outs.append(out)
+        start = 2
+    for off, c in enumerate(spec.cards):
+        i = start + off
         out = f"{out_prefix}_{i}.png"
         _shoot(build_detail(spec, c, i, total), out)
         outs.append(out)
@@ -1097,6 +1106,7 @@ def mix_detail_spec() -> DetailSpec:
     return DetailSpec(
         series="미용실 상식 뒤집기",
         foot="@차노쌤 · 머리는 자르는 게 아니라 '그리는' 거예요",
+        cover=mix_spec(),   # 1번=처음 그 6칸 만화카드(서사) 그대로
         cards=[
             DetailCard("숱치기 = 양 덜기", "숱치기는\n공간이에요", "숨 쉴 자리를 준다", "hd_space",
                        "숱을 친다는 건 양을 더는 게 아니에요.\n머리카락 사이에 숨 쉴 자리를 만드는 일.\n공간이 생겨야 결이 살고,\n무겁던 머리가 가벼워 보여요."),
