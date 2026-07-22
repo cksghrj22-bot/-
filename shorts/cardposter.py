@@ -846,12 +846,11 @@ def mix_spec() -> ZineSpec:
                       "결에 움직임을 넣기", "hd_layers", 96, 524, 340, 4.5),
             ZineBlock("단발 = 길이 자르기", "단발 = 길이 밸런스",
                       "튀어나온 곳을 조각해요", "hd_bob", 648, 622, 372, -5),
-            ZineBlock("색 = 정하는 것", "디자이너의 색 = 스며듦",
-                      "얹지 않고 배어들죠", "soak", 34, 812, 392, -2.5),
+            # 색=스며듦 제외(이찬호: 커트 흐름에 쌩뚱맞음) → '디자이너 정체성' 카드로 별도. 재정의는 대장 보존.
             ZineBlock("어울림 = 얼굴형", "어울림 = 무드 밸런스",
-                      "무드가 안 맞을 뿐", "hd_moods", 648, 905, 372, 3.5),
+                      "무드가 안 맞을 뿐", "hd_moods", 40, 820, 392, -2.5),
         ],
-        arrows=[(410, 372, 20), (438, 636, 24), (404, 920, 16)],
+        arrows=[(410, 372, 20), (438, 636, 24)],
         banner="머리는 자르는 게 아니라, '그리는' 거예요",
         closer_sub="투박하게 그려도 그 사람에게 잘 어울리면, 좋은 그림이에요.",
     )
@@ -1044,6 +1043,7 @@ def build_detail(spec: DetailSpec, card: DetailCard, idx: int, total: int) -> st
     faces = _font_face("KyoboPoster", FONT_HAND) + _font_face("NanumPenPoster", FONT_PEN)
     svg = DOODLES[card.doodle](7) if card.doodle in DOODLES else SCENES[card.doodle]()
     explain = card.explain.replace("\n", "<br>")
+    redef = card.redef.replace("\n", "<br>")   # 의도한 줄바꿈만 — '요'만 흘러내리는 것 방지
     return f'''<!doctype html><html><head><meta charset="utf-8"><style>
 {faces}
 *{{margin:0;padding:0;box-sizing:border-box}}
@@ -1070,7 +1070,7 @@ body{{background:#fbfbf9;color:#141416;position:relative;overflow:hidden}}
 <div class="dwrap">
   <div class="dtop"><span class="series">{spec.series}</span><span class="pg">{idx} / {total}</span></div>
   <div class="dmyth">✗ {card.myth}</div>
-  <div class="dredef">{card.redef}</div>
+  <div class="dredef">{redef}</div>
   <div class="dess">{card.essence}</div>
   <div class="dbody">{svg}</div>
   <div class="dexp"><span class="tag">한 번 더</span><div class="txt">{explain}</div></div>
@@ -1117,8 +1117,7 @@ def mix_detail_spec() -> DetailSpec:
                        "레이어드는 층을 내는 기술이 아니에요.\n결에 움직임을 넣는 일이에요.\n층이 목적이 아니라,\n흔들릴 때 자연스러운 그 느낌이 목적이죠."),
             DetailCard("단발 = 길이 자르기", "단발은\n밸런스예요", "튀어나온 곳을 조각한다", "hd_bob",
                        "단발은 길이를 자르는 게 아니에요.\n튀어나온 곳을 조각해\n전체 밸런스를 맞추는 일.\n같은 길이도 밸런스가 다르면 인상이 달라져요."),
-            DetailCard("색 = 정하는 것", "디자이너의 색은\n스며듦이에요", "얹지 않고 배어든다", "soak",
-                       "디자이너의 색은 정하는 게 아니에요.\n(컬러 얘기가 아니에요.)\n그 사람에게 천천히 배어드는 것.\n얹지 않고 스며들 때 진짜 어울려요."),
+            # 색=스며듦: 커트 흐름에 쌩뚱맞아 제외(이찬호 2026-07-22). 재정의는 대장에 보존→'디자이너 정체성' 카드로 별도.
             DetailCard("어울림 = 얼굴형", "어울림은\n무드예요", "무드가 안 맞을 뿐", "hd_moods",
                        "안 어울리는 얼굴형은 없어요.\n얼굴형이 문제가 아니라\n무드가 안 맞았을 뿐이에요.\n무드만 맞추면 누구나 소화해요."),
         ],
