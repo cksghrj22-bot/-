@@ -423,7 +423,7 @@ body{{background:#fbfbf9;color:#141416;position:relative;overflow:hidden}}
   padding-top:4px}}
 .htxt{{font-family:KyoboPoster;font-size:40px;line-height:1;white-space:nowrap}}
 .pbody{{display:flex;gap:8px;align-items:center}}
-.ptext{{font-family:NanumPenPoster;font-size:34px;line-height:1.22;flex:1;color:#22242a}}
+.ptext{{font-family:NanumPenPoster;font-size:32px;line-height:1.25;flex:1;color:#22242a}}
 .part{{width:196px;height:196px;flex:none;position:relative}}
 .part svg{{width:196px;height:196px}}
 .note{{position:absolute;bottom:-2px;left:0;right:0;text-align:center;
@@ -511,13 +511,13 @@ def danbal_spec() -> PosterSpec:
             Panel("1", "끝이 아니라 '면'을 본다",
                   "단발했는데 부해 보였다면\n끝을 잘못 잘라서가\n아니에요.\n옆면이 '면'이 아니라\n'삼각형'이라서예요.", "hair_triangle"),
             Panel("2", "면이 정리되면 슬림해진다",
-                  "두상은 둥근데\n머리가 퍼지면\n각이 생겨요.\n면을 다듬으면\n한 톤 슬림해져요.", "hair_slim"),
+                  "두상은 둥근데\n머리가 퍼지면 각이 생겨요.\n같은 길이도 면을 다듬으면\n한 톤 슬림해집니다.", "hair_slim"),
             Panel("3", "가벼움 = 공기를 자른 것",
                   "숱을 덜어내는 게 아니라\n머리카락 '사이'를\n디자인해요.\n공간이 생기면\n같은 숱도 가벼워집니다.", "hair_air"),
             Panel("4", "얼굴형이 아니라 '무드'",
                   "안 어울리는 얼굴은 없어요.\n무드가 안 맞는 단발이\n있을 뿐.\n직선이 강하면 차갑고\n곡선이 남으면 부드러워요.", "hair_mood"),
             Panel("5", "유행 단발은 '결'로 산다",
-                  "웬디컷·허쉬컷은\n레이어가 아니라\n'결'이에요.\n결이 살면\n유행이 내 것이 돼요.", "hair_texture"),
+                  "웬디컷·허쉬컷이\n어울리려면\n레이어가 아니라 '결'이에요.\n결이 살면 유행이\n내 것이 됩니다.", "hair_texture"),
             Panel("6", "상담 때 이걸 물어보세요",
                   "\"끝을 다듬을까요,\n면을 다듬을까요?\"\n이 한마디가\n단발의 성패를 가릅니다.", "hair_verdict"),
         ],
