@@ -460,7 +460,11 @@ def _shoot(html: str, out_png: str) -> str:
         browser = pw.chromium.launch(args=["--no-sandbox"])
         page = browser.new_page(viewport={"width": W, "height": H}, device_scale_factor=2)
         page.goto(tmp.resolve().as_uri())
-        page.wait_for_timeout(350)
+        try:
+            page.evaluate("document.fonts && document.fonts.ready")
+        except Exception:
+            pass
+        page.wait_for_timeout(650)
         page.screenshot(path=out_png, clip={"x": 0, "y": 0, "width": W, "height": H})
         browser.close()
     return out_png
@@ -524,11 +528,9 @@ def danbal_spec() -> PosterSpec:
 # 반듯한 격자 대신 기울어진 말풍선 블록을 흩뿌리고, 선을 울렁이게(sketch) 만든다.
 
 def _rough(inner: str, seed: int, scale: int = 4) -> str:
-    """손그림 느낌 — feTurbulence 변위로 선을 울렁이게. seed로 블록마다 다르게."""
-    return (f'<filter id="r{seed}" x="-20%" y="-20%" width="140%" height="140%">'
-            f'<feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="2" seed="{seed}" result="n"/>'
-            f'<feDisplacementMap in="SourceGraphic" in2="n" scale="{scale}"/></filter>'
-            f'<g filter="url(#r{seed})">{inner}</g>')
+    """규격 유지 — 예전엔 feTurbulence로 울렁였지만 '찌그러짐' 지적(이찬호 2026-07-22)으로
+    왜곡 제거. 깔끔한 손그림(교보/나눔펜 + 균일 선)으로 규격화."""
+    return f'<g>{inner}</g>'
 
 
 def _d_scissors(seed) -> str:
@@ -600,9 +602,91 @@ def _d_think(seed) -> str:
     return f'<svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">{_rough(inner, seed)}</svg>'
 
 
+# ── 머리 '특징'을 직접 그린 손그림(이찬호: 추상아이콘 말고 그 머리 모양) ──
+def _hd_face(cx, cy, smile=True):
+    eyes = f'<circle cx="{cx-11}" cy="{cy}" r="3" fill="#141416"/><circle cx="{cx+11}" cy="{cy}" r="3" fill="#141416"/>'
+    mouth = (f'<path d="M{cx-7} {cy+15} q7 6 14 0" {STK_T}/>' if smile
+             else f'<path d="M{cx-6} {cy+16} l12 0" {STK_T}/>')
+    return eyes + mouth
+
+
+# 규격 손그림 — 균일한 깔끔 선(왜곡 없음). viewBox 140.
+DCS = 'fill="none" stroke="#141416" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"'
+DCS_T = 'fill="none" stroke="#141416" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"'
+
+
+def _dface(cx, cy, smile=True):
+    eyes = f'<circle cx="{cx-10}" cy="{cy}" r="2.8" fill="#141416"/><circle cx="{cx+10}" cy="{cy}" r="2.8" fill="#141416"/>'
+    mouth = (f'<path d="M{cx-6} {cy+14} q6 5 12 0" {DCS_T}/>' if smile
+             else f'<path d="M{cx-5} {cy+15} l10 0" {DCS_T}/>')
+    return eyes + mouth
+
+
+def _hd_space(seed) -> str:
+    # 숱치기=공간 — 머리카락 사이 '공간'(정돈된 갈라짐)
+    inner = (f'<circle cx="70" cy="76" r="30" {DCS}/>{_dface(70,74)}'
+             f'<path d="M46 54 q24 -20 48 0" {DCS}/>'
+             f'<path d="M58 52 l0 -14 M70 50 l0 -16 M82 52 l0 -14" {DCS_T}/>'
+             f'<circle cx="64" cy="42" r="1.8" fill="#141416"/><circle cx="76" cy="42" r="1.8" fill="#141416"/>')
+    return f'<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">{inner}</svg>'
+
+
+def _hd_rootangle(seed) -> str:
+    # 볼륨=모근 각도 — 정수리 뿌리가 '각도로 서있다'
+    inner = (f'<circle cx="70" cy="80" r="30" {DCS}/>{_dface(70,80)}'
+             f'<path d="M56 51 l8 -18 M70 49 l6 -19 M84 51 l10 -17" {DCS}/>'
+             f'<path d="M64 33 q6 -3 12 0" {DCS_T}/>'
+             f'<path d="M64 33 a10 10 0 0 1 12 0" {DCS_T}/>')
+    return f'<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">{inner}</svg>'
+
+
+def _hd_layers(seed) -> str:
+    # 레이어드=움직임 — 층진 머리 + 흐름선
+    inner = (f'<circle cx="66" cy="80" r="29" {DCS}/>{_dface(66,80)}'
+             f'<path d="M40 70 q6 -30 26 -30 q20 0 26 26" {DCS}/>'
+             f'<path d="M42 82 q10 12 24 8" {DCS_T}/><path d="M46 96 q10 10 22 6" {DCS_T}/>'
+             f'<path d="M100 70 q16 4 22 -4 M100 84 q16 6 22 0" {DCS_T}/>')
+    return f'<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">{inner}</svg>'
+
+
+def _hd_bob(seed) -> str:
+    # 단발=길이 밸런스 — 가지런한 단발 + 튀어나온 곳 '조각'(가위질)
+    inner = (f'<path d="M42 56 q28 -22 56 0" {DCS}/>'
+             f'<line x1="42" y1="56" x2="40" y2="104" {DCS}/><line x1="98" y1="56" x2="100" y2="104" {DCS}/>'
+             f'<path d="M40 104 q30 8 60 0" {DCS}/>{_dface(70,80)}'
+             # 튀어나온 한 올 + 조각(가위)
+             f'<path d="M100 92 q16 -2 22 -12" {DCS_T}/>'
+             f'<circle cx="124" cy="72" r="5" {DCS_T}/><circle cx="124" cy="86" r="5" {DCS_T}/>'
+             f'<path d="M120 76 l-14 6 M120 82 l-14 -6" {DCS_T}/>')
+    return f'<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">{inner}</svg>'
+
+
+def _d_soak(seed) -> str:
+    # 색=스며듦 — 머리카락 한 올에 색이 '배어든다'(위→아래 옅어짐)
+    dots = "".join(f'<circle cx="58" cy="{48+i*13}" r="{4-i*0.5:.1f}" fill="#141416"/>' for i in range(5))
+    inner = (f'<path d="M50 26 q8 46 4 96" {DCS}/><path d="M66 26 q-6 46 0 96" {DCS}/>'
+             f'{dots}'
+             f'<path d="M92 34 q10 14 10 22 a10 10 0 1 1 -20 0 q0 -8 10 -22 z" {DCS}/>'
+             f'<path d="M84 60 l-14 -4" {DCS_T}/>')
+    return f'<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">{inner}</svg>'
+
+
+def _hd_moods(seed) -> str:
+    # 어울림=무드 밸런스 — 직선(차갑게) vs 곡선(부드럽게)
+    inner = (f'<rect x="20" y="46" width="42" height="56" rx="4" {DCS}/>'
+             f'<circle cx="34" cy="70" r="2.6" fill="#141416"/><circle cx="48" cy="70" r="2.6" fill="#141416"/>'
+             f'<path d="M34 84 l14 0" {DCS_T}/>'
+             f'<circle cx="100" cy="74" r="28" {DCS}/>'
+             f'<circle cx="92" cy="70" r="2.6" fill="#141416"/><circle cx="108" cy="70" r="2.6" fill="#141416"/>'
+             f'<path d="M92 82 q8 6 16 0" {DCS_T}/>')
+    return f'<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">{inner}</svg>'
+
+
 DOODLES = {"scissors": _d_scissors, "angle": _d_angle, "wave": _d_wave,
            "triface": _d_triface, "drop": _d_drop, "moods": _d_moods,
-           "steps": _d_steps, "dir": _d_dir, "think": _d_think}
+           "steps": _d_steps, "dir": _d_dir, "think": _d_think,
+           "hd_space": _hd_space, "hd_rootangle": _hd_rootangle, "hd_layers": _hd_layers,
+           "hd_bob": _hd_bob, "soak": _d_soak, "hd_moods": _hd_moods}
 
 
 def _arrow(seed) -> str:
@@ -635,9 +719,11 @@ class ZineSpec:
 def _zblock_html(b: ZineBlock, i: int) -> str:
     dood = DOODLES[b.doodle](seed=i + 3)
     return f'''<div class="zblock" style="left:{b.x}px;top:{b.y}px;width:{b.w}px;transform:rotate({b.rot}deg)">
-  <div class="zold">{b.old}</div>
-  <div class="znew">{b.new}</div>
-  <div class="zsub">{b.sub}</div>
+  <div class="ztext">
+    <div class="zold">{b.old}</div>
+    <div class="znew">{b.new}</div>
+    <div class="zsub">{b.sub}</div>
+  </div>
   <div class="zdood">{dood}</div>
 </div>'''
 
@@ -664,15 +750,16 @@ body::before{{content:"";position:absolute;inset:0;opacity:.05;
   border-bottom:7px solid #141416;border-radius:60%;transform:rotate(-1deg);opacity:.85}}
 .tag{{position:absolute;top:60px;right:70px;font-family:NanumPenPoster;font-size:34px;
   transform:rotate(4deg);border:3px solid #141416;border-radius:40% 50% 45% 55%;padding:2px 16px}}
-.zblock{{position:absolute;min-height:152px;border:4px solid #141416;border-radius:20px 26px 16px 24px;
-  background:#fffef8;padding:15px 20px 16px;box-shadow:5px 6px 0 rgba(20,20,22,.13)}}
-.zold{{font-family:NanumPenPoster;font-size:27px;color:#9a978e;text-decoration:line-through;
+.zblock{{position:absolute;min-height:184px;border:4px solid #141416;border-radius:20px 26px 16px 24px;
+  background:#fffef8;padding:16px 22px 18px;box-shadow:5px 6px 0 rgba(20,20,22,.13);
+  display:flex;align-items:center}}
+.ztext{{flex:1;min-width:0;padding-right:112px}}
+.zold{{font-family:NanumPenPoster;font-size:31px;color:#8f8c82;text-decoration:line-through;
   text-decoration-thickness:2px}}
-.znew{{font-family:KyoboPoster;font-size:39px;line-height:1.0;margin-top:1px;white-space:nowrap}}
-.zsub{{font-family:NanumPenPoster;font-size:24px;color:#33343a;margin-top:7px;
-  padding-right:98px;white-space:nowrap}}
-.zdood{{position:absolute;right:10px;bottom:10px;width:84px;height:84px}}
-.zdood svg{{width:84px;height:84px}}
+.znew{{font-family:KyoboPoster;font-size:41px;line-height:1.02;margin-top:2px;white-space:nowrap}}
+.zsub{{font-family:NanumPenPoster;font-size:29px;color:#2a2b30;margin-top:8px;white-space:nowrap}}
+.zdood{{position:absolute;right:16px;top:50%;transform:translateY(-50%);width:100px;height:100px}}
+.zdood svg{{width:100px;height:100px}}
 .zarrow{{position:absolute;width:96px;height:48px;opacity:.9}}
 .zarrow svg{{width:96px;height:48px}}
 .zbanner{{position:absolute;left:60px;bottom:118px;font-family:KyoboPoster;font-size:44px;
@@ -688,11 +775,16 @@ body::before{{content:"";position:absolute;inset:0;opacity:.05;
 {banner}{closer}
 <script>
 // znew(재정의) 가 블록 폭을 넘으면 폰트 축소 — 변칙 폭에도 안 잘림.
-document.querySelectorAll('.zblock').forEach(function(bl){{
-  var t=bl.querySelector('.znew');
-  var avail=bl.clientWidth - 40;   // 좌우 패딩
-  var fs=39; while(t && t.scrollWidth>avail && fs>22){{ fs-=1; t.style.fontSize=fs+'px'; }}
-}});
+function _fitZ(){{
+  document.querySelectorAll('.zblock').forEach(function(bl){{
+    var tx=bl.querySelector('.ztext'); var t=bl.querySelector('.znew'); if(!tx||!t) return;
+    var avail=tx.clientWidth - 112;   // 도형칸(패딩) 확보
+    var fs=41; t.style.fontSize=fs+'px';
+    while(t.scrollWidth>avail && fs>22){{ fs-=1; t.style.fontSize=fs+'px'; }}
+  }});
+}}
+if(document.fonts && document.fonts.ready){{ document.fonts.ready.then(function(){{ _fitZ(); setTimeout(_fitZ,50); }}); }}
+else {{ _fitZ(); }}
 </script>
 </body></html>'''
 
@@ -709,17 +801,17 @@ def mix_spec() -> ZineSpec:
         blocks=[
             # 벽돌 엇갈림(왼 232/524/812 · 오 330/622/905) + 폭·기울기 변칙
             ZineBlock("숱치기 = 양 덜기", "숱치기 = 공간 만들기",
-                      "숨 쉴 자리를 준다", "scissors", 40, 232, 356, -3.5),
+                      "숨 쉴 자리를 준다", "hd_space", 40, 232, 356, -3.5),
             ZineBlock("볼륨 = 숱", "볼륨 = 모근의 각도",
-                      "뿌리가 서서 산다", "angle", 676, 330, 344, 3),
+                      "뿌리가 서서 산다", "hd_rootangle", 676, 330, 344, 3),
             ZineBlock("레이어드 = 층", "레이어드 = 움직임",
-                      "결에 움직임을 넣기", "wave", 96, 524, 340, 4.5),
-            ZineBlock("단발 = 끝", "단발 = 면",
-                      "옆'면'을 다듬기", "triface", 648, 622, 360, -5),
+                      "결에 움직임을 넣기", "hd_layers", 96, 524, 340, 4.5),
+            ZineBlock("단발 = 길이 자르기", "단발 = 길이 밸런스",
+                      "튀어나온 곳을 조각해요", "hd_bob", 648, 622, 372, -5),
             ZineBlock("색 = 정하는 것", "색 = 스며드는 것",
-                      "결에 배어들게", "drop", 34, 812, 344, -2.5),
-            ZineBlock("어울림 = 얼굴형", "어울림 = 무드",
-                      "무드가 안 맞을 뿐", "moods", 660, 905, 352, 3.5),
+                      "결에 배어들게", "soak", 34, 812, 344, -2.5),
+            ZineBlock("어울림 = 얼굴형", "어울림 = 무드 밸런스",
+                      "무드가 안 맞을 뿐", "hd_moods", 648, 905, 372, 3.5),
         ],
         arrows=[(410, 372, 20), (438, 636, 24), (404, 920, 16)],
         banner="머리는 자르는 게 아니라, '생각'하는 거예요",
