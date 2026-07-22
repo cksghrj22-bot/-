@@ -378,9 +378,8 @@ document.querySelectorAll('.phead').forEach(function(h){{
 </body></html>'''
 
 
-def render_poster(spec: PosterSpec, out_png: str) -> str:
-    """HTML→PNG (playwright chromium). 산출 PNG 경로 반환."""
-    html = build_html(spec)
+def _shoot(html: str, out_png: str) -> str:
+    """HTML 문자열 → PNG (playwright chromium). 산출 PNG 경로 반환."""
     tmp = Path(out_png).with_suffix(".html")
     tmp.write_text(html, encoding="utf-8")
     from playwright.sync_api import sync_playwright
@@ -392,6 +391,11 @@ def render_poster(spec: PosterSpec, out_png: str) -> str:
         page.screenshot(path=out_png, clip={"x": 0, "y": 0, "width": W, "height": H})
         browser.close()
     return out_png
+
+
+def render_poster(spec: PosterSpec, out_png: str) -> str:
+    """격자형 6칸 포스터."""
+    return _shoot(build_html(spec), out_png)
 
 
 # ── 포맷 검증용 데모: 레퍼런스 "지독하게 잘하는 법" 재현(발행 아님) ──
@@ -442,12 +446,200 @@ def danbal_spec() -> PosterSpec:
     )
 
 
+# ═══════════════════════ 만화/변칙배열(zine) 모드 ═══════════════════════
+# 이찬호 2026-07-22: "배열이 변칙적이면 / 만화스럽게 손글씨 같게 / 내 주제를 섞어".
+# 반듯한 격자 대신 기울어진 말풍선 블록을 흩뿌리고, 선을 울렁이게(sketch) 만든다.
+
+def _rough(inner: str, seed: int, scale: int = 4) -> str:
+    """손그림 느낌 — feTurbulence 변위로 선을 울렁이게. seed로 블록마다 다르게."""
+    return (f'<filter id="r{seed}" x="-20%" y="-20%" width="140%" height="140%">'
+            f'<feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="2" seed="{seed}" result="n"/>'
+            f'<feDisplacementMap in="SourceGraphic" in2="n" scale="{scale}"/></filter>'
+            f'<g filter="url(#r{seed})">{inner}</g>')
+
+
+def _d_scissors(seed) -> str:
+    inner = (f'<g transform="rotate(-16 65 65)"><circle cx="40" cy="46" r="13" {STK}/>'
+             f'<circle cx="40" cy="86" r="13" {STK}/><path d="M52 54 L108 76 M52 78 L108 56" {STK}/></g>'
+             f'<circle cx="92" cy="30" r="2.5" fill="#141416"/><circle cx="104" cy="44" r="2.5" fill="#141416"/>'
+             f'<circle cx="86" cy="52" r="2.5" fill="#141416"/>')
+    return f'<svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">{_rough(inner, seed)}</svg>'
+
+
+def _d_angle(seed) -> str:
+    inner = (f'<line x1="16" y1="104" x2="114" y2="104" {STK}/>'
+             f'<path d="M46 104 L88 30" {STK}/><path d="M70 104 L104 44" {STK_T}/>'
+             f'<path d="M46 104 q20 -4 26 -18" {STK_T}/>')
+    return f'<svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">{_rough(inner, seed)}</svg>'
+
+
+def _d_wave(seed) -> str:
+    inner = (f'<path d="M14 48 q22 -16 44 0 q22 16 44 0" {STK}/>'
+             f'<path d="M14 74 q22 -16 44 0 q22 16 44 0" {STK}/>'
+             f'<path d="M14 100 q22 -16 44 0 q22 16 44 0" {STK}/>'
+             f'<path d="M104 60 l12 -4 M104 86 l12 4" {STK_T}/>')
+    return f'<svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">{_rough(inner, seed)}</svg>'
+
+
+def _d_triface(seed) -> str:
+    inner = (f'<path d="M65 22 L34 102 M65 22 L96 102" {STK}/><path d="M34 102 q31 12 62 0" {STK}/>'
+             f'<circle cx="56" cy="74" r="2.6" fill="#141416"/><circle cx="74" cy="74" r="2.6" fill="#141416"/>'
+             f'<path d="M58 84 q7 5 14 0" {STK_T}/>')
+    return f'<svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">{_rough(inner, seed)}</svg>'
+
+
+def _d_drop(seed) -> str:
+    inner = (f'<path d="M65 26 q22 30 22 46 a22 22 0 1 1 -44 0 q0 -16 22 -46 z" {STK}/>'
+             f'<path d="M34 108 q31 10 62 0" {STK_T} stroke-dasharray="4 7"/>')
+    return f'<svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">{_rough(inner, seed)}</svg>'
+
+
+def _d_moods(seed) -> str:
+    inner = (f'<rect x="16" y="34" width="42" height="60" rx="3" {STK}/>'
+             f'<circle cx="30" cy="60" r="2.4" fill="#141416"/><circle cx="44" cy="60" r="2.4" fill="#141416"/>'
+             f'<path d="M30 74 l14 0" {STK_T}/>'
+             f'<path d="M74 40 q-12 2 -12 28 q0 24 24 30 q24 -6 24 -30 q0 -26 -12 -28 q-12 -6 -24 0 z" {STK}/>'
+             f'<circle cx="80" cy="66" r="2.4" fill="#141416"/><circle cx="96" cy="66" r="2.4" fill="#141416"/>'
+             f'<path d="M80 78 q8 6 16 0" {STK_T}/>')
+    return f'<svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">{_rough(inner, seed)}</svg>'
+
+
+DOODLES = {"scissors": _d_scissors, "angle": _d_angle, "wave": _d_wave,
+           "triface": _d_triface, "drop": _d_drop, "moods": _d_moods}
+
+
+def _arrow(seed) -> str:
+    inner = f'<path d="M8 20 q34 18 74 -6 M74 14 l10 0 l-4 12" {STK_T}/>'
+    return f'<svg viewBox="0 0 96 48" xmlns="http://www.w3.org/2000/svg">{_rough(inner, seed, 3)}</svg>'
+
+
+@dataclass
+class ZineBlock:
+    old: str      # 통념(취소선)
+    new: str      # 재정의(강조)
+    sub: str      # 짧은 부연
+    doodle: str   # DOODLES 키
+    x: int        # left(px)
+    y: int        # top(px)
+    w: int        # width(px)
+    rot: float    # 기울기(deg)
+
+
+@dataclass
+class ZineSpec:
+    title: str
+    blocks: list = field(default_factory=list)
+    arrows: list = field(default_factory=list)   # (x,y,rot) 흩뿌릴 화살표
+    banner: str = ""
+    closer_sub: str = ""
+    tag: str = "@차노쌤"
+
+
+def _zblock_html(b: ZineBlock, i: int) -> str:
+    dood = DOODLES[b.doodle](seed=i + 3)
+    return f'''<div class="zblock" style="left:{b.x}px;top:{b.y}px;width:{b.w}px;transform:rotate({b.rot}deg)">
+  <div class="zold">{b.old}</div>
+  <div class="znew">{b.new}</div>
+  <div class="zsub">{b.sub}</div>
+  <div class="zdood">{dood}</div>
+</div>'''
+
+
+def build_zine(spec: ZineSpec) -> str:
+    faces = _font_face("KyoboPoster", FONT_HAND) + _font_face("NanumPenPoster", FONT_PEN)
+    blocks = "".join(_zblock_html(b, i) for i, b in enumerate(spec.blocks))
+    arrows = "".join(
+        f'<div class="zarrow" style="left:{x}px;top:{y}px;transform:rotate({r}deg)">{_arrow(90 + i)}</div>'
+        for i, (x, y, r) in enumerate(spec.arrows))
+    banner = f'<div class="zbanner">{spec.banner}</div>' if spec.banner else ""
+    closer = f'<div class="zcloser">{spec.closer_sub}</div>' if spec.closer_sub else ""
+    return f'''<!doctype html><html><head><meta charset="utf-8"><style>
+{faces}
+*{{margin:0;padding:0;box-sizing:border-box}}
+html,body{{width:{W}px;height:{H}px}}
+body{{background:#faf8f2;color:#141416;position:relative;overflow:hidden}}
+/* 종이 결 느낌 */
+body::before{{content:"";position:absolute;inset:0;opacity:.05;
+  background:repeating-linear-gradient(0deg,#000 0 1px,transparent 1px 6px)}}
+.title{{position:absolute;left:0;right:0;top:44px;text-align:center;
+  font-family:KyoboPoster;font-size:96px;transform:rotate(-1.5deg);z-index:5}}
+.tunder{{position:absolute;top:172px;left:50%;width:560px;height:12px;margin-left:-280px;
+  border-bottom:7px solid #141416;border-radius:60%;transform:rotate(-1deg);opacity:.85}}
+.tag{{position:absolute;top:60px;right:70px;font-family:NanumPenPoster;font-size:34px;
+  transform:rotate(4deg);border:3px solid #141416;border-radius:40% 50% 45% 55%;padding:2px 16px}}
+.zblock{{position:absolute;min-height:152px;border:4px solid #141416;border-radius:20px 26px 16px 24px;
+  background:#fffef8;padding:15px 20px 16px;box-shadow:5px 6px 0 rgba(20,20,22,.13)}}
+.zold{{font-family:NanumPenPoster;font-size:27px;color:#9a978e;text-decoration:line-through;
+  text-decoration-thickness:2px}}
+.znew{{font-family:KyoboPoster;font-size:39px;line-height:1.0;margin-top:1px;white-space:nowrap}}
+.zsub{{font-family:NanumPenPoster;font-size:24px;color:#33343a;margin-top:7px;
+  padding-right:98px;white-space:nowrap}}
+.zdood{{position:absolute;right:10px;bottom:10px;width:84px;height:84px}}
+.zdood svg{{width:84px;height:84px}}
+.zarrow{{position:absolute;width:96px;height:48px;opacity:.9}}
+.zarrow svg{{width:96px;height:48px}}
+.zbanner{{position:absolute;left:60px;bottom:118px;font-family:KyoboPoster;font-size:44px;
+  color:#faf8f2;background:#141416;padding:10px 24px 14px;border-radius:10px;
+  transform:rotate(-2deg);line-height:1.12}}
+.zcloser{{position:absolute;left:0;right:0;bottom:56px;text-align:center;
+  font-family:NanumPenPoster;font-size:36px;color:#22242a}}
+</style></head><body>
+<div class="title">{spec.title}</div>
+<div class="tunder"></div>
+<div class="tag">{spec.tag}</div>
+{arrows}{blocks}
+{banner}{closer}
+<script>
+// znew(재정의) 가 블록 폭을 넘으면 폰트 축소 — 변칙 폭에도 안 잘림.
+document.querySelectorAll('.zblock').forEach(function(bl){{
+  var t=bl.querySelector('.znew');
+  var avail=bl.clientWidth - 40;   // 좌우 패딩
+  var fs=39; while(t && t.scrollWidth>avail && fs>22){{ fs-=1; t.style.fontSize=fs+'px'; }}
+}});
+</script>
+</body></html>'''
+
+
+def render_zine(spec: ZineSpec, out_png: str) -> str:
+    """만화/변칙배열 카드."""
+    return _shoot(build_zine(spec), out_png)
+
+
+# ── 형님 주제 총서(재정의 믹스) — 단발·레이어드·볼륨·숱치기·색·무드 한 장 ──
+def mix_spec() -> ZineSpec:
+    return ZineSpec(
+        title="미용실 상식 뒤집기",
+        blocks=[
+            # 벽돌 엇갈림(왼 232/524/812 · 오 330/622/905) + 폭·기울기 변칙
+            ZineBlock("숱치기 = 양 덜기", "숱치기 = 공간 만들기",
+                      "숨 쉴 자리를 준다", "scissors", 40, 232, 356, -3.5),
+            ZineBlock("볼륨 = 숱", "볼륨 = 모근의 각도",
+                      "뿌리가 서서 산다", "angle", 676, 330, 344, 3),
+            ZineBlock("레이어드 = 층", "레이어드 = 움직임",
+                      "결에 움직임을 넣기", "wave", 96, 524, 340, 4.5),
+            ZineBlock("단발 = 끝", "단발 = 면",
+                      "옆'면'을 다듬기", "triface", 648, 622, 360, -5),
+            ZineBlock("색 = 정하는 것", "색 = 스며드는 것",
+                      "결에 배어들게", "drop", 34, 812, 344, -2.5),
+            ZineBlock("어울림 = 얼굴형", "어울림 = 무드",
+                      "무드가 안 맞을 뿐", "moods", 660, 905, 352, 3.5),
+        ],
+        arrows=[(410, 372, 20), (438, 636, 24), (404, 920, 16)],
+        banner="머리는 자르는 게 아니라, '생각'하는 거예요",
+        closer_sub="당신의 머리는 — 기술로 잘렸나요, 생각으로 잘렸나요?",
+    )
+
+
 SPECS = {"demo": demo_spec, "danbal": danbal_spec}
+ZINE_SPECS = {"mix": mix_spec}
 
 if __name__ == "__main__":
     out = sys.argv[1] if len(sys.argv) > 1 else "/tmp/cardposter.png"
     which = "demo"
     if "--spec" in sys.argv:
         which = sys.argv[sys.argv.index("--spec") + 1]
-    render_poster(SPECS[which](), out)
+    if which in ZINE_SPECS:
+        render_zine(ZINE_SPECS[which](), out)
+    else:
+        render_poster(SPECS[which](), out)
     print("OK →", out)
