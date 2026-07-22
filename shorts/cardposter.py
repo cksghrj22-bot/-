@@ -200,42 +200,42 @@ def _hair_triangle() -> str:
   {_face(150,150)}
   <g transform="translate(224,52)"><path d="M0 44 L24 2 L48 44 Z" {STK_T}/>
     <rect x="13" y="30" width="22" height="14" rx="2" {STK_T}/></g>
-  <text x="150" y="250" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#22242a">삼각형 ≠ 면</text>
+  <text x="150" y="250" text-anchor="middle" font-family="NanumPenPoster" font-size="30" fill="#22242a">삼각형 ≠ 면</text>
 </svg>'''
 
 
 def _hair_slim() -> str:
-    # 부한 두상(점선 둥근 가이드) → 화살표 → 슬림
+    # 퍼져서 각진 두상(둥근 가이드) → 면 정리 → 슬림. 두 머리 비교.
     return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-  <!-- 왼쪽: 퍼진 머리 + 둥근 두상 가이드 -->
-  <circle cx="72" cy="120" r="46" stroke-dasharray="5 9" {STK_T}/>
-  <path d="M30 128 q-4 -66 42 -70 q46 4 42 70" {STK}/>
-  <path d="M30 128 q8 34 20 50 M114 128 q-8 34 -20 50" {STK_T}/>
-  <path d="M54 138 q0 34 18 46 q18 -12 18 -46" {STK_T}/>{_face(72,138,False)}
+  <!-- 왼쪽: 퍼진 각진 단발 + 둥근 두상 점선 -->
+  <circle cx="74" cy="118" r="42" stroke-dasharray="5 9" {STK_T}/>
+  <path d="M32 108 q0 -52 42 -52 q42 0 42 52 q4 40 -12 58 l-60 0 q-16 -18 -12 -58 z" {STK}/>
+  {_face(74,120,False)}
+  <text x="74" y="204" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#22242a">퍼짐·각</text>
   <!-- 화살표 -->
-  <path d="M126 150 l40 0 M158 140 l10 10 l-10 10" {STK}/>
-  <!-- 오른쪽: 슬림 -->
-  <path d="M196 126 q-2 -64 40 -66 q42 2 40 66 q-6 40 -40 52 q-34 -12 -40 -52" {STK}/>
-  {_face(236,140)}
-  <text x="150" y="250" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#22242a">면 정리 = 슬림</text>
+  <path d="M128 150 l38 0 M158 140 l10 10 l-10 10" {STK}/>
+  <!-- 오른쪽: 면 정리된 슬림 단발 -->
+  <path d="M200 104 q0 -50 38 -50 q38 0 38 50 q0 40 -10 58 l-56 0 q-10 -18 -10 -58 z" {STK}/>
+  <line x1="200" y1="104" x2="198" y2="162" {STK_T}/><line x1="276" y1="104" x2="278" y2="162" {STK_T}/>
+  {_face(238,120)}
+  <text x="238" y="204" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#22242a">면 정리=슬림</text>
 </svg>'''
 
 
 def _hair_air() -> str:
-    # 공기감 — 가위 + 머리카락 '사이' 공간
-    strands = ""
-    for i, x in enumerate((150, 178, 206, 234)):
-        strands += f'<path d="M{x} 60 q-8 70 4 150" {STK_T}/>'
-    airs = ""
-    for x, y in ((166, 110), (194, 150), (222, 120), (180, 200), (210, 190)):
-        airs += f'<path d="M{x} {y} q10 -8 8 6" {STK_T}/>'
+    # 가벼움=공기 — 머리에 '공기'가 든 가벼운 결(사이 공간)
     return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-  <!-- 가위 -->
-  <g transform="translate(40,120) rotate(-18)">
-    <circle cx="0" cy="-16" r="15" {STK}/><circle cx="0" cy="20" r="15" {STK}/>
-    <path d="M12 -6 L74 34 M12 10 L74 -30" {STK}/></g>
-  {strands}{airs}
-  <text x="150" y="250" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#22242a">'사이'를 자른다</text>
+  <!-- 얼굴 -->
+  <ellipse cx="150" cy="168" rx="52" ry="60" {STK}/>{_face(150,158)}
+  <!-- 가벼운 머리(위로 뜨고 사이 벌어진 결) -->
+  <path d="M104 128 q-6 -46 18 -62" {STK}/>
+  <path d="M132 112 q-2 -50 14 -66" {STK}/>
+  <path d="M168 112 q2 -50 -14 -66" {STK}/>
+  <path d="M196 128 q6 -46 -18 -62" {STK}/>
+  <!-- 사이 공기 표시(작은 소용돌이) -->
+  <path d="M124 96 q10 -6 8 6" {STK_T}/><path d="M150 84 q10 -6 8 6" {STK_T}/>
+  <path d="M176 96 q10 -6 8 6" {STK_T}/>
+  <text x="150" y="256" text-anchor="middle" font-family="NanumPenPoster" font-size="30" fill="#22242a">사이에 공기가 든다</text>
 </svg>'''
 
 
@@ -246,24 +246,28 @@ def _hair_mood() -> str:
   <path d="M40 78 L40 176 L112 176 L112 78" {STK}/>
   <path d="M40 78 L112 78" {STK}/>
   <path d="M58 120 q0 44 18 52 q18 -8 18 -52" {STK_T}/>{_face(76,120,False)}
-  <text x="76" y="204" text-anchor="middle" font-family="NanumPenPoster" font-size="24" fill="#22242a">직선=차갑게</text>
+  <text x="76" y="204" text-anchor="middle" font-family="NanumPenPoster" font-size="27" fill="#22242a">직선=차갑게</text>
   <!-- 우: 곡선 단발 -->
   <path d="M188 76 q-24 4 -24 54 q0 44 24 56 M260 76 q24 4 24 54 q0 44 -24 56" {STK}/>
   <path d="M188 76 q36 -14 72 0" {STK}/>
   <path d="M206 120 q0 44 18 52 q18 -8 18 -52" {STK_T}/>{_face(224,120)}
-  <text x="224" y="204" text-anchor="middle" font-family="NanumPenPoster" font-size="24" fill="#22242a">곡선=부드럽게</text>
+  <text x="224" y="204" text-anchor="middle" font-family="NanumPenPoster" font-size="27" fill="#22242a">곡선=부드럽게</text>
 </svg>'''
 
 
 def _hair_texture() -> str:
-    # 결 — 흐르는 웨이브 결(유행이 내 것이 되는 지점)
-    waves = ""
-    for i, y in enumerate((80, 116, 152, 188)):
-        waves += f'<path d="M46 {y} q34 -20 68 0 q34 20 68 0 q34 -20 68 0" {STK}/>'
+    # 결 — 웨이브 결이 살아 흐르는 단발(머리+결)
     return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-  {waves}
-  <path d="M228 96 l18 -6 M232 128 l18 0 M228 160 l18 6" {STK_T}/>
-  <text x="150" y="244" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#22242a">결이 곧 유행</text>
+  <!-- 얼굴 -->
+  <ellipse cx="150" cy="150" rx="50" ry="58" {STK}/>{_face(150,142)}
+  <!-- 윗머리 -->
+  <path d="M104 118 q46 -40 92 0" {STK}/>
+  <!-- 양옆 흐르는 웨이브 결 -->
+  <path d="M100 120 q-20 22 -8 44 q-16 20 -4 42 q-14 18 0 38" {STK}/>
+  <path d="M120 138 q-14 18 -4 36 q-12 16 -2 34" {STK_T}/>
+  <path d="M200 120 q20 22 8 44 q16 20 4 42 q14 18 0 38" {STK}/>
+  <path d="M180 138 q14 18 4 36 q12 16 2 34" {STK_T}/>
+  <text x="150" y="266" text-anchor="middle" font-family="NanumPenPoster" font-size="30" fill="#22242a">결이 살면 내 것</text>
 </svg>'''
 
 
@@ -289,7 +293,7 @@ def _lf_vertical() -> str:
   <line x1="150" y1="52" x2="150" y2="252" {STK_T} stroke-dasharray="5 9"/>
   <path d="M94 116 q-10 74 6 120" {STK}/><path d="M206 116 q10 74 -6 120" {STK}/>
   <path d="M150 256 l0 20 M143 270 l7 9 l7 -9" {STK_T}/>
-  <text x="150" y="292" text-anchor="middle" font-family="NanumPenPoster" font-size="24" fill="#22242a">세로 = 길어보임</text>
+  <text x="150" y="292" text-anchor="middle" font-family="NanumPenPoster" font-size="27" fill="#22242a">세로 = 길어보임</text>
 </svg>'''
 
 
@@ -311,7 +315,7 @@ def _lf_jaw() -> str:
     return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
   <ellipse cx="150" cy="140" rx="56" ry="80" {STK}/>{_face(150,128)}
   <line x1="88" y1="192" x2="212" y2="192" {STK}/>
-  <text x="232" y="198" font-family="NanumPenPoster" font-size="24" fill="#22242a">턱선</text>
+  <text x="232" y="198" font-family="NanumPenPoster" font-size="27" fill="#22242a">턱선</text>
   <path d="M110 168 l9 9 l18 -20" {STK_T}/>
   <text x="150" y="256" text-anchor="middle" font-family="NanumPenPoster" font-size="23" fill="#22242a">위=가로 · 아래=세로</text>
 </svg>'''
@@ -338,7 +342,7 @@ def _lf_expand() -> str:
   <path d="M202 112 q46 26 36 84 q-40 26 -44 -4" {STK}/>
   <path d="M60 158 l-28 0 M38 149 l-9 9 l9 9" {STK}/>
   <path d="M240 158 l28 0 M262 149 l9 9 l-9 9" {STK}/>
-  <text x="150" y="282" text-anchor="middle" font-family="NanumPenPoster" font-size="24" fill="#22242a">옆으로 퍼지는 볼륨</text>
+  <text x="150" y="282" text-anchor="middle" font-family="NanumPenPoster" font-size="27" fill="#22242a">옆으로 퍼지는 볼륨</text>
 </svg>'''
 
 
@@ -348,7 +352,7 @@ def _lf_dry() -> str:
   <ellipse cx="150" cy="150" rx="54" ry="78" {STK}/>{_face(150,140)}
   <path d="M112 108 L64 60 M64 60 l4 26 M64 60 l26 4" {STK}/>
   <path d="M188 108 L236 60 M236 60 l-4 26 M236 60 l-26 4" {STK}/>
-  <text x="150" y="288" text-anchor="middle" font-family="NanumPenPoster" font-size="24" fill="#22242a">사선 위로 넘겨</text>
+  <text x="150" y="288" text-anchor="middle" font-family="NanumPenPoster" font-size="27" fill="#22242a">사선 위로 넘겨</text>
 </svg>'''
 
 
@@ -419,7 +423,7 @@ body{{background:#fbfbf9;color:#141416;position:relative;overflow:hidden}}
   padding-top:4px}}
 .htxt{{font-family:KyoboPoster;font-size:40px;line-height:1;white-space:nowrap}}
 .pbody{{display:flex;gap:8px;align-items:center}}
-.ptext{{font-family:NanumPenPoster;font-size:31px;line-height:1.26;flex:1;color:#22242a}}
+.ptext{{font-family:NanumPenPoster;font-size:34px;line-height:1.22;flex:1;color:#22242a}}
 .part{{width:196px;height:196px;flex:none;position:relative}}
 .part svg{{width:196px;height:196px}}
 .note{{position:absolute;bottom:-2px;left:0;right:0;text-align:center;
@@ -507,13 +511,13 @@ def danbal_spec() -> PosterSpec:
             Panel("1", "끝이 아니라 '면'을 본다",
                   "단발했는데 부해 보였다면\n끝을 잘못 잘라서가\n아니에요.\n옆면이 '면'이 아니라\n'삼각형'이라서예요.", "hair_triangle"),
             Panel("2", "면이 정리되면 슬림해진다",
-                  "두상은 둥근데\n머리가 퍼지면 각이 생겨요.\n같은 길이도 면을 다듬으면\n한 톤 슬림해집니다.", "hair_slim"),
+                  "두상은 둥근데\n머리가 퍼지면\n각이 생겨요.\n면을 다듬으면\n한 톤 슬림해져요.", "hair_slim"),
             Panel("3", "가벼움 = 공기를 자른 것",
                   "숱을 덜어내는 게 아니라\n머리카락 '사이'를\n디자인해요.\n공간이 생기면\n같은 숱도 가벼워집니다.", "hair_air"),
             Panel("4", "얼굴형이 아니라 '무드'",
                   "안 어울리는 얼굴은 없어요.\n무드가 안 맞는 단발이\n있을 뿐.\n직선이 강하면 차갑고\n곡선이 남으면 부드러워요.", "hair_mood"),
             Panel("5", "유행 단발은 '결'로 산다",
-                  "웬디컷·허쉬컷이\n어울리려면\n레이어가 아니라 '결'이에요.\n결이 살면 유행이\n내 것이 됩니다.", "hair_texture"),
+                  "웬디컷·허쉬컷은\n레이어가 아니라\n'결'이에요.\n결이 살면\n유행이 내 것이 돼요.", "hair_texture"),
             Panel("6", "상담 때 이걸 물어보세요",
                   "\"끝을 다듬을까요,\n면을 다듬을까요?\"\n이 한마디가\n단발의 성패를 가릅니다.", "hair_verdict"),
         ],
@@ -814,8 +818,8 @@ def mix_spec() -> ZineSpec:
                       "무드가 안 맞을 뿐", "hd_moods", 648, 905, 372, 3.5),
         ],
         arrows=[(410, 372, 20), (438, 636, 24), (404, 920, 16)],
-        banner="머리는 자르는 게 아니라, '생각'하는 거예요",
-        closer_sub="당신의 머리는 — 기술로 잘렸나요, 생각으로 잘렸나요?",
+        banner="머리는 자르는 게 아니라, '그리는' 거예요",
+        closer_sub="투박하게 그려도 그 사람에게 잘 어울리면, 좋은 그림이에요.",
     )
 
 
