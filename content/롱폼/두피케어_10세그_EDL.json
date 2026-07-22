@@ -1,0 +1,17 @@
+{
+  "_note": "앳나운 두피케어 System 롱폼 — 이찬호 지정 10세그 순서. 영상=DJI 시네마틱(메인), 음성/자막=MVI 인터뷰 구간. segment_av로 조립. DJI 프록시는 드라이브 폴더 1vCwSuDMrT3vt14ZtJT35WVSaUm5WuKPj(link-share, uc?export=download)에서 받는다. 2026-07-22 확정.",
+  "open_title": "앳나운 두피케어 System",
+  "bgm": "shorts/assets/bgm_piano_long.mp3",
+  "segments": [
+    {"seg": "① 인터뷰",       "title": "앳나운 두피 스파, 오늘 전부 보여드립니다", "dji": "0170", "vstart": 3,   "mvi": "8958", "astart": 48.60,  "aend": 64.50},
+    {"seg": "② 제품 소개",    "title": "미용실에 잘 없는 다카라 · 엠라운 독점",      "dji": "0184", "vstart": 20,  "mvi": "8958", "astart": 465.89, "aend": 486.79},
+    {"seg": "③ 두피 진단",    "title": "pH가 무너지면 두피는 방어력을 잃습니다",     "dji": "0186", "vstart": 5,   "mvi": "8957", "astart": 7.28,   "aend": 34.80},
+    {"seg": "④ 약 제조",      "title": "약과 정제수를 1:1로 섞어 도포합니다",        "dji": "0187", "vstart": 2,   "mvi": "8961", "astart": 2.68,   "aend": 40.20},
+    {"seg": "⑤ 샴푸 · 스파",  "title": "손님을 재우는 스파 스킬, 온도와 압",         "dji": "0182", "vstart": 40,  "mvi": "8963", "astart": 355.22, "aend": 382.70},
+    {"seg": "⑥ 소감 · 다카라","title": "다카라는 럭셔리, 퀵은 캐주얼",               "dji": "0185", "vstart": 3,   "mvi": "8961", "astart": 330.10, "aend": 350.64},
+    {"seg": "⑦ 퀵케어 소개",  "title": "시간 없는 분들을 위한 퀵메뉴 · 4.4만",       "dji": "0181", "vstart": 10,  "mvi": "8961", "astart": 105.60, "aend": 159.44},
+    {"seg": "⑧ 퀵케어 진행",  "title": "스크럽 꼼꼼히 도포하고 스팀으로 흡수",       "dji": "0189", "vstart": 8,   "mvi": "8961", "astart": 311.98, "aend": 329.42},
+    {"seg": "⑨ 받아본 소감",  "title": "두피에 숨통이 트인다, 가성비도 시간도",      "dji": "0184", "vstart": 300, "mvi": "8964", "astart": 258.78, "aend": 296.38},
+    {"seg": "⑩ 마무리",       "title": "좋은 걸 좋은 값에, 좋은 서비스로",           "dji": "0170", "vstart": 6,   "mvi": "8968", "astart": 90.46,  "aend": 123.54}
+  ]
+}
