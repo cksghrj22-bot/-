@@ -444,6 +444,10 @@ body{{background:#fbfbf9;color:#141416;position:relative;overflow:hidden}}
 .title{{font-family:KyoboPoster;font-size:104px;text-align:center;line-height:1;letter-spacing:2px}}
 .tunder{{width:520px;height:10px;margin:14px auto 4px;
   background:radial-gradient(closest-side,#141416 92%,transparent);border-radius:8px;opacity:.5}}
+.wu{{position:relative;display:inline-block}}
+.wu::after{{content:"";position:absolute;left:-4px;right:-4px;bottom:-20px;height:14px;
+  background:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='14'><path d='M0 9 q11 -9 22 0 t22 0' fill='none' stroke='%23141416' stroke-width='3'/></svg>") repeat-x;
+  background-size:auto 14px}}
 .stars{{position:absolute;top:70px;right:96px;font-family:KyoboPoster;font-size:52px;color:#141416;opacity:.55}}
 .grid{{display:grid;grid-template-columns:1fr 1fr;gap:18px 40px;margin-top:26px}}
 .panel{{min-height:236px}}
@@ -967,7 +971,7 @@ def coolchic_designmap() -> DesignMapSpec:
 def longface_spec() -> PosterSpec:
     # 인스타 11p '긴 얼굴형 단발 공식' — 실제 5가지 방법(4·6·7·8·9p)으로 구성 + 정리
     return PosterSpec(
-        title="긴 얼굴형 단발 공식",
+        title='<span class="wu">긴 얼굴형</span> 단발 공식',
         panels=[
             Panel("1", "길이 — 어디서 자르나",
                   "턱보다 위에서 끝나면\n얼굴이 넓어 보이고,\n아래로 길면\n더 길어 보여요.", "lf_jaw"),
