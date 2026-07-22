@@ -147,6 +147,28 @@ def segment(clip_mp4: Path, stt_json: Path, start: float, end: float, out: Path,
                         "-c:a", "aac", "-ar", "44100", str(out)], check=True)
 
 
+def segment_av(video_clip: Path, vstart: float, audio_clip: Path, astart: float, aend: float,
+               stt_json: Path, out: Path, work: Path, seg_label: str = "", title: str = ""):
+    """영상은 video_clip[vstart~](DJI 시술컷), 소리·자막은 audio_clip[astart~aend](MVI 인터뷰 설명).
+    DJI 다이나믹 화면 위에 인터뷰 설명이 나레이션·자막으로 흐른다. 영상은 소리 길이에 맞춰 루프."""
+    words = json.loads(stt_json.read_text())["words"] if stt_json.exists() else []
+    alen = aend - astart
+    ass = work / (out.stem + ".ass")
+    build_ass(words, astart, aend, ass)
+    base = f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps=30,subtitles='{ass}'"
+    band = work / (out.stem + "_band.png")
+    _title_band_png(seg_label, title, band)
+    fc = (f"[0:v]{base}[bg];"
+          f"[2:v]format=rgba,fade=t=in:st=0:d=0.4:alpha=1,fade=t=out:st=4.1:d=0.4:alpha=1[tb];"
+          f"[bg][tb]overlay=0:0:enable='between(t,0,4.5)'[v]")
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error",
+                    "-stream_loop", "-1", "-ss", f"{vstart}", "-t", f"{alen}", "-an", "-i", str(video_clip),
+                    "-ss", f"{astart}", "-to", f"{aend}", "-i", str(audio_clip),
+                    "-loop", "1", "-framerate", "30", "-i", str(band),
+                    "-filter_complex", fc, "-map", "[v]", "-map", "1:a", "-shortest",
+                    "-c:v", "libx264", "-pix_fmt", "yuv420p", "-c:a", "aac", "-ar", "44100", str(out)], check=True)
+
+
 def _dur(p: Path) -> float:
     return float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration",
                                  "-of", "csv=p=0", str(p)], check=True, capture_output=True, text=True).stdout.strip())
