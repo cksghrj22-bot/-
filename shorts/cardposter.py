@@ -353,14 +353,17 @@ def _lf_weight() -> str:
 
 
 def _lf_expand() -> str:
-    # 가로 확장 (펌·볼륨 옆으로)
+    # 결/컬 — 옆머리 면적에 '2번 꼬인 컬'(펌). 세로가 아니라 가로로 부풀림(이찬호 2026-07-22).
     return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-  <ellipse cx="150" cy="146" rx="52" ry="76" {STK}/>{_face(150,134)}
-  <path d="M98 112 q-46 26 -36 84 q40 26 44 -4" {STK}/>
-  <path d="M202 112 q46 26 36 84 q-40 26 -44 -4" {STK}/>
-  <path d="M60 158 l-28 0 M38 149 l-9 9 l9 9" {STK}/>
-  <path d="M240 158 l28 0 M262 149 l9 9 l-9 9" {STK}/>
-  <text x="150" y="282" text-anchor="middle" font-family="NanumPenPoster" font-size="27" fill="#22242a">옆을 통통하게</text>
+  <ellipse cx="150" cy="140" rx="46" ry="70" {STK}/>{_face(150,130)}
+  <!-- 옆머리 면적(좌우 윤곽) -->
+  <path d="M106 96 q-40 40 -22 108" {STK_T}/>
+  <path d="M194 96 q40 40 22 108" {STK_T}/>
+  <!-- 오른쪽: 2번 꼬인 컬(코일) -->
+  <path d="M198 116 c34 2 34 30 6 34 c-24 3 -26 -24 2 -26 c24 -2 26 26 -2 30 c-20 3 -22 -18 -2 -22" {STK}/>
+  <!-- 왼쪽: 2번 꼬인 컬(대칭) -->
+  <path d="M102 116 c-34 2 -34 30 -6 34 c24 3 26 -24 -2 -26 c-24 -2 -26 26 2 30 c20 3 22 -18 2 -22" {STK}/>
+  <text x="150" y="284" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#22242a">옆에 컬 = 가로로 통통</text>
 </svg>'''
 
 
