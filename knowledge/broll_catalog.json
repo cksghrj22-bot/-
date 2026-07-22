@@ -221,6 +221,54 @@
       "사용편": [
         "0721-01 원랭스"
       ]
+    },
+    {
+      "id": "IMG_2014",
+      "category": "workout",
+      "file_id": "1EFl4e9AC4p4dBqheB6Sa3Io10w7H7HWb",
+      "start": 0,
+      "uses": 0,
+      "note": "헬스 팀훈련(바벨 오버헤드)·인트레이 0722"
+    },
+    {
+      "id": "IMG_2015",
+      "category": "workout",
+      "file_id": "1iHNK2DzWrbsmgif9BZk3iWiPcGu9U5Y_",
+      "start": 3,
+      "uses": 0,
+      "note": "헬스 웨이트(스내치/런지)·89s·인트레이 0722"
+    },
+    {
+      "id": "IMG_2016",
+      "category": "workout",
+      "file_id": "1Qb1Xxf4Z_OBncNTAkEpjmgTVCvzTZx5T",
+      "start": 0,
+      "uses": 0,
+      "note": "헬스장 인터뷰/케틀벨 룸·17.9s·인트레이 0722"
+    },
+    {
+      "id": "IMG_2017",
+      "category": "workout",
+      "file_id": "1ALSjaCgT65fQ98FjpS_O3Xy1OdGzJlHx",
+      "start": 0,
+      "uses": 0,
+      "note": "헬스 브이로그(웃는 컷)·43s·인트레이 0722"
+    },
+    {
+      "id": "IMG_2018",
+      "category": "daily",
+      "file_id": "1vSP3L_l9phQo-urqrTZKGdAFYE3UJBcd",
+      "start": 0,
+      "uses": 0,
+      "note": "식당 식사(손·젓가락 클로즈업)·10.7s·인트레이 0722"
+    },
+    {
+      "id": "IMG_2020",
+      "category": "daily",
+      "file_id": "1ZxdVaNtS449dsMeCvhOsC7zObazQtCEB",
+      "start": 4,
+      "uses": 0,
+      "note": "식당 식사(마라탕·소스)·52s·인트레이 0722"
     }
   ],
   "_다양성규칙": "⭐우선순위 1 = 장면 다양성 (이찬호 2026-07-19): 채널이 '맨날 같은 영상'처럼 보이면 안 된다. B롤 배정 시 맥락(카테고리)보다 '다양한 장면'을 더 높은 우선순위로 둔다 — 맥락에서 크게 벗어나지만 않으면 새/다른 장면을 적극 채택. 같은 소스 반복 최소화, 도쿄 여행분 등 신규 소스 적극 발굴·투입(단 성희 부원장 제외·이찬호 본인/무인물만).",
