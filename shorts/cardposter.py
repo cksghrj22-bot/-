@@ -735,6 +735,53 @@ def _hd_moods(seed) -> str:
     return f'<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">{inner}</svg>'
 
 
+def _hd_perm(seed) -> str:
+    # 펌 = 손질 — 머리 매만지는 양손
+    def hand(x, thumb_out):
+        t = f'M{x} 90 l-11 -7' if thumb_out else f'M{x+32} 90 l11 -7'
+        return (f'<rect x="{x}" y="84" width="32" height="26" rx="11" {DCS}/>'
+                f'<path d="M{x+6} 84 l0 -13 M{x+14} 84 l0 -16 M{x+22} 84 l0 -16 M{x+29} 84 l0 -12" {DCS}/>'
+                f'<path d="{t}" {DCS}/>')
+    return f'<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">{hand(16, True)}{hand(92, False)}</svg>'
+
+
+def _hd_emphasis(seed) -> str:
+    # 앞머리 = 강조 — 앞머리(가로선) + 가리키는 손가락 + 검은 손톱 + 강조 반짝
+    inner = (f'<path d="M38 40 l64 0" {DCS}/>'
+             f'<path d="M48 40 l-3 10 M60 40 l-2 11 M70 40 l0 11 M80 40 l2 11 M92 40 l3 10" {DCS_T}/>'
+             f'<path d="M62 122 q-10 -6 -10 -22 l0 -28 q0 -9 10 -9 q10 0 10 9 l0 28 q0 16 -10 22 z" {DCS}/>'
+             f'<path d="M54 66 q8 -8 16 0 l0 8 q-8 5 -16 0 z" fill="#141416"/>'
+             f'<path d="M62 54 l0 -8 M47 58 l-7 -5 M77 58 l7 -5" {DCS_T}/>')
+    return f'<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">{inner}</svg>'
+
+
+def _hd_scalp(seed) -> str:
+    # 두피 = 피부 — 얼굴(피부)과 두피를 점선으로 연결(같다)
+    inner = (f'<circle cx="72" cy="84" r="30" {DCS}/>{_dface(72,80)}'
+             f'<path d="M50 94 q-22 -28 22 -54" fill="none" stroke="#141416" stroke-width="3.4" stroke-linecap="round" stroke-dasharray="1.5 8"/>'
+             f'<circle cx="50" cy="94" r="3.4" fill="#141416"/>'
+             f'<circle cx="72" cy="40" r="3.4" fill="#141416"/>')
+    return f'<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">{inner}</svg>'
+
+
+def _hd_dry(seed) -> str:
+    # 재현 = 말리는 법 — 드라이어 + 전방 15도 사선 바람
+    inner = (f'<rect x="58" y="54" width="44" height="24" rx="12" {DCS}/>'
+             f'<path d="M58 60 l-14 3 l0 9 l14 3 z" {DCS}/>'
+             f'<path d="M77 78 l-4 22 q-1 7 8 7 l8 0" {DCS}/>'
+             f'<path d="M40 66 l-22 5 M20 60 l-4 12 l12 1" {DCS_T}/>')
+    return f'<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">{inner}</svg>'
+
+
+def _hd_mood(seed) -> str:
+    # 커트 = 무드 — 사람 + 바깥으로 퍼지는 원형 물결(아우라)
+    inner = (f'<circle cx="70" cy="74" r="20" {DCS}/>{_dface(70,70)}'
+             f'<circle cx="70" cy="74" r="32" {DCS_T}/>'
+             f'<path d="M30 74 a40 40 0 0 1 80 0" {DCS_T}/>'
+             f'<path d="M70 22 l0 -8 M116 74 l9 0 M24 74 l-9 0 M103 41 l6 -6 M37 41 l-6 -6" {DCS_T}/>')
+    return f'<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">{inner}</svg>'
+
+
 def _hd_shaggy(seed) -> str:
     # 유행컷 = 샤기컷처럼 층 많은 스타일 — 촘촘한 레이어 + 뾰족한 끝 + 시스루 앞머리
     inner = (f'<path d="M36 62 q34 -36 68 0" {DCS}/>'
@@ -754,7 +801,9 @@ DOODLES = {"scissors": _d_scissors, "angle": _d_angle, "wave": _d_wave,
            "triface": _d_triface, "drop": _d_drop, "moods": _d_moods,
            "steps": _d_steps, "dir": _d_dir, "think": _d_think,
            "hd_space": _hd_space, "hd_rootangle": _hd_rootangle, "hd_layers": _hd_layers,
-           "hd_bob": _hd_bob, "soak": _d_soak, "hd_moods": _hd_moods, "shaggy": _hd_shaggy}
+           "hd_bob": _hd_bob, "soak": _d_soak, "hd_moods": _hd_moods, "shaggy": _hd_shaggy,
+           "perm": _hd_perm, "emphasis": _hd_emphasis, "scalp": _hd_scalp,
+           "dry": _hd_dry, "mood": _hd_mood}
 
 
 def _arrow(seed) -> str:
@@ -1027,17 +1076,17 @@ def mix2_spec() -> ZineSpec:
         title="머리 관리 상식 뒤집기",
         blocks=[
             ZineBlock("펌 = 스타일 완성", "펌 = 손질",
-                      "딱 손질만큼의\n역할이에요.", "steps", 40, 232, 356, -3.5),
+                      "딱 손질만큼의\n역할이에요.", "perm", 40, 232, 356, -3.5),
             ZineBlock("앞머리 = 얼굴 가리기", "앞머리 = 강조",
-                      "예쁜 데를\n강조해요.", "angle", 676, 330, 356, 3),
+                      "예쁜 데를\n강조해요.", "emphasis", 676, 330, 356, 3),
             ZineBlock("두피 = 그냥 두기", "두피 = 피부",
-                      "얼굴처럼\n피부예요.", "drop", 96, 524, 340, 4.5),
+                      "얼굴처럼\n피부예요.", "scalp", 96, 524, 340, 4.5),
             ZineBlock("재현 = 미용실 손", "재현 = 말리는 법",
-                      "전방 15도로\n앞으로.", "dir", 648, 622, 360, -5),
+                      "전방 15도로\n앞으로.", "dry", 648, 622, 360, -5),
             ZineBlock("유행컷 = 따라하기", "유행컷 = 조금만",
                       "사진에만 있어요.\n조금만 섞어요.", "shaggy", 34, 812, 356, -2.5),
             ZineBlock("커트 = 기술", "커트 = 무드",
-                      "층이 아니라\n무드를 읽어요.", "think", 660, 905, 352, 3.5),
+                      "층이 아니라\n무드를 읽어요.", "mood", 660, 905, 352, 3.5),
         ],
         arrows=[(410, 372, 20), (438, 636, 24), (404, 920, 16)],
         banner="잘 자른 머리도, 집에서 못 살리면 반이에요",
@@ -1183,17 +1232,17 @@ def mix2_detail_spec() -> DetailSpec:
         foot="@차노쌤 · 잘 자른 머리도 집에서 못 살리면 반이에요",
         cover=mix2_spec(),   # 1번=처음 그 관리편 6칸 카드 그대로
         cards=[
-            DetailCard("펌 = 스타일 완성", "펌은\n손질이에요", "딱 손질만큼의 역할", "steps",
+            DetailCard("펌 = 스타일 완성", "펌은\n손질이에요", "딱 손질만큼의 역할", "perm",
                        "펌은 100% 스타일링이 아니에요.\n딱 '손질'만큼의 역할이에요.\n그 정도인 줄 알고 해야\n머리가 안 상해요."),
-            DetailCard("앞머리 = 얼굴 가리기", "앞머리는\n강조예요", "예쁜 데를 강조", "angle",
+            DetailCard("앞머리 = 얼굴 가리기", "앞머리는\n강조예요", "예쁜 데를 강조", "emphasis",
                        "앞머리는 가리는 게 아니에요.\n예쁜 데를 강조하는 거예요.\n눈이 예쁜 사람이 앞머리를 내면\n눈이 살아 더 예뻐 보여요."),
-            DetailCard("두피 = 그냥 두기", "두피는\n피부예요", "얼굴처럼 관리해요", "drop",
+            DetailCard("두피 = 그냥 두기", "두피는\n피부예요", "얼굴처럼 관리해요", "scalp",
                        "두피도 얼굴처럼 피부예요.\n알면서도 관리는 잘 안 하죠.\n여름엔 특히 꼭 챙기고,\n먼저 내 두피부터 관찰해요."),
-            DetailCard("재현 = 미용실 손", "재현은\n말리는 법이에요", "전방 15도 앞으로", "dir",
+            DetailCard("재현 = 미용실 손", "재현은\n말리는 법이에요", "전방 15도 앞으로", "dry",
                        "집에서 안 되는 건 손이 아니에요.\n말리는 법이 달라서예요.\n전방 15도로, 가르마 없이,\n모근을 비비면서 말려요."),
             DetailCard("유행컷 = 따라하기", "유행컷은\n조금만 섞어요", "사진에만 있어요", "shaggy",
                        "맥시멀한 유행컷은 사진에만 있어요.\n그대로 하면 손질이 안 돼\n망한 머리로 나가요.\n성향·손질 감당만큼만 섞어요."),
-            DetailCard("커트 = 기술", "커트는\n무드예요", "사진의 무드를 읽어요", "think",
+            DetailCard("커트 = 기술", "커트는\n무드예요", "사진의 무드를 읽어요", "mood",
                        "같은 레이어드도 무드로 갈려요.\n가벼움·무거움만 읽는 게 아니라\n손님이 가져온 사진의 무드까지\n읽어야 뭘 원하는지 알아요."),
         ],
     )
