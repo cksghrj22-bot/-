@@ -19,7 +19,7 @@ import shutil as _shutil
 # BGM은 '파일 자체 음량'과 무관하게 목소리 밑에 깔려야 한다(이찬호 2026-07-21).
 # loudnorm=I=-40 으로 어떤 BGM이든 -40 LUFS로 정규화 → 목소리(≈-28 LUFS)보다 ~12dB 아래.
 # (기존 makeup+5dB가 BGM을 목소리와 맞먹게 키워 '너무 큼' 문제였음.)
-BGM_EVEN = "dynaudnorm=f=150:g=11:p=0.9,loudnorm=I=-40:TP=-3:LRA=11"
+BGM_EVEN = "dynaudnorm=f=150:g=11:p=0.9,loudnorm=I=-34:TP=-3:LRA=11"
 
 
 def _ffmpeg_info(video: str | Path) -> str:
