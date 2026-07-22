@@ -473,7 +473,7 @@ body{{background:#fbfbf9;color:#141416;position:relative;overflow:hidden}}
 <div class="stars">✦ ✧</div>
 <div class="wrap">
   <div class="title">{spec.title}</div>
-  <div class="tunder"></div>
+  {'' if 'class="wu"' in spec.title else '<div class="tunder"></div>'}
   <div class="grid">{panels}</div>
   {banner}{closer}
 </div>
