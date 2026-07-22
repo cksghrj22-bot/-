@@ -281,11 +281,84 @@ def _hair_verdict() -> str:
 </svg>'''
 
 
+# ── 긴 얼굴형 단발 공식 손그림 6종 ──
+def _lf_vertical() -> str:
+    # 긴 얼굴 + 세로 강조(일자단발) = 길어보임
+    return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="150" cy="150" rx="58" ry="90" {STK}/>{_face(150,138,False)}
+  <line x1="150" y1="52" x2="150" y2="252" {STK_T} stroke-dasharray="5 9"/>
+  <path d="M94 116 q-10 74 6 120" {STK}/><path d="M206 116 q10 74 -6 120" {STK}/>
+  <path d="M150 256 l0 20 M143 270 l7 9 l7 -9" {STK_T}/>
+  <text x="150" y="292" text-anchor="middle" font-family="NanumPenPoster" font-size="24" fill="#22242a">세로 = 길어보임</text>
+</svg>'''
+
+
+def _lf_cut() -> str:
+    # 세로를 끊고 가로를 만든다
+    return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="150" cy="142" rx="56" ry="78" {STK}/>{_face(150,130)}
+  <line x1="150" y1="58" x2="150" y2="150" {STK_T} stroke-dasharray="5 8"/>
+  <path d="M132 96 l36 30 M168 96 l-36 30" {STK}/>
+  <path d="M54 196 L246 196" {STK}/>
+  <path d="M54 196 l20 -12 M54 196 l20 12" {STK}/>
+  <path d="M246 196 l-20 -12 M246 196 l-20 12" {STK}/>
+  <text x="150" y="240" text-anchor="middle" font-family="NanumPenPoster" font-size="25" fill="#22242a">가로를 만든다</text>
+</svg>'''
+
+
+def _lf_jaw() -> str:
+    # 턱선 기준 — 위=가로선, 아래=세로선
+    return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="150" cy="140" rx="56" ry="80" {STK}/>{_face(150,128)}
+  <line x1="88" y1="192" x2="212" y2="192" {STK}/>
+  <text x="232" y="198" font-family="NanumPenPoster" font-size="24" fill="#22242a">턱선</text>
+  <path d="M110 168 l9 9 l18 -20" {STK_T}/>
+  <text x="150" y="256" text-anchor="middle" font-family="NanumPenPoster" font-size="23" fill="#22242a">위=가로 · 아래=세로</text>
+</svg>'''
+
+
+def _lf_weight() -> str:
+    # 무게중심 낮추기 (광대 밑~턱 위)
+    hatch = "".join(f'<line x1="{100+i*14}" y1="180" x2="{86+i*14}" y2="212" {STK_T}/>' for i in range(8))
+    return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="150" cy="140" rx="56" ry="82" {STK}/>{_face(150,120)}
+  <line x1="92" y1="178" x2="208" y2="178" {STK_T} stroke-dasharray="4 7"/>
+  <line x1="104" y1="214" x2="196" y2="214" {STK_T} stroke-dasharray="4 7"/>
+  {hatch}
+  <path d="M240 176 l0 40 M233 204 l7 12 l7 -12" {STK_T}/>
+  <text x="150" y="266" text-anchor="middle" font-family="NanumPenPoster" font-size="23" fill="#22242a">광대 밑~턱 위</text>
+</svg>'''
+
+
+def _lf_expand() -> str:
+    # 가로 확장 (펌·볼륨 옆으로)
+    return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="150" cy="146" rx="52" ry="76" {STK}/>{_face(150,134)}
+  <path d="M98 112 q-46 26 -36 84 q40 26 44 -4" {STK}/>
+  <path d="M202 112 q46 26 36 84 q-40 26 -44 -4" {STK}/>
+  <path d="M60 158 l-28 0 M38 149 l-9 9 l9 9" {STK}/>
+  <path d="M240 158 l28 0 M262 149 l9 9 l-9 9" {STK}/>
+  <text x="150" y="282" text-anchor="middle" font-family="NanumPenPoster" font-size="24" fill="#22242a">옆으로 퍼지는 볼륨</text>
+</svg>'''
+
+
+def _lf_dry() -> str:
+    # 말리기 — 사선 위로 넘겨
+    return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="150" cy="150" rx="54" ry="78" {STK}/>{_face(150,140)}
+  <path d="M112 108 L64 60 M64 60 l4 26 M64 60 l26 4" {STK}/>
+  <path d="M188 108 L236 60 M236 60 l-4 26 M236 60 l-26 4" {STK}/>
+  <text x="150" y="288" text-anchor="middle" font-family="NanumPenPoster" font-size="24" fill="#22242a">사선 위로 넘겨</text>
+</svg>'''
+
+
 SCENES = {
     "wall": _wall, "jeer": _jeer, "tally": _tally,
     "shame_run": _shame_run, "mix": _mix, "blank": _blank,
     "hair_triangle": _hair_triangle, "hair_slim": _hair_slim, "hair_air": _hair_air,
     "hair_mood": _hair_mood, "hair_texture": _hair_texture, "hair_verdict": _hair_verdict,
+    "lf_vertical": _lf_vertical, "lf_cut": _lf_cut, "lf_jaw": _lf_jaw,
+    "lf_weight": _lf_weight, "lf_expand": _lf_expand, "lf_dry": _lf_dry,
 }
 
 
@@ -741,7 +814,31 @@ def coolchic_designmap() -> DesignMapSpec:
     )
 
 
-SPECS = {"demo": demo_spec, "danbal": danbal_spec}
+def longface_spec() -> PosterSpec:
+    # 인스타 11p '긴 얼굴형 단발 공식' 내용만 6칸으로 압축(차노 보이스)
+    return PosterSpec(
+        title="긴 얼굴형 단발 공식",
+        panels=[
+            Panel("1", "일자단발 = 세로선",
+                  "긴 얼굴에 일자단발은\n세로로 이어져\n더 길어 보여요.", "lf_vertical"),
+            Panel("2", "세로를 끊고, 가로를",
+                  "단발은 짧게 자르는 게\n아니라\n'비율'을 끊는 디자인.", "lf_cut"),
+            Panel("3", "기준은 '턱선'",
+                  "턱선 위 길이 = 가로선.\n턱선 아래로 내려가면\n세로선(길어 보임).", "lf_jaw"),
+            Panel("4", "무게중심을 낮춘다",
+                  "광대 밑~턱 바로 위.\n무게중심이 낮을수록\n긴 얼굴이 짧아 보여요.", "lf_weight"),
+            Panel("5", "가로로 확장한다",
+                  "볼륨이 부족하면 펌으로.\n옆으로 퍼지는 볼륨이\n핵심이에요.", "lf_expand"),
+            Panel("6", "말리기로 완성",
+                  "뿌리를 흔들고\n사선 위로 넘겨 말리면\n실루엣이 가로로 커져요.", "lf_dry"),
+        ],
+        banner="세로를 끊고, 가로를 만든다",
+        closer_hand="단발은 길이가 아니라 <b>인상</b>을 설계하는 일.",
+        closer_sub="긴 얼굴형이라 포기했다면 — 비율부터 보세요.",
+    )
+
+
+SPECS = {"demo": demo_spec, "danbal": danbal_spec, "longface": longface_spec}
 ZINE_SPECS = {"mix": mix_spec}
 MAP_SPECS = {"coolchic": coolchic_designmap}
 
