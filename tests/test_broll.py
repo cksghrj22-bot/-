@@ -39,14 +39,14 @@ class TestClassify(unittest.TestCase):
 class TestPick(unittest.TestCase):
     def test_덜쓴것_우선(self):
         cat = copy.deepcopy(CATALOG)
-        # cut 클립 두 개의 uses를 조작
+        # 다른 usable cut 클립은 많이 쓴 것으로, 가발커트_3583만 0으로 → 덜 쓴 3583 선택
         for c in cat["clips"]:
-            if c["id"] == "IMG_9496":
+            if c["category"] == "cut" and c.get("usable", True):
                 c["uses"] = 5
-            if c["id"] == "IMG_9497":
+            if c["id"] == "가발커트_3583":
                 c["uses"] = 0
         chosen = broll.pick("cut", cat)
-        self.assertEqual(chosen["id"], "IMG_9497")  # 덜 쓴 것
+        self.assertEqual(chosen["id"], "가발커트_3583")  # 덜 쓴 것(usable)
 
     def test_require_file_id는_id있는것만(self):
         # 합성 카탈로그: file_id 없는 카테고리는 require_file_id=True면 None (상태 비의존)
