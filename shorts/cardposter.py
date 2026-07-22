@@ -746,39 +746,49 @@ def _hd_perm(seed) -> str:
 
 
 def _hd_emphasis(seed) -> str:
-    # 앞머리 = 강조 — 앞머리(가로선) + 가리키는 손가락 + 검은 손톱 + 강조 반짝
-    inner = (f'<path d="M38 40 l64 0" {DCS}/>'
-             f'<path d="M48 40 l-3 10 M60 40 l-2 11 M70 40 l0 11 M80 40 l2 11 M92 40 l3 10" {DCS_T}/>'
-             f'<path d="M62 122 q-10 -6 -10 -22 l0 -28 q0 -9 10 -9 q10 0 10 9 l0 28 q0 16 -10 22 z" {DCS}/>'
-             f'<path d="M54 66 q8 -8 16 0 l0 8 q-8 5 -16 0 z" fill="#141416"/>'
-             f'<path d="M62 54 l0 -8 M47 58 l-7 -5 M77 58 l7 -5" {DCS_T}/>')
+    # 앞머리 = 강조 — 정면 얼굴, 일직선 앞머리 // 평행한 직선 눈매(쌍꺼풀 없는 일자 눈)
+    inner = (f'<circle cx="70" cy="82" r="32" {DCS}/>'
+             # 일직선 앞머리(가로 직선)
+             f'<path d="M42 64 l56 0" {DCS}/>'
+             f'<path d="M50 64 l-2 8 M60 64 l-1 9 M70 64 l0 9 M80 64 l1 9 M90 64 l2 8" {DCS_T}/>'
+             # 직선 눈매(앞머리와 평행) + 정면 응시
+             f'<path d="M52 80 l14 0" {DCS}/><path d="M74 80 l14 0" {DCS}/>'
+             f'<path d="M62 98 q8 5 16 0" {DCS_T}/>'
+             # 강조 반짝(눈매 강조)
+             f'<path d="M46 74 l-8 -3 M94 74 l8 -3" {DCS_T}/>')
     return f'<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">{inner}</svg>'
 
 
 def _hd_scalp(seed) -> str:
-    # 두피 = 피부 — 얼굴(피부)과 두피를 점선으로 연결(같다)
-    inner = (f'<circle cx="72" cy="84" r="30" {DCS}/>{_dface(72,80)}'
-             f'<path d="M50 94 q-22 -28 22 -54" fill="none" stroke="#141416" stroke-width="3.4" stroke-linecap="round" stroke-dasharray="1.5 8"/>'
-             f'<circle cx="50" cy="94" r="3.4" fill="#141416"/>'
-             f'<circle cx="72" cy="40" r="3.4" fill="#141416"/>')
+    # 두피 = 피부 — 얼굴(피부) + 머리카락 나는 두피(살), 두 살을 점선으로 '같다'
+    inner = (f'<circle cx="74" cy="88" r="27" {DCS}/>{_dface(74,86)}'
+             # 두피 라인(머리카락 나는 살)
+             f'<path d="M52 68 q22 -16 44 0" {DCS}/>'
+             f'<path d="M60 62 l-2 -13 M70 59 l0 -14 M80 62 l2 -13 M90 66 l3 -12" {DCS}/>'
+             # 점선: 두피 살(모근) → 얼굴 피부 (같은 피부)
+             f'<path d="M55 74 q-24 12 -3 34" fill="none" stroke="#141416" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="1.5 8"/>'
+             f'<circle cx="55" cy="74" r="3.2" fill="#141416"/>'
+             f'<circle cx="52" cy="102" r="3.2" fill="#141416"/>')
     return f'<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">{inner}</svg>'
 
 
 def _hd_dry(seed) -> str:
-    # 재현 = 말리는 법 — 드라이어 + 전방 15도 사선 바람
-    inner = (f'<rect x="58" y="54" width="44" height="24" rx="12" {DCS}/>'
-             f'<path d="M58 60 l-14 3 l0 9 l14 3 z" {DCS}/>'
-             f'<path d="M77 78 l-4 22 q-1 7 8 7 l8 0" {DCS}/>'
-             f'<path d="M40 66 l-22 5 M20 60 l-4 12 l12 1" {DCS_T}/>')
+    # 재현 = 말리는 법 — 드라이어(살짝 떨어져) + 전방 15도 화살표 2개
+    inner = (f'<rect x="72" y="44" width="42" height="22" rx="11" {DCS}/>'
+             f'<path d="M72 50 l-12 3 l0 8 l12 3 z" {DCS}/>'
+             f'<path d="M90 66 l-3 18 q-1 6 7 6 l6 0" {DCS}/>'
+             # 전방 15도 화살표 2개(앞·아래로, 살짝 떨어져)
+             f'<path d="M54 76 l-30 8 M24 78 l-5 6 l7 3" {DCS}/>'
+             f'<path d="M56 90 l-30 8 M26 92 l-5 6 l7 3" {DCS}/>')
     return f'<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">{inner}</svg>'
 
 
 def _hd_mood(seed) -> str:
-    # 커트 = 무드 — 사람 + 바깥으로 퍼지는 원형 물결(아우라)
-    inner = (f'<circle cx="70" cy="74" r="20" {DCS}/>{_dface(70,70)}'
-             f'<circle cx="70" cy="74" r="32" {DCS_T}/>'
-             f'<path d="M30 74 a40 40 0 0 1 80 0" {DCS_T}/>'
-             f'<path d="M70 22 l0 -8 M116 74 l9 0 M24 74 l-9 0 M103 41 l6 -6 M37 41 l-6 -6" {DCS_T}/>')
+    # 커트 = 무드 — 사람 + 바깥으로 퍼지는 '곡선 물결' 아우라(직선 X)
+    wl = "".join(
+        f'<g transform="rotate({a} 70 74)"><path d="M70 42 q5 -6 10 0 t10 0" {DCS_T}/></g>'
+        for a in (0, 60, 120, 180, 240, 300))
+    inner = (f'<circle cx="70" cy="74" r="19" {DCS}/>{_dface(70,70)}' + wl)
     return f'<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">{inner}</svg>'
 
 
@@ -1241,7 +1251,7 @@ def mix2_detail_spec() -> DetailSpec:
             DetailCard("재현 = 미용실 손", "재현은\n말리는 법이에요", "전방 15도 앞으로", "dry",
                        "집에서 안 되는 건 손이 아니에요.\n말리는 법이 달라서예요.\n전방 15도로, 가르마 없이,\n모근을 비비면서 말려요."),
             DetailCard("유행컷 = 따라하기", "유행컷은\n조금만 섞어요", "사진에만 있어요", "shaggy",
-                       "맥시멀한 유행컷은 사진에만 있어요.\n그대로 하면 손질이 안 돼\n망한 머리로 나가요.\n성향·손질 감당만큼만 섞어요."),
+                       "맥시멀한 유행컷은 사진에만 있어요.\n그대로 하면 손질이 안 돼\n망한 머리로 나가요.\n성향·손질이 감당할 만큼만 섞어요."),
             DetailCard("커트 = 기술", "커트는\n무드예요", "사진의 무드를 읽어요", "mood",
                        "같은 레이어드도 무드로 갈려요.\n가벼움·무거움만 읽는 게 아니라\n손님이 가져온 사진의 무드까지\n읽어야 뭘 원하는지 알아요."),
         ],
