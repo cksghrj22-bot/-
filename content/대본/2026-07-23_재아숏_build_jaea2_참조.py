@@ -58,7 +58,7 @@ PlayResY: {H}
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: sub,NanumSquareRound,58,&H00FFFFFF,&H00000000,&H00000000,-1,1,6,2,2,90,90,{SUB_MV},1
-Style: outro,NanumSquareRound,42,&H70FFFFFF,&H00000000,&H00000000,0,1,2,0,2,60,60,70,1
+Style: outro,NanumSquareRound,64,&H00FFFFFF,&H00000000,&H66000000,1,4,1,0,5,60,60,0,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -66,8 +66,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     body = ""
     for i, (s, e) in enumerate(SPANS):
         body += f"Dialogue: 0,{ts(s)},{ts(e)},sub,,0,0,0,,{ASSIGN[i][2]}\n"
-    # 아웃트로: 마지막 2.6초 하단 얇게(박스 없음) — 저장 CTA 아님(마스터 규격)
-    body += f"Dialogue: 1,{ts(max(0,NAR_DUR-2.6))},{ts(NAR_DUR)},outro,,0,0,0,,SNS에 일기를 쓰고 있어요\n"
+    # 아웃트로: 기존 흑백영상과 동일 — 중앙(align5)·size64·박스·페이드(600,400)·2.6초 (이찬호 지시)
+    body += (f"Dialogue: 1,{ts(max(0,NAR_DUR-2.6))},{ts(NAR_DUR)},outro,,0,0,0,,"
+             f"{{\\fad(600,400)\\1a&H20&\\3a&H20&}}SNS에 일기를 쓰고 있어요\n")
     path.write_text(head + body, encoding="utf-8")
 
 
@@ -104,7 +105,7 @@ def main():
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(subbed), "-i", str(NAR),
                     "-stream_loop", "-1", "-i", BGM,
                     "-filter_complex",
-                    "[1:a]dynaudnorm=f=250:g=15[nar];[2:a]volume=0.06[bg];"
+                    "[1:a]speechnorm=e=12.5:r=0.0001:l=1[nar];[2:a]volume=0.06[bg];"
                     "[nar][bg]amix=inputs=2:duration=first:dropout_transition=0[a]",
                     "-map", "0:v", "-map", "[a]", "-t", f"{NAR_DUR:.3f}",
                     "-c:v", "copy", "-c:a", "aac", "-ar", "44100", str(OUT)], check=True)
