@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>세상에 없는 앳나운 교육 시스템 — 반복설계 제안</title>
+<style>
+  :root{--bg:#0e0e0e;--card:#191919;--line:#2b2b2b;--ink:#ededed;--ink2:#a6a6a6;--ink3:#767676;--gold:#C6A15B;--red:#d9695f;--grn:#5fbf8a;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.62;padding:34px 16px;}
+  .wrap{max-width:940px;margin:0 auto;}
+  .eyebrow{font-size:11px;letter-spacing:.24em;color:var(--gold);font-weight:700;}
+  h1{font-size:30px;font-weight:800;letter-spacing:-.01em;margin:8px 0 6px;}
+  .lead{color:var(--ink2);font-size:15px;max-width:680px;}
+  .gold{height:2px;background:var(--gold);width:54px;margin:18px 0 8px;}
+  h2{font-size:19px;font-weight:800;margin:34px 0 4px;}
+  h2 .n{color:var(--gold);font-family:"Cormorant Garamond",serif;margin-right:8px;}
+  .cap{font-size:12px;color:var(--ink3);letter-spacing:.06em;margin-bottom:14px;}
+  /* iteration chain */
+  .loop{border-left:2px solid var(--line);margin-left:6px;padding-left:20px;}
+  .step{position:relative;margin-bottom:22px;}
+  .step::before{content:"";position:absolute;left:-27px;top:4px;width:11px;height:11px;border-radius:50%;background:var(--gold);border:2px solid var(--bg);}
+  .rnd{font-size:11px;letter-spacing:.14em;color:var(--ink3);font-weight:700;}
+  .solve{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--grn);border-radius:3px;padding:12px 15px;margin:6px 0;}
+  .prob{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--red);border-radius:3px;padding:12px 15px;margin:6px 0;}
+  .solve .t,.prob .t{font-size:11px;font-weight:800;letter-spacing:.1em;}
+  .solve .t{color:var(--grn);} .prob .t{color:var(--red);}
+  .solve b,.prob b{color:#fff;}
+  .step p{font-size:14px;margin-top:4px;color:var(--ink);}
+  /* pillars */
+  .pillars{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:8px;}
+  .pil{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:3px;padding:15px 17px;}
+  .pil .pn{font-size:11px;color:var(--gold);font-weight:800;letter-spacing:.1em;}
+  .pil .pt{font-size:16px;font-weight:800;margin:3px 0 5px;}
+  .pil .pd{font-size:13px;color:var(--ink2);}
+  /* rhythm */
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px;}
+  th{background:#000;color:#fff;text-align:left;padding:9px 12px;font-size:12.5px;}
+  td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+  td.k{font-weight:800;white-space:nowrap;color:var(--gold);}
+  .diff{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:14px 17px;margin-bottom:10px;}
+  .diff .dh{font-weight:800;font-size:15px;}
+  .diff .db{font-size:13px;color:var(--ink2);margin-top:3px;}
+  .seed{font-size:13.5px;color:var(--ink2);padding:7px 0 7px 22px;position:relative;border-bottom:1px dashed var(--line);}
+  .seed::before{content:"↻";position:absolute;left:0;color:var(--gold);font-weight:800;}
+  .foot{text-align:center;font-size:11px;letter-spacing:.3em;color:var(--ink3);font-weight:700;margin:34px 0 6px;}
+  .kbox{background:linear-gradient(180deg,#1c1a14,#191919);border:1px solid #3a3320;border-radius:4px;padding:18px 20px;margin-top:8px;}
+  .kbox .kt{color:var(--gold);font-weight:800;font-size:15px;}
+  .kbox .kd{font-size:14px;color:var(--ink);margin-top:6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">AT NOWN · 밤샘 반복설계 · v1</div>
+  <h1>세상에 없는 교육 시스템</h1>
+  <div class="lead">방법: <b>해결 → 그 해결책의 새 문제 → 재해결</b>을 반복해 수렴시킨다. 아래는 8라운드를 돌린 기록과, 그 끝에 남은 시스템이다. 마지막의 '다음 씨앗'은 이 루프가 멈추지 않는다는 표시다.</div>
+  <div class="gold"></div>
+
+  <h2><span class="n">◆</span>반복설계 기록 — 8 라운드</h2>
+  <div class="cap">초록 = 해결 / 빨강 = 그 해결이 낳은 새 문제</div>
+  <div class="loop">
+
+    <div class="step"><div class="rnd">ROUND 1</div>
+      <div class="solve"><div class="t">해결</div><p>레벨·과목 나열식(시간제)을 버리고 <b>자기주도 경로</b>로. Lv1~2 공통 기반 후, 학생이 자기 미감대로 과목을 배치.</p></div>
+      <div class="prob"><div class="t">새 문제</div><p>자기주도·게임화는 이미 흔하다(부트캠프 뱃지). 게다가 뱃지는 이미 뺐다. "세상에 없는"이 아니다.</p></div>
+    </div>
+
+    <div class="step"><div class="rnd">ROUND 2</div>
+      <div class="solve"><div class="t">해결</div><p>미용학원이 <b>절대 안 가르치는 것</b>을 척추로 세운다 = <b>관점(미감)</b>. 차노 철학 "똑같은 머리 할 바엔 끝을 택하겠다". 기술 먼저가 아니라 <b>관점 먼저(POV-First)</b>. 매 레벨은 '맥락 PPT'로 시작.</p></div>
+      <div class="prob"><div class="t">새 문제</div><p>관점·미감은 측정이 안 되면 그냥 뜬구름이다. "감각은 타고나는 것"으로 끝나면 못 가르친다.</p></div>
+    </div>
+
+    <div class="step"><div class="rnd">ROUND 3</div>
+      <div class="solve"><div class="t">해결</div><p>미감을 <b>훈련 가능한 자산</b>으로 만든다. ① <b>미감 은행</b> — 학생마다 패션·건축·인테리어 레퍼런스를 헤어로 번역해 개인 코퍼스 축적(차노 '키워드 지도' 방식). ② 기술은 <b>재현 → 변주 → 창작</b> 3단 사다리 — 각 단계에서 <b>"왜"를 설명 못 하면 못 올라간다.</b></p></div>
+      <div class="prob"><div class="t">새 문제</div><p>3사다리 × 8라인 × 5레벨 = 거대한 행렬. 관료화·과부하. 그리고 이게 살롱의 실제 일·수입과 어떻게 붙나?</p></div>
+    </div>
+
+    <div class="step"><div class="rnd">ROUND 4</div>
+      <div class="solve"><div class="t">해결</div><p><b>실전이 곧 시험, 콘텐츠가 곧 증명.</b> 따로 치르는 시험(사전작업으로 조작 가능 — 율이 시험의 실제 허점)을 없앤다. 평가는 <b>실제 손님·모델데이 작업</b>에서. SNS 일기(유튜브·블로그)가 곧 포트폴리오. 승급 = 실적 누적(모델 100·매출·리뷰·조회수 = 이미 정한 5중2). → 교육이 곧 콘텐츠(한 번 만들어 두 번 쓴다).</p></div>
+      <div class="prob"><div class="t">새 문제</div><p>일이 곧 시험이면, 손님 수만 채운 <b>대충한 작업</b>으로 승급을 딸 수 있다. 조작 불가능한 품질 게이트가 없다.</p></div>
+    </div>
+
+    <div class="step"><div class="rnd">ROUND 5</div>
+      <div class="solve"><div class="t">해결</div><p><b>익명 교차 채점.</b> 실제 작업을 <b>예고 없이 무작위 샘플링</b> → 여러 선생님이 <b>익명으로</b> 채점(누가 뭘 줬는지 모름 — 율이 익명 채점판 그대로). 정치·눈치·편향 제거. 미감/관점은 <b>설명력</b>으로 판정(모두 촬영되니 근거가 남음).</p></div>
+      <div class="prob"><div class="t">새 문제</div><p>뱃지도 없고 시험도 없으면 <b>학생을 앞으로 당기는 힘</b>은? 동기·리텐션이 빈다.</p></div>
+    </div>
+
+    <div class="step"><div class="rnd">ROUND 6</div>
+      <div class="solve"><div class="t">해결</div><p>당기는 힘 3개(가짜 보상 없이): ① <b>정체성</b> — 미감 은행이 눈에 보이게 자란다(나만의 디자이너가 되어감) ② <b>수입</b> — 매출이 승급 기준(실력=돈으로 즉시 환류) ③ <b>관객</b> — SNS 팔로워가 공개적으로 큰다. 정체성+수입+관객 = 진짜 동기.</p></div>
+      <div class="prob"><div class="t">새 문제</div><p>이 전체가 매일 굴리기엔 너무 복잡하다. 선생님·학생이 헷갈리면 안 굴러간다.</p></div>
+    </div>
+
+    <div class="step"><div class="rnd">ROUND 7</div>
+      <div class="solve"><div class="t">해결</div><p><b>단순한 리듬으로 압축.</b> 수·목·금 아침 = 관점 PPT + 기술 재현/변주. 저녁 = 실전 모델. 월 2회 모델데이(상담→펌→염색 실전). 월 1회 특강(선생님 시그니처). 분기 1회 익명 샘플 채점. 시험일 없음 — 대신 <b>상시 증거 누적.</b></p></div>
+      <div class="prob"><div class="t">새 문제</div><p>불합격/미흡이 나오면? 탈락 통보로 끝나면 사람이 죽는다. 그리고 이 시스템은 '완성'되면 또 굳는다.</p></div>
+    </div>
+
+    <div class="step"><div class="rnd">ROUND 8</div>
+      <div class="solve"><div class="t">해결</div><p><b>미흡 = 탈락이 아니라 '콕 집어 육성'</b>(율이 판정 철학 그대로). 익명 채점이 약점을 한 곳으로 모아주면 → 그 구간만 다음 분기 개인 과제로. 그리고 시스템 자체를 <b>매 분기 이 반복설계로 다시 깨서</b> 굳지 않게 한다.</p></div>
+      <div class="prob"><div class="t">새 문제 (다음 씨앗)</div><p>미감을 '설명력'으로만 재면, 말 잘하는 사람이 유리하고 <b>말 못 하는 천재</b>가 불리하다. → ROUND 9의 과제로 넘긴다(아래).</p></div>
+    </div>
+
+  </div>
+
+  <h2><span class="n">◆</span>수렴한 시스템 — 8 기둥</h2>
+  <div class="cap">위 반복이 남긴 뼈대. 기존 8라인 과목전담은 그대로 품는다.</div>
+  <div class="pillars">
+    <div class="pil"><div class="pn">기둥 1</div><div class="pt">관점 먼저 (POV-First)</div><div class="pd">미감·관점이 척추, 기술은 그걸 구현하는 근육. 매 레벨은 '맥락 PPT'로 연다.</div></div>
+    <div class="pil"><div class="pn">기둥 2</div><div class="pt">미감 은행</div><div class="pd">학생마다 레퍼런스를 헤어로 번역해 개인 미감 코퍼스를 축적. 눈에 보이게 자란다.</div></div>
+    <div class="pil"><div class="pn">기둥 3</div><div class="pt">재현 → 변주 → 창작</div><div class="pd">기술마다 3단 사다리. 각 단계 "왜"를 설명 못 하면 못 올라간다.</div></div>
+    <div class="pil"><div class="pn">기둥 4</div><div class="pt">한 줄기 한 선생님</div><div class="pd">8라인 과목 전담(차노·연교·성희·이호·창엽·보미·신후·와이). 시즈가 그 개인 커리큘럼으로 들어간다.</div></div>
+    <div class="pil"><div class="pn">기둥 5</div><div class="pt">실전이 곧 시험 · 콘텐츠가 곧 증명</div><div class="pd">따로 치는(조작 가능한) 시험 폐지. 실제 손님·모델·SNS가 평가 원료. 교육=콘텐츠.</div></div>
+    <div class="pil"><div class="pn">기둥 6</div><div class="pt">익명 교차 채점</div><div class="pd">무작위 샘플을 여러 선생님이 익명 채점. 정치·편향 제거. 근거는 촬영본에 남는다.</div></div>
+    <div class="pil"><div class="pn">기둥 7</div><div class="pt">3동력 — 정체성·수입·관객</div><div class="pd">가짜 보상(뱃지) 없이 당긴다. 미감이 자라고, 매출이 오르고, 팔로워가 큰다.</div></div>
+    <div class="pil"><div class="pn">기둥 8</div><div class="pt">미흡 = 육성 · 시스템도 매분기 재설계</div><div class="pd">탈락 통보 대신 약점 구간만 개인 과제. 시스템 자체도 분기마다 이 루프로 다시 깨 굳지 않게.</div></div>
+  </div>
+
+  <div class="kbox">
+    <div class="kt">한 문장 요약</div>
+    <div class="kd">기술을 가르치는 학원이 아니라, <b>"관점을 가진 디자이너"를 실전·콘텐츠·익명평가로 길러내고, 시스템 자신조차 분기마다 스스로를 깨는</b> 살아있는 교육 생태계.</div>
+  </div>
+
+  <h2><span class="n">◆</span>운영 리듬</h2>
+  <table>
+    <tr><th>주기</th><th>내용</th></tr>
+    <tr><td class="k">매주 수·목·금 오전</td><td>관점 PPT(맥락) + 기술 재현/변주 · 한 과목 하루 (07:30~8:00 개별전달 포함)</td></tr>
+    <tr><td class="k">평일 저녁</td><td>실전 모델 수업 (19:00)</td></tr>
+    <tr><td class="k">월 2회</td><td>모델작업데이 — 상담→펌→염색 실전 (2인1조)</td></tr>
+    <tr><td class="k">월 1회</td><td>특강 — 선생님 시그니처(=콘텐츠 원료, 레이밴 촬영→쇼츠)</td></tr>
+    <tr><td class="k">분기 1회</td><td>익명 교차 샘플 채점 — 약점 구간 도출 → 개인 육성 과제</td></tr>
+    <tr><td class="k">상시</td><td>SNS 일기(포트폴리오) · 미감 은행 축적 · 실적 누적(승급 5중2)</td></tr>
+    <tr><td class="k">코스</td><td>옴므 2년 / 한남 2년반 / 플레이스 3년 — 시험일 없이 증거 누적으로 승급</td></tr>
+  </table>
+
+  <h2><span class="n">◆</span>왜 세상에 없나 (차별점)</h2>
+  <div class="diff"><div class="dh">1. 관점을 '측정 가능하게' 가르친다</div><div class="db">대부분 학원은 기술 체크리스트. 여기선 미감 은행 + 재현·변주·창작 + 설명력 게이트로 <b>감각을 훈련·평가 가능한 것</b>으로 만든다.</div></div>
+  <div class="diff"><div class="dh">2. 시험을 없애서 조작을 없앤다</div><div class="db">사전작업으로 부풀릴 수 있는 시험(율이 케이스의 실제 허점)을 폐지. 무작위·익명·실전 평가라 <b>조작할 대상이 없다.</b></div></div>
+  <div class="diff"><div class="dh">3. 교육이 스스로 콘텐츠·매출을 만든다</div><div class="db">SNS 일기·특강·모델데이가 곧 브랜드 콘텐츠·수강 유입·매출. <b>교육이 비용이 아니라 엔진.</b></div></div>
+  <div class="diff"><div class="dh">4. 시스템이 스스로를 깬다</div><div class="db">분기마다 이 반복설계로 재설계. 굳지 않는 <b>살아있는 커리큘럼</b> — 이게 진짜 '세상에 없는' 부분.</div></div>
+
+  <h2><span class="n">◆</span>다음 반복 씨앗 (루프는 멈추지 않는다)</h2>
+  <div class="seed">ROUND 9 — 설명력 편중 문제: 말 못 하는 천재를 어떻게 안 놓칠까? (작품 자체로 증명하는 '무언(無言) 트랙' 검토)</div>
+  <div class="seed">ROUND 10 — 미감 은행이 '베끼기'로 흐를 위험: 수집→번역→창작의 창작 비중을 어떻게 강제할까?</div>
+  <div class="seed">ROUND 11 — 익명 채점의 역설: 익명이라 무책임한 혹평이 나오면? (근거 필수·촬영본 링크 의무화)</div>
+  <div class="seed">ROUND 12 — 3동력이 '수입'에 쏠려 예술성이 죽을 위험: 매출 기준의 상한/균형 장치.</div>
+
+  <div class="foot">A T &nbsp; N O W N &nbsp;·&nbsp; 반복설계 v1 · 밤샘</div>
+</div>
+</body>
+</html>
