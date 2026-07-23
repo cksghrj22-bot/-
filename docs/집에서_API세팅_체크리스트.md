@@ -33,7 +33,8 @@
 
 ## 📤 구글드라이브 자동화 (컴퓨터 아니라 폰에서 · 5분)
 > 파이프라인 Drive는 이미 됨. 남은 건 "폰→Drive 자동업로드"뿐 = **PhotoSync 앱**(API 아님).
-- 폰 App Store 「PhotoSync」 설치 → Google Drive 연결 → 대상 「쇼츠_배경클립_넣는곳」 → Autotransfer ON
+- 폰 App Store 「PhotoSync」 설치 → Google Drive 연결 → 대상 **「코드방_B롤_인트레이」**(ID `1MBvVanqFgvBjk7hS2wjOaYN6oiaoBtlO` — 코드 `shorts/intake_scan.py`가 읽는 정본 폴더) → Autotransfer ON
+  - ⚠️ 구 폴더 「쇼츠_배경클립_넣는곳」 아님. 파이프라인은 「코드방_B롤_인트레이」를 스캔한다(2026-07-23 실측: PhotoSync가 여기로 정상 업로드 중).
 - 상세: `docs/드라이브_업로드_자동화_계획.md`
 
 ## 🔑 값 넘기는 법 (안전)
@@ -43,7 +44,7 @@
 ## ✅ 완료 기준
 - `python3 -m pipeline check` 돌렸을 때 스레드·인스타가 ✅로 바뀜
 - 스레드 예약 8편이 자동으로 올라가기 시작
-- PhotoSync로 영상 찍어 올리면 Drive 「쇼츠_배경클립_넣는곳」에 뜸
+- PhotoSync로 영상 찍어 올리면 Drive 「코드방_B롤_인트레이」에 뜸 (파이프라인이 읽는 폴더)
 
 ---
 **요약: 집에서 = Meta 앱에서 스레드·인스타 토큰 2개. 나머지(유튜브·TTS·드라이브)는 이미 끝. 폰에선 PhotoSync 5분.**
