@@ -23,6 +23,27 @@ class TestGlyph(unittest.TestCase):
         self.assertFalse(textsafe.assert_ok("x😀", FB, 1800)[0])
 
 
+class TestRenderBased(unittest.TestCase):
+    """cmap이 아니라 실제 렌더로 깨짐 검출 — 교보 손글씨 space=□ 실사고 재현."""
+    HAND = "/root/.fonts/KyoboHandwriting2019.ttf"
+
+    def test_손글씨_공백깨짐_검출(self):
+        import os
+        if not os.path.exists(self.HAND):
+            self.skipTest("교보 폰트 없음")
+        # cmap엔 space가 있다고 나오지만, 실제로는 박스로 깨짐 → broken_chars가 잡아야
+        self.assertIn(" ", textsafe.broken_chars("러닝 = 인생", self.HAND))
+
+    def test_나눔은_공백정상(self):
+        self.assertEqual(textsafe.broken_chars("러닝 = 인생", FB), [])
+
+    def test_pick_font_깨지는손글씨_피하고_나눔선택(self):
+        import os
+        if not os.path.exists(self.HAND):
+            self.skipTest("교보 폰트 없음")
+        self.assertEqual(textsafe.pick_font("러닝 = 인생", [self.HAND, FB]), FB)
+
+
 class TestFit(unittest.TestCase):
     def setUp(self):
         self.d = ImageDraw.Draw(Image.new("RGB", (100, 100)))

@@ -42,15 +42,56 @@ def missing_glyphs(text: str, font_path: str) -> list[str]:
     return [c for c in dict.fromkeys(text) if c not in (" ", "\n") and ord(c) not in cm]
 
 
+def _ink(font, ch: str) -> int:
+    """글자를 실제로 렌더해 잉크(칠해진 픽셀) 개수. 빈 글리프=0, 두부박스=큰 값."""
+    try:
+        mask = font.getmask(ch, mode="L")
+        if mask.size == (0, 0):
+            return 0
+        return sum(1 for p in mask if p)
+    except Exception:
+        return -1
+
+
+@lru_cache(maxsize=64)
+def _notdef_ink(font_path: str, size: int) -> int:
+    """이 폰트에서 '없는 글자'(사설영역 U+E000)의 잉크량 = 두부박스 기준값."""
+    return _ink(ImageFont.truetype(font_path, size), "")
+
+
+def broken_chars(text: str, font_path: str, size: int = 80) -> list[str]:
+    """cmap이 아니라 '실제 렌더'로 깨지는 글자 검출 (진짜 원인 잡기).
+    - 공백이 잉크로 그려지면(교보 손글씨 space=□) → 깨짐.
+    - 비공백이 안 그려지거나(빈 글리프) 두부박스와 같으면 → 깨짐.
+    """
+    font = ImageFont.truetype(font_path, size)
+    box = _notdef_ink(font_path, size)
+    bad = []
+    for c in dict.fromkeys(text):
+        if c == "\n":
+            continue
+        ink = _ink(font, c)
+        if c == " ":
+            if ink and ink > 0:      # 공백인데 뭔가 그려짐 = 깨진 space
+                bad.append(c)
+        else:
+            if ink == 0:             # 글자인데 안 그려짐 = 빈 글리프
+                bad.append(c)
+            elif box > 0 and ink == box:  # 두부박스와 동일 = notdef
+                bad.append(c)
+    return bad
+
+
 def pick_font(text: str, candidates: list[str]) -> str:
-    """text의 모든 글리프를 가진 첫 폰트. 없으면 결손이 가장 적은 폰트."""
-    best, best_miss = candidates[0], None
+    """text가 '실제로 깨지지 않고' 그려지는 첫 폰트. (cmap 아닌 렌더 기반 — 교보 space=□ 같은 것도 잡음)
+    전부 깨지면 깨지는 글자가 가장 적은 폰트."""
+    best, best_bad = candidates[0], None
     for p in candidates:
-        m = missing_glyphs(text, p)
-        if not m:
+        bad = broken_chars(text, p)
+        if not bad:
             return p
-        if best_miss is None or len(m) < best_miss:
-            best, best_miss = p, len(m)
+        if best_bad is None or len(bad) < best_bad:
+            best, best_bad = p, len(bad)
     return best
 
 
@@ -125,8 +166,9 @@ def draw_centered(draw, lines, font, cx: float, top: float, fill, line_gap: floa
 
 
 def assert_ok(text: str, font_path: str, max_w: float, draw=None, size: int = 60):
-    """렌더 전 자가검사. 글리프 결손이 있으면 (False, 사유). 폭은 fit로 항상 해결되므로 경고만."""
-    miss = missing_glyphs(text, font_path)
-    if miss:
-        return False, f"글리프 없음 {''.join(miss)} in {font_path.split('/')[-1]}"
+    """렌더 전 자가검사. 실제 렌더로 깨지는 글자가 있으면 (False, 사유). 폭은 fit로 해결되므로 경고만."""
+    bad = broken_chars(text, font_path, size)
+    if bad:
+        shown = "".join("␣" if c == " " else c for c in bad)
+        return False, f"렌더 깨짐 '{shown}' in {font_path.split('/')[-1]}"
     return True, "ok"

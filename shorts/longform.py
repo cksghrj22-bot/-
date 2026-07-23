@@ -37,7 +37,10 @@ def title_card(main: str, sub: str, dur: float, out: Path, opening=False):
     img = Image.new("RGB", (W, H), (16, 16, 18))
     d = ImageDraw.Draw(img)
     if opening:
-        f = ImageFont.truetype(FONT_HAND, 92)
+        # 교보 손글씨는 공백을 □로 깨뜨림 → 실제 렌더로 검증해 안전 폰트 선택
+        from shorts import textsafe
+        hand = textsafe.pick_font(main, [FONT_HAND, FONT_B])
+        f = ImageFont.truetype(hand, 92)
         lines = _wrap(d, main, f, W - 160)
         y = H // 2 - len(lines) * 60 - 30
         for ln in lines:
