@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ATNOWN CUT ACADEMY</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{--cream:#F7F5F1;--ink:#111;--gold:#A8895E;--gray:#9B958C;--line:#E4DFD6;}
+  body{background:#e8e5df;color:var(--ink);font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;padding:28px 16px;}
+  .deck{max-width:960px;margin:0 auto;}
+  .slide{background:var(--cream);border:1px solid var(--line);margin-bottom:20px;padding:52px 56px;position:relative;overflow:hidden;min-height:300px;}
+  .serif{font-family:"Cormorant Garamond","Times New Roman",serif;}
+  .mono{position:absolute;top:34px;left:56px;display:flex;align-items:center;gap:14px;}
+  .an{width:34px;height:34px;border:1.5px solid var(--ink);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:"Cormorant Garamond",serif;font-weight:700;font-size:15px;letter-spacing:1px;}
+  .mlabel{font-size:10px;letter-spacing:.28em;color:var(--gray);font-weight:700;}
+  .vlabel{position:absolute;right:20px;top:50%;transform:translateY(-50%) rotate(180deg);writing-mode:vertical-rl;font-size:10px;letter-spacing:.3em;color:var(--gray);font-weight:700;}
+  .goldrule{height:1px;background:var(--gold);width:100%;position:relative;margin:0;}
+  .goldrule::after{content:"";position:absolute;right:0;top:-2px;width:5px;height:5px;background:var(--gold);border-radius:50%;}
+  /* cover */
+  .cover{min-height:440px;display:flex;flex-direction:column;justify-content:center;}
+  .cover h1{font-size:62px;line-height:1.02;font-weight:600;letter-spacing:.01em;}
+  .cover h1 .g{color:var(--gold);}
+  .cover .krsub{font-size:17px;color:var(--ink);margin-top:22px;font-weight:500;}
+  .cover .encap{font-size:11px;letter-spacing:.2em;color:var(--gray);margin-top:8px;font-weight:700;}
+  .icons{display:flex;gap:30px;margin-top:34px;}
+  .ico{display:flex;flex-direction:column;align-items:center;gap:7px;}
+  .ico .c{width:26px;height:26px;border:1.3px solid var(--gold);border-radius:50%;}
+  .ico .l{font-size:9.5px;letter-spacing:.16em;color:var(--gray);font-weight:700;}
+  /* section head */
+  .kicker{font-size:11px;letter-spacing:.24em;color:var(--gold);font-weight:700;margin-bottom:14px;}
+  .slide h2{font-family:"Cormorant Garamond","Times New Roman",serif;font-size:40px;font-weight:600;letter-spacing:.005em;line-height:1.1;}
+  .slide .lead{font-size:15px;color:#555;margin-top:14px;max-width:620px;line-height:1.7;}
+  .num{font-family:"Cormorant Garamond",serif;font-size:15px;color:var(--gold);font-weight:700;letter-spacing:.1em;}
+  /* overview table */
+  .otable{margin-top:26px;width:100%;border-collapse:collapse;}
+  .otable td{padding:15px 4px;border-bottom:1px solid var(--line);vertical-align:baseline;}
+  .otable .bn{font-family:"Cormorant Garamond",serif;font-size:24px;color:var(--gold);font-weight:700;width:64px;}
+  .otable .bt{font-size:17px;font-weight:700;}
+  .otable .bd{font-size:13px;color:var(--gray);padding-left:18px;}
+  /* detail slide */
+  .big{font-family:"Cormorant Garamond",serif;font-size:120px;line-height:.8;color:var(--gold);opacity:.9;position:absolute;right:56px;bottom:40px;font-weight:600;}
+  .points{margin-top:26px;list-style:none;max-width:600px;}
+  .points li{font-size:15px;padding:11px 0 11px 26px;border-bottom:1px solid var(--line);position:relative;color:#333;}
+  .points li::before{content:"—";position:absolute;left:0;color:var(--gold);font-weight:700;}
+  .master{min-height:360px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+  .master h2{font-size:46px;}
+  .master .sub{font-size:14px;color:var(--gray);margin-top:16px;letter-spacing:.05em;}
+  .foot{text-align:center;font-size:10px;letter-spacing:.35em;color:#b7b1a6;font-weight:700;margin:26px 0 4px;}
+  .fignote{position:absolute;right:56px;bottom:30px;font-size:10px;color:#cfc8bb;letter-spacing:.12em;}
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- COVER -->
+  <div class="slide cover">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">ATNOWN ACADEMY</div></div>
+    <div class="vlabel">CUT DESIGN</div>
+    <h1 class="serif">ATNOWN<br><span class="g">CUT</span> ACADEMY</h1>
+    <div class="krsub">기본기부터 살롱워크까지 — 커트 디자이너 양성 과정</div>
+    <div class="encap">PROFESSIONAL CUT CURRICULUM</div>
+    <div class="icons">
+      <div class="ico"><div class="c"></div><div class="l">SECTION</div></div>
+      <div class="ico"><div class="c"></div><div class="l">ELEVATION</div></div>
+      <div class="ico"><div class="c"></div><div class="l">LAYER</div></div>
+      <div class="ico"><div class="c"></div><div class="l">GRADATION</div></div>
+      <div class="ico"><div class="c"></div><div class="l">TEXTURE</div></div>
+      <div class="ico"><div class="c"></div><div class="l">MASTER</div></div>
+    </div>
+    <div class="fignote">◦ AI 인물 자리 (우측)</div>
+  </div>
+
+  <!-- WHY -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">WHY</div></div>
+    <div class="vlabel">CUT DESIGN</div>
+    <div class="kicker">왜 커트 기본기인가</div>
+    <h2 class="serif">커트는 손이 아니라<br>눈으로 한다</h2>
+    <ul class="points">
+      <li>도구와 친해지는 것이 먼저 — 가위·빗이 손의 일부가 될 때 디자인이 보인다</li>
+      <li>두상의 굴곡을 이해해야 같은 커트도 다른 분위기가 나온다</li>
+      <li>반복 숙련 — 현장에서 자유롭게 쓰는 수준까지 몸에 새긴다</li>
+    </ul>
+    <div class="fignote">◦ AI 인물 자리</div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">CURRICULUM</div></div>
+    <div class="kicker">커리큘럼 한눈에</div>
+    <h2 class="serif">Basic 1 — 7</h2>
+    <table class="otable">
+      <tr><td class="bn serif">01</td><td class="bt">커트 기본</td><td class="bd">도구·빗질·가위질에 익숙해지기</td></tr>
+      <tr><td class="bn serif">02</td><td class="bt">스퀘어 원랭스</td><td class="bd">두상 굴곡 · Natural fall · 바디포지션</td></tr>
+      <tr><td class="bn serif">03</td><td class="bt">그라데이션 (스퀘어)</td><td class="bd">엘레베이션 · 오버디렉션 · 포지션 안정성</td></tr>
+      <tr><td class="bn serif">04</td><td class="bt">그라데이션 (라운드)</td><td class="bd">두상 굴곡 · 라운드 섹션의 이해</td></tr>
+      <tr><td class="bn serif">05</td><td class="bt">레이어 (Natural Inversion)</td><td class="bd">레이어 원리 · 오버디렉션</td></tr>
+      <tr><td class="bn serif">06</td><td class="bt">레이어 (Flat Layer)</td><td class="bd">두상 굴곡 · 헤드/바디 포지션</td></tr>
+      <tr><td class="bn serif">07</td><td class="bt">질감 처리</td><td class="bd">질감 · 양감 · 다양한 테크닉</td></tr>
+    </table>
+  </div>
+
+  <!-- DETAIL 01 -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">BASIC 01</div></div>
+    <div class="vlabel">CUT DESIGN</div>
+    <div class="num">BASIC 01</div>
+    <h2 class="serif">커트 기본</h2>
+    <div class="lead">커트를 하기 위해 필요한 모든 행위에 익숙해지고, 도구와 친해지는 과정.</div>
+    <ul class="points"><li>빗질 · 가위질의 기본 동작</li><li>도구가 손의 일부가 되는 감각</li></ul>
+    <div class="big serif">01</div>
+  </div>
+
+  <!-- DETAIL 02 -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">BASIC 02</div></div>
+    <div class="vlabel">CUT DESIGN</div>
+    <div class="num">BASIC 02</div>
+    <h2 class="serif">스퀘어 원랭스</h2>
+    <ul class="points"><li>두상의 굴곡 이해</li><li>Natural fall의 이해</li><li>바디 포지션</li></ul>
+    <div class="big serif">02</div>
+  </div>
+
+  <!-- DETAIL 03 -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">BASIC 03</div></div>
+    <div class="vlabel">CUT DESIGN</div>
+    <div class="num">BASIC 03</div>
+    <h2 class="serif">그라데이션 · 스퀘어</h2>
+    <ul class="points"><li>엘레베이션과 오버디렉션의 이해</li><li>바디·헤드 포지션의 이해</li><li>핑거 포지션의 안정성</li></ul>
+    <div class="big serif">03</div>
+  </div>
+
+  <!-- DETAIL 04 -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">BASIC 04</div></div>
+    <div class="vlabel">CUT DESIGN</div>
+    <div class="num">BASIC 04</div>
+    <h2 class="serif">그라데이션 · 라운드</h2>
+    <ul class="points"><li>엘레베이션과 오버디렉션</li><li>두상 굴곡에 대한 이해</li><li>라운드 섹션의 이해</li></ul>
+    <div class="big serif">04</div>
+  </div>
+
+  <!-- DETAIL 05 -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">BASIC 05</div></div>
+    <div class="vlabel">CUT DESIGN</div>
+    <div class="num">BASIC 05</div>
+    <h2 class="serif">레이어 · Natural Inversion</h2>
+    <ul class="points"><li>레이어의 원리 이해</li><li>오버디렉션의 이해</li></ul>
+    <div class="big serif">05</div>
+  </div>
+
+  <!-- DETAIL 06 -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">BASIC 06</div></div>
+    <div class="vlabel">CUT DESIGN</div>
+    <div class="num">BASIC 06</div>
+    <h2 class="serif">레이어 · Flat Layer</h2>
+    <ul class="points"><li>두상 굴곡에 대한 이해</li><li>헤드 포지션과 바디 포지션</li></ul>
+    <div class="big serif">06</div>
+  </div>
+
+  <!-- DETAIL 07 -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">BASIC 07</div></div>
+    <div class="vlabel">CUT DESIGN</div>
+    <div class="num">BASIC 07</div>
+    <h2 class="serif">질감 처리</h2>
+    <ul class="points"><li>질감과 양감의 이해</li><li>다양한 테크닉의 이해</li></ul>
+    <div class="big serif">07</div>
+  </div>
+
+  <!-- EVAL -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">MASTERY</div></div>
+    <div class="vlabel">CUT DESIGN</div>
+    <div class="kicker">완성 기준</div>
+    <h2 class="serif">반복이 실력이 된다</h2>
+    <div class="lead">실전 살롱워크에 필요한 모든 것을 배우고, 반복 교육을 통해 실제 현장에서 자유롭게 활용할 수 있는 수준까지 완성한다.</div>
+  </div>
+
+  <!-- MASTER -->
+  <div class="slide master">
+    <div class="goldrule" style="width:52px;margin-bottom:26px;"></div>
+    <h2 class="serif">같은 베이스,<br>다른 분위기</h2>
+    <div class="sub">CUT IS NOT LENGTH — IT IS IMPRESSION</div>
+  </div>
+
+  <div class="foot">A T &nbsp; N O W N &nbsp; C U T &nbsp; A C A D E M Y</div>
+</div>
+</body>
+</html>
