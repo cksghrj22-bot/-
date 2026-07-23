@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>율이 입봉 심사 — 코멘트 종합 · 판정</title>
+<title>율이 입봉 심사 — 코멘트 종합 (익명)</title>
 <style>
   :root{--paper:#F4F0E6;--card:#FBF8F0;--ink:#23201A;--ink2:#6B6455;--ink3:#938B78;--rule:#DAD3C2;--pen:#C4302B;
     --A:#3B7A57;--Asoft:#E4EFE7;--B:#B8862B;--Bsoft:#F4EBD1;--C:#B23A3A;--Csoft:#F3DEDB;}
@@ -11,144 +11,123 @@
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--paper);color:var(--ink);line-height:1.6;font-family:system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
     background-image:radial-gradient(var(--rule) .5px,transparent .5px);background-size:22px 22px;}
-  .wrap{max-width:900px;margin:0 auto;padding:30px 18px 70px;}
-  header{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px;}
+  .wrap{max-width:920px;margin:0 auto;padding:30px 18px 70px;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:18px;}
   .eyebrow{font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink2);font-weight:700;}
-  h1{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:6px 0 3px;}
-  .sub{color:var(--ink2);font-size:14px;}
-  .verdict{background:var(--card);border:1px solid var(--rule);border-left:5px solid var(--A);border-radius:3px;padding:20px 22px;margin-bottom:26px;}
-  .vbig{font-size:26px;font-weight:800;letter-spacing:-.01em;}
-  .vbig .cond{font-size:14px;color:var(--ink2);font-weight:600;margin-left:8px;}
-  .vmeta{font-size:14px;color:var(--ink2);margin-top:8px;}
-  .vmeta b{color:var(--ink);}
-  h2{font-size:12.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink2);font-weight:800;margin:30px 0 12px;display:flex;align-items:center;gap:10px;}
-  h2::before{content:"";width:20px;height:2px;background:var(--pen);}
-  .card{background:var(--card);border:1px solid var(--rule);border-radius:3px;padding:16px 18px;margin-bottom:11px;}
+  h1{font-size:29px;font-weight:800;letter-spacing:-.02em;margin:6px 0 3px;}
+  .sub{color:var(--ink2);font-size:13.5px;}
+  .anon{font-size:12px;color:var(--ink3);margin-top:8px;background:var(--card);border:1px solid var(--rule);border-radius:20px;display:inline-block;padding:4px 12px;}
+  .verdict{background:var(--card);border:1px solid var(--rule);border-left:5px solid var(--A);border-radius:3px;padding:16px 20px;margin:18px 0 20px;}
+  .vbig{font-size:20px;font-weight:800;}
+  .legend{font-size:12px;color:var(--ink3);margin:2px 0 14px;}
+  .card{background:var(--card);border:1px solid var(--rule);border-radius:3px;padding:15px 18px;margin-bottom:11px;}
   .chead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:9px;}
-  .who{font-size:16px;font-weight:800;}
-  .pf{font-size:11.5px;font-weight:800;padding:2px 9px;border-radius:20px;}
+  .who{font-size:15px;font-weight:800;color:var(--ink2);letter-spacing:.02em;}
+  .pf{font-size:11px;font-weight:800;padding:2px 9px;border-radius:20px;}
   .pass{background:var(--Asoft);color:var(--A);} .fail{background:var(--Csoft);color:var(--C);}
   .grades{display:flex;gap:5px;margin-left:auto;}
-  .g{width:26px;height:26px;border-radius:5px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:12px;line-height:1;}
-  .g small{font-size:7px;font-weight:700;opacity:.75;letter-spacing:.02em;}
+  .g{width:26px;height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:12px;line-height:1;}
+  .g small{font-size:7px;font-weight:700;opacity:.75;}
   .gA{background:var(--Asoft);color:var(--A);} .gB{background:var(--Bsoft);color:var(--B);} .gC{background:var(--Csoft);color:var(--C);}
-  .cmt{font-size:13.5px;color:var(--ink);border-top:1px dashed var(--rule);padding-top:9px;}
+  .cmt{font-size:13px;color:var(--ink);border-top:1px dashed var(--rule);padding-top:9px;}
   .cmt .lab{color:var(--ink3);font-size:11px;font-weight:700;letter-spacing:.08em;}
-  .cmt ul{margin:5px 0 0;padding-left:16px;}
-  .cmt li{margin-bottom:3px;}
-  .nocmt{font-size:12.5px;color:var(--ink3);border-top:1px dashed var(--rule);padding-top:9px;}
-  .legend{font-size:12px;color:var(--ink3);margin:4px 0 0;}
-  .final{background:var(--card);border:1px solid var(--rule);border-radius:3px;padding:18px 20px;margin-top:8px;}
-  .final ol{margin:8px 0 0;padding-left:20px;}
-  .final li{font-size:14px;margin-bottom:7px;}
-  footer{margin-top:26px;font-size:12px;color:var(--ink3);text-align:center;letter-spacing:.05em;}
+  .cmt ul{margin:5px 0 0;padding-left:15px;}
+  .cmt li{margin-bottom:5px;}
+  .cmt .ch{font-weight:700;color:var(--ink2);}
+  .cmt .tot{margin-top:8px;padding-top:7px;border-top:1px dotted var(--rule);color:var(--ink2);}
+  footer{margin-top:24px;font-size:12px;color:var(--ink3);text-align:center;letter-spacing:.05em;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
     <div class="eyebrow">ATNOWN · 율이 디자이너 입봉 심사 · 2026-07-17</div>
-    <h1>채점 코멘트 종합 &amp; 판정</h1>
-    <div class="sub">채점위원별 코멘트 원문 · 합불은 종합 판단</div>
+    <h1>채점 코멘트 종합 (익명)</h1>
+    <div class="sub">채점위원별 코멘트 원문 · 순서는 무작위</div>
+    <div class="anon">🔒 익명 처리 — 채점자 이름 삭제 · 누가 어떤 평가를 했는지 알 수 없도록 순서를 섞음</div>
   </header>
 
   <div class="verdict">
-    <div class="vbig">합격 <span class="cond">— 조건부(육성 과제 있음)</span></div>
-    <div class="vmeta">채점 <b>합격 6 : 불합격 3</b>. 불합격 사유는 <b>펌디자인·업스타일·시연 설명력</b>에 몰려 있음 — 자질 결격이 아니라 입사 후 육성 지점. 강점(PPT·기획·세계관)은 이미 디자이너급.</div>
+    <div class="vbig">종합 — 코멘트 전달 후, 현재 합격 유력</div>
   </div>
 
-  <div class="legend">등급 · <b style="color:var(--A)">A</b> 우수 &nbsp; <b style="color:var(--B)">B</b> 합격 &nbsp; <b style="color:var(--C)">C</b> 미흡 &nbsp;/&nbsp; 챕터 C1 스타일링 · C2 업스타일 · C3 펌디자인 · C4 PPT력 · C5 기획력</div>
-
-  <h2>합격 판정 위원</h2>
+  <div class="legend">등급 · <b style="color:var(--A)">A</b> 우수 &nbsp; <b style="color:var(--B)">B</b> 합격 &nbsp; <b style="color:var(--C)">C</b> 미흡 &nbsp;/&nbsp; C1 스타일링 · C2 업스타일 · C3 펌디자인 · C4 PPT력 · C5 기획력 &nbsp;/&nbsp; <b>채점 9인 · 합격 6 : 불합격 3</b></div>
 
   <div class="card">
-    <div class="chead"><span class="who">창엽 부원장</span><span class="pf pass">합격</span>
-      <span class="grades"><span class="g gA">A<small>C1</small></span><span class="g gB">B<small>C2</small></span><span class="g gA">A<small>C3</small></span><span class="g gA">A<small>C4</small></span><span class="g gA">A<small>C5</small></span></span></div>
-    <div class="nocmt">코멘트 원문 미확보 (시트에서 추가 가능) · 등급 전반 우수.</div>
-  </div>
-
-  <div class="card">
-    <div class="chead"><span class="who">승현 실장</span><span class="pf pass">합격</span>
+    <div class="chead"><span class="who">위원 ①</span><span class="pf pass">합격</span>
       <span class="grades"><span class="g gA">A<small>C1</small></span><span class="g gB">B<small>C2</small></span><span class="g gB">B<small>C3</small></span><span class="g gA">A<small>C4</small></span><span class="g gA">A<small>C5</small></span></span></div>
-    <div class="nocmt">코멘트 원문 미확보 (시트에서 추가 가능).</div>
   </div>
 
   <div class="card">
-    <div class="chead"><span class="who">보미 실장</span><span class="pf pass">합격</span>
-      <span class="grades"><span class="g gC">C<small>C1</small></span><span class="g gB">B<small>C2</small></span><span class="g gB">B<small>C3</small></span><span class="g gA">A<small>C4</small></span><span class="g gB">B<small>C5</small></span></span></div>
-    <div class="nocmt">코멘트 원문 미확보 (시트에서 추가 가능).</div>
-  </div>
-
-  <div class="card">
-    <div class="chead"><span class="who">시은 부원장</span><span class="pf pass">합격</span>
-      <span class="grades"><span class="g gB">B<small>C1</small></span><span class="g gB">B<small>C2</small></span><span class="g gB">B<small>C3</small></span><span class="g gC">C<small>C4</small></span><span class="g gB">B<small>C5</small></span></span></div>
-    <div class="nocmt">코멘트 원문 미확보 (시트에서 추가 가능).</div>
-  </div>
-
-  <div class="card">
-    <div class="chead"><span class="who">이호 실장</span><span class="pf pass">합격</span>
-      <span class="grades"><span class="g gB">B<small>C1</small></span><span class="g gB">B<small>C2</small></span><span class="g gC">C<small>C3</small></span><span class="g gB">B<small>C4</small></span><span class="g gB">B<small>C5</small></span></span></div>
-    <div class="nocmt">코멘트 원문 미확보 (시트에서 추가 가능).</div>
-  </div>
-
-  <div class="card">
-    <div class="chead"><span class="who">신후 원장</span><span class="pf pass">합격</span>
-      <span class="grades"><span class="g gC">C<small>C1</small></span><span class="g gC">C<small>C2</small></span><span class="g gC">C<small>C3</small></span><span class="g gB">B<small>C4</small></span><span class="g gA">A<small>C5</small></span></span></div>
-    <div class="nocmt">코멘트 원문 미확보 (시트에서 추가 가능).</div>
-  </div>
-
-  <h2>불합격 판정 위원 (코멘트 원문)</h2>
-
-  <div class="card">
-    <div class="chead"><span class="who">와이 원장</span><span class="pf fail">불합격</span>
+    <div class="chead"><span class="who">위원 ②</span><span class="pf fail">불합격</span>
       <span class="grades"><span class="g gC">C<small>C1</small></span><span class="g gC">C<small>C2</small></span><span class="g gC">C<small>C3</small></span><span class="g gA">A<small>C4</small></span><span class="g gB">B<small>C5</small></span></span></div>
-    <div class="cmt"><span class="lab">코멘트</span>
+    <div class="cmt"><span class="lab">코멘트 원문</span>
       <ul>
-        <li>C1·C2 — "모든 과정이 사전작업되어 있어 수준 가늠이 어려움 / 결 정리가 이미 되어 있어 평가가 어려움"</li>
-        <li>C3 — 시술 전 강조한 옆볼륨이 실제로 만들어지지 않음, 컨셉 대비 펌 테크닉이 단조로움</li>
-        <li>C4 — 세계관·자료가 명확함 (A)</li>
-        <li>C5 — 기획이 좋음 (B)</li>
+        <li><span class="ch">C1</span> 모든 과정이 사전작업이 되어있어서 수준을 가늠하기 어려움</li>
+        <li><span class="ch">C2</span> 가장 중요한 백콤 테크닉, 결 정리가 이미 되어있어 평가에 어려움이 있고, 시연 중 번의 들뜸을 계속해서 수정하는 모습에서 어느 시점에서 평가를 내려야 하는지 판단할 수 없는 와중, 베일의 대칭이 맞지 않는 상태에서 마무리를 보이지 않는 곳으로 이동하여 수정하여 평가하기 어려움</li>
+        <li><span class="ch">C3</span> 시술 전 강조했던 옆볼륨이 만들어지지 않았고, 세계관·컨셉·페르소나에 비해 펌 테크닉이 단조롭고 특별함이 없어(결과물도 마찬가지) 준비한 세계관이 설득되지 않음</li>
+        <li><span class="ch">C4</span> 세계관 및 컨셉을 다양한 자료로 보여줌으로써 디자이너의 추구미와 방향성을 명확하게 이해할 수 있었음</li>
+        <li><span class="ch">C5</span> 기획력은 좋으나 결과물은 평범했음</li>
       </ul>
+      <div class="tot"><b>종합</b> — 인턴 실력을 고려하면 평범한 수준이었지만 기획력과 과정을 즐기는 모습이 보기 좋았음. 다만 고객을 맞이할 충분한 실력과 태도를 증명하기는 어려움. 여유로운 애티튜드와 건조한 애티튜드는 다름을 인지할 필요, '나는 어떤 디자이너가 될 것인가' 단락의 태도·마인드를 다시 점검해 볼 필요.</div>
     </div>
   </div>
 
   <div class="card">
-    <div class="chead"><span class="who">성희 부원장</span><span class="pf fail">불합격</span>
+    <div class="chead"><span class="who">위원 ③</span><span class="pf pass">합격</span>
+      <span class="grades"><span class="g gB">B<small>C1</small></span><span class="g gB">B<small>C2</small></span><span class="g gC">C<small>C3</small></span><span class="g gB">B<small>C4</small></span><span class="g gB">B<small>C5</small></span></span></div>
+  </div>
+
+  <div class="card">
+    <div class="chead"><span class="who">위원 ④</span><span class="pf fail">불합격</span>
       <span class="grades"><span class="g gB">B<small>C1</small></span><span class="g gB">B<small>C2</small></span><span class="g gC">C<small>C3</small></span><span class="g gB">B<small>C4</small></span><span class="g gC">C<small>C5</small></span></span></div>
-    <div class="cmt"><span class="lab">코멘트</span>
+    <div class="cmt"><span class="lab">코멘트 원문</span>
       <ul>
-        <li>C1 — "이번 시연만으로는 커트 역량을 확인하기 어려웠다" · 두상·얼굴형 분석과 디자인 설계가 보이지 않음(스태프↔디자이너 차이) · 설명력·에티튜드가 아쉬움</li>
-        <li>C3 — 모발 진단·약제 선택 근거·시술 후 손상 관리 안내가 부족</li>
-        <li>C5 — 초반 PPT 대비 후반 영상 퀄리티가 저하, 감성 호소로 완성도가 하락</li>
+        <li><span class="ch">C1</span> 이번 시연만으로는 커트 역량을 충분히 확인하기 어려웠고 설명 과정도 다소 부족. 디자이너와 스태프를 구분하는 핵심은 고객의 두상·얼굴형을 분석해 맞는 디자인을 설계하는 능력인데, 이번 시연에서는 분석·디자인 의도가 충분히 전달되지 않았고 설명·시연 에티튜드에서도 아쉬움</li>
+        <li><span class="ch">C2</span> 클래식 번의 기본 원리 이해와 구현 능력이 다소 부족, 기술적 완성도·안정감이 전반적으로 아쉬움</li>
+        <li><span class="ch">C3</span> 모발 진단·손상도에 따른 시술 설계 설명이 충분치 않고, 시술 후 손상 최소화 주의사항 안내가 없었으며, 약제 선택 근거를 모발 진단·손상 관리 관점까지 연결해 설명하지 못한 점이 아쉬움</li>
+        <li><span class="ch">C4</span> 시각적 구성 시도는 좋았으나 기획 의도보다 제작 과정(인쇄·수정) 위주 설명이 많아 설득력이 떨어지고, '북(Book)' 형식의 이유·메시지보다 형식에 내용을 채운 느낌</li>
+        <li><span class="ch">C5</span> 초반 PPT 대비 후반 영상 퀄리티 차이가 크고, 후반으로 갈수록 전문성보다 감성 호소에 초점이 맞춰져 완성도·일관성이 약해짐, 디자인 선택 이유와 쇼 기획 의도 연결 설명 부족</li>
+      </ul>
+      <div class="tot"><b>종합</b> — 기술은 향후 성장 가능한 영역. 다만 소통 능력·설명력·시연 에티튜드에서 프로페셔널한 자세가 다소 부족. 부족한 점을 객관적으로 인식하며 보완하면 경쟁력 있는 디자이너로 성장 기대.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="chead"><span class="who">위원 ⑤</span><span class="pf pass">합격</span>
+      <span class="grades"><span class="g gA">A<small>C1</small></span><span class="g gB">B<small>C2</small></span><span class="g gA">A<small>C3</small></span><span class="g gA">A<small>C4</small></span><span class="g gA">A<small>C5</small></span></span></div>
+  </div>
+
+  <div class="card">
+    <div class="chead"><span class="who">위원 ⑥</span><span class="pf fail">불합격</span>
+      <span class="grades"><span class="g gB">B<small>C1</small></span><span class="g gC">C<small>C2</small></span><span class="g gC">C<small>C3</small></span><span class="g gB">B<small>C4</small></span><span class="g gB">B<small>C5</small></span></span></div>
+    <div class="cmt"><span class="lab">코멘트 원문</span>
+      <ul>
+        <li><span class="ch">C1</span> 커트를 제대로 볼 수가 없었습니다. 스타일링 형태는 예뻤으나 면처리가 지저분해요</li>
+        <li><span class="ch">C2</span> 핀 꽂는 위치, 앞가르마, 클래식번의 이해도와 전달력이 미흡하며, 모델 워킹 시 핀이 벌어지는 사태를 보았어요. 아쉽습니다</li>
+        <li><span class="ch">C3</span> 앞머리 뒷머리 연결감이 아쉽고, 모질에 대한 연화펌/직펌 선택 기준 설명이 애매모호, 컬이 제각각이라 심사가 어려웠어요</li>
+        <li><span class="ch">C4</span> 다이어리 기획력은 좋으나 정확한 무드 설명과 실제 모델들 느낌이 달랐던 점이 아쉬워요</li>
+        <li><span class="ch">C5</span> 기획 노력은 보이나 전반적으로 준비가 아쉽고, 쇼와 연결고리가 설명과 일치하는지 분별하기 어렵습니다</li>
       </ul>
     </div>
   </div>
 
   <div class="card">
-    <div class="chead"><span class="who">재아 실장</span><span class="pf fail">불합격</span>
-      <span class="grades"><span class="g gB">B<small>C1</small></span><span class="g gC">C<small>C2</small></span><span class="g gC">C<small>C3</small></span><span class="g gB">B<small>C4</small></span><span class="g gB">B<small>C5</small></span></span></div>
-    <div class="cmt"><span class="lab">코멘트</span>
-      <ul>
-        <li>C1 — 면처리가 지저분함</li>
-        <li>C2 — 핀 위치·앞가르마·클래식번 이해도가 미흡, 워킹 중 핀이 벌어짐</li>
-        <li>C3 — 앞뒤 연결감이 아쉬움, 연화펌/직펌 선택 기준이 애매, 컬이 제각각</li>
-        <li>C4·C5 — 기획 노력은 보이나 무드 설명과 실제 모델 느낌이 불일치, 쇼 연결고리가 불명확</li>
-      </ul>
-    </div>
+    <div class="chead"><span class="who">위원 ⑦</span><span class="pf pass">합격</span>
+      <span class="grades"><span class="g gB">B<small>C1</small></span><span class="g gB">B<small>C2</small></span><span class="g gB">B<small>C3</small></span><span class="g gC">C<small>C4</small></span><span class="g gB">B<small>C5</small></span></span></div>
   </div>
 
-  <h2>종합 판단 (합불)</h2>
-  <div class="final">
-    <div class="vbig" style="font-size:20px">합격 (조건부)</div>
-    <ol>
-      <li><b>다수 합격 6 : 3.</b> 제출된 채점의 3분의 2가 합격 판정.</li>
-      <li><b>불합격 사유가 흩어지지 않고 한곳에 몰린다.</b> 펌디자인(C3)·업스타일(C2)·시연 설명력에 집중 → 자질 결격이 아니라 <b>콕 집어 육성할 과제</b>.</li>
-      <li><b>강점은 이미 디자이너급.</b> PPT·기획·세계관은 배워서 되기 어려운 축인데 이미 갖춤 → 지켜주면 됨.</li>
-      <li><b>결론: 합격.</b> 입사 후 <b>펌디자인 · 업스타일 · 시연 설명력/에티튜드</b> 3가지를 집중 보완 조건.</li>
-    </ol>
+  <div class="card">
+    <div class="chead"><span class="who">위원 ⑧</span><span class="pf pass">합격</span>
+      <span class="grades"><span class="g gC">C<small>C1</small></span><span class="g gC">C<small>C2</small></span><span class="g gC">C<small>C3</small></span><span class="g gB">B<small>C4</small></span><span class="g gA">A<small>C5</small></span></span></div>
   </div>
 
-  <footer>차노 원장(본인)·소희 원장·라희 실장 미작성 · 개인 평가 자료(비공개)</footer>
+  <div class="card">
+    <div class="chead"><span class="who">위원 ⑨</span><span class="pf pass">합격</span>
+      <span class="grades"><span class="g gC">C<small>C1</small></span><span class="g gB">B<small>C2</small></span><span class="g gB">B<small>C3</small></span><span class="g gA">A<small>C4</small></span><span class="g gB">B<small>C5</small></span></span></div>
+  </div>
+
+  <footer>일부 위원 미작성 · 개인 평가 자료(비공개)</footer>
 </div>
 </body>
 </html>
