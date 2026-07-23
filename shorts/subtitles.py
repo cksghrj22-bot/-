@@ -331,11 +331,15 @@ Format: Layer, Start, End, Style, Text
         vid_end = total_duration if total_duration is not None else last_end
         dur = float(ost.get("dur", 2.8))
         o_start = max(0.0, vid_end - dur)
+        # 프레임 양자화 가드: 출력 mp4는 total_duration보다 최대 몇 프레임(~0.1s) 짧게 끝난다
+        # (마지막 프레임 경계로 반올림). 아웃트로 끝을 total_duration에 딱 맞추면 verify가 '잘림'으로
+        # 오탐 → 끝을 0.15s 당긴다(페이드아웃 중이라 눈에 안 보임). 2026-07-23 박제(렌더버그 #10).
+        o_end = max(o_start + 0.5, vid_end - 0.15)
         fin, fout = (ost.get("fade") or [0, 0])[:2]
         # 글자(1a)·외곽선(3a)만 alpha 적용. 박스(BackColour=4a)는 style의 box_opacity가 제어하게
         # 남겨둔다 → 어두운 박스는 또렷하게 깔리고 글자만 원하는 투명도. (blanket \alpha는 박스까지 투명화)
         a = ost.get("alpha", "80")
         tag = f"{{\\fad({int(fin)},{int(fout)})\\1a&H{a}&\\3a&H{a}&}}"
         otext = outro.replace("\n", "\\N")
-        events.append(f"Dialogue: 2,{_ass_time(o_start)},{_ass_time(vid_end)},Outro,{tag}{otext}")
+        events.append(f"Dialogue: 2,{_ass_time(o_start)},{_ass_time(o_end)},Outro,{tag}{otext}")
     return header + "\n".join(events) + "\n"
