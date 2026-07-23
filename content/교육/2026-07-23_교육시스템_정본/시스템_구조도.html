@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>앳나운 교육 시스템 구조도</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:#f4f4f2;color:#111;font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;padding:40px 18px;line-height:1.5;}
+  .deck{max-width:1000px;margin:0 auto;}
+  .card{background:#fff;border:1px solid #e2e2e0;border-radius:2px;padding:34px 38px;margin-bottom:20px;}
+  .kicker{font-size:11px;letter-spacing:.22em;color:#999;font-weight:700;}
+  h1{font-size:30px;font-weight:800;letter-spacing:-.01em;margin:6px 0 4px;}
+  h2{font-size:20px;font-weight:800;letter-spacing:-.01em;margin:2px 0 3px;}
+  .sub{font-size:13px;color:#888;margin-bottom:18px;}
+  .rule{height:2px;background:#111;width:44px;margin:12px 0 20px;}
+  /* flow map */
+  .flow{display:flex;align-items:stretch;gap:0;margin:4px 0 8px;flex-wrap:nowrap;}
+  .stage{flex:1;text-align:center;padding:14px 6px;border:1px solid #e2e2e0;background:#fafafa;position:relative;}
+  .stage .n{font-size:10px;letter-spacing:.15em;color:#aaa;font-weight:700;}
+  .stage .t{font-size:14px;font-weight:800;margin-top:3px;}
+  .stage .d{font-size:10.5px;color:#888;margin-top:3px;line-height:1.35;}
+  .arrow{display:flex;align-items:center;color:#bbb;font-weight:800;padding:0 4px;font-size:15px;}
+  .endcap{flex:0 0 auto;background:#111;color:#fff;display:flex;flex-direction:column;justify-content:center;padding:14px 16px;text-align:center;}
+  .endcap .t{font-size:14px;font-weight:800;}
+  .endcap .d{font-size:10px;color:#bbb;margin-top:2px;}
+  .tracks{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px;}
+  .track{border:1px solid #e2e2e0;border-top:4px solid #111;padding:12px 14px;background:#fff;}
+  .track .t{font-weight:800;font-size:14px;}
+  .track .yr{font-size:12px;color:#e67e00;font-weight:700;margin-top:1px;}
+  .track .d{font-size:11.5px;color:#777;margin-top:5px;}
+  /* lanes */
+  .grid8{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+  .lane{border:1px solid #e2e2e0;border-left:5px solid #111;padding:11px 14px;background:#fafafa;}
+  .lane .subj{font-weight:800;font-size:15px;}
+  .lane .who{font-size:12.5px;color:#666;margin-top:1px;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{background:#111;color:#fff;text-align:left;padding:9px 12px;font-weight:700;font-size:12.5px;}
+  td{padding:9px 12px;border-bottom:1px solid #ececea;vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  td.k{font-weight:800;white-space:nowrap;width:1%;}
+  td.g{color:#777;font-size:12px;}
+  .chip{display:inline-block;background:#f0efec;border:1px solid #e2e2e0;border-radius:2px;padding:3px 9px;font-size:12px;margin:3px 4px 0 0;}
+  .note{font-size:12px;color:#666;margin-top:14px;padding-top:11px;border-top:1px dashed #ddd;}
+  .redcard{border-left:5px solid #c0392b;}
+  .foot{text-align:center;font-size:11px;letter-spacing:.3em;color:#bbb;font-weight:700;margin:28px 0 6px;}
+  @media(max-width:720px){.flow{flex-wrap:wrap}.stage{flex:1 1 30%}.arrow{display:none}.tracks{grid-template-columns:1fr}.grid8{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- HERO: SYSTEM MAP -->
+  <div class="card">
+    <div class="kicker">AT NOWN · EDUCATION SYSTEM 2026</div>
+    <h1>앳나운 교육 시스템 구조도</h1>
+    <div class="sub">한 줄기 = 한 선생님 전담 · 5레벨 관점 · 모델작업 실전 · 지점별 전문가</div>
+    <div class="rule"></div>
+    <div class="flow">
+      <div class="stage"><div class="n">입사</div><div class="t">START</div><div class="d">CS·마인드</div></div>
+      <div class="arrow">›</div>
+      <div class="stage"><div class="n">LV.1</div><div class="t">재미·마인드</div><div class="d">왜 하는지</div></div>
+      <div class="arrow">›</div>
+      <div class="stage"><div class="n">LV.2</div><div class="t">기본기</div><div class="d">반복 숙련</div></div>
+      <div class="arrow">›</div>
+      <div class="stage"><div class="n">LV.3</div><div class="t">모질·기능</div><div class="d">펌·염색 화학</div></div>
+      <div class="arrow">›</div>
+      <div class="stage"><div class="n">LV.4</div><div class="t">퍼스널 상담</div><div class="d">맞춤 디자인</div></div>
+      <div class="arrow">›</div>
+      <div class="stage"><div class="n">LV.5</div><div class="t">트렌드 미감</div><div class="d">영감→헤어</div></div>
+      <div class="arrow">›</div>
+      <div class="endcap"><div class="t">디자이너 승급</div><div class="d">5중 2 → 승급시험</div></div>
+    </div>
+    <div class="tracks">
+      <div class="track"><div class="t">앳나운 옴므 (맨즈)</div><div class="yr">2년</div><div class="d">남자머리 전문가 · STAGE 0→7</div></div>
+      <div class="track"><div class="t">앳나운 한남 (시그니처)</div><div class="yr">2년 반</div><div class="d">살롱 시그니처 · 컷+펌 / 컷+염색</div></div>
+      <div class="track"><div class="t">앳나운 플레이스</div><div class="yr">3년</div><div class="d">한남 + 업스타일</div></div>
+    </div>
+    <div class="note">문제의식 — ① 맥락 없음(레벨 난이도 모호) ② 모델작업 부재(아침교육) ③ 기간 김 &nbsp;→&nbsp; 관점·모델데이·지점 전문화로 "홀로 서게" 만든다</div>
+  </div>
+
+  <!-- 과목 전담제 -->
+  <div class="card">
+    <div class="kicker">CORE — 과목 전담제</div>
+    <h2>선생님 8명, 한 과목 전담</h2>
+    <div class="sub">퍼즐식 분담이 아니라 한 과목 전담 — 시즈가 그 개인 커리큘럼으로 들어간다</div>
+    <div class="rule"></div>
+    <div class="grid8">
+      <div class="lane"><div class="subj">열펌 (기본)</div><div class="who">차노</div></div>
+      <div class="lane"><div class="subj">탈색 · 염색</div><div class="who">연교</div></div>
+      <div class="lane"><div class="subj">트렌드 · 콜드펌</div><div class="who">성희</div></div>
+      <div class="lane"><div class="subj">기본기 커트</div><div class="who">이호</div></div>
+      <div class="lane"><div class="subj">카핑컷 · 무드복사</div><div class="who">창엽</div></div>
+      <div class="lane"><div class="subj">업스타일 · 인플루언서</div><div class="who">보미</div></div>
+      <div class="lane"><div class="subj">미 · 커트 · 감정선</div><div class="who">신후</div></div>
+      <div class="lane"><div class="subj">비스포크</div><div class="who">와이</div></div>
+    </div>
+    <div class="note">공급 — 선생님이 레벨당 3과목(시그니처 모듈)과 통과 기준을 설계 &nbsp;/&nbsp; 수요 — 학생은 Lv.1~2 공통 기반 후 Lv.2부터 자기 미감대로 과목을 배치·선택(나만의 성장 경로)</div>
+  </div>
+
+  <!-- 펌 라인 -->
+  <div class="card">
+    <div class="kicker">과목 상세 — 확정</div>
+    <h2>펌 · 와인딩 라인 <span style="font-size:12px;color:#999;font-weight:600;">(키노트 추출)</span></h2>
+    <div class="rule"></div>
+    <table>
+      <tr><th>Lv</th><th>과목</th></tr>
+      <tr><td class="k">1</td><td>모발학·ph·약제 구조 · 머리 말리는 법(남/여 · 블로우/아이롱/매직 C컬) · 기본터치법(버진헤어 도포·다운펌·염색 원·투·쓰리터치) · 호리존탈 와인딩 · 업/펌/다운펌 세척법</td></tr>
+      <tr><td class="k">2</td><td>다데 와인딩 · 다이애거널(사선) · 씽(Thin) · 열펌 와인딩(C컬/S컬) — 이론(차이점) + 세척·중화·크리프</td></tr>
+      <tr><td class="k">3</td><td>히피 트위스트 · 호일펌 · 스핀스왈로펌(핀컬) · 스트레이트+볼륨매직 — 특징/원리/추천모질/차이점</td></tr>
+      <tr><td class="k">4</td><td>단발·긴머리·숏 디자인 열펌/일반펌 하는 법 — 시안 읽는 법 + 응용 스킬</td></tr>
+      <tr><td class="k">5</td><td>고객분석 → 펌 상담법 → 디자인 분석 → 약제 선택 → 와인딩 선택 + 결과 예측 &nbsp;(실모델 5회차)</td></tr>
+    </table>
+  </div>
+
+  <!-- 커트 라인 -->
+  <div class="card">
+    <div class="kicker">과목 상세 — 확정</div>
+    <h2>커트 Basic 라인 <span style="font-size:12px;color:#999;font-weight:600;">(키노트 추출)</span></h2>
+    <div class="rule"></div>
+    <span class="chip">1 커트 기본</span><span class="chip">2 스퀘어 원랭스</span><span class="chip">3 그라데이션(스퀘어)</span><span class="chip">4 그라데이션(라운드)</span><span class="chip">5 레이어(Natural Inversion)</span><span class="chip">6 레이어(Flat Layer)</span><span class="chip">7 질감처리</span>
+    <div class="note">엘레베이션·오버디렉션 / 바디·헤드·핑거 포지션 안정성 / 두상 굴곡·라운드 섹션 / Natural fall / 질감·양감·다양한 테크닉 → 반복교육으로 실전 살롱워크 자유 활용까지 완성</div>
+  </div>
+
+  <!-- 맨즈 STAGE -->
+  <div class="card">
+    <div class="kicker">앳나운 옴므 (맨즈) · 2년</div>
+    <h2>인턴 로드맵 STAGE 0 → 7 <span style="font-size:12px;color:#999;font-weight:600;">(총괄 와이 원장)</span></h2>
+    <div class="rule"></div>
+    <table>
+      <tr><th>STAGE</th><th>교육 내용</th><th>담당</th><th>기간</th></tr>
+      <tr><td class="k">0</td><td>CS·마인드 — 세계관, 왜 일하는가 <span style="color:#999">(필사·발표)</span></td><td class="g">강사 Y</td><td class="g">1주</td></tr>
+      <tr><td class="k">0.5</td><td>CS·기본기 — 매뉴얼·리셉션·약재·샴푸·두피케어</td><td class="g">점장·범진·유안·태원</td><td class="g">1개월</td></tr>
+      <tr><td class="k">1</td><td>남자 드라이·스타일링 — 댄디컷·슬릭백·플랫컷·가일</td><td class="g">강사 Y</td><td class="g">1개월</td></tr>
+      <tr><td class="k">2</td><td>염색·약터치 — 열펌 약터치·중화 / 새치커버 / 업컬러(원·투·쓰리터치)</td><td class="g">강사 Y</td><td class="g">1개월</td></tr>
+      <tr><td class="k">3</td><td>다운펌 — 기본 다운펌(DP) / 조각 다운펌(플랫·슬릭백)</td><td class="g">강사 Y</td><td class="g">1개월</td></tr>
+      <tr><td class="k">4</td><td>와인딩 — 기본 와인딩(60개) / 스타일(쉐도우펌·텍스처펌)</td><td class="g">강사 Y</td><td class="g">1개월</td></tr>
+      <tr><td class="k">5</td><td>열펌 — 라인매직·아이론펌·디지털펌·모류교정</td><td class="g">강사 서나</td><td class="g">1개월</td></tr>
+      <tr><td class="k">6</td><td>정규과정 — 커트·드라이(원랭스·그레쥬에이션·레이어, 각 한 통)</td><td class="g">—</td><td class="g">추후</td></tr>
+      <tr><td class="k">7</td><td>모델워크·실전 — 리프컷·미디엄댄디·텍스처/플랫컷</td><td class="g">모델워크 동시</td><td class="g">3개월</td></tr>
+    </table>
+  </div>
+
+  <!-- 운영 -->
+  <div class="card">
+    <div class="kicker">운영</div>
+    <h2>모델작업데이 · 특강 · 평가</h2>
+    <div class="rule"></div>
+    <table>
+      <tr><th>항목</th><th>내용</th></tr>
+      <tr><td class="k">모델작업데이</td><td>월 2회 — 한 번에 모여 상담→펌→염색 실전 흐름 티칭 (아침 공백 해소). 2인1조: 차노·연교 / 성희·이호 / 신후·와이 / 창엽·보미</td></tr>
+      <tr><td class="k">특강</td><td>월 1회 이상 — 선생님의 시그니처가 곧 주제 (대부분 3F 저녁 7시)</td></tr>
+      <tr><td class="k">생각 스터디</td><td>미감 강의 = 성희·와이·연교 / AI 활용법 = 차노</td></tr>
+      <tr><td class="k">SNS 일기</td><td>유튜브·블로그 포함 — 스타일이 아니라 '나'를 어필</td></tr>
+      <tr><td class="k">연습·팀스터디</td><td>함께 공부·반복 연습 → 점수 반영</td></tr>
+      <tr><td class="k">장소</td><td>4인 이상 = 선생님 이동 / 3인 이하 = 시즈 이동</td></tr>
+    </table>
+  </div>
+
+  <!-- 승급 -->
+  <div class="card redcard">
+    <div class="kicker" style="color:#c0392b">디자이너 승급</div>
+    <h2>5중 2 달성 → 즉시 승급시험</h2>
+    <div class="rule" style="background:#c0392b"></div>
+    <span class="chip">모델 100명</span><span class="chip">매출 500</span><span class="chip">시그니처 60</span><span class="chip">리뷰 70</span><span class="chip">조회수 10만</span>
+    <div class="note">위 5가지 중 <b>2가지만 달성해도 디자이너 승급시험 응시 가능</b> (4·5레벨 포함 누적) · 시그니처 쇼 = 디렉터 입회, 보이는 실력으로 증명 (기획력·PPT력·인스타 노출력)</div>
+  </div>
+
+  <!-- 미확보 -->
+  <div class="card redcard">
+    <div class="kicker" style="color:#c0392b">확인 필요 — 상세 미확보 3라인</div>
+    <h2>전담 배정만 있고 15강 상세 없음</h2>
+    <div class="rule" style="background:#c0392b"></div>
+    <span class="chip">연교 · 탈색/염색</span><span class="chip">보미 · 업스타일/인플루언서</span><span class="chip">신후 · 미·커트·감정선</span>
+    <div class="note">이 3개 라인의 레벨별 상세 과목은 이번 업로드 파일에 텍스트로 없었음 (28MB 키노트는 사진뿐). 채워주면 완성.</div>
+  </div>
+
+  <div class="foot">A T &nbsp; N O W N</div>
+</div>
+</body>
+</html>
