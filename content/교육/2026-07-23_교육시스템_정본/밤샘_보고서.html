@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>밤샘 보고서 — 교육 시스템 반복설계</title>
+<style>
+  :root{--bg:#0e0e0e;--card:#191919;--line:#2b2b2b;--ink:#ededed;--ink2:#a6a6a6;--ink3:#767676;--gold:#C6A15B;--grn:#5fbf8a;--red:#d9695f;--vio:#9b8cd8;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.6;padding:34px 16px;}
+  .wrap{max-width:960px;margin:0 auto;}
+  .eyebrow{font-size:11px;letter-spacing:.24em;color:var(--gold);font-weight:700;}
+  h1{font-size:30px;font-weight:800;margin:8px 0 5px;}
+  .sub{color:var(--ink2);font-size:14px;}
+  .gold{height:2px;background:var(--gold);width:54px;margin:16px 0 6px;}
+  h2{font-size:18px;font-weight:800;margin:30px 0 12px;display:flex;align-items:center;gap:10px;}
+  h2::before{content:"";width:18px;height:2px;background:var(--gold);}
+  .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px;}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:15px 17px;}
+  .stat .b{font-size:26px;font-weight:800;color:var(--gold);font-family:"Cormorant Garamond",serif;}
+  .stat .l{font-size:12px;color:var(--ink2);margin-top:2px;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th{background:#000;color:#fff;text-align:left;padding:9px 12px;font-size:12.5px;}
+  td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+  td.k{font-weight:800;white-space:nowrap;}
+  .st{font-weight:800;font-size:12px;}
+  .ok{color:var(--grn);} .go{color:var(--gold);} .no{color:var(--red);}
+  .arc{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:16px 18px;font-size:13.5px;color:var(--ink2);}
+  .arc b{color:#fff;}
+  .arc .step{padding:6px 0;border-bottom:1px solid var(--line);}
+  .arc .step:last-child{border-bottom:none;}
+  .arc .v{color:var(--vio);font-weight:800;}
+  .ask{background:linear-gradient(180deg,#1e1a14,#191919);border:1px solid #3a3320;border-radius:4px;padding:16px 18px;}
+  .ask li{font-size:14px;margin:6px 0 6px 18px;}
+  .ask b{color:var(--gold);}
+  .path{font-size:12px;color:var(--ink3);font-family:ui-monospace,monospace;}
+  .foot{text-align:center;font-size:11px;letter-spacing:.3em;color:var(--ink3);font-weight:700;margin:32px 0 6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">AT NOWN · 밤샘 보고서 · 2026-07-23 · C방</div>
+  <h1>교육 시스템 반복설계 — 밤샘 리포트</h1>
+  <div class="sub">지시: "제안→해결→해결을 뛰어넘는 새것, 무한 반복해서 세상에 없는 교육시스템"</div>
+  <div class="gold"></div>
+
+  <div class="grid" style="margin-top:6px">
+    <div class="stat"><div class="b">19</div><div class="l">반복설계 라운드 (해결→새문제→초월)</div></div>
+    <div class="stat"><div class="b">3</div><div class="l">개념 도약 (v3 초월편)</div></div>
+    <div class="stat"><div class="b">9</div><div class="l">밤새 만든 산출물(HTML/덱/캘린더)</div></div>
+  </div>
+
+  <h2>1. 무엇을 만들었나 (창의 반복설계)</h2>
+  <div class="arc">
+    <div class="step"><b>v1</b> — 8라운드 루프 → <b>8기둥</b> 시스템(관점 먼저·미감 은행·재현/변주/창작·실전=시험·익명 채점·3동력·자기재설계)</div>
+    <div class="step"><b>v2</b> — ROUND 9~16 → 새 메커니즘 6 → 수렴점: <b>교육이 앳나운 연동(파이프라인) 위에 얹혀 '연동이 먼저'가 방어막이 됨</b></div>
+    <div class="step"><b>v3 초월편</b> — 패치를 멈추고 <span class="v">3단 도약</span>: 자기학습 엔진 ⟹ 유파(流派) 연합 ⟹ <b>학생이 곧 학교</b>. 앳나운 = "관점을 번식시키는 회사"</div>
+  </div>
+
+  <h2>2. 시스템 진단 — 문제와 처리</h2>
+  <table>
+    <tr><th>발견한 문제</th><th>처리</th></tr>
+    <tr><td class="k">옛 7팀(유솔) 데이터 재사용 반복</td><td><span class="st ok">해결</span> 옛 통합본 폐기 표시 + 8라인 정본 박제(재발 방지)</td></tr>
+    <tr><td class="k">시험이 사전작업으로 조작 가능(율이 케이스 허점)</td><td><span class="st ok">설계반영</span> 창의안: 실전=시험·익명 무작위 채점으로 조작 대상 제거</td></tr>
+    <tr><td class="k">스태프↔디자이너 차이 = 설명력(율이 불합격 핵심)</td><td><span class="st ok">설계반영</span> '설명 못 하면 못 올라감' 게이트 + 무언 증명 트랙</td></tr>
+    <tr><td class="k">연교·신후 2라인 상세 미확보</td><td><span class="st no">형 필요</span> 자료 주면 즉시 덱화 → 8라인 완성</td></tr>
+    <tr><td class="k">메타 토큰(발행) 막힘 — 기기신뢰 대기</td><td><span class="st go">대기</span> 풀리면 스레드 예약 8편 자동발행</td></tr>
+    <tr><td class="k">TTS 한글 받침 오독 반복</td><td><span class="st go">보류</span> 피시오디오 A/B는 형 키+샘플 대기</td></tr>
+  </table>
+
+  <h2>3. 밤새 만든 산출물 (전부 커밋·푸시됨)</h2>
+  <table>
+    <tr><th>산출물</th><th>내용</th></tr>
+    <tr><td class="k">세상에없는_교육시스템 v1·v2·v3</td><td>창의 반복설계 3부작 (핵심 제안)</td></tr>
+    <tr><td class="k">시스템_구조도</td><td>8라인 과목전담·5레벨·뱃지삭제·승급5중2</td></tr>
+    <tr><td class="k">커트 / 펌 아카데미 덱</td><td>DRY&UPSTYLE 스타일, 실제 커리큘럼</td></tr>
+    <tr><td class="k">교육배분_캘린더 2026H2</td><td>8~12월 특강·모델데이·시험(12/14) 정확일자</td></tr>
+    <tr><td class="k">율이 코멘트 종합(익명)</td><td>이름삭제·순서무작위 / 합격 유력</td></tr>
+    <tr><td class="k">젠스파크 프롬프트 정본</td><td>커트·펌 붙여넣기용 + AI 인물</td></tr>
+    <tr><td class="k">디렉터 상황판</td><td>3전선 + 크게 본 다음 수</td></tr>
+  </table>
+  <div class="path" style="margin-top:8px">저장소 정본: content/교육/2026-07-23_교육시스템_정본/ (+ /창의제안)</div>
+
+  <h2>4. 형이 결정·줄 것 (유일한 병목)</h2>
+  <div class="ask"><ul>
+    <li><b>연교(염색) · 신후(미·커트·감정선)</b> 2라인 상세 → 주면 8라인 덱 풀세트 = 원장단 공표 완성</li>
+    <li><b>창의 시스템 채택 여부</b> — v1~v3 중 어디까지 실제로 갈지 (착지 1단계는 이미 부품 다 있음)</li>
+    <li><b>메타 토큰 · 피시 샘플</b> — 준비되면 발행/음성 A/B 즉시</li>
+  </ul></div>
+
+  <h2>5. 다음 반복 씨앗 (루프는 안 멈춘다)</h2>
+  <div class="arc">
+    <div class="step"><span class="v">v4</span> — 계보가 갈라지면 '앳나운다움'이 흐려진다: 무엇을 불변의 뿌리로 남기고 무엇을 변주에 열까?</div>
+    <div class="step"><span class="v">ROUND 17~19</span> — 정성/정량 균형 · 대시보드가 학생을 점수기계로 만들 위험 · 8라인 전담의 단일점 실패 이중화</div>
+  </div>
+
+  <div class="foot">A T &nbsp; N O W N &nbsp;·&nbsp; 밤샘 리포트 · 계속 반복 중</div>
+</div>
+</body>
+</html>
