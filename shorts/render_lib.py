@@ -56,8 +56,9 @@ def textcard(text, dur, out):
         "-vf",f"noise=alls=6:allf=t,ass={af}:fontsdir=/root/.fonts,format=yuv420p","-an",
         "-c:v","libx264","-preset","fast","-crf","20",str(out)],check=True)
 
-def render(name, clips, plan, bgm, out_name, outro_png=None, bgm_lufs=-24):
-    """clips={key:path}, plan=[(key,offset),...] 세그별, len(plan)==len(lines)."""
+def render(name, clips, plan, bgm, out_name, outro_png=None, bgm_lufs=-24, mono=False, en=None):
+    """clips={key:path}, plan=[(key,offset),...] 세그별, len(plan)==len(lines). mono=True → 흑백(마인드편).
+    en=[영어줄,...] 주면 한글자막 아래 영어자막 동반(해외 시청자·저장률↑, 2026-07-24 이찬호 "영어자막 왜 안해"). len(en)==len(lines)."""
     meta = json.loads((D/"tts_meta.json").read_text(encoding="utf-8"))[name]
     lines = meta["lines"]; spans = meta["spans"]; total = meta["total"]; nar = meta["nar"]
     assert len(plan) == len(lines), f"{name}: plan {len(plan)} != lines {len(lines)}"
@@ -77,7 +78,8 @@ def render(name, clips, plan, bgm, out_name, outro_png=None, bgm_lufs=-24):
         pre = "scale=-2:1920,crop=1080:1920,fps=30"
         if "z" in xf: pre = "scale=-2:2110,crop=1080:1920,fps=30"  # 줌인(≈10%)
         if "h" in xf: pre += ",hflip"
-        vf = pre + ",eq=saturation=1.06:contrast=1.02,format=yuv420p"
+        eq = "eq=saturation=0:contrast=1.05" if mono else "eq=saturation=1.06:contrast=1.02"  # mono=흑백(마인드편)
+        vf = pre + "," + eq + ",format=yuv420p"
         # -stream_loop -1: 짧은 클립도 세그 길이(dur+T)를 꽉 채우게 루프 → xfade truncate/프리즈 방지 (2026-07-24 펌 7.5초 잘림 사고)
         subprocess.run(["ffmpeg","-v","error","-y","-stream_loop","-1","-ss",str(o),"-i",clips[k],"-t",f"{durs[i]+T:.3f}",
             "-vf",vf,"-an",
@@ -109,12 +111,19 @@ ScaledBorderAndShadow: yes
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: cap,{FONT},58,&H00FFFFFF,&H00101010,&H00000000,1,1,5,1,2,70,70,210,1
+Style: eng,Pretendard,36,&H00D8D8D8,&H00101010,&H00000000,0,1,3,1,2,80,80,150,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
+    is_txt = [(plan[i][0] == "TXT") for i in range(len(lines))]
+    # TXT 세그는 가운데 대형 한글카드가 이미 있음 → 하단 한글자막 생략(중복 방지). 영어는 카드 아래 유지(해외시청자).
     ev = [f"Dialogue: 0,{ts(starts[i])},{ts(starts[i+1] if i<len(lines)-1 else total)},cap,,0,0,0,,{wrap(t)}"
-          for i, t in enumerate(lines)]
+          for i, t in enumerate(lines) if not is_txt[i]]
+    if en:
+        assert len(en) == len(lines), f"{name}: en {len(en)} != lines {len(lines)}"
+        ev += [f"Dialogue: 0,{ts(starts[i])},{ts(starts[i+1] if i<len(lines)-1 else total)},eng,,0,0,0,,{t}"
+               for i, t in enumerate(en)]
     sb = D/f"{name}_subs.ass"; sb.write_text(head+"\n".join(ev)+"\n", encoding="utf-8")
     fc.append(f"[vbody]ass={sb}[v]")
     VTOT = total + 2.6 - T
