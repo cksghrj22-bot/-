@@ -59,3 +59,11 @@ postgres 07-24 에러 0건. 과거(07-08~07-13) "column X does not exist / relat
 **= headless CLI의 OAuth 액세스 토큰 만료가 확정 원인.** ("로그인 됨" 표시는 세션이 남아 그렇게 보일 뿐, access token은 실제 만료 → API 401.) 초기 "인증 만료" 진단이 맞았음(중간에 assistant 정상=SDK 별도토큰이라 헷갈렸음).
 **해결**: 맥에서 `claude` → `/login`(안 되면 `/logout`후 `/login`) 브라우저 재인증 → `claude -p "테스트"`가 exit=0이면 디스코드→코드방 headless 파이프 부활 → Creator OS 재시작으로 backlog 폭주 정리.
 **교훈**: "Creator OS가 나랑 협업 안 함"의 1순위 의심 = **headless CLI OAuth 토큰 만료**. `claude -p`를 맥에서 직접 돌려 stderr 확인이 가장 빠른 진단.
+
+## 🟢 복구 완료 절차 (2026-07-24, 실제 성공 경로)
+Claude Code **업데이트가 온보딩을 초기화** → `claude`가 첫실행(테마 선택) 화면으로 뜸 → 그 프롬프트를 headless(`-p`)가 못 넘겨 exit1(OAuth expired). **인터랙티브로 1회 통과하면 토큰 갱신됨.**
+1. 맥 터미널 `claude` 실행 → 테마 선택 화면 **Enter**(키 안 먹으면 터미널 창 클릭 후) → 온보딩 진행.
+2. 로그인 단계 브라우저 인증 → **"Claude Code 설정이 완료되었습니다"** 뜨면 성공, 브라우저 닫기.
+3. 확인 `claude -p "테스트" --output-format text` → **exit=0**면 headless 부활.
+4. **Creator OS 재시작** → 디스코드→코드방 파이프 복구, backlog 폭주 종료.
+**재발 시 1순위 체크**: Claude Code 업데이트 후 `claude` 첫실행 온보딩이 떠 있는지. 떠 있으면 인터랙티브 1회 통과가 답(headless는 이 화면을 못 넘음).
