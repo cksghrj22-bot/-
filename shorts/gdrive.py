@@ -32,13 +32,16 @@ DEVICE_CODE_URL = "https://oauth2.googleapis.com/device/code"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
 UPLOAD_URL = "https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&supportsAllDrives=true"
 FILES_URL = "https://www.googleapis.com/drive/v3/files"
-# drive.file(앱 생성분) + drive.readonly(형님 폰 업로드=인트레이 열람) + youtube.upload.
-# ⚠️drive.readonly 추가(2026-07-25 이찬호 "인트레이 파일 볼 수 있게 · oauth 달라"):
-#   앱이 안 만든 파일(폰 PhotoSync분)도 읽는다. **새 스코프는 재인증(형님 재로그인) 후 적용.**
-#   기기 인증(device flow)이 drive.readonly를 거부하면 → 브라우저 OAuth 토큰을 secrets/gdrive.json에 넣어 사용.
-SCOPE = ("https://www.googleapis.com/auth/drive.file "
-         "https://www.googleapis.com/auth/drive.readonly "
-         "https://www.googleapis.com/auth/youtube.upload")
+# 기기 인증(device flow)이 허용하는 스코프 = drive.file(앱 생성분) + youtube.upload 뿐.
+# ⚠️전체 drive/drive.readonly는 기기 인증에서 거부된다 → SCOPE는 device-safe로 고정(test로 잠금).
+SCOPE = "https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/youtube.upload"
+
+# 인트레이(형님 폰 PhotoSync분) 열람용 = drive.readonly. 기기 인증 불가 → **브라우저 OAuth** 필요
+# (2026-07-25 이찬호 "인트레이 파일 볼 수 있게 · oauth 달라"). 브라우저 OAuth로 아래 3스코프를 한 번에
+# 발급받아 refresh_token을 secrets/gdrive.json에 넣으면 upload+읽기+youtube 다 된다. list_folder가 그때 동작.
+SCOPE_FULL = ("https://www.googleapis.com/auth/drive.file "
+              "https://www.googleapis.com/auth/drive.readonly "
+              "https://www.googleapis.com/auth/youtube.upload")
 DEFAULT_SECRETS = "secrets/gdrive.json"
 FALLBACK_FOLDER_NAME = "코드방_업로드"
 
