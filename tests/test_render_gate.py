@@ -66,6 +66,18 @@ class TestLengthGate(unittest.TestCase):
         self.assertTrue(verify_render.length_fails(50))
         self.assertTrue(verify_render.length_fails(48))
 
+    def test_longform_allows_up_to_90s(self):
+        # 육성 롱폼(버그#13): 상한 90초. 55초는 쇼츠기준 FAIL이지만 롱폼은 통과.
+        self.assertTrue(verify_render.length_fails(55))               # 쇼츠 기준 FAIL
+        self.assertEqual(verify_render.length_fails(55, longform=True), [])  # 롱폼 통과
+        self.assertEqual(verify_render.length_fails(88, longform=True), [])
+        self.assertTrue(verify_render.length_fails(95, longform=True))  # 롱폼도 90 넘으면 FAIL
+        # 롱폼도 바닥 24초는 유지(파손 방어)
+        self.assertTrue(verify_render.length_fails(20, longform=True))
+
+    def test_verify_accepts_longform_kwarg(self):
+        self.assertIn("longform", inspect.signature(verify_render.verify).parameters)
+
     def test_verify_accepts_duration_kwarg(self):
         # 렌더가 정확한 길이를 넘길 수 있어야 한다(ffmpeg 측정 플레이크 방어).
         self.assertIn("duration", inspect.signature(verify_render.verify).parameters)

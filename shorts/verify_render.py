@@ -21,18 +21,22 @@ def _ff(args: list[str]) -> str:
 
 
 LEN_MIN, LEN_MAX = 24.0, 46.0  # 길이 규격: 24초 이상 ~ 45초 미만. 바닥 30→24로 내림 "28초도 괜찮아"(이찬호 2026-07-21). 24 미만은 잘림버그 등 진짜 파손만 잡는 안전바닥.
+LEN_MAX_LONGFORM = 90.0  # 육성 롱폼(버그#13, 2026-07-24): 스토리 아크 보존 위해 90초까지 허용. punchy 쇼츠 아님.
 
 
-def length_fails(dur: float) -> list[str]:
-    """길이 규격(24초 이상~45초 미만) 검사 — ffmpeg 없이 순수 계산이라 단위테스트로 잠근다."""
+def length_fails(dur: float, longform: bool = False) -> list[str]:
+    """길이 규격 검사 — ffmpeg 없이 순수 계산이라 단위테스트로 잠근다.
+    기본=24~45초(punchy 쇼츠). longform=True면 상한 90초(형님 육성 스토리)."""
+    cap = LEN_MAX_LONGFORM if longform else LEN_MAX
     if dur < LEN_MIN:
         return [f"길이 {dur:.0f}초 — {LEN_MIN:.0f}초 밑(파손 의심). 대본 조금 더."]
-    if dur > LEN_MAX:
-        return [f"길이 {dur:.0f}초 — 45초 초과. 대본 줄일 것"]
+    if dur > cap:
+        return [f"길이 {dur:.0f}초 — {cap:.0f}초 초과. 대본 줄일 것"]
     return []
 
 
-def verify(mp4: str, ass: str, duration: float | None = None) -> list[str]:
+def verify(mp4: str, ass: str, duration: float | None = None,
+           longform: bool = False) -> list[str]:
     """규격 검사. 실패 사유 리스트를 돌려준다(빈 리스트 = 통과)."""
     fails: list[str] = []
     info = subprocess.run(["ffmpeg", "-hide_banner", "-i", mp4], capture_output=True, text=True).stderr
@@ -46,8 +50,8 @@ def verify(mp4: str, ass: str, duration: float | None = None) -> list[str]:
     if duration:  # 렌더가 아는 정확한 길이를 넘겨주면 우선 사용
         dur = duration
 
-    # 1b) 길이 40~50초 (이찬호 2026-07-21): 25초처럼 짧거나 50 넘으면 FAIL.
-    fails += length_fails(dur)
+    # 1b) 길이 규격: 25초처럼 짧거나 상한 넘으면 FAIL (longform이면 상한 90초).
+    fails += length_fails(dur, longform=longform)
 
     # 2) 흑백: 25% 지점 중앙 500x500 채도(SATAVG) 낮아야. ffmpeg 읽기 플레이크 방어로 빈값이면 1회 재시도.
     t = dur * 0.25

@@ -189,6 +189,7 @@ def render_batch(
     bgm: str | Path | None = None,
     grade: str | None = None,
     verify: bool = True,
+    longform: bool = False,
 ) -> list[Path]:
     cfg = json.loads(Path(config_path).read_text(encoding="utf-8"))
     v9 = cfg[preset]
@@ -292,9 +293,22 @@ def render_batch(
         # 🔒 출력 게이트 = 무조건 실행. 프리셋이 컬러든 흑백이든 상관없이 규격을 검사한다.
         #    (2026-07-21 사고: 기본이 컬러(v9)로 새고, 게이트가 'grayscale일 때만' 돌아 검사를 건너뜀.
         #     → 정해놓은 표준이 조용히 무너져도 아무도 못 잡는 = 시스템 뒤흔드는 문제. 게이트를 무조건으로.)
+        # 육성 롱폼(버그#13): 형님 육성 TTS가 조용함(mean≈-28dB)+짧은 BGM이 긴 영상서 꼬리 무음
+        #  → loudnorm 후처리로 mean·꼬리BGM 동시 회복(qc_gate PASS). 오디오만, 영상 무손실 copy.
+        if longform:
+            tmp = out.with_suffix(".ln.mp4")
+            subprocess.run(
+                ["ffmpeg", "-v", "error", "-y", "-i", str(out), "-c:v", "copy",
+                 "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-c:a", "aac", "-b:a", "192k",
+                 "-movflags", "+faststart", str(tmp)],
+                check=True,
+            )
+            tmp.replace(out)
+            print("  🔊 loudnorm -16 후처리(육성 롱폼)")
+
         if verify:
             ass_path = work / f"{bg.stem}.ass"
-            fails = verify_render(str(out), str(ass_path), duration=duration)
+            fails = verify_render(str(out), str(ass_path), duration=duration, longform=longform)
             if fails:
                 print("  ❌ 규격검사 FAIL — 산출 거부:", file=sys.stderr)
                 for f in fails:
@@ -323,13 +337,15 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--bgm", default=None, help="BGM 오디오 파일/폴더 (폴더면 편별 로테이션)")
     ap.add_argument("--grade", default=None, help="색보정 필터 override (GRADES): warm_film·clean·cinema·bw·none")
     ap.add_argument("--no-verify", action="store_true", help="렌더 후 규격 자동검사 끄기 (기본 켜짐)")
+    ap.add_argument("--longform", action="store_true",
+                    help="육성 롱폼(버그#13): loudnorm -16 자동 후처리 + 길이 상한 90초로 완화")
     args = ap.parse_args(argv)
     try:
         outs = render_batch(args.scripts_dir, args.out, use_tts=not args.no_tts,
                             config_path=args.config, workdir=args.workdir,
                             broll=args.broll, broll_start=args.broll_start,
                             preset=args.preset, only=args.only, bgm=args.bgm, grade=args.grade,
-                            verify=not args.no_verify)
+                            verify=not args.no_verify, longform=args.longform)
     except OSError as e:
         print(f"❌ 중단: {e}\n   api.elevenlabs.io 차단이면 네트워크 정책 확인 (연결지도.md), "
               f"무음 검증은 --no-tts.", file=sys.stderr)
