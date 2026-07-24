@@ -65,9 +65,28 @@ def synthesize(text: str, creds: dict, timeout: int = 120) -> bytes:
         return r.read()
 
 
-def synth_to_file(text: str, creds: dict, out_path) -> Path:
+def _mp3_dur(p) -> float:
+    out = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration",
+                          "-of", "csv=p=0", str(p)], capture_output=True, text=True).stdout.strip()
+    return float(out or 0.0)
+
+
+def synth_to_file(text: str, creds: dict, out_path, max_retries: int = 3) -> Path:
+    """text → mp3. ⚠️ 피쉬가 가끔 짧은 줄에서 길이 폭주(47초 등) → 예상 길이 초과 시 재합성.
+    (2026-07-24 태도 숏 l01 47초 사고). 글자수 기반 상한: chars*0.32 + 3.5초."""
     out = Path(out_path)
-    out.write_bytes(synthesize(text, creds))
+    cap = len(text) * 0.32 + 3.5   # 관대한 상한(정상은 이 안)
+    best = None; best_d = 1e9
+    for _ in range(max_retries):
+        data = synthesize(text, creds)
+        out.write_bytes(data)
+        d = _mp3_dur(out)
+        if d <= cap:
+            return out
+        if d < best_d:  # 폭주 중 그나마 짧은 것 보관
+            best_d = d; best = data
+    if best is not None:
+        out.write_bytes(best)  # 다 폭주면 가장 짧은 것
     return out
 
 
