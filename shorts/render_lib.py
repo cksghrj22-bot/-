@@ -131,7 +131,10 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     inputs += ["-i", str(nar), "-stream_loop","-1","-i", bgm]
     # 나레이션·BGM 따로 정규화 후 믹스 → BGM이 확실히 들리게. (2026-07-24 "BGM 안 나옴" 사고: 최종 loudnorm이 나레이션에 맞춰 BGM을 깔아뭉갬 → 제거)
     # 나레이션 speechnorm(라우드), BGM loudnorm -24(나레이션 밑 ~9dB, 또렷이 들림), amix normalize=0(반토막 방지), alimiter로 클립 방지.
-    fc.append(f"[{naidx}:a]apad,speechnorm=e=12.5:r=0.0006[na];[{bgidx}:a]loudnorm=I={bgm_lufs}:TP=-3[bg];[na][bg]amix=inputs=2:duration=first:dropout_transition=0:normalize=0,alimiter=limit=0.97[a]")
+    # duration=longest + BGM stream_loop(무한) → BGM이 -t(VTOT) 컷까지 끝까지 깔림. 나레이션 끝 여백 유무와 무관.
+    # (2026-07-24 피쉬 나레이션은 끝 여백이 없어 amix=first가 나레이션 콘텐츠 끝에서 잘림 → 아웃트로 무음 사고)
+    # ⚠️ BGM 파일은 앞뒤 무음이 없어야 함(루프 경계 침묵 방지) — 무음 있으면 미리 트림해서 넘길 것.
+    fc.append(f"[{naidx}:a]apad,speechnorm=e=12.5:r=0.0006[na];[{bgidx}:a]loudnorm=I={bgm_lufs}:TP=-3[bg];[na][bg]amix=inputs=2:duration=longest:dropout_transition=0:normalize=0,alimiter=limit=0.97[a]")
     out = D/out_name
     cmd = ["ffmpeg","-y","-loglevel","error"]+inputs+["-filter_complex",";".join(fc),
            "-map","[v]","-map","[a]","-t",f"{VTOT:.3f}","-c:v","libx264","-preset","medium","-crf","20","-c:a","aac","-b:a","192k",str(out)]
