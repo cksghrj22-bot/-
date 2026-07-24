@@ -50,3 +50,12 @@ postgres 07-24 에러 0건. 과거(07-08~07-13) "column X does not exist / relat
 **backlog/CLI headless 실패 = "부가 기능"이 아니라 핵심 파이프였다.** 형이 **디스코드 메시지 → Creator OS가 `claude` headless(`claude -p "..."`) subprocess 실행 → 코드방(나)한테 일 시킴** 경로. 이게 exit1로 죽어서 "디스코드로 걸어도 못 알아듣는" 것. 메인 assistant(SDK/API)는 되는데 **headless CLI 경로만** 끊김 → 반쪽 작동.
 - **로그 stderr 빈 값**(`exit code 1: ` 뒤 공백)이라 로그만으론 원인 확정 불가. 맥에서 직접: `/Users/chanho/.local/bin/claude -p "테스트" --output-format text ; echo exit=$?` → 실제 에러 확인.
 - **가장 흔한 원인**: ①업데이트 후 신뢰/권한 프롬프트가 headless에서 막힘 → 작업 폴더서 `claude` 인터랙티브 1회 승인하면 통과 ②headless 플래그/출력형식 변경 → Creator OS 업데이트가 맞춰야.
+
+## ✅✅ 최종 확정 (형이 맥에서 headless 직접 테스트)
+```
+/Users/chanho/.local/bin/claude -p "테스트" --output-format text
+→ Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. (exit=1)
+```
+**= headless CLI의 OAuth 액세스 토큰 만료가 확정 원인.** ("로그인 됨" 표시는 세션이 남아 그렇게 보일 뿐, access token은 실제 만료 → API 401.) 초기 "인증 만료" 진단이 맞았음(중간에 assistant 정상=SDK 별도토큰이라 헷갈렸음).
+**해결**: 맥에서 `claude` → `/login`(안 되면 `/logout`후 `/login`) 브라우저 재인증 → `claude -p "테스트"`가 exit=0이면 디스코드→코드방 headless 파이프 부활 → Creator OS 재시작으로 backlog 폭주 정리.
+**교훈**: "Creator OS가 나랑 협업 안 함"의 1순위 의심 = **headless CLI OAuth 토큰 만료**. `claude -p`를 맥에서 직접 돌려 stderr 확인이 가장 빠른 진단.
