@@ -102,11 +102,15 @@ class TestSelect(unittest.TestCase):
         self.assertEqual(r["category"], "aerial")
         self.assertTrue(r["ready"])  # DJI file_id 채워짐 → 렌더 가능
 
-    def test_scalp도_스캔완료(self):
-        # A방 2026-07-18 두피 스캔완료 → 이제 렌더 가능
+    def test_scalp_주제판별(self):
+        # 2026-07-24: 오분류(IMG_0655·0659=바/라운지)를 카탈로그에서 제거 →
+        # 현재 scalp 실사 B롤 0개. 주제 판별은 되지만 실footage 없어 렌더 대기(ready=False)여야
+        # 두피 영상에 엉뚱한 B롤이 안 붙는다(가드).
         r = broll.select_for_script("두피 스케일링 탈모 관리", CATALOG)
         self.assertEqual(r["category"], "scalp")
-        self.assertTrue(r["ready"])
+        scalp = [c for c in CATALOG["clips"] if c.get("category") == "scalp"]
+        # 실사 두피 클립이 생기기 전까지는 not ready (오분류 재발 방지)
+        self.assertEqual(r["ready"], bool(scalp))
 
     def test_file_id없으면_not_ready(self):
         # 동작 자체(스캔 대기 표시)는 합성 카탈로그로 계속 검증 — 실카탈로그가 다 차도 유효

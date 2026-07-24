@@ -53,14 +53,24 @@ def build_metadata(
     tags: list[str] | None = None,
     privacy: str = "private",
     publish_at: str | None = None,
+    stem: str | None = None,
 ) -> dict:
     """업로드 메타데이터를 만든다. publish_at(RFC3339)을 주면 예약 공개.
+
+    stem(줄기: 교육/컬러/흑백/만화카드/미용)을 주면 해시태그를 자동첨부한다
+    (2026-07-24 이찬호 "영상에 해시태그 붙여서 나가게"). 설명란 끝 + 유튜브 tags.
+    description에 이미 '#'가 있으면 손대지 않는다(중복 방지).
 
     ⛔ 안전장치(2026-07-19 이찬호 지시 "다시 실수 안하게"): publish_at이 과거면 예외.
     과거 시각을 주면 유튜브가 예약이 아니라 **즉시 공개**해버린다(실제 사고: 오늘을 7/18로
     착각해 7/19로 걸었다가 이미 지나 바로 공개됨). 미래인지 코드가 강제 확인한다.
     """
     from datetime import datetime, timezone
+    if stem:
+        from shorts.hashtags import caption_with_tags, youtube_tags
+        description = caption_with_tags(description, stem)
+        if not tags:
+            tags = youtube_tags(stem)
     status: dict = {"privacyStatus": privacy, "selfDeclaredMadeForKids": False}
     if publish_at:
         try:
