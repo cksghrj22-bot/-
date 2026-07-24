@@ -32,9 +32,13 @@ DEVICE_CODE_URL = "https://oauth2.googleapis.com/device/code"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
 UPLOAD_URL = "https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&supportsAllDrives=true"
 FILES_URL = "https://www.googleapis.com/drive/v3/files"
-# drive.file(앱이 만든 파일) + youtube.upload — 둘 다 기기 인증 허용 스코프.
-# 폰 승인 한 번으로 드라이브 업로드와 유튜브 일부공개 업로드를 같이 연다.
-SCOPE = "https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/youtube.upload"
+# drive.file(앱 생성분) + drive.readonly(형님 폰 업로드=인트레이 열람) + youtube.upload.
+# ⚠️drive.readonly 추가(2026-07-25 이찬호 "인트레이 파일 볼 수 있게 · oauth 달라"):
+#   앱이 안 만든 파일(폰 PhotoSync분)도 읽는다. **새 스코프는 재인증(형님 재로그인) 후 적용.**
+#   기기 인증(device flow)이 drive.readonly를 거부하면 → 브라우저 OAuth 토큰을 secrets/gdrive.json에 넣어 사용.
+SCOPE = ("https://www.googleapis.com/auth/drive.file "
+         "https://www.googleapis.com/auth/drive.readonly "
+         "https://www.googleapis.com/auth/youtube.upload")
 DEFAULT_SECRETS = "secrets/gdrive.json"
 FALLBACK_FOLDER_NAME = "코드방_업로드"
 
@@ -140,6 +144,30 @@ def find_in_folder(name: str, folder_id: str, token: str) -> str | None:
     return files[0]["id"] if files else None
 
 
+def list_folder(folder_id: str, secrets_path: str | Path = DEFAULT_SECRETS,
+                video_only: bool = False) -> list[dict]:
+    """폴더 안 파일 목록 [{id,name,mimeType,size}]. drive.readonly 스코프 필요
+    (형님 폰 업로드분=인트레이 열람용, 2026-07-25). 스코프 없으면 앱 생성분만 보임."""
+    token = access_token(load_secrets(secrets_path))
+    clauses = [f"'{folder_id}' in parents", "trashed = false"]
+    if video_only:
+        clauses.append("mimeType contains 'video/'")
+    q = urllib.parse.quote(" and ".join(clauses))
+    out: list[dict] = []
+    page = ""
+    for _ in range(20):  # 페이지네이션(최대 20페이지)
+        url = (f"{FILES_URL}?q={q}&fields=nextPageToken,files(id,name,mimeType,size)"
+               f"&pageSize=100&supportsAllDrives=true&includeItemsFromAllDrives=true")
+        if page:
+            url += f"&pageToken={page}"
+        r = _api(url, token)
+        out.extend(r.get("files", []))
+        page = r.get("nextPageToken", "")
+        if not page:
+            break
+    return out
+
+
 def upload_file(path: str | Path, folder_id: str | None = None,
                 secrets_path: str | Path = DEFAULT_SECRETS, name: str | None = None,
                 overwrite: bool = False) -> dict:
@@ -224,7 +252,25 @@ def main(argv: list[str] | None = None) -> int:
     p_up.add_argument("--overwrite", action="store_true",
                       help="폴더 내 같은 이름 파일 내용만 교체 (링크 유지·중복0)")
     p_up.add_argument("--secrets", default=DEFAULT_SECRETS)
+    p_ls = sub.add_parser("list", help="폴더 내 파일 목록 (drive.readonly 스코프 필요)")
+    p_ls.add_argument("folder_id")
+    p_ls.add_argument("--video-only", action="store_true")
+    p_ls.add_argument("--secrets", default=DEFAULT_SECRETS)
     args = ap.parse_args(argv)
+
+    if args.cmd == "list":
+        try:
+            files = list_folder(args.folder_id, args.secrets, video_only=args.video_only)
+        except urllib.error.HTTPError as e:
+            print(f"❌ 목록 실패({e.code}) — drive.readonly 스코프 없으면 앱 생성분만 보임. "
+                  f"형님 재인증 필요(gdrive auth) 또는 브라우저 OAuth 토큰.", file=sys.stderr)
+            return 1
+        for f in files:
+            sz = f.get("size")
+            szs = f" {int(sz)//1048576}MB" if sz else ""
+            print(f"{f['id']}\t{f['name']}\t{f.get('mimeType','')}{szs}")
+        print(f"\n총 {len(files)}개", file=sys.stderr)
+        return 0
 
     if args.cmd == "auth":
         creds = load_secrets(args.secrets)
