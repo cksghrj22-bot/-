@@ -11,6 +11,15 @@ import json, sys, subprocess
 import urllib.request
 from pathlib import Path
 
+# 읽기 규약 공유: 일레븐랩스에 쌓아온 발음교정 사전을 피쉬에도 그대로 적용.
+# (2026-07-24 이찬호 "읽기에 관한 지금까지의 일들을 다 피쉬에 학습시켜")
+# 형님이 오독 지적 → shorts/tts.py의 SYNTH_FIXES 한 줄 추가 = 일레븐·피쉬 양쪽 자동 반영.
+try:
+    from shorts.tts import apply_synth_fixes
+except Exception:
+    def apply_synth_fixes(text):  # tts.py 임포트 실패 시 무보정(안전)
+        return text
+
 TTS_URL = "https://api.fish.audio/v1/tts"
 DEFAULT_MODEL = "s1"
 DEFAULT_SECRETS = "/home/user/-/secrets/fish.json"
@@ -34,7 +43,7 @@ def load_credentials(path=DEFAULT_SECRETS) -> dict:
 
 def build_request(text: str, creds: dict) -> urllib.request.Request:
     payload = dict(creds["params"])
-    payload["text"] = text
+    payload["text"] = apply_synth_fixes(text)  # 발음교정(읽기 규약) 적용 — 자막 원문과 별개, 합성 텍스트만
     if creds.get("reference_id"):
         payload["reference_id"] = creds["reference_id"]
     body = json.dumps(payload).encode("utf-8")
