@@ -15,7 +15,9 @@ def send(text: str, webhook_path: str = WEBHOOK_PATH) -> int:
         raise ValueError(f"웹훅 URL 형식 이상: {url[:40]!r}")
     body = json.dumps({"content": text[:2000], "username": "코드방(B방)"}).encode("utf-8")
     req = urllib.request.Request(url, data=body,
-        headers={"Content-Type": "application/json"}, method="POST")
+        headers={"Content-Type": "application/json",
+                 "User-Agent": "CodeRoom-B/1.0 (+atnown)"},  # 디스코드는 UA 없으면 403
+        method="POST")
     with urllib.request.urlopen(req, timeout=15) as r:
         return r.status  # 204 = 성공
 
