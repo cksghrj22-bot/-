@@ -57,6 +57,22 @@ def textcard(text, dur, out):
         "-vf",f"noise=alls=6:allf=t,ass={af}:fontsdir=/root/.fonts,format=yuv420p","-an",
         "-c:v","libx264","-preset","fast","-crf","20",str(out)],check=True)
 
+def textover(clip, offset, text, dur, out, mono=False):
+    """⭐영상 위 대형 중앙 텍스트 오버레이(검정 카드 아님). 배경 영상을 어둡게(dim) 깔고 텍스트를 얹는다.
+    2026-07-25 이찬호: "영상을 깔다가 텍스트를 섞으라 했지 텍스트만 넣으라 안 했다." → 텍스트'만' 검정카드 금지."""
+    head = ("[Script Info]\nScriptType: v4.00+\nPlayResX: 1080\nPlayResY: 1920\nWrapStyle: 0\nScaledBorderAndShadow: yes\n\n"
+            "[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\n"
+            "Style: big,Pretendard,76,&H00FFFFFF,&H00101010,&H00000000,1,1,4,1,5,110,110,0,1\n\n"
+            "[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n")
+    ev = f"Dialogue: 0,{ts(0)},{ts(dur)},big,,0,0,0,,{{\\fad(150,120)}}{text}"
+    af = D/f"_to_{abs(hash(text))%99999}.ass"; af.write_text(head+ev+"\n", encoding="utf-8")
+    eq = "eq=saturation=0:contrast=1.05" if mono else "eq=saturation=1.06:contrast=1.02"
+    # 배경 영상(러닝 등) 깔고 → dim 55% → 대형 텍스트. 영상이 계속 움직이며 텍스트가 얹힌다.
+    vf = (f"scale=-2:1920,crop=1080:1920,fps=30,{eq},"
+          f"drawbox=x=0:y=0:w=1080:h=1920:color=black@0.55:t=fill,ass={af}:fontsdir=/root/.fonts,format=yuv420p")
+    subprocess.run(["ffmpeg","-v","error","-y","-stream_loop","-1","-ss",str(offset),"-i",clip,"-t",f"{dur:.3f}",
+        "-vf",vf,"-an","-c:v","libx264","-preset","fast","-crf","20",str(out)],check=True)
+
 def render(name, clips, plan, bgm, out_name, outro_png=None, bgm_lufs=-24, mono=False, en=None):
     """clips={key:path}, plan=[(key,offset),...] 세그별, len(plan)==len(lines). mono=True → 흑백(마인드편).
     en=[영어줄,...] 주면 한글자막 아래 영어자막 동반(해외 시청자·저장률↑, 2026-07-24 이찬호 "영어자막 왜 안해"). len(en)==len(lines)."""
@@ -70,9 +86,16 @@ def render(name, clips, plan, bgm, out_name, outro_png=None, bgm_lufs=-24, mono=
     segfiles = []
     for i, item in enumerate(plan):
         sf = SEG/f"s{i:02d}.mp4"
-        if item[0] == "TXT":   # 텍스트 카드 세그(검정+대형 중앙). item=("TXT", 표시문구 or None)
-            big = item[1] if len(item) > 1 and item[1] else lines[i]
-            textcard(big, durs[i]+T, sf)
+        if item[0] == "TXT":
+            # ⭐신규: ("TXT", clipkey, offset[, 표시문구]) = 영상 위 텍스트 오버레이(검정 아님, 2026-07-25 이찬호).
+            #        구형: ("TXT", 표시문구 or None) = 검정카드(폐지 예정, 하위호환만).
+            if len(item) >= 3 and item[1] is not None:
+                k = item[1]; o = item[2]
+                big = item[3] if len(item) > 3 and item[3] else lines[i]
+                textover(clips[k], o, big, durs[i]+T, sf, mono)
+            else:
+                big = item[1] if len(item) > 1 and item[1] else lines[i]
+                textcard(big, durs[i]+T, sf)
             segfiles.append(str(sf)); continue
         k, o = item[0], item[1]
         xf = item[2] if len(item) > 2 else ""   # 세그별 미세변형: "h"=좌우반전, "z"=줌 (같은 클립 재등장 차별화)
