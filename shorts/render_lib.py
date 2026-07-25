@@ -57,21 +57,27 @@ def textcard(text, dur, out):
         "-c:v","libx264","-preset","fast","-crf","20",str(out)],check=True)
 
 def textover(clip, offset, text, dur, out, mono=False):
-    """⭐텍스트카드 = 흑백 서브틀 배경 위 대형 텍스트(우리 흑백 쇼츠 톤). 검정만도 아니고 밝은 컬러 dim도 아님.
-    2026-07-25 이찬호: 밝은 컬러+dim은 "싼마이" → 폐지. "배경 살짝 넣고 흑백 쇼츠 하듯이" → 흑백+블러+진한 dim."""
+    """⭐텍스트카드 = 영상 위 대형 화이트 제목(가운데). mono=True → 흑백화면+진한 dim(우리 흑백 쇼츠 톤),
+    mono=False → 컬러 유지+약한 dim. 2026-07-25 이찬호: "텍스트 섞어쓰는 거 흑백·컬러 랜덤. 흑백화면 가운데 큰 화이트 제목"."""
     head = ("[Script Info]\nScriptType: v4.00+\nPlayResX: 1080\nPlayResY: 1920\nWrapStyle: 0\nScaledBorderAndShadow: yes\n\n"
             "[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\n"
             "Style: big,Pretendard,76,&H00FFFFFF,&H00101010,&H00000000,1,1,2,1,5,110,110,0,1\n\n"
             "[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n")
     ev = f"Dialogue: 0,{ts(0)},{ts(dur)},big,,0,0,0,,{{\\fad(150,120)}}{text}"
     af = D/f"_to_{abs(hash(text))%99999}.ass"; af.write_text(head+ev+"\n", encoding="utf-8")
-    vf = ("scale=-2:1920,crop=1080:1920,fps=30,eq=saturation=0:contrast=1.02,boxblur=8:1,"
-          f"drawbox=x=0:y=0:w=1080:h=1920:color=black@0.62:t=fill,ass={af}:fontsdir=/root/.fonts,format=yuv420p")
+    if mono:  # 흑백화면(무채색)+진한 dim
+        vf = ("scale=-2:1920,crop=1080:1920,fps=30,eq=saturation=0:contrast=1.02,boxblur=8:1,"
+              f"drawbox=x=0:y=0:w=1080:h=1920:color=black@0.62:t=fill,ass={af}:fontsdir=/root/.fonts,format=yuv420p")
+    else:     # 컬러 유지+약한 dim(제목 가독 위해 살짝만 가라앉힘)
+        vf = ("scale=-2:1920,crop=1080:1920,fps=30,eq=saturation=1.04:contrast=1.02,boxblur=6:1,"
+              f"drawbox=x=0:y=0:w=1080:h=1920:color=black@0.42:t=fill,ass={af}:fontsdir=/root/.fonts,format=yuv420p")
     subprocess.run(["ffmpeg","-v","error","-y","-stream_loop","-1","-ss",str(offset),"-i",clip,"-t",f"{dur:.3f}",
         "-vf",vf,"-an","-c:v","libx264","-preset","fast","-crf","20",str(out)],check=True)
 
-def render(name, clips, plan, bgm, out_name, outro_png=None, bgm_lufs=-24, mono=False, en=None):
-    """clips={key:path}, plan=[(key,offset),...] 세그별, len(plan)==len(lines). mono=True → 흑백(마인드편).
+def render(name, clips, plan, bgm, out_name, outro_png=None, bgm_lufs=-24, mono=False, en=None, randmix=False):
+    """clips={key:path}, plan=[(key,offset),...] 세그별, len(plan)==len(lines). mono=True → 전편 흑백(마인드편).
+    ⭐randmix=True(2026-07-25 이찬호) → 세그별 흑백/컬러 랜덤 섞기 + 오프닝은 흑백 제목카드(영상보다 텍스트 먼저).
+       흑백 세그 = 자막 화면 가운데 / 컬러 세그 = 자막 하단(단 유튜브 UI존 위). 텍스트카드도 흑백/컬러 랜덤.
     en=[영어줄,...] 주면 한글자막 아래 영어자막 동반(해외 시청자·저장률↑). len(en)==len(lines)."""
     meta = json.loads((D/"tts_meta.json").read_text(encoding="utf-8"))[name]
     lines = meta["lines"]; spans = meta["spans"]; total = meta["total"]; nar = meta["nar"]
@@ -79,17 +85,24 @@ def render(name, clips, plan, bgm, out_name, outro_png=None, bgm_lufs=-24, mono=
     starts = [s[0] for s in spans]
     durs = [(starts[i+1]-starts[i]) if i < len(lines)-1 else (total-starts[i]) for i in range(len(lines))]
     durs = [max(d, 0.5) for d in durs]
+    # 세그별 흑백/컬러 결정. randmix=True면 인덱스 기반 유사난수(재현가능)로 섞되 오프닝(i=0)은 무조건 흑백(제목카드).
+    def seg_is_mono(i):
+        if mono: return True
+        if not randmix: return False
+        if i == 0: return True                     # 영상보다 텍스트 먼저 = 흑백 제목카드
+        return ((i*73 + 19) % 100) < 55            # ~55% 흑백, 나머지 컬러(유사난수·재현가능)
+    seg_mono = [seg_is_mono(i) for i in range(len(plan))]
     SEG = D/f"{name}_seg"; SEG.mkdir(exist_ok=True)
     segfiles = []
     for i, item in enumerate(plan):
         sf = SEG/f"s{i:02d}.mp4"
         if item[0] == "TXT":
-            # ⭐신규: ("TXT", clipkey, offset[, 표시문구]) = 흑백 서브틀 영상 위 텍스트(2026-07-25 이찬호).
+            # ⭐신규: ("TXT", clipkey, offset[, 표시문구]) = 영상 위 대형 화이트 제목(흑백/컬러=seg_mono).
             #        구형: ("TXT", 표시문구 or None) = 검정카드(하위호환만).
             if len(item) >= 3 and item[1] is not None:
                 k = item[1]; o = item[2]
                 big = item[3] if len(item) > 3 and item[3] else lines[i]
-                textover(clips[k], o, big, durs[i]+T, sf, mono)
+                textover(clips[k], o, big, durs[i]+T, sf, seg_mono[i])
             else:
                 big = item[1] if len(item) > 1 and item[1] else lines[i]
                 textcard(big, durs[i]+T, sf)
@@ -99,7 +112,7 @@ def render(name, clips, plan, bgm, out_name, outro_png=None, bgm_lufs=-24, mono=
         pre = "scale=-2:1920,crop=1080:1920,fps=30"
         if "z" in xf: pre = "scale=-2:2110,crop=1080:1920,fps=30"  # 줌인(≈10%)
         if "h" in xf: pre += ",hflip"
-        eq = "eq=saturation=0:contrast=1.05" if mono else "eq=saturation=1.06:contrast=1.02"  # mono=흑백(마인드편)
+        eq = "eq=saturation=0:contrast=1.05" if seg_mono[i] else "eq=saturation=1.06:contrast=1.02"  # 세그별 흑백/컬러
         vf = pre + "," + eq + ",format=yuv420p"
         # -stream_loop -1: 짧은 클립도 세그 길이(dur+T)를 꽉 채우게 루프 → xfade truncate/프리즈 방지 (2026-07-24 펌 7.5초 잘림 사고)
         subprocess.run(["ffmpeg","-v","error","-y","-stream_loop","-1","-ss",str(o),"-i",clips[k],"-t",f"{durs[i]+T:.3f}",
@@ -140,28 +153,34 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     is_txt = [(plan[i][0] == "TXT") for i in range(len(lines))]
     # 자막 위치: 숏츠 하단 UI(채널·제목·버튼) 위로 올림. \pos로 직접 배치 → MarginV 무시.
     # 2026-07-24 이찬호 "숏츠 밑 채널소개 때문에 자막 안 보임 → 위로·크게, 2줄 간격 좁게".
-    Y_ENG = 1500       # 영어(하단, 화면 아래서 420px — UI 위 안전)
-    Y_CAP_BASE = 1436  # 한글 최하단 줄 바닥(영어 위 64px)
+    # 컬러 세그 = 하단(유튜브 UI존 위). 흑백 세그 = 화면 가운데. (2026-07-25 이찬호)
+    Y_ENG = 1500       # 컬러: 영어(하단, UI 위 안전)
+    Y_CAP_BASE = 1436  # 컬러: 한글 최하단 줄 바닥
+    Y_ENG_C = 1044     # 흑백: 영어(가운데 약간 아래)
+    Y_CAP_C = 980      # 흑백: 한글 최하단 줄 바닥(가운데)
     GAP = 74           # 한글 2줄 간격(size70 기준 바짝)
-    def cap_events(t, st, en_ts):
+    def cap_events(t, st, en_ts, is_mono):
+        base = Y_CAP_C if is_mono else Y_CAP_BASE
         parts = wrap(t).split("\\N")
         out = []
         for j, part in enumerate(parts):
-            y = Y_CAP_BASE - (len(parts) - 1 - j) * GAP
+            y = base - (len(parts) - 1 - j) * GAP
             out.append(f"Dialogue: 0,{st},{en_ts},cap,,0,0,0,,{{\\an2\\pos(540,{y})}}{part}")
         return out
-    # TXT 세그는 가운데 대형 한글카드가 이미 있음 → 하단 한글자막 생략(중복 방지). 영어는 카드 아래 유지(해외시청자).
+    # TXT 세그는 가운데 대형 한글카드가 이미 있음 → 하단 한글자막 생략(중복 방지). 영어는 카드 아래(하단) 유지.
     ev = []
     for i, t in enumerate(lines):
         if is_txt[i]:
             continue
         et = ts(starts[i+1] if i < len(lines)-1 else total)
-        ev += cap_events(t, ts(starts[i]), et)
+        ev += cap_events(t, ts(starts[i]), et, seg_mono[i])
     if en:
         assert len(en) == len(lines), f"{name}: en {len(en)} != lines {len(lines)}"
         for i, t in enumerate(en):
             et = ts(starts[i+1] if i < len(lines)-1 else total)
-            ev.append(f"Dialogue: 0,{ts(starts[i])},{et},eng,,0,0,0,,{{\\an2\\pos(540,{Y_ENG})}}{t}")
+            # TXT 카드의 영어는 항상 하단(제목과 안 겹치게). 그 외엔 세그 흑백=가운데 / 컬러=하단.
+            ye = Y_ENG if (is_txt[i] or not seg_mono[i]) else Y_ENG_C
+            ev.append(f"Dialogue: 0,{ts(starts[i])},{et},eng,,0,0,0,,{{\\an2\\pos(540,{ye})}}{t}")
     sb = D/f"{name}_subs.ass"; sb.write_text(head+"\n".join(ev)+"\n", encoding="utf-8")
     fc.append(f"[vbody]ass={sb}[v]")
     VTOT = total + 2.6 - T
