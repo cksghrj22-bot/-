@@ -23,6 +23,7 @@ UPLOAD_URL = (
     "https://www.googleapis.com/upload/youtube/v3/videos"
     "?uploadType=resumable&part=snippet,status"
 )
+THUMBNAIL_URL = "https://www.googleapis.com/upload/youtube/v3/thumbnails/set"
 
 
 def load_credentials(path: str | Path) -> dict:
@@ -98,8 +99,45 @@ def build_metadata(
     }
 
 
-def upload(video_path: str | Path, metadata: dict, creds: dict, chunk_size: int = 8 * 1024 * 1024) -> str:
-    """영상을 업로드하고 videoId를 반환한다."""
+def set_thumbnail(video_id: str, thumb_path: str | Path, creds: dict) -> None:
+    """업로드된 영상에 커스텀 썸네일을 장착한다.
+
+    2026-07-25 이찬호: "썸네일 장착해서 올려야, 볼 때 썸네일부터 보인다."
+    안 붙이면 유튜브가 영상 첫 프레임을 자동 썸네일로 쓴다 → 피드에서 밋밋. 이 함수로
+    제작한 커스텀 썸네일(제목 크게)을 세팅하면 피드·검색에서 그 이미지가 먼저 노출된다.
+    youtube.upload 스코프로 본인 영상에 설정 가능. 이미지 ≤2MB 권장.
+    """
+    thumb_path = Path(thumb_path)
+    token = get_access_token(creds)
+    data = thumb_path.read_bytes()
+    mime = "image/png" if thumb_path.suffix.lower() == ".png" else "image/jpeg"
+    url = f"{THUMBNAIL_URL}?videoId={urllib.parse.quote(video_id)}&uploadType=media"
+    request = urllib.request.Request(
+        url,
+        data=data,
+        method="POST",
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Content-Type": mime,
+            "Content-Length": str(len(data)),
+        },
+    )
+    with urllib.request.urlopen(request, timeout=120) as response:
+        json.loads(response.read())  # 성공 시 thumbnailSetResponse — 던지지 않으면 OK
+
+
+def upload(
+    video_path: str | Path,
+    metadata: dict,
+    creds: dict,
+    chunk_size: int = 8 * 1024 * 1024,
+    thumbnail: str | Path | None = None,
+) -> str:
+    """영상을 업로드하고 videoId를 반환한다.
+
+    thumbnail을 주면 업로드 완료 직후 커스텀 썸네일을 장착한다(2026-07-25 이찬호 —
+    "썸네일부터 보이게"). 썸네일 세팅 실패는 업로드 자체를 되돌리지 않고 예외로 알린다.
+    """
     video_path = Path(video_path)
     token = get_access_token(creds)
     size = video_path.stat().st_size
@@ -138,7 +176,10 @@ def upload(video_path: str | Path, metadata: dict, creds: dict, chunk_size: int 
             )
             try:
                 with urllib.request.urlopen(put, timeout=300) as response:
-                    return json.loads(response.read())["id"]  # 마지막 조각: 완료 응답
+                    video_id = json.loads(response.read())["id"]  # 마지막 조각: 완료 응답
+                    if thumbnail:
+                        set_thumbnail(video_id, thumbnail, creds)  # 커스텀 썸네일 장착
+                    return video_id
             except urllib.error.HTTPError as exc:
                 if exc.code != 308:  # 308 = 조각 수신됨, 계속
                     raise

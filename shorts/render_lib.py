@@ -32,7 +32,8 @@ def alloc(pool, n, fixed=None, gap=None):
     return seq
 
 def wrap(t):
-    if len(t) <= 15 or " " not in t:
+    # cap 폰트 70(2026-07-25 규격)에선 한 줄 ~13자 넘으면 가로 넘침(가용 940px) → 12자에서 2줄로.
+    if len(t) <= 12 or " " not in t:
         return t
     mid = len(t)//2; best = None
     for i, ch in enumerate(t):
@@ -110,8 +111,8 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: cap,{FONT},58,&H00FFFFFF,&H00101010,&H00000000,1,1,5,1,2,70,70,210,1
-Style: eng,Pretendard,36,&H00D8D8D8,&H00101010,&H00000000,0,1,3,1,2,80,80,150,1
+Style: cap,{FONT},70,&H00FFFFFF,&H00101010,&H00000000,1,1,5,1,2,70,70,470,1
+Style: eng,Pretendard,46,&H00D8D8D8,&H00101010,&H00000000,0,1,3,1,2,80,80,414,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
