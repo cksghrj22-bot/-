@@ -58,18 +58,17 @@ def textcard(text, dur, out):
         "-c:v","libx264","-preset","fast","-crf","20",str(out)],check=True)
 
 def textover(clip, offset, text, dur, out, mono=False):
-    """⭐영상 위 대형 중앙 텍스트 오버레이(검정 카드 아님). 배경 영상을 어둡게(dim) 깔고 텍스트를 얹는다.
-    2026-07-25 이찬호: "영상을 깔다가 텍스트를 섞으라 했지 텍스트만 넣으라 안 했다." → 텍스트'만' 검정카드 금지."""
+    """⭐텍스트카드 = 흑백 서브틀 배경 위 대형 텍스트(우리 흑백 쇼츠 톤). 검정만도 아니고, 밝은 컬러 dim도 아님.
+    2026-07-25 이찬호: 밝은 컬러+dim은 "싼마이" → 폐지. "배경 살짝 넣고 흑백 쇼츠 하듯이" → 흑백+블러+진한 dim."""
     head = ("[Script Info]\nScriptType: v4.00+\nPlayResX: 1080\nPlayResY: 1920\nWrapStyle: 0\nScaledBorderAndShadow: yes\n\n"
             "[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\n"
-            "Style: big,Pretendard,76,&H00FFFFFF,&H00101010,&H00000000,1,1,4,1,5,110,110,0,1\n\n"
+            "Style: big,Pretendard,76,&H00FFFFFF,&H00101010,&H00000000,1,1,2,1,5,110,110,0,1\n\n"
             "[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n")
     ev = f"Dialogue: 0,{ts(0)},{ts(dur)},big,,0,0,0,,{{\\fad(150,120)}}{text}"
     af = D/f"_to_{abs(hash(text))%99999}.ass"; af.write_text(head+ev+"\n", encoding="utf-8")
-    eq = "eq=saturation=0:contrast=1.05" if mono else "eq=saturation=1.06:contrast=1.02"
-    # 배경 영상(러닝 등) 깔고 → dim 55% → 대형 텍스트. 영상이 계속 움직이며 텍스트가 얹힌다.
-    vf = (f"scale=-2:1920,crop=1080:1920,fps=30,{eq},"
-          f"drawbox=x=0:y=0:w=1080:h=1920:color=black@0.55:t=fill,ass={af}:fontsdir=/root/.fonts,format=yuv420p")
+    # 배경 = 흑백(saturation 0) + 블러(부드럽게) + 진한 dim(0.62) = 은은한 흑백 배경. 그 위 흰 대형 텍스트.
+    vf = ("scale=-2:1920,crop=1080:1920,fps=30,eq=saturation=0:contrast=1.02,boxblur=8:1,"
+          f"drawbox=x=0:y=0:w=1080:h=1920:color=black@0.62:t=fill,ass={af}:fontsdir=/root/.fonts,format=yuv420p")
     subprocess.run(["ffmpeg","-v","error","-y","-stream_loop","-1","-ss",str(offset),"-i",clip,"-t",f"{dur:.3f}",
         "-vf",vf,"-an","-c:v","libx264","-preset","fast","-crf","20",str(out)],check=True)
 
