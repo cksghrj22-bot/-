@@ -32,8 +32,7 @@ def alloc(pool, n, fixed=None, gap=None):
     return seq
 
 def wrap(t):
-    # cap 폰트 70(2026-07-25 규격)에선 한 줄 ~13자 넘으면 가로 넘침(가용 940px) → 12자에서 2줄로.
-    if len(t) <= 12 or " " not in t:
+    if len(t) <= 15 or " " not in t:
         return t
     mid = len(t)//2; best = None
     for i, ch in enumerate(t):
@@ -58,7 +57,7 @@ def textcard(text, dur, out):
         "-c:v","libx264","-preset","fast","-crf","20",str(out)],check=True)
 
 def textover(clip, offset, text, dur, out, mono=False):
-    """⭐텍스트카드 = 흑백 서브틀 배경 위 대형 텍스트(우리 흑백 쇼츠 톤). 검정만도 아니고, 밝은 컬러 dim도 아님.
+    """⭐텍스트카드 = 흑백 서브틀 배경 위 대형 텍스트(우리 흑백 쇼츠 톤). 검정만도 아니고 밝은 컬러 dim도 아님.
     2026-07-25 이찬호: 밝은 컬러+dim은 "싼마이" → 폐지. "배경 살짝 넣고 흑백 쇼츠 하듯이" → 흑백+블러+진한 dim."""
     head = ("[Script Info]\nScriptType: v4.00+\nPlayResX: 1080\nPlayResY: 1920\nWrapStyle: 0\nScaledBorderAndShadow: yes\n\n"
             "[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\n"
@@ -66,7 +65,6 @@ def textover(clip, offset, text, dur, out, mono=False):
             "[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n")
     ev = f"Dialogue: 0,{ts(0)},{ts(dur)},big,,0,0,0,,{{\\fad(150,120)}}{text}"
     af = D/f"_to_{abs(hash(text))%99999}.ass"; af.write_text(head+ev+"\n", encoding="utf-8")
-    # 배경 = 흑백(saturation 0) + 블러(부드럽게) + 진한 dim(0.62) = 은은한 흑백 배경. 그 위 흰 대형 텍스트.
     vf = ("scale=-2:1920,crop=1080:1920,fps=30,eq=saturation=0:contrast=1.02,boxblur=8:1,"
           f"drawbox=x=0:y=0:w=1080:h=1920:color=black@0.62:t=fill,ass={af}:fontsdir=/root/.fonts,format=yuv420p")
     subprocess.run(["ffmpeg","-v","error","-y","-stream_loop","-1","-ss",str(offset),"-i",clip,"-t",f"{dur:.3f}",
@@ -74,7 +72,7 @@ def textover(clip, offset, text, dur, out, mono=False):
 
 def render(name, clips, plan, bgm, out_name, outro_png=None, bgm_lufs=-24, mono=False, en=None):
     """clips={key:path}, plan=[(key,offset),...] 세그별, len(plan)==len(lines). mono=True → 흑백(마인드편).
-    en=[영어줄,...] 주면 한글자막 아래 영어자막 동반(해외 시청자·저장률↑, 2026-07-24 이찬호 "영어자막 왜 안해"). len(en)==len(lines)."""
+    en=[영어줄,...] 주면 한글자막 아래 영어자막 동반(해외 시청자·저장률↑). len(en)==len(lines)."""
     meta = json.loads((D/"tts_meta.json").read_text(encoding="utf-8"))[name]
     lines = meta["lines"]; spans = meta["spans"]; total = meta["total"]; nar = meta["nar"]
     assert len(plan) == len(lines), f"{name}: plan {len(plan)} != lines {len(lines)}"
@@ -86,8 +84,8 @@ def render(name, clips, plan, bgm, out_name, outro_png=None, bgm_lufs=-24, mono=
     for i, item in enumerate(plan):
         sf = SEG/f"s{i:02d}.mp4"
         if item[0] == "TXT":
-            # ⭐신규: ("TXT", clipkey, offset[, 표시문구]) = 영상 위 텍스트 오버레이(검정 아님, 2026-07-25 이찬호).
-            #        구형: ("TXT", 표시문구 or None) = 검정카드(폐지 예정, 하위호환만).
+            # ⭐신규: ("TXT", clipkey, offset[, 표시문구]) = 흑백 서브틀 영상 위 텍스트(2026-07-25 이찬호).
+            #        구형: ("TXT", 표시문구 or None) = 검정카드(하위호환만).
             if len(item) >= 3 and item[1] is not None:
                 k = item[1]; o = item[2]
                 big = item[3] if len(item) > 3 and item[3] else lines[i]
@@ -133,20 +131,37 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: cap,{FONT},70,&H00FFFFFF,&H00101010,&H00000000,1,1,5,1,2,70,70,470,1
-Style: eng,Pretendard,46,&H00D8D8D8,&H00101010,&H00000000,0,1,3,1,2,80,80,414,1
+Style: cap,{FONT},70,&H00FFFFFF,&H00101010,&H00000000,1,1,5,1,2,50,50,40,1
+Style: eng,Pretendard,46,&H00E0E0E0,&H00101010,&H00000000,0,1,3,1,2,60,60,40,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
     is_txt = [(plan[i][0] == "TXT") for i in range(len(lines))]
+    # 자막 위치: 숏츠 하단 UI(채널·제목·버튼) 위로 올림. \pos로 직접 배치 → MarginV 무시.
+    # 2026-07-24 이찬호 "숏츠 밑 채널소개 때문에 자막 안 보임 → 위로·크게, 2줄 간격 좁게".
+    Y_ENG = 1500       # 영어(하단, 화면 아래서 420px — UI 위 안전)
+    Y_CAP_BASE = 1436  # 한글 최하단 줄 바닥(영어 위 64px)
+    GAP = 74           # 한글 2줄 간격(size70 기준 바짝)
+    def cap_events(t, st, en_ts):
+        parts = wrap(t).split("\\N")
+        out = []
+        for j, part in enumerate(parts):
+            y = Y_CAP_BASE - (len(parts) - 1 - j) * GAP
+            out.append(f"Dialogue: 0,{st},{en_ts},cap,,0,0,0,,{{\\an2\\pos(540,{y})}}{part}")
+        return out
     # TXT 세그는 가운데 대형 한글카드가 이미 있음 → 하단 한글자막 생략(중복 방지). 영어는 카드 아래 유지(해외시청자).
-    ev = [f"Dialogue: 0,{ts(starts[i])},{ts(starts[i+1] if i<len(lines)-1 else total)},cap,,0,0,0,,{wrap(t)}"
-          for i, t in enumerate(lines) if not is_txt[i]]
+    ev = []
+    for i, t in enumerate(lines):
+        if is_txt[i]:
+            continue
+        et = ts(starts[i+1] if i < len(lines)-1 else total)
+        ev += cap_events(t, ts(starts[i]), et)
     if en:
         assert len(en) == len(lines), f"{name}: en {len(en)} != lines {len(lines)}"
-        ev += [f"Dialogue: 0,{ts(starts[i])},{ts(starts[i+1] if i<len(lines)-1 else total)},eng,,0,0,0,,{t}"
-               for i, t in enumerate(en)]
+        for i, t in enumerate(en):
+            et = ts(starts[i+1] if i < len(lines)-1 else total)
+            ev.append(f"Dialogue: 0,{ts(starts[i])},{et},eng,,0,0,0,,{{\\an2\\pos(540,{Y_ENG})}}{t}")
     sb = D/f"{name}_subs.ass"; sb.write_text(head+"\n".join(ev)+"\n", encoding="utf-8")
     fc.append(f"[vbody]ass={sb}[v]")
     VTOT = total + 2.6 - T
@@ -155,8 +170,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     # 나레이션·BGM 따로 정규화 후 믹스 → BGM이 확실히 들리게. (2026-07-24 "BGM 안 나옴" 사고: 최종 loudnorm이 나레이션에 맞춰 BGM을 깔아뭉갬 → 제거)
     # 나레이션 speechnorm(라우드), BGM loudnorm -24(나레이션 밑 ~9dB, 또렷이 들림), amix normalize=0(반토막 방지), alimiter로 클립 방지.
     # duration=longest + BGM stream_loop(무한) → BGM이 -t(VTOT) 컷까지 끝까지 깔림. 나레이션 끝 여백 유무와 무관.
-    # (2026-07-24 피쉬 나레이션은 끝 여백이 없어 amix=first가 나레이션 콘텐츠 끝에서 잘림 → 아웃트로 무음 사고)
-    # ⚠️ BGM 파일은 앞뒤 무음이 없어야 함(루프 경계 침묵 방지) — 무음 있으면 미리 트림해서 넘길 것.
+    # (2026-07-24 피쉬 나레이션은 끝 여백이 없어 amix=first가 나레이션 콘텐츠 끝에서 잘림 → 아웃트로 무음 사고. longest로 해결)
     fc.append(f"[{naidx}:a]apad,speechnorm=e=12.5:r=0.0006[na];[{bgidx}:a]loudnorm=I={bgm_lufs}:TP=-3[bg];[na][bg]amix=inputs=2:duration=longest:dropout_transition=0:normalize=0,alimiter=limit=0.97[a]")
     out = D/out_name
     cmd = ["ffmpeg","-y","-loglevel","error"]+inputs+["-filter_complex",";".join(fc),
