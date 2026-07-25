@@ -62,12 +62,17 @@ def _multipart(fields: dict, file_field: str, file_path: Path) -> tuple[bytes, s
 
 
 def transcribe(audio: str | Path, api_key: str, language: str = "kor",
-               model_id: str = "scribe_v1", timeout: int = 600) -> dict:
-    """오디오 파일 → Scribe 응답(dict). words[].{text,start,end,type} 포함."""
+               model_id: str = "scribe_v1", timeout: int = 600,
+               diarize: bool = False) -> dict:
+    """오디오 파일 → Scribe 응답(dict). words[].{text,start,end,type} 포함.
+
+    diarize=True면 words[].speaker_id 도 온다(화자분리). 창엽 세미나에서 이호실장
+    목소리 오염 구간 탐지·시즈(학생) 대화 식별에 사용 (2026-07-25)."""
     audio = Path(audio)
-    body, boundary = _multipart(
-        {"model_id": model_id, "language_code": language, "timestamps_granularity": "word"},
-        "file", audio)
+    fields = {"model_id": model_id, "language_code": language, "timestamps_granularity": "word"}
+    if diarize:
+        fields["diarize"] = "true"
+    body, boundary = _multipart(fields, "file", audio)
     req = urllib.request.Request(STT_URL, data=body, method="POST", headers={
         "xi-api-key": api_key,
         "Content-Type": f"multipart/form-data; boundary={boundary}",
