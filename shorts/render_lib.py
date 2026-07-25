@@ -132,7 +132,7 @@ ScaledBorderAndShadow: yes
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: cap,{FONT},70,&H00FFFFFF,&H00101010,&H00000000,1,1,5,1,2,50,50,40,1
-Style: eng,Pretendard,46,&H00E0E0E0,&H00101010,&H00000000,0,1,3,1,2,60,60,40,1
+Style: eng,Pretendard,54,&H00E0E0E0,&H00101010,&H00000000,0,1,3,1,2,60,60,40,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
