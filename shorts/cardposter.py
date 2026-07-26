@@ -401,6 +401,99 @@ def _lf_trim() -> str:
 </svg>'''
 
 
+# ── 사각형(각진) 얼굴 단발 공식 손그림 6종 (2026-07-26 이찬호) ──
+# 핵심: 단발은 '면'이 아니라 '꼬불꼬불(웨이브)'로 표현한다(형님 지시). 각진 얼굴은 곡선으로 감싼다.
+def _squig(x, y0, n=4, h=30, a=13, s=-1):
+    # 꼬불꼬불 세로 물결(둥근 컬) — 면이 아니라 웨이브로 머리 표현
+    d = f'M{x} {y0}'
+    for _ in range(n):
+        d += f' c {int(a*s)} {int(h*0.28)}, {int(a*s)} {int(h*0.72)}, 0 {h}'
+        s *= -1
+    return d
+
+
+def _sqface(cx, cy, smile=True):
+    # 각진 얼굴: 넓은 이마 + 각진 턱(모서리 살짝만 둥근 사각)
+    face = (f'<path d="M{cx-48} {cy-44} q2 -24 22 -24 h52 q20 0 22 24 '
+            f'v38 q0 24 -12 38 q-34 30 -72 0 q-12 -14 -12 -38 z" {STK}/>')
+    return face + _face(cx, cy, smile)
+
+
+def _sq_soften() -> str:
+    # 각(직선 모서리) → 곡선 웨이브로 감쌈. 왼=각 그대로 / 오=곡선으로 감쌈.
+    return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  {_sqface(82,132)}
+  <path d="M40 150 l0 30 l16 0 M124 150 l0 30 l-16 0" {STK_T}/>
+  <text x="82" y="228" text-anchor="middle" font-family="NanumPenPoster" font-size="24" fill="#9a9a9a">각이 선다</text>
+  {_sqface(218,132)}
+  <path d="{_squig(176,110,4,26,12)}" {STK}/><path d="{_squig(260,110,4,26,12)}" {STK}/>
+  <path d="M150 250 l14 -10 l-2 12" {STK_T}/>
+  <text x="218" y="228" text-anchor="middle" font-family="NanumPenPoster" font-size="24" fill="#22242a">곡선이 감싼다</text>
+  <text x="150" y="286" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#141416">각을 곡선으로 감싸요</text>
+</svg>'''
+
+
+def _sq_bang() -> str:
+    # 사선 앞머리 — 이마 각(위 모서리)을 사선으로 눕혀 완화
+    return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  {_sqface(150,150)}
+  <path d="M104 118 q46 -14 92 22" {STK}/>
+  <path d="M104 118 q30 8 54 4 q22 -2 38 18" {STK_T}/>
+  <path d="M92 96 l-22 -16 M70 80 l4 20 M70 80 l20 -2" {STK_T}/>
+  <text x="150" y="288" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#141416">사선 앞머리로 각 완화</text>
+</svg>'''
+
+
+def _sq_jawcurl() -> str:
+    # 턱선 감싸는 꼬불꼬불 컬 — 히어로 컷(웨이브로 각을 감쌈)
+    right = " ".join(_squig(x, 96, 5, 30, 15) for x in (206, 234))
+    left = " ".join(_squig(x, 96, 5, 30, 15) for x in (94, 66))
+    return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  {_sqface(150,146)}
+  <path d="{right}" fill="none" {STK}/>
+  <path d="{left}" fill="none" {STK}/>
+  <path d="M108 214 q42 26 84 0" {STK_T} stroke-dasharray="4 8"/>
+  <text x="150" y="288" text-anchor="middle" font-family="NanumPenPoster" font-size="25" fill="#141416">턱선을 감싸는 옆 컬</text>
+</svg>'''
+
+
+def _sq_inward() -> str:
+    # 끝은 안으로(C컬) — 딱 떨어지지 않게 안으로 말기
+    return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  {_sqface(150,140)}
+  <path d="M96 176 q-8 34 34 46" {STK}/>
+  <path d="M204 176 q8 34 -34 46" {STK}/>
+  <path d="M126 224 l8 -2 l-3 9 M174 224 l-8 -2 l3 9" {STK_T}/>
+  <text x="150" y="284" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#141416">끝은 안으로 말아요</text>
+</svg>'''
+
+
+def _sq_round() -> str:
+    # 직선(각) vs 곡선(둥근) 실루엣 — 왼 딱단발 ✗ / 오 둥근 웨이브 O
+    return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <path d="M52 96 h60 v92 h-60 z" {STK}/>
+  <path d="M64 200 l24 24 M88 200 l-24 24" {STK_T}/>
+  <text x="82" y="252" text-anchor="middle" font-family="NanumPenPoster" font-size="23" fill="#9a9a9a">각지면 더 셈</text>
+  <path d="M188 100 q44 6 44 52 q0 40 -44 44 q-44 -4 -44 -44 q0 -46 44 -52 z" {STK}/>
+  <path d="{_squig(168,120,3,24,10)}" {STK_T}/><path d="{_squig(232,120,3,24,10)}" {STK_T}/>
+  <path d="M206 176 l9 9 l16 -18" {STK_T}/>
+  <text x="218" y="252" text-anchor="middle" font-family="NanumPenPoster" font-size="23" fill="#22242a">둥글면 부드럽</text>
+  <text x="150" y="288" text-anchor="middle" font-family="NanumPenPoster" font-size="26" fill="#141416">직선보다 곡선</text>
+</svg>'''
+
+
+def _sq_avoid() -> str:
+    # 피할 것 — 일자 뱅 + 딱 떨어지는 단발(각을 더 세움)
+    return f'''<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  {_sqface(150,152,False)}
+  <line x1="104" y1="112" x2="196" y2="112" {STK}/>
+  <line x1="100" y1="190" x2="200" y2="190" {STK}/>
+  <g transform="translate(150,150)"><circle cx="0" cy="0" r="86" fill="none" stroke="#141416" stroke-width="7"/>
+   <line x1="-60" y1="-60" x2="60" y2="60" stroke="#141416" stroke-width="7"/></g>
+  <text x="150" y="290" text-anchor="middle" font-family="NanumPenPoster" font-size="25" fill="#141416">일자 뱅·딱 떨어지는 단발</text>
+</svg>'''
+
+
 SCENES = {
     "wall": _wall, "jeer": _jeer, "tally": _tally,
     "shame_run": _shame_run, "mix": _mix, "blank": _blank,
@@ -408,6 +501,8 @@ SCENES = {
     "hair_mood": _hair_mood, "hair_texture": _hair_texture, "hair_verdict": _hair_verdict,
     "lf_vertical": _lf_vertical, "lf_cut": _lf_cut, "lf_jaw": _lf_jaw,
     "lf_weight": _lf_weight, "lf_expand": _lf_expand, "lf_dry": _lf_dry, "lf_trim": _lf_trim,
+    "sq_soften": _sq_soften, "sq_bang": _sq_bang, "sq_jawcurl": _sq_jawcurl,
+    "sq_inward": _sq_inward, "sq_round": _sq_round, "sq_avoid": _sq_avoid,
 }
 
 
@@ -1262,11 +1357,59 @@ def mix2_detail_spec() -> DetailSpec:
     )
 
 
-SPECS = {"demo": demo_spec, "danbal": danbal_spec, "longface": longface_spec}
+def square_spec() -> PosterSpec:
+    # 사각형(각진) 얼굴 단발 공식 — 각진 얼굴 정본(얼굴형별커트 4p) + 단발 구술(비율·특징 강조)
+    # 각진 얼굴 = 턱·광대 각이 선명 → 직선이 각을 세운다. 곡선으로 감싼다. 단발은 '면' 아닌 '꼬불꼬불'.
+    return PosterSpec(
+        title='<span class="wu">사각형 얼굴</span> 단발 공식',
+        panels=[
+            Panel("1", "각 — 지우지 말고 감싸요",
+                  "각진 얼굴은\n시크한 매력이에요.\n세 보이면 직선 말고\n곡선으로 감싸요.", "sq_soften"),
+            Panel("2", "앞머리 — 사선으로 눕혀요",
+                  "이마 각을\n사선 앞머리가\n비스듬히 눕혀\n부드러워 보여요.", "sq_bang"),
+            Panel("3", "컬 — 턱선을 감싸게",
+                  "펌으로 옆머리에\n구불구불 컬을 주면\n턱선을 감싸\n각이 완화돼요.", "sq_jawcurl"),
+            Panel("4", "끝 — 안으로 말아요",
+                  "끝이 딱 떨어지면\n각이 더 서요.\nC컬로 안으로 말면\n부드러워 보여요.", "sq_inward"),
+            Panel("5", "실루엣 — 둥글게",
+                  "직선보다 곡선이에요.\n전체 모양을\n동그랗게 그리면\n각이 눌려요.", "sq_round"),
+            Panel("6", "피할 것 — 직선 라인",
+                  "일자 뱅과\n딱 떨어지는 단발은\n턱·이마 각을\n더 세워요.", "sq_avoid"),
+        ],
+        banner="각진 얼굴 = 곡선으로 감싸면 부드러워 보여요",
+        closer_hand="단발은 각을 지우는 게 아니라 <b>부드럽게 감싸는</b> 일.",
+        closer_sub="저장했다가, 상담 때 보여주세요.",
+    )
+
+
+def square_detail_spec() -> DetailSpec:
+    return DetailSpec(
+        series="사각형 얼굴 단발 공식",
+        foot="@차노쌤 · 각은 단점이 아니라 곡선으로 감싸는 매력이에요",
+        cover=square_spec(),   # 1번=처음 그 사각형 카드(공식 6칸) 그대로
+        cards=[
+            DetailCard("각진 얼굴 = 단발 안 어울림", "각은\n감싸는 거예요", "직선 말고 곡선", "sq_soften",
+                       "각진 얼굴은 단발이 안 어울리는 게 아니에요.\n각진 선이 시크하게 드러나는 거예요.\n세 보이면 지우려 하지 말고\n곡선 웨이브로 부드럽게 감싸요."),
+            DetailCard("앞머리 = 이마 가리기", "앞머리는\n각을 눕혀요", "사선으로 비스듬히", "sq_bang",
+                       "일자로 뚝 떨어지는 뱅은 이마 각을 더 세워요.\n사선으로 비스듬히 흐르는 앞머리가\n위쪽 모서리를 눕혀\n인상이 부드러워 보여요."),
+            DetailCard("펌 = 볼륨 크게", "컬은\n턱선을 감싸요", "옆으로 구불구불", "sq_jawcurl",
+                       "펌으로 옆머리에 구불구불 컬을 주면\n납작한 옆이 턱선을 감싸요.\n각진 턱 라인이 컬 안에 묻혀\n선이 부드럽게 정리돼요."),
+            DetailCard("끝 = 딱 떨어지게", "끝은\n안으로 말아요", "C컬로 안으로", "sq_inward",
+                       "끝이 일자로 딱 떨어지면 각이 더 서요.\nC컬로 끝을 안으로 말면\n시선이 안으로 모여\n턱 라인이 부드러워 보여요."),
+            DetailCard("모양 = 각지게 딱", "실루엣은\n둥글게 그려요", "직선보다 곡선", "sq_round",
+                       "각진 실루엣은 얼굴 각을 그대로 비춰요.\n전체 모양을 동그랗게 그리면\n곡선이 각을 눌러줘\n부드럽고 여성스러워 보여요."),
+            DetailCard("단발 = 짧게만", "직선 라인은\n피해요", "각을 세우는 선", "sq_avoid",
+                       "일자 뱅과 딱 떨어지는 블런트 단발은\n턱·이마의 각을 더 세워요.\n같은 단발이라도 직선이 많으면 셈,\n곡선이 많으면 부드러워요."),
+        ],
+    )
+
+
+SPECS = {"demo": demo_spec, "danbal": danbal_spec, "longface": longface_spec,
+         "square": square_spec}
 ZINE_SPECS = {"mix": mix_spec, "mix2": mix2_spec}
 MAP_SPECS = {"coolchic": coolchic_designmap}
 DETAIL_SPECS = {"mixdetail": mix_detail_spec, "longfacedetail": longface_detail_spec,
-                "mix2detail": mix2_detail_spec}
+                "mix2detail": mix2_detail_spec, "squaredetail": square_detail_spec}
 
 if __name__ == "__main__":
     out = sys.argv[1] if len(sys.argv) > 1 else "/tmp/cardposter.png"
