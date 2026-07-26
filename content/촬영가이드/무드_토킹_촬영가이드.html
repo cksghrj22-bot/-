@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>무드 토킹 촬영 가이드</title>
+<style>
+  :root{--bg:#0d0d0e;--card:#18181a;--line:#2a2a2c;--ink:#ededed;--ink2:#a6a6a6;--ink3:#767676;--amber:#C9924A;--teal:#5b8a86;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.6;padding:32px 16px;}
+  .wrap{max-width:860px;margin:0 auto;}
+  .eyebrow{font-size:11px;letter-spacing:.24em;color:var(--amber);font-weight:700;}
+  h1{font-size:28px;font-weight:800;margin:8px 0 5px;}
+  .lead{color:var(--ink2);font-size:14.5px;max-width:680px;}
+  .amber{height:2px;background:var(--amber);width:52px;margin:16px 0 8px;}
+  h2{font-size:18px;font-weight:800;margin:28px 0 12px;display:flex;align-items:center;gap:9px;}
+  h2 .no{color:var(--amber);font-family:"Cormorant Garamond",serif;font-size:22px;}
+  /* diagram */
+  .diagram{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:22px;position:relative;height:230px;margin-bottom:8px;overflow:hidden;}
+  .room{position:absolute;inset:22px;border:1px dashed #3a3a3c;border-radius:4px;}
+  .obj{position:absolute;text-align:center;font-size:11px;color:var(--ink2);}
+  .dot{width:14px;height:14px;border-radius:50%;margin:0 auto 3px;}
+  .person{left:44%;top:38%;} .person .dot{width:26px;height:26px;background:#4a4a52;border:2px solid #6a6a72;}
+  .key{left:16%;top:26%;} .key .dot{background:var(--amber);box-shadow:0 0 22px 8px rgba(201,146,74,.5);}
+  .cam{left:45%;top:74%;} .cam .dot{width:16px;height:12px;border-radius:3px;background:#ddd;}
+  .bg1{left:74%;top:22%;} .bg1 .dot{width:8px;height:8px;background:#c98;box-shadow:0 0 12px 4px rgba(201,146,74,.4);}
+  .bg2{left:82%;top:40%;} .bg2 .dot{width:6px;height:6px;background:#89a;box-shadow:0 0 10px 3px rgba(120,140,170,.4);}
+  .ray{position:absolute;left:20%;top:30%;width:28%;height:2px;background:linear-gradient(90deg,var(--amber),transparent);transform:rotate(18deg);transform-origin:left;}
+  .card2{background:var(--card);border:1px solid var(--line);border-radius:5px;padding:15px 17px;margin-bottom:10px;}
+  .card2.key{border-left:3px solid var(--amber);}
+  .card2 .t{font-size:15px;font-weight:800;}
+  .card2 .d{font-size:13.5px;color:var(--ink2);margin-top:5px;}
+  .card2 .d b{color:#fff;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th{background:#000;color:#fff;text-align:left;padding:8px 11px;font-size:12.5px;}
+  td{padding:8px 11px;border-bottom:1px solid var(--line);vertical-align:top;}
+  td.k{font-weight:800;white-space:nowrap;color:var(--amber);}
+  .do{color:#6fbf8a;font-weight:800;} .dont{color:#d9695f;font-weight:800;}
+  .chk{list-style:none;} .chk li{font-size:14px;padding:6px 0 6px 24px;position:relative;border-bottom:1px solid var(--line);}
+  .chk li::before{content:"☐";position:absolute;left:2px;color:var(--amber);font-weight:800;}
+  .foot{text-align:center;font-size:11px;letter-spacing:.3em;color:var(--ink3);font-weight:700;margin:30px 0 6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">AT NOWN · 무드 토킹 촬영 가이드</div>
+  <h1>그 "릴스 느낌" 내는 법</h1>
+  <div class="lead">색감(필터)은 마감의 40%. 나머지 <b>60%는 촬영</b>이다. 아래 세팅으로 찍으면 필터 없이도 이미 그 무드가 나온다. 핵심은 딱 하나 — <b>어둡게 만들고, 빛을 하나만 준다.</b></div>
+  <div class="amber"></div>
+
+  <h2><span class="no">◆</span>세팅 배치도 (위에서 본 그림)</h2>
+  <div class="diagram">
+    <div class="room"></div>
+    <div class="ray"></div>
+    <div class="obj key"><div class="dot"></div>따뜻한 조명<br>(45° 옆·위)</div>
+    <div class="obj person"><div class="dot"></div>나(피사체)</div>
+    <div class="obj cam"><div class="dot"></div>카메라<br>(가슴~얼굴)</div>
+    <div class="obj bg1"><div class="dot"></div>배경 불빛1</div>
+    <div class="obj bg2"><div class="dot"></div>배경 불빛2</div>
+  </div>
+  <div style="font-size:12px;color:var(--ink3);margin-bottom:6px;">빛은 얼굴 <b>한쪽</b>에서 와서 반대쪽에 그림자가 지게. 정면 플랫 조명 = 무드 죽음.</div>
+
+  <h2><span class="no">1</span>조명 — 이게 90%</h2>
+  <div class="card2 key">
+    <div class="t">① 천장 형광등 다 끈다</div>
+    <div class="d">밝고 평평한 형광등이 무드의 최대 적. <b>다 끄고</b> 방을 어둡게.</div>
+  </div>
+  <div class="card2 key">
+    <div class="t">② 따뜻한 조명 하나만, 옆·위 45°에서</div>
+    <div class="d">스탠드·링라이트(전구색/3000K)·따뜻한 무드등 하나를 <b>얼굴 옆 45°, 눈높이보다 살짝 위</b>에. 정면 금지 → 옆에서 와야 얼굴에 <b>입체 그림자</b>가 생긴다.</div>
+  </div>
+  <div class="card2">
+    <div class="t">③ 배경에 작은 불빛 1~2개 (보케용)</div>
+    <div class="d">뒤쪽에 따뜻한 전구·조명 몇 개(그 릴스의 펙보드 불빛). 초점 밖에서 <b>동그란 보케</b>가 되어 깊이가 생김.</div>
+  </div>
+
+  <h2><span class="no">2</span>구도 · 렌즈</h2>
+  <table>
+    <tr><th>항목</th><th>세팅</th></tr>
+    <tr><td class="k">크기</td><td>얼굴~가슴 <b>타이트샷</b> (와이드 단체샷 ❌ — 그건 무드 안 남)</td></tr>
+    <tr><td class="k">배경 거리</td><td>나와 배경을 <b>멀리</b> 떨어뜨림 → 배경 흐려짐(보케)</td></tr>
+    <tr><td class="k">아이폰</td><td><b>시네마틱 모드</b> 또는 <b>인물 사진</b> 느낌(얕은 심도). 4K·24/30fps</td></tr>
+    <tr><td class="k">노출</td><td>화면 톡 눌러 <b>얼굴에 초점 + 노출 살짝 내림</b>(어둡게 유지). 밝게 올리지 말 것</td></tr>
+    <tr><td class="k">화이트밸런스</td><td>따뜻하게(수동 3200~3800K). 자동이면 너무 하얘짐</td></tr>
+  </table>
+
+  <h2><span class="no">3</span>하지 말 것 / 할 것</h2>
+  <div class="card2">
+    <div class="d">
+      <span class="dont">✕</span> 천장 형광등 켠 채 촬영 &nbsp;·&nbsp; <span class="dont">✕</span> 정면 플랫 조명 &nbsp;·&nbsp; <span class="dont">✕</span> 와이드 단체샷 &nbsp;·&nbsp; <span class="dont">✕</span> 노출 밝게<br><br>
+      <span class="do">✓</span> 방 어둡게 &nbsp;·&nbsp; <span class="do">✓</span> 따뜻한 빛 하나 옆에서 &nbsp;·&nbsp; <span class="do">✓</span> 얼굴 타이트 &nbsp;·&nbsp; <span class="do">✓</span> 배경 보케 &nbsp;·&nbsp; <span class="do">✓</span> 살짝 어둡게
+    </div>
+  </div>
+
+  <h2><span class="no">4</span>찍고 나서 (색감은 내가/CapCut)</h2>
+  <div class="card2">
+    <div class="d">이렇게 찍은 영상에 <b>시네마틱 색감</b>(그림자 차갑게·하이라이트 따뜻·대비↑·채도↓·그레인·비네트)만 얹으면 완성. 코드방 렌더 프리셋(예정 <b>style_preset_cine</b>) 또는 CapCut 필름필터. <b>어둡게 잘 찍으면 필터는 살짝만 얹어도 된다.</b></div>
+  </div>
+
+  <h2><span class="no">✓</span>촬영 직전 체크리스트</h2>
+  <ul class="chk">
+    <li>천장 조명 껐나</li>
+    <li>따뜻한 빛 하나를 얼굴 옆 45°에 뒀나</li>
+    <li>배경에 작은 불빛(보케) 있나</li>
+    <li>얼굴~가슴 타이트샷인가</li>
+    <li>노출 살짝 내려 어둡게 유지했나</li>
+    <li>화이트밸런스 따뜻하게(수동) 맞췄나</li>
+  </ul>
+
+  <div class="foot">A T &nbsp; N O W N &nbsp;·&nbsp; MOOD TALKING SETUP</div>
+</div>
+</body>
+</html>
