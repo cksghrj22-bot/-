@@ -153,18 +153,15 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     is_txt = [(plan[i][0] == "TXT") for i in range(len(lines))]
     # 자막 위치: 숏츠 하단 UI(채널·제목·버튼) 위로 올림. \pos로 직접 배치 → MarginV 무시.
     # 2026-07-24 이찬호 "숏츠 밑 채널소개 때문에 자막 안 보임 → 위로·크게, 2줄 간격 좁게".
-    # 컬러 세그 = 하단(유튜브 UI존 위). 흑백 세그 = 화면 가운데. (2026-07-25 이찬호)
-    Y_ENG = 1500       # 컬러: 영어(하단, UI 위 안전)
-    Y_CAP_BASE = 1436  # 컬러: 한글 최하단 줄 바닥
-    Y_ENG_C = 1044     # 흑백: 영어(가운데 약간 아래)
-    Y_CAP_C = 980      # 흑백: 한글 최하단 줄 바닥(가운데)
+    # 자막은 항상 하단(유튜브 UI존 위). 대형 중앙 텍스트는 TXT 카드가 담당(강약 조절). (2026-07-26 이찬호: 흑백/컬러 랜덤·가운데자막 폐기)
+    Y_ENG = 1500       # 영어(하단, UI 위 안전)
+    Y_CAP_BASE = 1436  # 한글 최하단 줄 바닥
     GAP = 74           # 한글 2줄 간격(size70 기준 바짝)
-    def cap_events(t, st, en_ts, is_mono):
-        base = Y_CAP_C if is_mono else Y_CAP_BASE
+    def cap_events(t, st, en_ts):
         parts = wrap(t).split("\\N")
         out = []
         for j, part in enumerate(parts):
-            y = base - (len(parts) - 1 - j) * GAP
+            y = Y_CAP_BASE - (len(parts) - 1 - j) * GAP
             out.append(f"Dialogue: 0,{st},{en_ts},cap,,0,0,0,,{{\\an2\\pos(540,{y})}}{part}")
         return out
     # TXT 세그는 가운데 대형 한글카드가 이미 있음 → 하단 한글자막 생략(중복 방지). 영어는 카드 아래(하단) 유지.
@@ -173,14 +170,12 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         if is_txt[i]:
             continue
         et = ts(starts[i+1] if i < len(lines)-1 else total)
-        ev += cap_events(t, ts(starts[i]), et, seg_mono[i])
+        ev += cap_events(t, ts(starts[i]), et)
     if en:
         assert len(en) == len(lines), f"{name}: en {len(en)} != lines {len(lines)}"
         for i, t in enumerate(en):
             et = ts(starts[i+1] if i < len(lines)-1 else total)
-            # TXT 카드의 영어는 항상 하단(제목과 안 겹치게). 그 외엔 세그 흑백=가운데 / 컬러=하단.
-            ye = Y_ENG if (is_txt[i] or not seg_mono[i]) else Y_ENG_C
-            ev.append(f"Dialogue: 0,{ts(starts[i])},{et},eng,,0,0,0,,{{\\an2\\pos(540,{ye})}}{t}")
+            ev.append(f"Dialogue: 0,{ts(starts[i])},{et},eng,,0,0,0,,{{\\an2\\pos(540,{Y_ENG})}}{t}")
     sb = D/f"{name}_subs.ass"; sb.write_text(head+"\n".join(ev)+"\n", encoding="utf-8")
     fc.append(f"[vbody]ass={sb}[v]")
     VTOT = total + 2.6 - T
