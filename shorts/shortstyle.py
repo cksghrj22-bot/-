@@ -58,6 +58,16 @@ BGM_VOLUME = 1.0   # loudnorm(-34 LUFS)이 이미 레벨 결정 → 추가 감�
 # 채널명/브랜딩: 영상에 채널명 안 넣음(유튜브가 표시). SNS 아웃트로는 제작규격 유지(채널명 아님).
 CHANNEL_WATERMARK = False
 
+# 아웃트로 "SNS에 일기를 쓰고 있어요" — 정본=정가운데 카드+검은박스(런북·verify_render "아웃트로중앙").
+# 하단 작은 반투명(46/alpha80)은 옛버전 = 틀림. 중앙·박스·또렷·페이드.
+OUTRO_CARD = {
+    "font": KYOBO, "size": 64,
+    "primary_color": "&H00FFFFFF", "outline_color": "&H00000000",
+    "box_color": "000000", "box_opacity": 100, "border_style": 4,
+    "outline": 2, "alignment": 5, "margin_v": 40,
+    "alpha": "00", "fade": [500, 400], "dur": 2.6,
+}
+
 
 def ko_en(ko: str, en: str | None) -> str:
     """한글+영어를 한 블록으로. 영어는 바로 아래 작은 글씨(멀어짐 방지)."""
