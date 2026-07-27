@@ -64,6 +64,11 @@
   .ev-edu{background:#eef1ec;color:#3B7A57;}
   .ev-model{background:#141414;color:var(--cream);}
   .ev-special{background:var(--gold);color:#fff;}
+  .ev-pm{background:#3a352e;color:var(--cream);}
+  .ev-mood{background:#efe7d6;color:#A8895E;}
+  .cal .slot{display:block;font-size:9px;color:#b7b1a6;font-weight:800;margin-top:6px;letter-spacing:.03em;}
+  .cal .slot.first{margin-top:0;}
+  .cal .dash{color:#cfc8bb;font-size:12px;font-weight:700;}
   .cal-note{font-size:11.5px;color:var(--gray);margin-top:11px;line-height:1.6;}
   .cal-legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px;font-size:11px;font-weight:700;}
   .cal-legend span{display:inline-flex;align-items:center;gap:6px;}
@@ -354,59 +359,57 @@
   </div>
 
   <div class="sec">
-    <h2><span class="kr">월간 운영 캘린더</span></h2>
+    <h2><span class="kr">월간 운영 캘린더 (아침·저녁 배분)</span></h2>
     <div class="cal-legend">
-      <span><i class="ev-edu"></i>평상교육 (수·목·금 07:30~09:30)</span>
+      <span><i class="ev-edu"></i>평상교육 (아침 07:30~09:30)</span>
+      <span><i class="ev-mood"></i>무드·가발 (아침)</span>
+      <span><i class="ev-pm"></i>실전·모델실습 (저녁)</span>
       <span><i class="ev-model"></i>모델데이 (2·4주)</span>
-      <span><i class="ev-special"></i>특강 (3째주)</span>
+      <span><i class="ev-special"></i>특강 (3주)</span>
     </div>
     <table class="cal">
       <thead>
-        <tr><th class="sun">일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th class="sat">토</th></tr>
+        <tr><th style="width:52px;">주</th><th>화</th><th>수</th><th>목</th><th>금</th><th class="sun">일</th></tr>
       </thead>
       <tbody>
         <tr>
-          <td class="off"></td>
           <td><span class="wk">1주</span></td>
-          <td></td>
-          <td><span class="ev ev-edu">교육</span></td>
-          <td><span class="ev ev-edu">교육</span></td>
-          <td><span class="ev ev-edu">교육</span></td>
-          <td class="off"></td>
+          <td><span class="slot first">아침</span><span class="ev ev-edu">평상교육</span><span class="slot">저녁</span><span class="ev ev-pm">실전모델</span></td>
+          <td><span class="slot first">아침</span><span class="ev ev-edu">평상교육</span><span class="slot">저녁</span><span class="ev ev-pm">모델실습</span></td>
+          <td><span class="slot first">아침</span><span class="ev ev-edu">평상교육</span><span class="slot">저녁</span><span class="ev ev-pm">실전모델</span></td>
+          <td><span class="slot first">아침</span><span class="ev ev-edu">평상교육</span><span class="slot">저녁</span><span class="dash">—</span></td>
+          <td><span class="slot first">아침</span><span class="ev ev-mood">무드·가발</span><span class="slot">저녁</span><span class="dash">—</span></td>
         </tr>
         <tr>
-          <td class="off"></td>
           <td><span class="wk">2주</span></td>
-          <td></td>
-          <td><span class="ev ev-edu">교육</span></td>
-          <td><span class="ev ev-edu">교육</span></td>
-          <td><span class="ev ev-edu">교육</span><span class="ev ev-model">모델데이 ①</span></td>
-          <td class="off"></td>
+          <td><span class="slot first">아침</span><span class="ev ev-edu">평상교육</span><span class="slot">저녁</span><span class="ev ev-pm">실전모델</span></td>
+          <td><span class="slot first">아침</span><span class="ev ev-edu">평상교육</span><span class="slot">저녁</span><span class="ev ev-pm">모델실습</span></td>
+          <td><span class="slot first">아침</span><span class="ev ev-edu">평상교육</span><span class="slot">저녁</span><span class="ev ev-pm">실전모델</span></td>
+          <td><span class="slot first">아침</span><span class="ev ev-edu">평상교육</span><span class="slot">저녁</span><span class="ev ev-model">모델데이 ①</span></td>
+          <td><span class="slot first">아침</span><span class="ev ev-mood">무드·가발</span><span class="slot">저녁</span><span class="dash">—</span></td>
         </tr>
         <tr>
-          <td class="off"></td>
           <td><span class="wk">3주</span></td>
-          <td></td>
-          <td><span class="ev ev-edu">교육</span></td>
-          <td><span class="ev ev-edu">교육</span></td>
-          <td><span class="ev ev-edu">교육</span><span class="ev ev-special">특강</span></td>
-          <td class="off"></td>
+          <td><span class="slot first">아침</span><span class="ev ev-edu">평상교육</span><span class="slot">저녁</span><span class="ev ev-pm">실전모델</span></td>
+          <td><span class="slot first">아침</span><span class="ev ev-edu">평상교육</span><span class="slot">저녁</span><span class="ev ev-pm">모델실습</span></td>
+          <td><span class="slot first">아침</span><span class="ev ev-edu">평상교육</span><span class="slot">저녁</span><span class="ev ev-pm">실전모델</span></td>
+          <td><span class="slot first">아침</span><span class="ev ev-edu">평상교육</span><span class="slot">저녁</span><span class="ev ev-special">특강</span></td>
+          <td><span class="slot first">아침</span><span class="ev ev-mood">무드·가발</span><span class="slot">저녁</span><span class="dash">—</span></td>
         </tr>
         <tr>
-          <td class="off"></td>
           <td><span class="wk">4주</span></td>
-          <td></td>
-          <td><span class="ev ev-edu">교육</span></td>
-          <td><span class="ev ev-edu">교육</span></td>
-          <td><span class="ev ev-edu">교육</span><span class="ev ev-model">모델데이 ②</span></td>
-          <td class="off"></td>
+          <td><span class="slot first">아침</span><span class="ev ev-edu">평상교육</span><span class="slot">저녁</span><span class="ev ev-pm">실전모델</span></td>
+          <td><span class="slot first">아침</span><span class="ev ev-edu">평상교육</span><span class="slot">저녁</span><span class="ev ev-pm">모델실습</span></td>
+          <td><span class="slot first">아침</span><span class="ev ev-edu">평상교육</span><span class="slot">저녁</span><span class="ev ev-pm">실전모델</span></td>
+          <td><span class="slot first">아침</span><span class="ev ev-edu">평상교육</span><span class="slot">저녁</span><span class="ev ev-model">모델데이 ②</span></td>
+          <td><span class="slot first">아침</span><span class="ev ev-mood">무드·가발</span><span class="slot">저녁</span><span class="dash">—</span></td>
         </tr>
       </tbody>
     </table>
     <div class="cal-note">
-      · <b>모델데이</b> — 월 2회(2·4주 금). <b>모델 최소 2명 이상 확보됐을 때만 시행.</b> 미달 시 평상교육/실습으로 대체.<br>
-      · <b>장소</b> — 플레이스 기본. 협의 시 장소 무관하며, <b>다수(모델·인원)가 모이는 장소를 기준</b>으로 정한다.<br>
-      · <b>특강</b> — 월 1회(3째주 금). · <b>시험</b> — 12월 둘째 주 월(12/14).
+      · <b>월·토 휴무</b> — 교육·행사는 화·수·목·금·일에만 배분.<br>
+      · <b>특강(3주 금)과 모델데이(2·4주 금)는 서로 다른 주</b>라 겹치지 않음. <b>모델 2명↑ 확보 시에만 모델데이 시행</b>(미달 시 실습 대체).<br>
+      · 아침 07:30~09:30 평상교육(한 과목/하루) · 무드·가발은 일요일 아침 · 실전모델/모델실습은 저녁.
     </div>
   </div>
 
