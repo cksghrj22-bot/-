@@ -73,6 +73,7 @@ def render(
     narration: str | Path | None = None,
     outro: str | None = None,
     outro_style: dict | None = None,
+    en_style: dict | None = None,
 ) -> Path:
     """자막을 굽고 (있다면) BGM을 원본 음성 위에 깔아 output으로 렌더링한다.
 
@@ -88,7 +89,7 @@ def render(
     ass_path = Path(workdir) / f"{video.stem}.ass"
     ass_path.write_text(
         to_ass(lines, style=style, title=script.title or None, title_style=title_style,
-               outro=outro, outro_style=outro_style, total_duration=duration),
+               outro=outro, outro_style=outro_style, total_duration=duration, en_style=en_style),
         encoding="utf-8",
     )
 
