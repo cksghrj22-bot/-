@@ -68,7 +68,19 @@
   .cal-legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px;font-size:11px;font-weight:700;}
   .cal-legend span{display:inline-flex;align-items:center;gap:6px;}
   .cal-legend i{width:14px;height:14px;border-radius:3px;display:inline-block;}
-  @media(max-width:960px){.lanes{grid-template-columns:repeat(2,1fr);}.cols{grid-template-columns:repeat(2,1fr);}.ops{grid-template-columns:repeat(3,1fr);}.pend{grid-template-columns:1fr;}.cal td{height:auto;}}
+  .stages{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
+  .stage{border:1px solid var(--line);background:#fff;border-radius:2px;padding:12px 13px;border-top:3px solid var(--ink);}
+  .stage.y{border-top-color:var(--gold);}
+  .stage .snrow{display:flex;align-items:baseline;gap:9px;}
+  .stage .sn{font-family:"Cormorant Garamond",serif;font-size:24px;font-weight:700;color:var(--gold);line-height:1;}
+  .stage .st{font-size:13.5px;font-weight:800;}
+  .stage .meta{font-size:10px;color:var(--gray);font-weight:700;margin:4px 0 7px;}
+  .stage .who2{color:var(--ink);}
+  .stage ul{list-style:none;}
+  .stage li{font-size:11px;color:#444;padding:3px 0 3px 10px;position:relative;line-height:1.35;}
+  .stage li::before{content:"·";position:absolute;left:0;color:var(--gold);font-weight:800;}
+  .stage li b{font-weight:800;color:var(--ink);}
+  @media(max-width:960px){.lanes{grid-template-columns:repeat(2,1fr);}.cols{grid-template-columns:repeat(2,1fr);}.ops{grid-template-columns:repeat(3,1fr);}.pend{grid-template-columns:1fr;}.cal td{height:auto;}.stages{grid-template-columns:repeat(2,1fr);}}
 </style>
 </head>
 <body>
@@ -83,13 +95,13 @@
   <div class="sec">
     <h2><span class="kr">과목 전담 · 선생님 배분</span></h2>
     <div class="lanes">
-      <div class="lane done"><div class="who">창엽</div><div class="subj">기본 커트 L1·L2 (공통 7 + 1레벨 가위잡는법 = 8, ＋저녁 실습 2)</div><span class="badge b-ok">8+2</span></div>
+      <div class="lane done"><div class="who">창엽</div><div class="subj">기본 커트 L1·L2 (공통 7 + 1레벨 가위잡는법 = 8)</div><span class="badge b-ok">8강</span></div>
       <div class="lane done"><div class="who">이호</div><div class="subj">디자인 분석·상담 L3 + 시그니처 컷 L4·L5</div><span class="badge b-ok">9강</span></div>
       <div class="lane done"><div class="who">신후 대표님</div><div class="subj">열펌 L3·L4·L5 강의</div><span class="badge b-ok">L3~5</span></div>
       <div class="lane done"><div class="who">차노</div><div class="subj">열펌 L1·L2 진행 + 디자인방법 L3~5 전담</div><span class="badge b-ok">혼합</span></div>
-      <div class="lane done"><div class="who">성희</div><div class="subj">트렌드 + 콜드펌 (와인딩)</div><span class="badge b-ok">17강</span></div>
+      <div class="lane done"><div class="who">성희</div><div class="subj">트렌드 + 콜드펌 (와인딩)</div><span class="badge b-ok">15강</span></div>
       <div class="lane done"><div class="who">보미</div><div class="subj">업스타일 · 방송헤어</div><span class="badge b-ok">추정</span></div>
-      <div class="lane"><div class="who">와이</div><div class="subj">비스포크 (맨즈 총괄·STAGE)</div><span class="badge b-wait">STAGE</span></div>
+      <div class="lane done"><div class="who">와이 원장</div><div class="subj">비스포크 맨즈 (앳나운 옴므 STAGE 0~7)</div><span class="badge b-ok">2년</span></div>
       <div class="lane"><div class="who">연교</div><div class="subj">탈색·염색 — 특강 편성</div><span class="badge b-wait">특강</span></div>
     </div>
   </div>
@@ -101,13 +113,12 @@
     <div class="lineband">
       <div class="lbh"><span class="lt">커트</span><span class="lw">창엽 L1·L2 · 이호 L3~5</span><span class="lc">기본기 → 분석·상담 → 시그니처 컷</span></div>
       <div class="cols">
-        <div class="col"><div class="lv">L1·L2</div><div class="th">기본기 <span class="tag">창엽</span></div><ul><li>가위 파지·도구 컨트롤 <span class="tag">1레벨 따로</span></li><li>헤드·바디·핑거 포지션·두상 이해</li><li>스퀘어 원랭스 (Natural fall)</li><li>그라쥬에이션 (스퀘어)</li></ul></div>
-        <div class="col"><div class="lv">L1·L2</div><div class="th">구조·질감 <span class="tag">창엽</span></div><ul><li>그라쥬에이션 (라운드)</li><li>레이어 (Natural Inversion)</li><li>레이어 (Flat Layer)</li><li>질감처리 (질감·양감)</li></ul></div>
+        <div class="col" style="grid-column:span 2;"><div class="lv">L1 · L2 (통합)</div><div class="th">기본 커트 — 8과목 <span class="tag">창엽</span></div><ul style="columns:2;column-gap:16px;"><li>가위 파지·도구 컨트롤 <span class="tag">1레벨</span></li><li>헤드·바디·핑거 포지션·두상 이해</li><li>스퀘어 원랭스 (Natural fall)</li><li>그라쥬에이션 (스퀘어)</li><li>그라쥬에이션 (라운드)</li><li>레이어 (Natural Inversion)</li><li>레이어 (Flat Layer)</li><li>질감처리 (질감·양감)</li></ul></div>
         <div class="col"><div class="lv">L3</div><div class="th">디자인 분석·상담 <span class="tag">이호</span></div><ul><li>두상·얼굴형 분석</li><li>고객상담·이미지 컨설팅</li><li>디자인 수정·리터치</li></ul></div>
-        <div class="col men"><div class="lv">L4</div><div class="th">시그니처 <span class="tag">이호·가발</span></div><ul><li>휩시컷 <span class="tag">아침</span></li><li>샤에컷 <span class="tag">아침</span></li><li>실습 <span class="tag">저녁</span></li></ul></div>
-        <div class="col men"><div class="lv">L5</div><div class="th">시그니처 <span class="tag">이호·가발</span></div><ul><li>쉬즈컷 <span class="tag">아침</span></li><li>사모님 보브 <span class="tag">아침</span></li><li>실습 <span class="tag">저녁</span></li></ul></div>
+        <div class="col men"><div class="lv">L4</div><div class="th">시그니처 <span class="tag">이호·가발</span></div><ul><li>휩시컷 <span class="tag">아침</span></li><li>샤에컷 <span class="tag">아침</span></li><li>간이시험 <span class="tag">40분</span></li></ul></div>
+        <div class="col men"><div class="lv">L5</div><div class="th">시그니처 <span class="tag">이호·가발</span></div><ul><li>쉬즈컷 <span class="tag">아침</span></li><li>사모님 보브 <span class="tag">아침</span></li><li>간이시험 <span class="tag">40분</span></li></ul></div>
       </div>
-      <div class="note">창엽 = <b>1·2레벨 같이 진행 · 공통 7과목</b>, <b>1레벨만 가위잡는법 추가 → 8과목</b> · 저녁 실습 2 병행 · 이호 가발 시그니처는 <b>아침</b>, 레벨별 실습 1강 저녁</div>
+      <div class="note">창엽 = <b>1·2레벨 통합 진행 · 공통 7과목</b>, <b>1레벨만 가위잡는법 추가 → 8과목</b> · 이호 가발 시그니처는 <b>아침</b>, 레벨별 <b>간이시험 40분</b></div>
     </div>
 
     <!-- 열펌 신후 -->
@@ -136,10 +147,10 @@
 
     <!-- 성희 콜드펌 -->
     <div class="lineband">
-      <div class="lbh"><span class="lt">트렌드 + 콜드펌</span><span class="lw">성희 17강</span><span class="lc">와인딩 → 콜드펌 → 트렌드 · 열펌 제외(신후)</span></div>
+      <div class="lbh"><span class="lt">트렌드 + 콜드펌</span><span class="lw">성희 15강</span><span class="lc">와인딩 → 콜드펌 → 트렌드 · 열펌 제외(신후)</span></div>
       <div class="cols">
-        <div class="col"><div class="lv">L1</div><div class="th">기초·이론</div><ul><li>모발학(구조·ph·약제)</li><li>머리 말리는 법</li><li>콜드펌 원리(연화·중화)</li><li>세척·크리프</li></ul></div>
-        <div class="col"><div class="lv">L2</div><div class="th">와인딩</div><ul><li>호리존탈(기본)</li><li>다데(다단)</li><li>다이애거널(사선)</li><li>씽(Thin)</li></ul></div>
+        <div class="col"><div class="lv">L1</div><div class="th">기초·이론</div><ul><li>모발학(구조·ph·약제)</li><li>머리 말리는 법</li><li>콜드펌 원리 + 세척·크리프</li></ul></div>
+        <div class="col"><div class="lv">L2</div><div class="th">와인딩</div><ul><li>호리존탈(기본)</li><li>다데 + 다이애거널</li><li>씽(Thin)</li></ul></div>
         <div class="col"><div class="lv">L3</div><div class="th">콜드펌 기법</div><ul><li>히피 트위스트</li><li>호일펌</li><li>스핀스왈로+핀컬</li></ul></div>
         <div class="col"><div class="lv">L4</div><div class="th">디자인 콜드펌</div><ul><li>스트레이트+볼륨매직</li><li>단발 디자인 콜드펌</li><li>긴머리 디자인 콜드펌</li></ul></div>
         <div class="col"><div class="lv">L5</div><div class="th">트렌드·설계</div><ul><li>트렌드 분석·시안 읽기</li><li>디자인 분석+약제 선택</li><li>상담+결과예측(실모델)</li></ul></div>
@@ -161,9 +172,24 @@
   </div>
 
   <div class="sec">
+    <h2><span class="kr">앳나운 맨즈 · 비스포크 로드맵 (와이 원장)</span></h2>
+    <div style="font-size:11.5px;color:var(--gray);margin:-4px 0 13px;font-weight:600;">STAGE 0 → 7 · 인턴부터 앳나운 옴므 헤어디자이너까지 (전 과정 약 2년) · <b>앳나운 맨즈 전용</b></div>
+    <div class="stages">
+      <div class="stage y"><div class="snrow"><span class="sn">00</span><span class="st">CS · 마인드</span></div><div class="meta">1주 · <span class="who2">와이 원장</span></div><ul><li>앳나운옴므 세계관 · 왜 일하는가</li><li><b>과제</b> 필사 및 발표</li></ul></div>
+      <div class="stage"><div class="snrow"><span class="sn">0.5</span><span class="st">CS · 기본기</span></div><div class="meta">1개월(교육2주+테스트2주) · 점장·범진·유안·태원</div><ul><li>CS매뉴얼·리셉션·계산·회원권</li><li>트레이·커트준비·티서비스·동선</li><li>기본 약재 · 샴푸 5종</li><li>두피·모발케어 상담</li><li><b>TEST</b> 서비스·샴푸·고객 시뮬레이션</li></ul></div>
+      <div class="stage y"><div class="snrow"><span class="sn">01</span><span class="st">남자 드라이·스타일링</span></div><div class="meta">1개월 · <span class="who2">와이 원장</span></div><ul><li>기본 건조·스타일링(커트/열펌/다운펌)</li><li>댄디컷 — 시스루애즈·필러스컷</li><li>슬릭백 — 클래식·텍스처·가일</li><li>플랫컷 — 스퀘어·숏가일·포마드</li><li><b>TEST</b> 시안 재현 3스타일 각 10분</li></ul></div>
+      <div class="stage y"><div class="snrow"><span class="sn">02</span><span class="st">염색 · 약터치</span></div><div class="meta">1개월 · <span class="who2">와이 원장</span></div><ul><li>열펌 약터치·중화(원/투터치)</li><li>새치커버 염색</li><li>업컬러 염색(원·투·쓰리터치)</li><li><b>TEST</b> 약터치 25분·염색 15분</li></ul></div>
+      <div class="stage y"><div class="snrow"><span class="sn">03</span><span class="st">다운펌</span></div><div class="meta">1개월 · <span class="who2">와이 원장</span></div><ul><li>기본 다운펌(댄디컷 가발·DP)</li><li>조각 다운펌 — 플랫컷</li><li>조각 다운펌 — 슬릭백</li><li><b>TEST</b> 각 스타일 15분</li></ul></div>
+      <div class="stage y"><div class="snrow"><span class="sn">04</span><span class="st">와인딩</span></div><div class="meta">1개월 · <span class="who2">와이 원장</span></div><ul><li>기본 와인딩 60개</li><li>스타일 — 쉐도우펌</li><li>스타일 — 텍스처펌</li><li><b>TEST</b> 기본 25분·스타일 시안후 20분</li></ul></div>
+      <div class="stage"><div class="snrow"><span class="sn">05</span><span class="st">열펌</span></div><div class="meta">1개월 · 강사 서나</div><ul><li>라인매직 · 아이론펌</li><li>디지털펌 · 모류교정</li><li><b>TEST</b> 리프컷 가발 4항목 30분</li></ul></div>
+      <div class="stage"><div class="snrow"><span class="sn">06</span><span class="st">앳나운 정규과정</span></div><div class="meta">추후 안내 · 커트·드라이</div><ul><li>원랭스 · 그레쥬에이션 · 레이어</li><li><b>TEST</b> 각 항목 한 통씩 완성</li></ul></div>
+      <div class="stage"><div class="snrow"><span class="sn">07</span><span class="st">모델워크·실전</span></div><div class="meta">3개월 · 교육+모델워크 동시</div><ul><li>리프컷(라운드그레쥬·플랫레이어·쵸핑…)</li><li>미디엄 댄디컷(시저오브콤·포인트컷…)</li><li>텍스처·플랫컷(레자컷·네이프블랜딩…)</li><li><b>평가</b> 모델워크 퀄리티(승급 반영)</li></ul></div>
+    </div>
+  </div>
+
+  <div class="sec">
     <h2><span class="kr">남은 라인 · 편성 대기</span></h2>
     <div class="pend">
-      <div class="pb"><div class="pw">와이 · 비스포크(맨즈)</div><div class="pd">앳나운 옴므 STAGE 0~7 확보. 정규 라인 연결 정리 대기.</div></div>
       <div class="pb"><div class="pw">연교 · 탈색/염색</div><div class="pd">특강으로 편성 (정규 라인 아님).</div></div>
     </div>
   </div>
@@ -182,6 +208,23 @@
       <span class="pl">디자이너 승급 — 5중 2</span>
       <span><span class="chip">모델 100명</span><span class="chip">매출 500</span><span class="chip">시그니처 60</span><span class="chip">리뷰 70</span><span class="chip">조회수 10만</span></span>
       <div class="note">위 5가지 중 2가지 달성 → 즉시 승급시험 (4·5레벨 포함 누적) · 뱃지 시스템 없음</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2><span class="kr">예전 5레벨 헤어디자이너 쇼 기준 (참고)</span></h2>
+    <div style="font-size:11.5px;color:var(--gray);margin:-4px 0 13px;font-weight:600;">레벨별 관점 = 같은 과목, 다른 난이도 · 시그니처 쇼(인스타 헤어쇼) = 보이는 실력으로 증명</div>
+    <div class="cols">
+      <div class="col"><div class="lv">Lv1</div><div class="th">재미 + 마인드</div><ul><li>흥미·마인드 — 왜 하는지부터</li></ul></div>
+      <div class="col"><div class="lv">Lv2</div><div class="th">기본기 탄탄</div><ul><li>기본 커트·스타일링 반복 숙련</li></ul></div>
+      <div class="col"><div class="lv">Lv3</div><div class="th">모질 · 기능</div><ul><li>연화·펌·염색 화학 이해</li></ul></div>
+      <div class="col men"><div class="lv">Lv4</div><div class="th">퍼스널 상담</div><ul><li>손님 캐치·맞춤 디자인·상담</li><li><b>매주 SNS 2개 업로드</b> <span class="tag">나의 생각·연습</span></li></ul></div>
+      <div class="col"><div class="lv">Lv5</div><div class="th">트렌드 미감</div><ul><li>패션·건축·인테리어 영감 → 헤어</li></ul></div>
+    </div>
+    <div class="promo">
+      <span class="pl">시그니처 쇼 (인스타 헤어쇼 · 디렉터 입회)</span>
+      <span>기획력 · PPT력 · 인스타 노출력으로 증명</span>
+      <div class="note">정량 5기준 중 <b>4 달성</b> — <span class="chip">포트폴리오 30</span><span class="chip">인스타 3개월</span><span class="chip">매출 300~400만</span><span class="chip">리뷰 월 10</span><span class="chip">모델 50명</span></div>
     </div>
   </div>
 
