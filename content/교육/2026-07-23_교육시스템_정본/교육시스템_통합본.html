@@ -87,6 +87,19 @@
   .lc2 .who3{font-size:14px;font-weight:800;margin-top:9px;}
   .lc2 .topic{font-size:12px;color:#444;margin-top:4px;line-height:1.4;}
   @media(max-width:960px){.lect{grid-template-columns:repeat(2,1fr);}}
+  .journey{display:flex;gap:9px;align-items:stretch;}
+  .jstep{flex:1;background:#fff;border:1px solid var(--line);border-top:4px solid var(--gold);border-radius:3px;padding:14px 13px;position:relative;}
+  .jstep .jlv{font-family:"Cormorant Garamond",serif;font-size:13px;font-weight:700;color:var(--gold);letter-spacing:.12em;}
+  .jstep .jid{font-size:15.5px;font-weight:800;margin:3px 0 7px;line-height:1.2;}
+  .jstep .jint{font-size:11.5px;color:#555;line-height:1.5;}
+  .jstep .jar{position:absolute;right:-8px;top:50%;transform:translateY(-50%);color:var(--gold);font-weight:800;font-size:16px;z-index:3;background:#e8e5df;padding:0 1px;}
+  .jstep.fin{border-top-color:var(--ink);background:#faf6ee;}
+  .jstep.fin .jid{color:var(--ink);letter-spacing:.05em;}
+  .tracks{margin-top:13px;display:flex;flex-direction:column;gap:7px;}
+  .trk{display:flex;align-items:center;gap:11px;}
+  .trk .tlabel{font-size:11.5px;font-weight:800;width:120px;flex-shrink:0;text-align:right;color:var(--ink);}
+  .trk .tbar{height:24px;border-radius:20px;display:flex;align-items:center;padding:0 13px;font-size:10.5px;font-weight:800;color:#fff;white-space:nowrap;}
+  @media(max-width:760px){.journey{flex-direction:column;}.jstep .jar{display:none;}.trk .tbar{white-space:normal;}}
   @media(max-width:960px){.lanes{grid-template-columns:repeat(2,1fr);}.cols{grid-template-columns:repeat(2,1fr);}.ops{grid-template-columns:repeat(3,1fr);}.pend{grid-template-columns:1fr;}.cal td{height:auto;}.stages{grid-template-columns:repeat(2,1fr);}}
 </style>
 </head>
@@ -97,6 +110,23 @@
     <div class="eye">AT NOWN · EDUCATION SYSTEM 2026 · 전체 구조도</div>
     <h1>앳나운 교육 시스템 — 전체</h1>
     <div class="sub">한 줄기 = 한 선생님 전담 · 레벨당 3과목(1·2레벨 4까지) · 정규 5라인 + 특강 · 승급 5중2</div>
+  </div>
+
+  <div class="sec">
+    <h2><span class="kr">레벨 여정 · 한눈에</span></h2>
+    <div class="journey">
+      <div class="jstep"><div class="jlv">LEVEL 1</div><div class="jid">완전한 기초</div><div class="jint">손에 익히고 마음을 심는다 — 왜 하는지부터</div><div class="jar">›</div></div>
+      <div class="jstep"><div class="jlv">LEVEL 2</div><div class="jid">완전한 기초</div><div class="jint">기본 커트·스타일링을 몸에 붙인다</div><div class="jar">›</div></div>
+      <div class="jstep"><div class="jlv">LEVEL 3</div><div class="jid">실전 전투원</div><div class="jint">현장에 바로 투입 — 모질·기능으로 실전</div><div class="jar">›</div></div>
+      <div class="jstep"><div class="jlv">LEVEL 4</div><div class="jid">나를 소개하는 능력</div><div class="jint">실력 ＋ SNS·자기표현 — 손님을 오게 한다</div><div class="jar">›</div></div>
+      <div class="jstep fin"><div class="jlv">LEVEL 5</div><div class="jid">디 · 자 · 이 · 너</div><div class="jint">혼자 선다 — 손님을 오게 하고 케어한다</div></div>
+    </div>
+    <div class="tracks">
+      <div class="trk"><span class="tlabel">기본 · 2년</span><div class="tbar" style="width:66%;background:var(--gold);">Lv1 → Lv4 · 디자이너 코스 (2년)</div></div>
+      <div class="trk"><span class="tlabel">한남 · 시그니처</span><div class="tbar" style="width:84%;background:#8a6f47;">＋ 시그니처 (컷+펌 · 컷+컬러) · 2.6년</div></div>
+      <div class="trk"><span class="tlabel">플레이스</span><div class="tbar" style="width:100%;background:var(--ink);">업스타일까지 · 살롱 전문가 (3년)</div></div>
+    </div>
+    <div class="cal-note" style="margin-top:11px;">샵 의도 — 기초(1·2)로 손과 마음을 완성 → 실전(3)으로 현장에 세우고 → 자기표현(4)으로 손님을 부르고 → <b>5레벨에서 혼자 서는 디자이너</b>로 완성한다.</div>
   </div>
 
   <div class="sec">
