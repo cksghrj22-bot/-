@@ -39,7 +39,7 @@ SUB = {
     "font": KYOBO, "size": 70,
     "primary_color": "&H00FFFFFF", "outline_color": "&H00000000",
     "box_color": "000000", "box_opacity": 100, "border_style": 4,
-    "outline": 2, "alignment": 2, "margin_v": 300,   # 하단, UI존(바닥380) 위
+    "outline": 2, "alignment": 2, "margin_v": 410,   # 블록 하단 y≈1510 = 채널명 UI(하단 380) 위
 }
 EN_INLINE = r"{\fs54\c&HF0F0F0&}"   # 한글 아래 붙는 영어 인라인 태그(바짝)
 EMPHASIS_INLINE = r"{\fs104}"        # 강조 1회 글자확대
