@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>앳나운 교육 시스템 — 통합본</title>
+<title>앳나운 교육 시스템 — 전체 구조도</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;}
   :root{--cream:#F7F5F1;--ink:#141414;--gold:#A8895E;--gray:#8f887c;--line:#E4DFD6;--soft:#efeae1;}
   body{background:#e8e5df;color:var(--ink);font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.5;padding:26px 14px;}
-  .wrap{max-width:1240px;margin:0 auto;}
+  .wrap{max-width:1280px;margin:0 auto;}
   .head{background:var(--ink);color:var(--cream);border-radius:3px;padding:26px 34px;margin-bottom:14px;}
   .head .eye{font-size:11px;letter-spacing:.26em;color:var(--gold);font-weight:700;}
   .head h1{font-size:28px;font-weight:800;margin:7px 0 4px;}
@@ -17,7 +17,6 @@
   .sec h2{font-size:12px;letter-spacing:.14em;color:var(--gray);font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:9px;margin-bottom:14px;}
   .sec h2::before{content:"";width:16px;height:2px;background:var(--gold);}
   .sec h2 .kr{font-size:18px;letter-spacing:0;color:var(--ink);text-transform:none;font-weight:800;}
-  /* 담당 배분 — 가로 4열 */
   .lanes{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;}
   .lane{border:1px solid var(--line);border-top:3px solid var(--ink);padding:11px 13px;background:#fff;}
   .lane.done{border-top-color:var(--gold);}
@@ -25,28 +24,27 @@
   .lane .subj{font-size:11.5px;color:var(--gray);margin-top:2px;line-height:1.35;}
   .lane .badge{display:inline-block;margin-top:6px;font-size:10px;font-weight:800;padding:1px 8px;border-radius:20px;}
   .b-ok{background:#e6efe8;color:#3B7A57;} .b-wait{background:#f3ece0;color:var(--gold);}
-  /* 라인 = 가로 레벨 스트립 */
   .lineband{margin-bottom:16px;}
   .lineband:last-child{margin-bottom:0;}
-  .lbh{display:flex;align-items:baseline;gap:10px;border-bottom:2px solid var(--ink);padding-bottom:6px;margin-bottom:9px;}
+  .lbh{display:flex;align-items:baseline;gap:10px;border-bottom:2px solid var(--ink);padding-bottom:6px;margin-bottom:9px;flex-wrap:wrap;}
   .lbh .lt{font-size:16px;font-weight:800;}
   .lbh .lw{font-size:11px;font-weight:800;color:var(--cream);background:var(--gold);padding:2px 9px;border-radius:20px;}
   .lbh .lc{font-size:11.5px;color:var(--gray);margin-left:auto;}
   .cols{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
   .col{border:1px solid var(--line);background:#fff;border-radius:2px;padding:10px 11px;}
+  .col.men{border-top:3px solid var(--gold);}
+  .col.est{border-style:dashed;}
   .col .lv{font-family:"Cormorant Garamond",serif;font-size:13px;font-weight:700;color:var(--gold);letter-spacing:.06em;}
   .col .th{font-size:12.5px;font-weight:800;margin:1px 0 6px;line-height:1.25;}
   .col ul{list-style:none;}
   .col li{font-size:11.5px;color:#444;padding:3px 0 3px 9px;position:relative;line-height:1.35;}
   .col li::before{content:"·";position:absolute;left:0;color:var(--gold);font-weight:800;}
-  .col .tag{display:inline-block;font-size:9px;font-weight:800;color:var(--cream);background:var(--ink);padding:1px 6px;border-radius:20px;margin-left:4px;}
-  .col.men{border-top:3px solid var(--gold);}
-  /* 대기 라인 가로 4열 */
-  .pend{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;}
+  .col .tag{display:inline-block;font-size:9px;font-weight:800;color:var(--cream);background:var(--ink);padding:1px 6px;border-radius:20px;margin-left:3px;}
+  .note{font-size:11.5px;color:var(--gray);margin-top:7px;}
+  .pend{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;}
   .pb{border:1px dashed var(--line);background:var(--soft);border-radius:2px;padding:11px 13px;}
   .pb .pw{font-size:13px;font-weight:800;}
   .pb .pd{font-size:11.5px;color:var(--gray);margin-top:3px;line-height:1.4;}
-  /* 운영 가로 */
   .ops{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;}
   .op{border:1px solid var(--line);background:#fff;padding:10px 11px;}
   .op .t{font-size:11.5px;font-weight:800;color:var(--gold);}
@@ -54,63 +52,89 @@
   .promo{margin-top:13px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);padding:12px 15px;border-radius:2px;}
   .promo .pl{font-size:13px;font-weight:800;color:var(--gold);white-space:nowrap;}
   .chip{display:inline-block;background:var(--soft);border:1px solid var(--line);border-radius:20px;padding:2px 11px;font-size:12px;margin:2px 3px;font-weight:700;}
-  .promo .note{font-size:11.5px;color:var(--gray);width:100%;}
+  .promo .note{width:100%;}
   .foot{text-align:center;font-size:11px;letter-spacing:.3em;color:#b7b1a6;font-weight:700;margin:22px 0 6px;}
-  @media(max-width:900px){.lanes,.pend{grid-template-columns:repeat(2,1fr);}.cols{grid-template-columns:repeat(2,1fr);}.ops{grid-template-columns:repeat(3,1fr);}}
+  .cal{width:100%;border-collapse:collapse;table-layout:fixed;}
+  .cal th{font-size:11px;font-weight:800;color:var(--gray);padding:7px 0;border-bottom:2px solid var(--ink);letter-spacing:.05em;}
+  .cal th.sun{color:#c25b5b;} .cal th.sat{color:#5b7ac2;}
+  .cal td{border:1px solid var(--line);vertical-align:top;height:82px;padding:6px 7px;background:#fff;}
+  .cal td.off{background:var(--soft);}
+  .cal .wk{font-size:10px;font-weight:800;color:var(--gray);}
+  .cal .ev{display:block;font-size:10.5px;font-weight:800;border-radius:3px;padding:2px 5px;margin-top:4px;line-height:1.3;}
+  .ev-edu{background:#eef1ec;color:#3B7A57;}
+  .ev-model{background:#141414;color:var(--cream);}
+  .ev-special{background:var(--gold);color:#fff;}
+  .cal-note{font-size:11.5px;color:var(--gray);margin-top:11px;line-height:1.6;}
+  .cal-legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px;font-size:11px;font-weight:700;}
+  .cal-legend span{display:inline-flex;align-items:center;gap:6px;}
+  .cal-legend i{width:14px;height:14px;border-radius:3px;display:inline-block;}
+  @media(max-width:960px){.lanes{grid-template-columns:repeat(2,1fr);}.cols{grid-template-columns:repeat(2,1fr);}.ops{grid-template-columns:repeat(3,1fr);}.pend{grid-template-columns:1fr;}.cal td{height:auto;}}
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <div class="head">
-    <div class="eye">AT NOWN · EDUCATION SYSTEM 2026 · 통합본</div>
+    <div class="eye">AT NOWN · EDUCATION SYSTEM 2026 · 전체 구조도</div>
     <h1>앳나운 교육 시스템 — 전체</h1>
-    <div class="sub">한 줄기 = 한 선생님 전담 · 레벨당 3과목 · 정규 라인 + 특강 · 승급 5중2</div>
+    <div class="sub">한 줄기 = 한 선생님 전담 · 레벨당 3과목(1·2레벨 4까지) · 정규 6라인 + 특강 · 승급 5중2</div>
   </div>
 
   <div class="sec">
     <h2><span class="kr">과목 전담 · 선생님 배분</span></h2>
     <div class="lanes">
       <div class="lane done"><div class="who">창엽</div><div class="subj">기본 커트 L1~3 (＋저녁 실습 2)</div><span class="badge b-ok">9+2</span></div>
-      <div class="lane done"><div class="who">이호</div><div class="subj">시그니처 컷 L4~5 (가발)</div><span class="badge b-ok">6강</span></div>
+      <div class="lane done"><div class="who">이호</div><div class="subj">시그니처 컷 L4~5 (가발·저녁실습)</div><span class="badge b-ok">4강</span></div>
       <div class="lane done"><div class="who">신후</div><div class="subj">열펌 + 디자인커트(앳나운 룩북)</div><span class="badge b-ok">15강</span></div>
       <div class="lane done"><div class="who">차노</div><div class="subj">미감 특강 (색·질감·형용사·무드)</div><span class="badge b-ok">15강</span></div>
-      <div class="lane"><div class="who">보미</div><div class="subj">업스타일 · 인플루언서</div><span class="badge b-wait">자료</span></div>
-      <div class="lane"><div class="who">성희</div><div class="subj">트렌드 + 콜드펌</div><span class="badge b-wait">대기</span></div>
-      <div class="lane"><div class="who">와이</div><div class="subj">비스포크 (맨즈 총괄)</div><span class="badge b-wait">STAGE</span></div>
+      <div class="lane done"><div class="who">성희</div><div class="subj">트렌드 + 콜드펌 (와인딩)</div><span class="badge b-ok">17강</span></div>
+      <div class="lane done"><div class="who">보미</div><div class="subj">업스타일 · 방송헤어</div><span class="badge b-ok">추정</span></div>
+      <div class="lane"><div class="who">와이</div><div class="subj">비스포크 (맨즈 총괄·STAGE)</div><span class="badge b-wait">STAGE</span></div>
       <div class="lane"><div class="who">연교</div><div class="subj">탈색·염색 — 특강 편성</div><span class="badge b-wait">특강</span></div>
     </div>
   </div>
 
   <div class="sec">
-    <h2><span class="kr">정규 라인 · 확정 커리큘럼</span></h2>
+    <h2><span class="kr">정규 라인 · 커리큘럼</span></h2>
 
-    <!-- 커트: 5레벨 한 줄, 창엽 L1-2 / 이호 L3-5 -->
+    <!-- 커트 -->
     <div class="lineband">
-      <div class="lbh"><span class="lt">커트</span><span class="lw">창엽 L1~3 · 이호 L4~5</span><span class="lc">기본기 → 시그니처 컷 · 레벨당 3과목</span></div>
+      <div class="lbh"><span class="lt">커트</span><span class="lw">창엽 L1~3 · 이호 L4~5</span><span class="lc">기본기 → 시그니처 컷</span></div>
       <div class="cols">
         <div class="col"><div class="lv">L1</div><div class="th">기초·도구 <span class="tag">창엽</span></div><ul><li>가위 파지·컨트롤</li><li>섹션·파팅</li><li>자세·바디포지션</li></ul></div>
         <div class="col"><div class="lv">L2</div><div class="th">첫 커트 <span class="tag">창엽</span></div><ul><li>빗질·텐션</li><li>원랭스(스퀘어·전/후대각)</li><li>질감처리 기초(포인팅)</li></ul></div>
         <div class="col"><div class="lv">L3</div><div class="th">구조 <span class="tag">창엽</span></div><ul><li>그래쥬에이션</li><li>레이어</li><li>디스커넥션</li></ul></div>
-        <div class="col men"><div class="lv">L4</div><div class="th">시그니처 컷 <span class="tag">이호·가발</span></div><ul><li>뮤컷</li><li>휩시컷</li><li>샤에컷</li></ul></div>
-        <div class="col men"><div class="lv">L5</div><div class="th">시그니처 컷 <span class="tag">이호·가발</span></div><ul><li>쉬즈컷</li><li>매니컷</li><li>사모님 보브</li></ul></div>
+        <div class="col men"><div class="lv">L4</div><div class="th">시그니처 <span class="tag">이호·가발</span></div><ul><li>휩시컷 <span class="tag">저녁실습</span></li><li>샤에컷 <span class="tag">저녁실습</span></li></ul></div>
+        <div class="col men"><div class="lv">L5</div><div class="th">시그니처 <span class="tag">이호·가발</span></div><ul><li>쉬즈컷 <span class="tag">저녁실습</span></li><li>사모님 보브 <span class="tag">저녁실습</span></li></ul></div>
       </div>
-      <div style="font-size:11.5px;color:var(--gray);margin-top:7px;">＋ 창엽 저녁 실습 2 (L1~3 병행)</div>
+      <div class="note">＋ 창엽 저녁 실습 2 (L1~3 병행) · 이호 시그니처 컷(휩시·샤에·쉬즈·사모님보브)은 뮤컷·매니컷 제외 후 한 강씩 저녁(실습)으로 편성</div>
     </div>
 
     <!-- 열펌 신후 -->
     <div class="lineband">
       <div class="lbh"><span class="lt">열펌 + 룩북</span><span class="lw">신후 15강</span><span class="lc">레벨당 3과목</span></div>
       <div class="cols">
-        <div class="col"><div class="lv">L1</div><div class="th">기초 이론·도구</div><ul><li>펌제 원리(열펌·일반펌)</li><li>열펌 도구 사용·원리</li><li>매직 스트레이트</li></ul></div>
+        <div class="col"><div class="lv">L1</div><div class="th">기초 이론·도구</div><ul><li>펌제 원리</li><li>열펌 도구</li><li>매직 스트레이트</li></ul></div>
         <div class="col"><div class="lv">L2</div><div class="th">시술 프로세스</div><ul><li>연화·테스트</li><li>디지털·셋팅펌 와인딩</li><li>중화</li></ul></div>
         <div class="col"><div class="lv">L3</div><div class="th">남성 열펌·설계</div><ul><li>남성 아이롱펌</li><li>모류교정</li><li>디지털 와인딩 설계</li></ul></div>
-        <div class="col"><div class="lv">L4</div><div class="th">여성 디자인·복구</div><ul><li>여자 C컬 중간머리</li><li>여자 S컬 중간머리</li><li>손상모·극손상모 복구</li></ul></div>
-        <div class="col"><div class="lv">L5</div><div class="th">앳나운 룩북</div><ul><li>단발 C컬펌</li><li>중간머리 C·S컬펌</li><li>긴머리 S컬펌</li></ul></div>
+        <div class="col"><div class="lv">L4</div><div class="th">여성 디자인·복구</div><ul><li>C컬 중간머리</li><li>S컬 중간머리</li><li>손상모 복구</li></ul></div>
+        <div class="col"><div class="lv">L5</div><div class="th">앳나운 룩북</div><ul><li>단발 C컬펌</li><li>중간 C·S컬펌</li><li>긴머리 S컬펌</li></ul></div>
       </div>
     </div>
 
-    <!-- 차노 미감 특강 (월2강 표기 제거) -->
+    <!-- 성희 콜드펌 -->
+    <div class="lineband">
+      <div class="lbh"><span class="lt">트렌드 + 콜드펌</span><span class="lw">성희 17강</span><span class="lc">와인딩 → 콜드펌 → 트렌드 · 열펌 제외(신후)</span></div>
+      <div class="cols">
+        <div class="col"><div class="lv">L1</div><div class="th">기초·이론</div><ul><li>모발학(구조·ph·약제)</li><li>머리 말리는 법</li><li>콜드펌 원리(연화·중화)</li><li>세척·크리프</li></ul></div>
+        <div class="col"><div class="lv">L2</div><div class="th">와인딩</div><ul><li>호리존탈(기본)</li><li>다데(다단)</li><li>다이애거널(사선)</li><li>씽(Thin)</li></ul></div>
+        <div class="col"><div class="lv">L3</div><div class="th">콜드펌 기법</div><ul><li>히피 트위스트</li><li>호일펌</li><li>스핀스왈로+핀컬</li></ul></div>
+        <div class="col"><div class="lv">L4</div><div class="th">디자인 콜드펌</div><ul><li>스트레이트+볼륨매직</li><li>단발 디자인 콜드펌</li><li>긴머리 디자인 콜드펌</li></ul></div>
+        <div class="col"><div class="lv">L5</div><div class="th">트렌드·설계</div><ul><li>트렌드 분석·시안 읽기</li><li>디자인 분석+약제 선택</li><li>상담+결과예측(실모델)</li></ul></div>
+      </div>
+    </div>
+
+    <!-- 차노 미감 (원래대로 · 큐트 복원) -->
     <div class="lineband">
       <div class="lbh"><span class="lt">미감 특강</span><span class="lw">차노 15강</span><span class="lc">색 → 질감 → 시닝 → 형용사 → 무드</span></div>
       <div class="cols">
@@ -118,30 +142,41 @@
         <div class="col"><div class="lv">L2</div><div class="th">질감 마스터</div><ul><li>질감마스터 1</li><li>질감마스터 2</li><li>질감마스터 3</li></ul></div>
         <div class="col"><div class="lv">L3</div><div class="th">루트시닝·스타일잡기</div><ul><li>루트시닝 완벽파기 1</li><li>루트시닝 완벽파기 2</li><li>이용한 스타일잡기 1</li></ul></div>
         <div class="col"><div class="lv">L4</div><div class="th">형용사의 구조화</div><ul><li>이론 1</li><li>이론 2</li><li>실습 1</li></ul></div>
-        <div class="col"><div class="lv">L5</div><div class="th">무드 실습 <span class="tag">아침·가발</span></div><ul><li>엘레강스 (시작)</li><li>시크</li><li>쿨</li></ul></div>
+        <div class="col"><div class="lv">L5</div><div class="th">무드 실습 <span class="tag">아침·가발</span></div><ul><li>엘레강스(시작)</li><li>시크</li><li>쿨</li><li>큐트</li></ul></div>
       </div>
+    </div>
+
+    <!-- 보미 업스타일 (자료 기반 추정) -->
+    <div class="lineband">
+      <div class="lbh"><span class="lt">업스타일 · 방송헤어</span><span class="lw">보미</span><span class="lc">DRY&UPSTYLE 자료 기반 · 상세 확정 대기</span></div>
+      <div class="cols">
+        <div class="col est"><div class="lv">L1</div><div class="th">드라이 기초</div><ul><li>블로우·롤 드라이</li><li>텐션·결 정리</li><li>기본 세팅</li></ul></div>
+        <div class="col est"><div class="lv">L2</div><div class="th">브레이드</div><ul><li>기본 땋기</li><li>피쉬본·콘로우</li><li>믹스 브레이드</li></ul></div>
+        <div class="col est"><div class="lv">L3</div><div class="th">업스타일 기본</div><ul><li>클래식 번</li><li>포니테일 변형</li><li>핀워크·고정력</li></ul></div>
+        <div class="col est"><div class="lv">L4</div><div class="th">디자인 업스타일</div><ul><li>혼주·신부 업스타일</li><li>웨이브 업스타일</li><li>가발·헤어피스</li></ul></div>
+        <div class="col est"><div class="lv">L5</div><div class="th">방송헤어·마스터</div><ul><li>방송·촬영 헤어</li><li>인플루언서 스타일</li><li>실전 완성</li></ul></div>
+      </div>
+      <div class="note">※ 보미 라인은 확보 자료(DRY·BRAID·UPSTYLE·DESIGN·CAMERA·MASTER)로 추정 편성 — 상세 확정 시 교체</div>
     </div>
   </div>
 
   <div class="sec">
-    <h2><span class="kr">남은 라인 · 자료 확보 / 확정 대기</span></h2>
+    <h2><span class="kr">남은 라인 · 편성 대기</span></h2>
     <div class="pend">
-      <div class="pb"><div class="pw">보미 · 업스타일</div><div class="pd">DRY&UPSTYLE 자료 확보(방송헤어·번·브레이드). 15강 상세 대기.</div></div>
-      <div class="pb"><div class="pw">성희 · 트렌드+콜드펌</div><div class="pd">커리큘럼 확정 대기. 주시면 같은 형식으로 편성.</div></div>
-      <div class="pb"><div class="pw">와이 · 비스포크(맨즈)</div><div class="pd">앳나운 옴므 STAGE 0~7 확보. 정규 연결 정리 대기.</div></div>
+      <div class="pb"><div class="pw">와이 · 비스포크(맨즈)</div><div class="pd">앳나운 옴므 STAGE 0~7 확보. 정규 라인 연결 정리 대기.</div></div>
       <div class="pb"><div class="pw">연교 · 탈색/염색</div><div class="pd">특강으로 편성 (정규 라인 아님).</div></div>
     </div>
   </div>
 
   <div class="sec">
-    <h2><span class="kr">운영 · 배분 / 승급</span></h2>
+    <h2><span class="kr">운영 · 승급</span></h2>
     <div class="ops">
       <div class="op"><div class="t">평상교육</div><div class="d">수·목·금 07:30~8:00 · 한 과목/하루</div></div>
-      <div class="op"><div class="t">실전·무드</div><div class="d">실전모델 저녁 19:00 / 무드 아침·가발</div></div>
-      <div class="op"><div class="t">모델데이</div><div class="d">월 2회 (2·4주 금)</div></div>
-      <div class="op"><div class="t">특강</div><div class="d">월 1회 (3주 금)</div></div>
+      <div class="op"><div class="t">실전·무드</div><div class="d">실전모델 저녁 / 무드 아침·가발</div></div>
+      <div class="op"><div class="t">모델데이</div><div class="d">월 2회(2·4주) · 모델 2명↑ 조건</div></div>
+      <div class="op"><div class="t">특강</div><div class="d">월 1회 (3주)</div></div>
       <div class="op"><div class="t">시험</div><div class="d">12월 둘째주 월 (12/14)</div></div>
-      <div class="op"><div class="t">장소</div><div class="d">본점·플레이스 / 2인↓ 한남</div></div>
+      <div class="op"><div class="t">장소</div><div class="d">플레이스 기본 · 다수 모이는 곳</div></div>
     </div>
     <div class="promo">
       <span class="pl">디자이너 승급 — 5중 2</span>
@@ -150,7 +185,64 @@
     </div>
   </div>
 
-  <div class="foot">A T &nbsp; N O W N &nbsp;·&nbsp; 교육 시스템 통합본</div>
+  <div class="sec">
+    <h2><span class="kr">월간 운영 캘린더</span></h2>
+    <div class="cal-legend">
+      <span><i class="ev-edu"></i>평상교육 (수·목·금 07:30)</span>
+      <span><i class="ev-model"></i>모델데이 (2·4주)</span>
+      <span><i class="ev-special"></i>특강 (3주)</span>
+    </div>
+    <table class="cal">
+      <thead>
+        <tr><th class="sun">일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th class="sat">토</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="off"></td>
+          <td><span class="wk">1주</span></td>
+          <td></td>
+          <td><span class="ev ev-edu">교육</span></td>
+          <td><span class="ev ev-edu">교육</span></td>
+          <td><span class="ev ev-edu">교육</span></td>
+          <td class="off"></td>
+        </tr>
+        <tr>
+          <td class="off"></td>
+          <td><span class="wk">2주</span></td>
+          <td></td>
+          <td><span class="ev ev-edu">교육</span></td>
+          <td><span class="ev ev-edu">교육</span></td>
+          <td><span class="ev ev-edu">교육</span><span class="ev ev-model">모델데이 ①</span></td>
+          <td class="off"></td>
+        </tr>
+        <tr>
+          <td class="off"></td>
+          <td><span class="wk">3주</span></td>
+          <td></td>
+          <td><span class="ev ev-edu">교육</span></td>
+          <td><span class="ev ev-edu">교육</span></td>
+          <td><span class="ev ev-edu">교육</span><span class="ev ev-special">특강</span></td>
+          <td class="off"></td>
+        </tr>
+        <tr>
+          <td class="off"></td>
+          <td><span class="wk">4주</span></td>
+          <td></td>
+          <td><span class="ev ev-edu">교육</span></td>
+          <td><span class="ev ev-edu">교육</span></td>
+          <td><span class="ev ev-edu">교육</span><span class="ev ev-model">모델데이 ②</span></td>
+          <td class="off"></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="cal-note">
+      · <b>모델데이</b> — 월 2회(2·4주 금). <b>모델 최소 2명 이상 확보됐을 때만 시행.</b> 미달 시 평상교육/실습으로 대체.<br>
+      · <b>장소</b> — 플레이스 기본. 협의 시 장소 무관하며, <b>다수(모델·인원)가 모이는 장소를 기준</b>으로 정한다.<br>
+      · <b>특강</b> — 월 1회(3주 금). · <b>시험</b> — 12월 둘째 주 월(12/14).
+    </div>
+  </div>
+
+  <div class="foot">A T &nbsp; N O W N &nbsp;·&nbsp; 교육 시스템 전체 구조도</div>
 </div>
 </body>
 </html>
