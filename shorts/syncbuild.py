@@ -36,8 +36,9 @@ def build(narr_text: str, phrases: list, creds: dict, out_mp3: str | Path,
     out = Path(out_mp3)
     out.write_bytes(base64.b64decode(resp["audio_base64"]))
     al = resp["alignment"]
+    # 정렬 기준 = 합성한 텍스트(=apply_synth_fixes 적용본). raw도 같은 fix를 거쳐야 substring 매칭됨.
     spans = tts.align_line_spans(
-        [p[0] for p in phrases], al["characters"],
+        [tts.apply_synth_fixes(p[0]) for p in phrases], al["characters"],
         al["character_start_times_seconds"], al["character_end_times_seconds"], speed=1.0,
     )
     lines: list[Line] = []
