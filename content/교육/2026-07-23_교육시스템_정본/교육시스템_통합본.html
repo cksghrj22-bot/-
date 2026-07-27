@@ -80,6 +80,13 @@
   .stage li{font-size:11px;color:#444;padding:3px 0 3px 10px;position:relative;line-height:1.35;}
   .stage li::before{content:"·";position:absolute;left:0;color:var(--gold);font-weight:800;}
   .stage li b{font-weight:800;color:var(--ink);}
+  .lect{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;}
+  .lc2{border:1px solid var(--line);background:#fff;border-top:3px solid var(--gold);border-radius:2px;padding:13px 14px;}
+  .lc2 .m{font-family:"Cormorant Garamond",serif;font-size:30px;font-weight:700;color:var(--gold);line-height:1;}
+  .lc2 .dt{display:inline-block;font-size:11px;font-weight:800;color:var(--cream);background:var(--ink);border-radius:20px;padding:2px 9px;margin-top:7px;}
+  .lc2 .who3{font-size:14px;font-weight:800;margin-top:9px;}
+  .lc2 .topic{font-size:12px;color:#444;margin-top:4px;line-height:1.4;}
+  @media(max-width:960px){.lect{grid-template-columns:repeat(2,1fr);}}
   @media(max-width:960px){.lanes{grid-template-columns:repeat(2,1fr);}.cols{grid-template-columns:repeat(2,1fr);}.ops{grid-template-columns:repeat(3,1fr);}.pend{grid-template-columns:1fr;}.cal td{height:auto;}.stages{grid-template-columns:repeat(2,1fr);}}
 </style>
 </head>
@@ -213,6 +220,19 @@
       <span>기획력 · PPT력 · 인스타 노출력으로 증명</span>
       <div class="note">정량 5기준 중 <b>4 달성</b> — <span class="chip">포트폴리오 30</span><span class="chip">인스타 3개월</span><span class="chip">매출 300~400만</span><span class="chip">리뷰 월 10</span><span class="chip">모델 50명</span></div>
     </div>
+  </div>
+
+  <div class="sec">
+    <h2><span class="kr">하반기 특강 일정 (8~12월)</span></h2>
+    <div style="font-size:11.5px;color:var(--gray);margin:-4px 0 13px;font-weight:600;">매월 <b>3째주 금요일</b> · 전담쌤 시그니처가 주제 · 2026년 기준</div>
+    <div class="lect">
+      <div class="lc2"><div class="m">8</div><div class="dt">3째주 금 · 8/21</div><div class="who3">와이 원장</div><div class="topic">남자 비스포크 디자인</div></div>
+      <div class="lc2"><div class="m">9</div><div class="dt">3째주 금 · 9/18</div><div class="who3">연교 선생님</div><div class="topic">탈색 디자인과 뿌리탈색 노하우</div></div>
+      <div class="lc2"><div class="m">10</div><div class="dt">3째주 금 · 10/16</div><div class="who3">신후 대표님</div><div class="topic">디자이너로서 가져야 할 자질</div></div>
+      <div class="lc2"><div class="m">11</div><div class="dt">3째주 금 · 11/20</div><div class="who3">재아 실장님</div><div class="topic">시니어 단발머리 펌 노하우</div></div>
+      <div class="lc2"><div class="m">12</div><div class="dt">3째주 금 · 12/18</div><div class="who3">승현 실장님</div><div class="topic">남자머리 컨설팅 및 현실머리 구현!</div></div>
+    </div>
+    <div class="cal-note" style="margin-top:11px;">※ 날짜는 2026년 각 달 <b>3번째 금요일</b> 기준 자동 산출 (8/21·9/18·10/16·11/20·12/18) · 12월은 시험(12/14 둘째주 월)과 별개</div>
   </div>
 
   <div class="sec">
