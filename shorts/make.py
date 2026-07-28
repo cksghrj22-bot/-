@@ -182,7 +182,7 @@ def _dusang_zones_frames(frames_dir: Path, lines: list, num_line: int, total: fl
         return lines[idx].start if idx < len(lines) else lines[num_line].start + k * 0.9
     # (라벨,색,목표%,박스중심,원위연결점,등장시각,호각도)
     Z = [
-        ("톱",        BLUE,   10, (430,555),  (CX, CY-R),       _z0(0), (-108,-72)),
+        ("정수리",     BLUE,   10, (430,555),  (CX, CY-R),       _z0(0), (-108,-72)),
         ("페이스라인", GREEN,  30, (250,860),  (CX-R+18,CY-30),  _z0(1), (150,210)),
         ("뒤통수",     YEL,    15, (830,860),  (CX+R-18,CY-30),  _z0(2), (-30,30)),
         ("뒷목",      ORANGE, 70, (560,1250), (CX, CY+R),       _z0(3), (72,108)),
@@ -247,7 +247,7 @@ def _require(m: dict) -> None:
     if stem == "magic":
         if any(s.get("anim") == "dusang_zones" for s in segs):
             joined = " ".join((p[0] or "") for p in phrases)
-            for zone in ("톱", "페이스", "뒤통수", "뒷목"):
+            for zone in ("정수리", "페이스", "뒤통수", "뒷목"):
                 if zone not in joined:
                     errs.append(f"[magic] 도식 4존 중 '{zone}' 누락 — 계속 빠뜨린 부분")
     if errs:
