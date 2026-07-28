@@ -45,13 +45,62 @@ KYOBO = "/root/.fonts/KyoboHandwriting2019.ttf"
 NSQR = "/root/.fonts/nsqr_eb.ttf"
 
 
-def _frame_vf(frame: str, hflip: bool) -> str:
+def _frame_vf(frame: str, hflip: bool, bw: bool = False) -> str:
     fl = "hflip," if hflip else ""
+    gray = ",hue=s=0" if bw else ""   # 흑백(마인드/메시지 줄기)
     if frame == "portrait":
         return (f"{fl}scale=1080:1350:force_original_aspect_ratio=increase,"
-                "crop=1080:1350,pad=1080:1920:0:285:black,fps=30")
+                f"crop=1080:1350,pad=1080:1920:0:285:black,fps=30{gray}")
     # landscape(기본): 4:5 확대크롭 + 상하밴드
-    return f"{fl}crop=ih*4/5:ih,scale=1080:1350,pad=1080:1920:0:285:black,fps=30"
+    return f"{fl}crop=ih*4/5:ih,scale=1080:1350,pad=1080:1920:0:285:black,fps=30{gray}"
+
+
+# ── 화이팅 애니: 주먹을 들어올리는 데이터 모션(흑백 위 노랑 포인트) ───────────────
+def _fist_raise_frames(frames_dir: Path, lines: list, line_idx: int, fps: int = 30) -> tuple[float, float]:
+    """line_idx(화이팅 줄) 구간에 주먹이 아래→위로 솟구치고 '화이팅!'이 터진다. RGBA 오버레이."""
+    from PIL import Image, ImageDraw, ImageFont
+    frames_dir.mkdir(parents=True, exist_ok=True)
+    for p in frames_dir.glob("*.png"):
+        p.unlink()
+    ln = lines[line_idx]; off, end = ln.start, ln.end
+    N = max(1, round((end - off) * fps))
+    W, H = 1080, 1920
+    YEL = (255, 212, 0); WHITE = (245, 245, 245)
+    f_big = ImageFont.truetype(NSQR, 132); f_k = ImageFont.truetype(KYOBO, 44)
+
+    def ease_out(t): t = max(0, min(1, t)); return 1 - (1 - t) ** 3
+
+    def fist(d, cx, cy, s, col):
+        # 스타일 주먹(플랫): 손등 라운드+너클 4개+엄지+팔뚝
+        bw_, bh_ = int(150*s), int(130*s)
+        d.rounded_rectangle([cx-bw_//2, cy-bh_//2, cx+bw_//2, cy+bh_//2], radius=int(26*s), fill=col)
+        kw = bw_ // 4
+        for i in range(4):  # 너클
+            kx = cx - bw_//2 + kw//2 + i*kw
+            d.ellipse([kx-int(15*s), cy-bh_//2-int(14*s), kx+int(15*s), cy-bh_//2+int(16*s)], fill=col)
+        d.ellipse([cx-bw_//2-int(20*s), cy-int(6*s), cx-bw_//2+int(20*s), cy+int(46*s)], fill=col)  # 엄지
+        d.rounded_rectangle([cx-int(46*s), cy+bh_//2-int(6*s), cx+int(46*s), cy+bh_//2+int(150*s)],
+                            radius=int(22*s), fill=col)  # 팔뚝
+
+    for i in range(N):
+        t = i / (N - 1) if N > 1 else 1.0
+        p = ease_out(t)
+        img = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(img)
+        edge = min(1.0, i/8, (N-1-i)/6)
+        d.rectangle([0, 0, W, H], fill=(0, 0, 0, int(150 * edge)))   # 부드러운 스크림
+        cy = int(1500 - 560 * p)          # 아래→위로 솟구침
+        # 스피드 라인(상승감)
+        for k in range(5):
+            lx = W//2 - 200 + k*100
+            a = int(140 * max(0.0, min(1.0, (p-0.15)*2)) * (1 if (i//2 + k) % 2 else 0.5))
+            d.line([(lx, cy+260), (lx, cy+430)], fill=(*YEL, a), width=6)
+        fist(d, W//2, cy, 1.0, WHITE)
+        if p > 0.55:                      # 화이팅! 터짐
+            a = ease_out((p-0.55)/0.45)
+            tx = "화이팅!"; tw = d.textlength(tx, font=f_big)
+            d.text((W/2 - tw/2, cy-330), tx, font=f_big, fill=(*YEL, int(255*a)))
+        img.save(frames_dir / f"f{i:04d}.png")
+    return off, end
 
 
 # ── 데이터 애니: 가치 격차(소득 100만 vs 버는 능력 → 9억9,900만) ─────────────────
@@ -213,7 +262,7 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
                             "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "19", str(out_seg)], check=True)
         else:
             DS.extract(seg["src"], seg["ss"], dur, out_seg,
-                       vf=_frame_vf(seg.get("frame", "landscape"), seg.get("hflip", False)),
+                       vf=_frame_vf(seg.get("frame", "landscape"), seg.get("hflip", False), seg.get("bw", False)),
                        tok=tok)
         seg_files.append(out_seg)
         prev_end = seg_end
@@ -238,6 +287,16 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
             nxt = wd / f"comp_{j}.mp4"
             subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(comp),
                             "-itsoffset", f"{off:.3f}", "-framerate", "30", "-i", str(fdir / "a%04d.png"),
+                            "-filter_complex",
+                            f"[0][1]overlay=0:0:enable='between(t,{off:.3f},{end + 0.1:.3f})':format=auto[v]",
+                            "-map", "[v]", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "19", str(nxt)], check=True)
+            comp = nxt
+        elif ov["type"] == "fist_raise":
+            fdir = wd / f"fist_{j}"
+            off, end = _fist_raise_frames(fdir, lines, ov["line"])
+            nxt = wd / f"comp_{j}.mp4"
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(comp),
+                            "-itsoffset", f"{off:.3f}", "-framerate", "30", "-i", str(fdir / "f%04d.png"),
                             "-filter_complex",
                             f"[0][1]overlay=0:0:enable='between(t,{off:.3f},{end + 0.1:.3f})':format=auto[v]",
                             "-map", "[v]", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "19", str(nxt)], check=True)
