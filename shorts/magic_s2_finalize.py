@@ -18,9 +18,10 @@ NS = "/root/.fonts/nsqr_eb.ttf"
 KY = "/root/.fonts/KyoboHandwriting2019.ttf"
 DARK = (20, 23, 28); LAB = (228, 231, 238); ORG = (255, 140, 60)
 # 하단 자막 패치(교보 이름도 바꿔야 — 박스만 바꾸고 자막 놔두면 반쪽). (창=[시작,끝], 한1, 한2, 영)
+# 창은 S2 원본 자막의 실제 표시구간에 딱 맞춰야(앞부분 놓치면 옛 자막 스침 — 반복실수).
 CAP_PATCHES = [
-    ((14.0, 16.0), "정수리는 십 퍼센트만", "살짝 볼륨을 살리고", "Crown: only 10%, keep the volume"),
-    ((20.0, 22.3), "뒤통수는 십오 퍼센트", "자연스럽게 연결해요", "Back of head: 15%, blend it naturally"),
+    ((13.6, 16.05), "정수리는 십 퍼센트만", "살짝 볼륨을 살리고", "Crown: only 10%, keep the volume"),
+    ((19.8, 22.35), "뒤통수는 십오 퍼센트", "자연스럽게 연결해요", "Back of head: 15%, blend it naturally"),
 ]
 
 
@@ -81,7 +82,7 @@ def _detect_circle(frame_png):
     return cx, cy, r
 
 
-def finalize(s2, out, win=(14.0, 22.3), top_t=14.0, back_t=17.0, nape_t=18.0):
+def finalize(s2, out, win=(13.5, 22.35), top_t=13.8, back_t=17.0, nape_t=18.0):
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp); fr = tmp / "d.jpg"
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", "21.5", "-i", s2, "-frames:v", "1", str(fr)], check=True)
