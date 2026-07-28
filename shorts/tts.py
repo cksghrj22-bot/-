@@ -16,6 +16,7 @@ secrets/elevenlabs.json 형식 (gitignore — 절대 커밋 금지):
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import urllib.request
 from pathlib import Path
@@ -332,10 +333,64 @@ SYNTH_FIXES: dict[str, str] = {
 PUNCT_TARGET: dict[str, float] = {".": 0.40, "?": 0.42, "!": 0.42, "…": 0.34, ",": 0.16}
 
 
+# ── 한국어 숫자 리더 (영구 버그수정, 2026-07-28 이찬호: "숫자 끊김은 창의가 아니라 코드로 박을 버그") ──
+# 배경: "9억 9,900만 원"의 쉼표에서 일레븐랩스가 끊겨 읽는다. 영상마다 손으로 철자 고치던 것을
+# 코드에 한 번 박아 모든 매니페스트에 자동 적용. 아라비아 숫자(+쉼표, +억/만/천 단위)를 소리나는
+# 사이노 한글로 변환 → 합성 텍스트에만 적용(자막은 원문 숫자 유지).
+_SINO = ["", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구"]
+_NUM_UNIT = {"조": 10**12, "억": 10**8, "만": 10**4, "천": 10**3}
+
+
+def _read4(n: int) -> str:
+    """1..9999 → 한글(백/십 앞의 '일' 생략: 100=백, 200=이백)."""
+    out = ""
+    for place, unit in ((1000, "천"), (100, "백"), (10, "십"), (1, "")):
+        d = (n // place) % 10
+        if d:
+            out += ("" if (d == 1 and place > 1) else _SINO[d]) + unit
+    return out
+
+
+def read_sino(n: int) -> str:
+    """정수 → 사이노 한글 읽기 (만/억/조 단위)."""
+    if n == 0:
+        return "영"
+    big = ["", "만", "억", "조", "경"]
+    groups = []
+    i = 0
+    while n > 0 and i < len(big):
+        g = n % 10000
+        if g:
+            groups.append(_read4(g) + big[i])
+        n //= 10000
+        i += 1
+    return "".join(reversed(groups))
+
+
+def _money_value(expr: str) -> int:
+    total = 0
+    for num, unit in re.findall(r"(\d[\d,]*)\s*(조|억|만|천)?", expr):
+        if not num:
+            continue
+        total += int(num.replace(",", "")) * _NUM_UNIT.get(unit, 1)
+    return total
+
+
+def koreanize_numbers(text: str) -> str:
+    """숫자 토큰을 한글 읽기로. 단위복합('9억 9,900만')·순수숫자('1,821','37') 모두 처리."""
+    # 1) 억/만/천 단위가 붙은 복합 표현 → 값 계산 후 한글
+    text = re.sub(
+        r"\d[\d,]*\s*(?:조|억|만|천)(?:\s*\d[\d,]*\s*(?:조|억|만|천)?)*",
+        lambda m: read_sino(_money_value(m.group(0))), text)
+    # 2) 남은 순수 숫자(쉼표 포함) → 한글
+    text = re.sub(r"\d[\d,]*", lambda m: read_sino(int(m.group(0).replace(",", ""))), text)
+    return text
+
+
 def apply_synth_fixes(text: str) -> str:
     for a, b in SYNTH_FIXES.items():
         text = text.replace(a, b)
-    return text
+    return koreanize_numbers(text)
 
 
 def collect_pause_edits(
