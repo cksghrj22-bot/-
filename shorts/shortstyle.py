@@ -74,3 +74,58 @@ def ko_en(ko: str, en: str | None) -> str:
     if not en:
         return ko
     return f"{ko}\\N{EN_INLINE}{en}"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 🎬 POP 스타일 — 예능/유튜브 훅 자막(두꺼운 볼드고딕 + 굵은 검은테두리 + 2톤 노랑/흰)
+# (2026-07-28 이찬호 "이런 글씨체 이런 느낌도 하나 넣어놔" — IMG_2125 레퍼런스)
+# 교보손글씨(감성)와 별개의 '강한 정보전달' 옵션. 골라 쓰는 두 번째 스템.
+# ─────────────────────────────────────────────────────────────────────────────
+def bold_gothic_family() -> str:
+    """이 환경의 두꺼운 고딕 실제 패밀리명(레퍼런스=두꺼운 볼드고딕). 폴백 방지."""
+    for p in ("/root/.fonts/nsqr_eb.ttf",
+              "/home/user/-/assets/fonts/nsqr_eb.ttf"):
+        if Path(p).exists():
+            try:
+                full = subprocess.run(["fc-scan", "--format", "%{fullname}", p],
+                                      capture_output=True, text=True).stdout.strip()
+                if full:
+                    return full.split(",")[0]   # 'NanumSquareRound ExtraBold'
+            except Exception:
+                pass
+    return "NanumSquareRound ExtraBold"
+
+
+POP_FONT = bold_gothic_family()
+
+# POP 하단 자막 — 흰 볼드 + 굵은 검은 테두리(박스 없음, 아웃라인만). 레퍼런스 "그래서 저는 늘".
+POP_SUB = {
+    "font": POP_FONT, "size": 82,
+    "primary_color": "&H00FFFFFF", "outline_color": "&H00000000",
+    "box_color": "000000", "box_opacity": 0, "border_style": 1,
+    "outline": 6, "shadow": 0, "alignment": 2, "margin_v": 430,
+}
+# POP 영어 = 한글 아래 작은 노랑 이탤릭(레퍼런스 "so I I always wanna live in").
+POP_EN_INLINE = r"{\fs46\i1\c&H00D4FF&}"
+
+# POP 제목/훅 2톤 카드 — 노랑 1줄 + 흰 1줄, 초굵은 검은테두리, 상단 밴드. 레퍼런스 "가장 온전한 나로 / 살아가는 방법".
+POP_TITLE = {
+    "font": POP_FONT, "size": 108,
+    "primary_color": "&H00FFFFFF", "outline_color": "&H00000000",
+    "box_color": "000000", "box_opacity": 0, "border_style": 1,
+    "outline": 9, "shadow": 0, "alignment": 8, "margin_v": 120,
+}
+POP_YELLOW = r"{\c&H00D4FF&}"   # 노랑(ASS는 BGR: 00 D4 FF = #FFD400)
+POP_WHITE = r"{\c&H00FFFFFF&}"
+
+
+def pop_title(line_yellow: str, line_white: str) -> str:
+    """2톤 훅 제목: 윗줄 노랑 + 아랫줄 흰. POP_TITLE 스타일과 함께 쓴다."""
+    return f"{POP_YELLOW}{line_yellow}\\N{POP_WHITE}{line_white}"
+
+
+def pop_ko_en(ko: str, en: str | None) -> str:
+    """POP 하단: 흰 볼드 한글 + 아래 작은 노랑 이탤릭 영어."""
+    if not en:
+        return ko
+    return f"{ko}\\N{POP_EN_INLINE}{en}"
