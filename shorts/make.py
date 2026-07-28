@@ -219,15 +219,18 @@ def _dusang_zones_frames(frames_dir: Path, lines: list, num_line: int, total: fl
 
 
 def _require(m: dict) -> None:
-    """줄기별 필수요소 강제 검증. 누락 시 렌더 거부(형 '실수한 부분 꼭 끼기' — 변명 대신 코드로 막음).
+    """줄기별 필수요소 검증. 기본은 강제(잊어서 빠뜨리는 실수 차단)하되, **의도적 예외는 `waive`로 허용**.
+
+    형 원칙(2026-07-28): "유동적이어야 해, 무조건은 없어. 메시지를 유리하게 전달할 모든 방법을
+    기존것+새로배운것 총동원." → 규약은 '기본값'이지 '절대'가 아니다. 판단해서 뺀 건
+    매니페스트에 `"waive": ["실사", "outro", ...]`(사유는 _notes)로 통과. 잊어서 빠진 건 여전히 거부.
 
     정본 줄기 규약: content/manifests/_TEMPLATE_줄기.md
-    - message(마인드/흑백): stem·흑백(bw)·**메시지로 시작**(첫 세그=bigcard/검은 훅카드)·**outro(SNS)**·bigcard 최소1.
-    - magic(미용 도식): stem·**메시지로 시작**(첫 줄 훅 물음)·도식 **4존 전부**(톱/페이스/백/네이프).
     """
     stem = m.get("stem")
     phrases = m.get("phrases", [])
     segs = m.get("segments", [])
+    waived = set(m.get("waive", []))   # 의도적 예외(유동적)
     errs = []
     if stem not in ("message", "mind", "product", "magic"):
         errs.append("stem 미지정('message'/'product'/'magic')")
@@ -236,28 +239,30 @@ def _require(m: dict) -> None:
     # 공통: 메시지로 시작 — 첫 줄이 핵심 물음/메시지여야(빈 줄 금지)
     if phrases and not (phrases[0][0] or "").strip():
         errs.append("오프닝 메시지(phrases[0]) 비어있음")
-    # 아웃트로: 메시지·제품·마인드 계열 전부 SNS 아웃트로 필수(계속 빠뜨린 부분)
-    if stem in ("message", "mind", "product") and not m.get("outro"):
-        errs.append(f"[{stem}] outro(SNS 아웃트로) 필수 — 계속 빠뜨린 부분")
+    # 아웃트로: 메시지·제품·마인드 계열 전부 SNS 아웃트로 기본 필수(계속 빠뜨린 부분)
+    if stem in ("message", "mind", "product") and not m.get("outro") and "outro" not in waived:
+        errs.append(f"[{stem}] outro(SNS 아웃트로) 누락 — 계속 빠뜨린 부분. 의도면 waive:[\"outro\"].")
     if stem in ("message", "mind"):
-        if not any(s.get("bw") for s in segs):
-            errs.append("[message] 흑백(bw) 세그먼트 필수")
-        if not any(s.get("bigcard") for s in segs):
-            errs.append("[message] 큰 중앙 메시지카드(bigcard) 최소 1개")
+        if not any(s.get("bw") for s in segs) and "bw" not in waived:
+            errs.append("[message] 흑백(bw) 세그먼트 누락. 컬러가 메시지에 유리하면 waive:[\"bw\"].")
+        if not any(s.get("bigcard") for s in segs) and "bigcard" not in waived:
+            errs.append("[message] 큰 중앙 메시지카드(bigcard) 없음. 의도면 waive:[\"bigcard\"].")
         if segs and not (segs[0].get("bigcard") or segs[0].get("black")):
             print("⚠️ [message] '메시지로 시작' 권장 — 첫 세그를 bigcard/검은 훅카드로 여는 게 정본 줄기.")
     if stem == "magic":
-        # ★★ 실사(사람 매직하는 장면) 절대 필수 — 계속 빠뜨린 최악의 실수(형 "빼지마 절대") ★★
-        if not any(s.get("src") for s in segs):
-            errs.append("[magic] 실사(사람 매직하는 장면 src) 없음 — 절대 빼면 안 됨. 애니만 있는 매직은 렌더거부.")
-        if any(s.get("anim") == "dusang_zones" for s in segs):
+        # 실사(사람 매직하는 장면) 기본 필수 — 계속 빠뜨린 최악의 실수(형 "빼지마 절대").
+        if not any(s.get("src") for s in segs) and "실사" not in waived:
+            errs.append("[magic] 실사(사람 매직하는 장면 src) 없음 — 기본 절대금지. 진짜 의도면 waive:[\"실사\"]+_notes 사유.")
+        if any(s.get("anim") == "dusang_zones" for s in segs) and "존" not in waived:
             joined = " ".join((p[0] or "") for p in phrases)
             for zone in ("정수리", "페이스", "뒤통수", "뒷목"):
                 if zone not in joined:
                     errs.append(f"[magic] 도식 4존 중 '{zone}' 누락 — 계속 빠뜨린 부분")
     if errs:
-        raise ValueError("❌ 매니페스트 필수요소 누락(줄기 규약 위반): " + " / ".join(errs)
-                         + "\n→ content/manifests/_TEMPLATE_줄기.md 대조 후 채워서 다시.")
+        raise ValueError("❌ 매니페스트 필수요소 누락(줄기 규약): " + " / ".join(errs)
+                         + "\n→ 잊은 거면 채우고, 의도면 waive로 명시. 규약: content/manifests/_TEMPLATE_줄기.md")
+    if waived:
+        print(f"ⓘ 의도적 예외(waive) 적용: {sorted(waived)} — 유동적 판단(무조건 없음).")
 
 
 def make(manifest_path: str | Path, out: str | Path | None = None,
