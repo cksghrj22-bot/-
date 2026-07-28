@@ -45,14 +45,15 @@ KYOBO = "/root/.fonts/KyoboHandwriting2019.ttf"
 NSQR = "/root/.fonts/nsqr_eb.ttf"
 
 
-def _frame_vf(frame: str, hflip: bool, bw: bool = False) -> str:
+def _frame_vf(frame: str, hflip: bool, bw: bool = False, zoom: float = 1.0) -> str:
     fl = "hflip," if hflip else ""
     gray = ",hue=s=0" if bw else ""   # 흑백(마인드/메시지 줄기)
+    w, h = round(1080 * zoom), round(1350 * zoom)   # zoom>1 = 인물 확대(배경 줄임)
     if frame == "portrait":
-        return (f"{fl}scale=1080:1350:force_original_aspect_ratio=increase,"
+        return (f"{fl}scale={w}:{h}:force_original_aspect_ratio=increase,"
                 f"crop=1080:1350,pad=1080:1920:0:285:black,fps=30{gray}")
     # landscape(기본): 4:5 확대크롭 + 상하밴드
-    return f"{fl}crop=ih*4/5:ih,scale=1080:1350,pad=1080:1920:0:285:black,fps=30{gray}"
+    return f"{fl}crop=ih*4/5:ih,scale={w}:{h},crop=1080:1350,pad=1080:1920:0:285:black,fps=30{gray}"
 
 
 # ── 화이팅 애니: 주먹을 들어올리는 데이터 모션(흑백 위 노랑 포인트) ───────────────
@@ -237,6 +238,7 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
     seg_files = []
     prev_end = 0.0
     black_line_idx = set()
+    bigcard_idx = set()   # 큰 중앙 메시지카드(검은화면·물음/핵심메시지 확대)
     tail = 0.0
     for k, seg in enumerate(m["segments"]):
         seg_end = lines[seg["untilLine"]].end
@@ -252,7 +254,7 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
                 for li, ln in enumerate(lines):
                     mid = (ln.start + ln.end) / 2
                     if prev_end <= mid < seg_end:
-                        black_line_idx.add(li)
+                        (bigcard_idx if seg.get("bigcard") else black_line_idx).add(li)
         elif seg.get("anim"):
             fdir = wd / f"anim_seg_{k:02d}"
             if seg["anim"] == "dusang_zones":
@@ -262,7 +264,8 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
                             "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "19", str(out_seg)], check=True)
         else:
             DS.extract(seg["src"], seg["ss"], dur, out_seg,
-                       vf=_frame_vf(seg.get("frame", "landscape"), seg.get("hflip", False), seg.get("bw", False)),
+                       vf=_frame_vf(seg.get("frame", "landscape"), seg.get("hflip", False),
+                                    seg.get("bw", False), float(seg.get("zoom", 1.0))),
                        tok=tok)
         seg_files.append(out_seg)
         prev_end = seg_end
@@ -302,10 +305,15 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
                             "-map", "[v]", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "19", str(nxt)], check=True)
             comp = nxt
 
-    # 4) 자막 Line(훅/엔딩=검은카드 중앙) + 렌더
+    # 4) 자막 Line(훅/엔딩=검은카드 중앙 / bigcard=큰 중앙 메시지) + 렌더
     tl = []
     for li, ln in enumerate(lines):
-        txt = (r"{\an5}" + ln.text) if li in black_line_idx else ln.text
+        if li in bigcard_idx:
+            txt = r"{\an5\fs104\b1}" + ln.text   # 큰 중앙 메시지카드(강조)
+        elif li in black_line_idx:
+            txt = r"{\an5}" + ln.text
+        else:
+            txt = ln.text
         tl.append(Line(text=txt, start=ln.start, end=ln.end))
     script = Script(lines=tl, title=None)
 

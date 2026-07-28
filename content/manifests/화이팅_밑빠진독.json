@@ -9,15 +9,16 @@
     ["노력도, 시간도, 돈도. 여전히 들어가기만 하고.", "노력도, 시간도, 돈도.\\N여전히 들어가기만 하고.", "Effort, time, money — still only going in.", false],
     ["꼭, 밑 빠진 독에 물을 붓는 것처럼요.", "꼭, 밑 빠진 독에\\N물을 붓는 것처럼요.", "Like pouring water into a bottomless jar.", false],
     ["누구는 잘 쌓아가는데, 나만 제자리인가 싶어요.", "누구는 잘 쌓아가는데,\\N나만 제자리인가 싶어요.", "Others build up; am I the only one stuck?", false],
-    ["그래도 어쩌겠어요. 하루하루, 살아보는 거죠.", "그래도 어쩌겠어요.\\N하루하루, 살아보는 거죠.", "But what can you do — just live, day by day.", false],
+    ["그래도 어쩌겠어요. 하루하루, 살아보는 거죠.", "그래도 어쩌겠어요.\\N하루하루, 살아보는 거죠.", null, false],
     ["그러다 보면 언젠가, 뭐라도 돼 있지 않을까요.", "그러다 보면 언젠가,\\N뭐라도 돼 있지 않을까요.", "Maybe someday it'll add up to something.", false],
     ["헛웃음이 나지만, 오늘도 한 번 더 해보려구요.", "헛웃음이 나지만,\\N오늘도 한 번 더 해보려구요.", "I laugh it off, but I'll try once more today.", false],
     ["이 말이 도움이 될진 모르겠지만.", "이 말이,\\N도움이 될진 모르겠지만.", "Not sure if this helps, but —", false],
     ["저와 같이, 밑 빠진 독에 물 붓는 분들 모두모두. 화이팅입니다.", "밑 빠진 독에 물 붓는\\N당신에게도. 화이팅입니다.", "To everyone pouring into a bottomless jar — fighting.", false]
   ],
   "segments": [
-    {"src": "1tDURu3BgUt7Z4eQYTl57AsjdaManL58c", "ss": 2,  "bw": true, "frame": "portrait", "untilLine": 6},
-    {"src": "1Ez_wnOG-2wQq0BYHwcZeSQdGpNkNZ6yb", "ss": 4,  "bw": true, "frame": "portrait", "untilLine": 10, "tail": 2.0}
+    {"src": "1tDURu3BgUt7Z4eQYTl57AsjdaManL58c", "ss": 2, "bw": true, "frame": "portrait", "zoom": 1.4, "untilLine": 5},
+    {"black": true, "bigcard": true, "untilLine": 6},
+    {"src": "1Ez_wnOG-2wQq0BYHwcZeSQdGpNkNZ6yb", "ss": 4, "bw": true, "frame": "portrait", "untilLine": 10, "tail": 2.0}
   ],
   "overlays": [
     {"type": "fist_raise", "line": 10}
