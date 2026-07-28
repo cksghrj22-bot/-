@@ -71,6 +71,11 @@
   ],
   "segments": [
     {
+      "black": true,
+      "bigcard": true,
+      "untilLine": 3
+    },
+    {
       "anim": "dusang_zones",
       "numLine": 4,
       "untilLine": 9,

@@ -165,8 +165,9 @@ def _value_gap_frames(frames_dir: Path, lines: list, i3: int, i4: int, i5: int, 
 
 
 # ── 데이터 애니: 볼륨매직 두상 존-% 도식(실사 아님) ───────────────────────────
-def _dusang_zones_frames(frames_dir: Path, lines: list, num_line: int, total: float, fps: int = 30) -> None:
-    """두상 원 + 존별(톱/페이스/백/네이프) % 도식. num_line(퍼센트 나열 줄) 구간에 존 순차 등장."""
+def _dusang_zones_frames(frames_dir: Path, lines: list, num_line: int, total: float,
+                         seg_start: float = 0.0, fps: int = 30) -> None:
+    """두상 원 + 존별 % 도식. num_line부터 존 순차 등장. seg_start=이 anim 세그의 절대 시작초(오프닝 메시지 뒤에 오는 경우)."""
     from PIL import Image, ImageDraw, ImageFont
     frames_dir.mkdir(parents=True, exist_ok=True)
     for p in frames_dir.glob("*.png"):
@@ -179,7 +180,8 @@ def _dusang_zones_frames(frames_dir: Path, lines: list, num_line: int, total: fl
     # 각 존은 자기 나레이션 줄(num_line, +1, +2, +3)에서 등장. 마지막 줄 없으면 num_line 기준 분할.
     def _z0(k):
         idx = num_line + k
-        return lines[idx].start if idx < len(lines) else lines[num_line].start + k * 0.9
+        base = lines[idx].start if idx < len(lines) else lines[num_line].start + k * 0.9
+        return base - seg_start   # 세그 로컬 시간으로 변환(오프닝 메시지 뒤에 애니가 오는 구조)
     # (라벨,색,목표%,박스중심,원위연결점,등장시각,호각도)
     Z = [
         ("정수리",     BLUE,   10, (430,555),  (CX, CY-R),       _z0(0), (-108,-72)),
@@ -298,7 +300,7 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
         elif seg.get("anim"):
             fdir = wd / f"anim_seg_{k:02d}"
             if seg["anim"] == "dusang_zones":
-                _dusang_zones_frames(fdir, lines, seg.get("numLine", 2), dur)
+                _dusang_zones_frames(fdir, lines, seg.get("numLine", 2), dur, seg_start=prev_end)
             subprocess.run(["ffmpeg", "-v", "error", "-y", "-framerate", "30",
                             "-i", str(fdir / "z%04d.png"), "-t", f"{dur:.3f}",
                             "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "19", str(out_seg)], check=True)
