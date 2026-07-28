@@ -1,35 +1,150 @@
 {
   "title": "메타안경 산 후기",
-  "voice": {"stability": 0.42, "style": 0.15, "speed": 1.05},
+  "stem": "product",
+  "voice": {
+    "stability": 0.42,
+    "style": 0.15,
+    "speed": 1.05
+  },
   "bgm": "/tmp/claude-0/0fb0e5b8-eaea-542a-a0d3-be17b390f310/scratchpad/bgm_산책로.mp3",
   "outro": "SNS에 일기를 쓰고 있어요",
   "phrases": [
-    ["미용사가 AI 안경을 샀어요.", "미용사가\\NAI 안경을 샀어요.", "A hairdresser bought AI glasses.", false],
-    ["왜 샀을까요?", "왜 샀을까요?", "Why?", false],
-    ["여기, 백만 원이 있어요.", "여기, 백만 원이 있어요.", "Here's 1 million won.", false],
-    ["그리고 여기, 백만 원을 버는 능력이 있어요.", "그리고 여기,\\N백만 원을 버는 능력이 있어요.", "And the ability to earn it.", false],
-    ["같은 백만 원 같지만 이 둘의 가치 차이는 9억 9,900만 원이에요.", "이 둘의 가치 차이는\\N9억 9,900만 원.", "The value gap is 999 million won.", false],
-    ["돈은 쓰면 사라지지만 버는 능력은 계속 남으니까요.", "돈은 쓰면 사라지지만\\N버는 능력은 남으니까요.", "Cash is spent once; ability stays.", false],
-    ["지금은 콘텐츠가 자산이 되는 시대예요.", "콘텐츠가 자산이 되는 시대예요.", "Content becomes an asset now.", false],
-    ["노동으로 번 백만 원을, 버는 능력으로 바꿔야 해요.", "번 백만 원을,\\N'버는 능력'으로 바꿔야 해요.", "Turn income into earning ability.", false],
-    ["그래야 이 시대에 부자가 됩니다.", "그래야 부자가 됩니다.", "That's how you build wealth.", false],
-    ["그래서 저는 지금부터를 담기로 했어요.", "그래서 저는\\N지금부터를 담기로 했어요.", "So I capture from now on.", false],
-    ["손끝의 시술도 오늘의 대화도, 다 콘텐츠가 되니까요.", "손끝의 시술도 오늘의 대화도,\\N다 콘텐츠가 되니까요.", "Every cut, every talk becomes content.", false],
-    ["콘텐츠는 모아야 자산이 돼요. 흩어지면 그냥 정보일 뿐이거든요.", "모아야 자산이 돼요.\\N흩어지면 그냥 정보예요.", "Gathered it's an asset; scattered, just info.", false],
-    ["그 장면들을 담으려고 이 메타 안경을 샀어요.", "그 장면들을 담으려고\\N이 메타 안경을 샀어요.", "I bought these Meta glasses to capture them.", false],
-    ["당신의 백만 원은 어디로 가고 있나요?", "당신의 백만 원은\\N어디로 가고 있나요?", "Where is your 1 million won going?", false]
+    [
+      "미용사가 AI 안경을 샀어요.",
+      "미용사가\\NAI 안경을 샀어요.",
+      "A hairdresser bought AI glasses.",
+      false
+    ],
+    [
+      "왜 샀을까요?",
+      "왜 샀을까요?",
+      "Why?",
+      false
+    ],
+    [
+      "여기, 백만 원이 있어요.",
+      "여기, 백만 원이 있어요.",
+      "Here's 1 million won.",
+      false
+    ],
+    [
+      "그리고 여기, 백만 원을 버는 능력이 있어요.",
+      "그리고 여기,\\N백만 원을 버는 능력이 있어요.",
+      "And the ability to earn it.",
+      false
+    ],
+    [
+      "같은 백만 원 같지만 이 둘의 가치 차이는 9억 9,900만 원이에요.",
+      "이 둘의 가치 차이는\\N9억 9,900만 원.",
+      "The value gap is 999 million won.",
+      false
+    ],
+    [
+      "돈은 쓰면 사라지지만 버는 능력은 계속 남으니까요.",
+      "돈은 쓰면 사라지지만\\N버는 능력은 남으니까요.",
+      "Cash is spent once; ability stays.",
+      false
+    ],
+    [
+      "지금은 콘텐츠가 자산이 되는 시대예요.",
+      "콘텐츠가 자산이 되는 시대예요.",
+      "Content becomes an asset now.",
+      false
+    ],
+    [
+      "노동으로 번 백만 원을, 버는 능력으로 바꿔야 해요.",
+      "번 백만 원을,\\N'버는 능력'으로 바꿔야 해요.",
+      "Turn income into earning ability.",
+      false
+    ],
+    [
+      "그래야 이 시대에 부자가 됩니다.",
+      "그래야 부자가 됩니다.",
+      "That's how you build wealth.",
+      false
+    ],
+    [
+      "그래서 저는 지금부터를 담기로 했어요.",
+      "그래서 저는\\N지금부터를 담기로 했어요.",
+      "So I capture from now on.",
+      false
+    ],
+    [
+      "손끝의 시술도 오늘의 대화도, 다 콘텐츠가 되니까요.",
+      "손끝의 시술도 오늘의 대화도,\\N다 콘텐츠가 되니까요.",
+      "Every cut, every talk becomes content.",
+      false
+    ],
+    [
+      "콘텐츠는 모아야 자산이 돼요. 흩어지면 그냥 정보일 뿐이거든요.",
+      "모아야 자산이 돼요.\\N흩어지면 그냥 정보예요.",
+      "Gathered it's an asset; scattered, just info.",
+      false
+    ],
+    [
+      "그 장면들을 담으려고 이 메타 안경을 샀어요.",
+      "그 장면들을 담으려고\\N이 메타 안경을 샀어요.",
+      "I bought these Meta glasses to capture them.",
+      false
+    ],
+    [
+      "당신의 백만 원은 어디로 가고 있나요?",
+      "당신의 백만 원은\\N어디로 가고 있나요?",
+      "Where is your 1 million won going?",
+      false
+    ]
   ],
   "segments": [
-    {"black": true, "untilLine": 0},
-    {"src": "1izAlosoitFz1-ZiHkngTZjFG0wXmGj6w", "ss": 6,   "hflip": true, "frame": "landscape", "untilLine": 3},
-    {"src": "1izAlosoitFz1-ZiHkngTZjFG0wXmGj6w", "ss": 44,  "hflip": true, "frame": "landscape", "untilLine": 6},
-    {"src": "1izAlosoitFz1-ZiHkngTZjFG0wXmGj6w", "ss": 84,  "hflip": true, "frame": "landscape", "untilLine": 9},
-    {"src": "18nsusbI2tLLS7h9dVcpFQjNVxhCIbScc", "ss": 2,   "frame": "portrait", "untilLine": 10},
-    {"src": "1izAlosoitFz1-ZiHkngTZjFG0wXmGj6w", "ss": 205, "hflip": true, "frame": "landscape", "untilLine": 12},
-    {"black": true, "untilLine": 13, "tail": 3.4}
+    {
+      "black": true,
+      "untilLine": 0
+    },
+    {
+      "src": "1izAlosoitFz1-ZiHkngTZjFG0wXmGj6w",
+      "ss": 6,
+      "hflip": true,
+      "frame": "landscape",
+      "untilLine": 3
+    },
+    {
+      "src": "1izAlosoitFz1-ZiHkngTZjFG0wXmGj6w",
+      "ss": 44,
+      "hflip": true,
+      "frame": "landscape",
+      "untilLine": 6
+    },
+    {
+      "src": "1izAlosoitFz1-ZiHkngTZjFG0wXmGj6w",
+      "ss": 84,
+      "hflip": true,
+      "frame": "landscape",
+      "untilLine": 9
+    },
+    {
+      "src": "18nsusbI2tLLS7h9dVcpFQjNVxhCIbScc",
+      "ss": 2,
+      "frame": "portrait",
+      "untilLine": 10
+    },
+    {
+      "src": "1izAlosoitFz1-ZiHkngTZjFG0wXmGj6w",
+      "ss": 205,
+      "hflip": true,
+      "frame": "landscape",
+      "untilLine": 12
+    },
+    {
+      "black": true,
+      "untilLine": 13,
+      "tail": 3.4
+    }
   ],
   "overlays": [
-    {"type": "value_gap", "fromLine": 2, "toLine": 4}
+    {
+      "type": "value_gap",
+      "fromLine": 2,
+      "toLine": 4
+    }
   ],
   "_notes": "삼자회의 산물. footage=Ray-Ban Meta 언박싱(개봉→리빌→착용, hflip 반전보정) + 상담 실사 인서트(line11). 애니=가치격차(line3~5). 아웃트로=SNS일기 중앙카드. 발행 전 형 검수."
 }

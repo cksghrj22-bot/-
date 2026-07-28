@@ -216,9 +216,49 @@ def _dusang_zones_frames(frames_dir: Path, lines: list, num_line: int, total: fl
         img.save(frames_dir / f"z{i:04d}.png")
 
 
+def _require(m: dict) -> None:
+    """줄기별 필수요소 강제 검증. 누락 시 렌더 거부(형 '실수한 부분 꼭 끼기' — 변명 대신 코드로 막음).
+
+    정본 줄기 규약: content/manifests/_TEMPLATE_줄기.md
+    - message(마인드/흑백): stem·흑백(bw)·**메시지로 시작**(첫 세그=bigcard/검은 훅카드)·**outro(SNS)**·bigcard 최소1.
+    - magic(미용 도식): stem·**메시지로 시작**(첫 줄 훅 물음)·도식 **4존 전부**(톱/페이스/백/네이프).
+    """
+    stem = m.get("stem")
+    phrases = m.get("phrases", [])
+    segs = m.get("segments", [])
+    errs = []
+    if stem not in ("message", "mind", "product", "magic"):
+        errs.append("stem 미지정('message'/'product'/'magic')")
+    if not phrases:
+        errs.append("phrases 없음")
+    # 공통: 메시지로 시작 — 첫 줄이 핵심 물음/메시지여야(빈 줄 금지)
+    if phrases and not (phrases[0][0] or "").strip():
+        errs.append("오프닝 메시지(phrases[0]) 비어있음")
+    # 아웃트로: 메시지·제품·마인드 계열 전부 SNS 아웃트로 필수(계속 빠뜨린 부분)
+    if stem in ("message", "mind", "product") and not m.get("outro"):
+        errs.append(f"[{stem}] outro(SNS 아웃트로) 필수 — 계속 빠뜨린 부분")
+    if stem in ("message", "mind"):
+        if not any(s.get("bw") for s in segs):
+            errs.append("[message] 흑백(bw) 세그먼트 필수")
+        if not any(s.get("bigcard") for s in segs):
+            errs.append("[message] 큰 중앙 메시지카드(bigcard) 최소 1개")
+        if segs and not (segs[0].get("bigcard") or segs[0].get("black")):
+            print("⚠️ [message] '메시지로 시작' 권장 — 첫 세그를 bigcard/검은 훅카드로 여는 게 정본 줄기.")
+    if stem == "magic":
+        if any(s.get("anim") == "dusang_zones" for s in segs):
+            joined = " ".join((p[0] or "") for p in phrases)
+            for zone in ("톱", "페이스", "백", "네이프"):
+                if zone not in joined:
+                    errs.append(f"[magic] 도식 4존 중 '{zone}' 누락 — 계속 빠뜨린 부분")
+    if errs:
+        raise ValueError("❌ 매니페스트 필수요소 누락(줄기 규약 위반): " + " / ".join(errs)
+                         + "\n→ content/manifests/_TEMPLATE_줄기.md 대조 후 채워서 다시.")
+
+
 def make(manifest_path: str | Path, out: str | Path | None = None,
          workdir: str | Path | None = None) -> Path:
     m = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+    _require(m)   # 줄기 필수요소 강제 — 누락이면 여기서 멈춤
     wd = Path(workdir) if workdir else Path(manifest_path).resolve().parent / "_build"
     wd.mkdir(parents=True, exist_ok=True)
 
