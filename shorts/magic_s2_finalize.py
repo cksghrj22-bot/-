@@ -15,7 +15,13 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 NS = "/root/.fonts/nsqr_eb.ttf"
+KY = "/root/.fonts/KyoboHandwriting2019.ttf"
 DARK = (20, 23, 28); LAB = (228, 231, 238); ORG = (255, 140, 60)
+# 하단 자막 패치(교보 이름도 바꿔야 — 박스만 바꾸고 자막 놔두면 반쪽). (창=[시작,끝], 한1, 한2, 영)
+CAP_PATCHES = [
+    ((14.0, 16.0), "정수리는 십 퍼센트만", "살짝 볼륨을 살리고", "Crown: only 10%, keep the volume"),
+    ((20.0, 22.3), "뒤통수는 십오 퍼센트", "자연스럽게 연결해요", "Back of head: 15%, blend it naturally"),
+]
 
 
 def _frames(fdir: Path, win, top_t, back_t, nape_t, cx, cy, r, fps=30):
@@ -24,12 +30,25 @@ def _frames(fdir: Path, win, top_t, back_t, nape_t, cx, cy, r, fps=30):
         p.unlink()
     W, H = 1080, 1920
     f_lab = ImageFont.truetype(NS, 36); f_pct = ImageFont.truetype(NS, 60); f_exp = ImageFont.truetype(NS, 26)
+    f_ck = ImageFont.truetype(KY, 60); f_ce = ImageFont.truetype(KY, 40)
     B = cy + r
     def ease(t): t = max(0, min(1, t)); return t * t * (3 - 2 * t)
     N = int((win[1] - win[0]) * fps)
     for i in range(N):
         t = win[0] + i / fps
         img = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(img)
+        def kct(cx0, y, txt, fnt, fill):
+            ws = txt.split(" "); gap = fnt.size * 0.26; wd = [d.textlength(w, font=fnt) for w in ws]
+            x = cx0 - (sum(wd) + gap * (len(ws) - 1)) / 2
+            for w, ww in zip(ws, wd):
+                d.text((x, y), w, font=fnt, fill=fill); x += ww + gap
+        # 하단 자막 패치(교보 이름 정합)
+        for (cs, ce), k1, k2, en in CAP_PATCHES:
+            if cs <= t < ce:
+                d.rectangle([222, 1286, 858, 1520], fill=(0, 0, 0, 255))
+                kct(W / 2, 1298, k1, f_ck, (245, 245, 245, 255))
+                kct(W / 2, 1372, k2, f_ck, (245, 245, 245, 255))
+                kct(W / 2, 1452, en, f_ce, (238, 238, 238, 255))
         # 톱→정수리
         if t >= top_t:
             d.rectangle([352, 320, 556, 374], fill=(*DARK, 255)); d.text((360, 322), "정수리", font=f_lab, fill=LAB)
