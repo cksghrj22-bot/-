@@ -114,6 +114,56 @@ def _value_gap_frames(frames_dir: Path, lines: list, i3: int, i4: int, i5: int, 
     return off, end
 
 
+# ── 데이터 애니: 볼륨매직 두상 존-% 도식(실사 아님) ───────────────────────────
+def _dusang_zones_frames(frames_dir: Path, lines: list, num_line: int, total: float, fps: int = 30) -> None:
+    """두상 원 + 존별(톱/페이스/백/네이프) % 도식. num_line(퍼센트 나열 줄) 구간에 존 순차 등장."""
+    from PIL import Image, ImageDraw, ImageFont
+    frames_dir.mkdir(parents=True, exist_ok=True)
+    for p in frames_dir.glob("*.png"):
+        p.unlink()
+    W, H = 1080, 1920
+    BG = (18, 20, 26); CX, CY, R = 540, 930, 250
+    f_title = ImageFont.truetype(KYOBO, 92); f_lab = ImageFont.truetype(KYOBO, 38)
+    f_pct = ImageFont.truetype(NSQR, 64); f_why = ImageFont.truetype(KYOBO, 20)
+    BLUE=(120,190,255); GREEN=(130,220,150); YEL=(255,212,0); ORANGE=(255,140,60); GREY=(150,158,170)
+    nl = lines[num_line]; z0, z1 = nl.start, nl.end
+    step = (z1 - z0) / 4.0
+    # (라벨,색,목표%,박스중심,원위연결점,등장시각,호각도)
+    Z = [
+        ("톱",        BLUE,   10, (430,555),  (CX, CY-R),       z0+0.0*step, (-108,-72)),
+        ("페이스라인", GREEN,  30, (250,860),  (CX-R+18,CY-30),  z0+1.0*step, (150,210)),
+        ("백",        YEL,    40, (830,860),  (CX+R-18,CY-30),  z0+2.0*step, (-30,30)),
+        ("네이프라인", ORANGE, 70, (560,1250), (CX, CY+R),       z0+3.0*step, (72,108)),
+    ]
+    def ease(t): t=max(0,min(1,t)); return t*t*(3-2*t)
+    def kct(d,cx,y,txt,fnt,fill):
+        ws=txt.split(" "); gap=fnt.size*0.30; wd=[d.textlength(w,font=fnt) for w in ws]
+        tot=sum(wd)+gap*(len(ws)-1); x=cx-tot/2
+        for w,ww in zip(ws,wd): d.text((x,y),w,font=fnt,fill=fill); x+=ww+gap
+    N = max(1, round(total * fps))
+    for i in range(N):
+        t = i / fps
+        img = Image.new("RGB", (W, H), BG); d = ImageDraw.Draw(img)
+        kct(d, W/2, 120, "볼륨매직?", f_title, YEL)
+        d.ellipse([CX-R,CY-R,CX+R,CY+R], outline=GREY, width=4)
+        d.polygon([(CX-R-4,CY-16),(CX-R-4,CY+16),(CX-R-26,CY)], fill=GREY)
+        for label,col,tgt,(bx,by),(px,py),t0,arc in Z:
+            a = ease((t-t0)/0.9)
+            if a <= 0:
+                continue
+            d.arc([CX-R,CY-R,CX+R,CY+R], arc[0], arc[1], fill=col, width=8)
+            d.line([(px,py),(bx,by)], fill=col, width=3); d.ellipse([px-6,py-6,px+6,py+6], fill=col)
+            bw,bh=270,124; x0,y0=bx-bw//2,by-bh//2
+            d.rounded_rectangle([x0,y0,x0+bw,y0+bh], radius=16, fill=(28,32,42), outline=col, width=3)
+            d.text((x0+20,y0+12), label, font=f_lab, fill=col)
+            d.text((x0+20,y0+50), f"{int(tgt*a)}%", font=f_pct, fill=col)
+            bx0,by0=x0+150,y0+60; blen=100
+            d.rounded_rectangle([bx0,by0,bx0+blen,by0+14], radius=7, fill=(50,55,66))
+            d.rounded_rectangle([bx0,by0,bx0+int(blen*tgt/100*a),by0+14], radius=7, fill=col)
+            d.text((x0+150,y0+82), "펴는 정도", font=f_why, fill=(120,128,140))
+        img.save(frames_dir / f"z{i:04d}.png")
+
+
 def make(manifest_path: str | Path, out: str | Path | None = None,
          workdir: str | Path | None = None) -> Path:
     m = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
@@ -147,10 +197,18 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
             subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "lavfi",
                             "-i", f"color=black:s=1080x1920:r=30:d={dur:.3f}",
                             "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "20", str(out_seg)], check=True)
-            for li, ln in enumerate(lines):
-                mid = (ln.start + ln.end) / 2
-                if prev_end <= mid < seg_end:
-                    black_line_idx.add(li)
+            if seg.get("card", True):  # 검은 카드=자막 중앙. card:false면 하단 유지(도식 위 나레이션 등)
+                for li, ln in enumerate(lines):
+                    mid = (ln.start + ln.end) / 2
+                    if prev_end <= mid < seg_end:
+                        black_line_idx.add(li)
+        elif seg.get("anim"):
+            fdir = wd / f"anim_seg_{k:02d}"
+            if seg["anim"] == "dusang_zones":
+                _dusang_zones_frames(fdir, lines, seg.get("numLine", 2), dur)
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-framerate", "30",
+                            "-i", str(fdir / "z%04d.png"), "-t", f"{dur:.3f}",
+                            "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "19", str(out_seg)], check=True)
         else:
             DS.extract(seg["src"], seg["ss"], dur, out_seg,
                        vf=_frame_vf(seg.get("frame", "landscape"), seg.get("hflip", False)),
