@@ -247,6 +247,9 @@ def _require(m: dict) -> None:
         if segs and not (segs[0].get("bigcard") or segs[0].get("black")):
             print("⚠️ [message] '메시지로 시작' 권장 — 첫 세그를 bigcard/검은 훅카드로 여는 게 정본 줄기.")
     if stem == "magic":
+        # ★★ 실사(사람 매직하는 장면) 절대 필수 — 계속 빠뜨린 최악의 실수(형 "빼지마 절대") ★★
+        if not any(s.get("src") for s in segs):
+            errs.append("[magic] 실사(사람 매직하는 장면 src) 없음 — 절대 빼면 안 됨. 애니만 있는 매직은 렌더거부.")
         if any(s.get("anim") == "dusang_zones" for s in segs):
             joined = " ".join((p[0] or "") for p in phrases)
             for zone in ("정수리", "페이스", "뒤통수", "뒷목"):
