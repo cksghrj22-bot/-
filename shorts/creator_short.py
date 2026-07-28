@@ -137,3 +137,24 @@ def cues_from_diar(diar_json: str | Path, A: float, B: float, teacher_only: bool
         cues.append((round(cur[0]["s"] - A, 2), round(cur[-1]["e"] - A + 0.5, 2),
                      "".join(c["t"] for c in cur).strip()))
     return cues, tea
+
+
+# ── 매니페스트 러너(스키마 검증) — 손튜플 오타(name 누락 등) 원천차단 ──────────
+REQUIRED = ("clip", "A", "B", "yellow", "white", "name", "cues")
+
+
+def render_batch(items: list[dict], srcdir: str | Path, outdir: str | Path) -> list[Path]:
+    """items=[{clip,A,B,yellow,white,name,cues}]. 각 항목 키를 검증(누락시 명확한 예외),
+    creator_short.build로 렌더. 튜플 위치오류(2026-07-28 2회 재발) 구조적 차단."""
+    srcdir, outdir = Path(srcdir), Path(outdir)
+    outdir.mkdir(parents=True, exist_ok=True)
+    done = []
+    for i, it in enumerate(items):
+        missing = [k for k in REQUIRED if k not in it]
+        if missing:
+            raise KeyError(f"매니페스트 항목#{i}({it.get('name','?')}) 필수키 누락: {missing}")
+        out = outdir / f"창엽쇼츠_{it['name']}.mp4"
+        build(srcdir / f"{it['clip']}.mp4", it["A"], it["B"], it["yellow"], it["white"],
+              it["cues"], out)
+        done.append(out); print(f"✅ {it['name']}", flush=True)
+    return done
