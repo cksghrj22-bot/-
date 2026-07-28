@@ -364,7 +364,8 @@ def read_sino(n: int) -> str:
             groups.append(_read4(g) + big[i])
         n //= 10000
         i += 1
-    return "".join(reversed(groups))
+    # 단위그룹 사이 공백 — 붙여쓰면 EL이 앞 숫자를 뭉갠다("구억구천구백만"→'구' 묵음, 이찬호 2026-07-28).
+    return " ".join(reversed(groups))
 
 
 def _money_value(expr: str) -> int:

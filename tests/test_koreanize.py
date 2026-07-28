@@ -8,13 +8,13 @@ class TestKoreanize(unittest.TestCase):
     def test_read_sino_기본(self):
         self.assertEqual(read_sino(0), "영")
         self.assertEqual(read_sino(1000000), "백만")
-        self.assertEqual(read_sino(999000000), "구억구천구백만")
+        self.assertEqual(read_sino(999000000), "구억 구천구백만")  # 그룹 사이 공백(구 묵음 방지)
         self.assertEqual(read_sino(18210000), "천팔백이십일만")
         self.assertEqual(read_sino(37), "삼십칠")
 
     def test_단위복합_쉼표(self):
-        # 핵심: 쉼표 있는 억/만 복합에서 안 끊기게 한글로
-        self.assertEqual(k("가치 차이는 9억 9,900만 원이에요."), "가치 차이는 구억구천구백만 원이에요.")
+        # 핵심: 쉼표 있는 억/만 복합에서 안 끊기게 한글로 + 그룹 공백
+        self.assertEqual(k("가치 차이는 9억 9,900만 원이에요."), "가치 차이는 구억 구천구백만 원이에요.")
         self.assertEqual(k("여기 100만 원이 있어요."), "여기 백만 원이 있어요.")
 
     def test_순수숫자(self):
@@ -26,7 +26,7 @@ class TestKoreanize(unittest.TestCase):
 
     def test_apply_synth_fixes에_포함(self):
         # apply_synth_fixes가 숫자 리더까지 자동 적용
-        self.assertIn("구억구천구백만", apply_synth_fixes("9억 9,900만 원"))
+        self.assertIn("구억 구천구백만", apply_synth_fixes("9억 9,900만 원"))
 
 
 if __name__ == "__main__":
