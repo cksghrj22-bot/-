@@ -1,0 +1,21 @@
+{
+  "title": "볼륨매직, 머리 전체를 펴는 게 아니에요",
+  "voice": {"stability": 0.42, "style": 0.15, "speed": 1.05},
+  "bgm": "/tmp/claude-0/0fb0e5b8-eaea-542a-a0d3-be17b390f310/scratchpad/bgm_산책로.mp3",
+  "phrases": [
+    ["장마철, 당신의 곱슬은 안녕하신가요?", "장마철,\\N당신의 곱슬은 안녕하신가요?", "Rainy season — how's your frizz?", false],
+    ["요즘 볼륨매직 많이들 하시죠?", "요즘 볼륨매직,\\N많이들 하시죠?", "Getting a lot of volume magic lately?", false],
+    ["그런데 볼륨매직은, 머리 전체를 똑같이 펴는 게 아니에요.", "볼륨매직은 머리 전체를\\N똑같이 펴는 게 아니에요.", "It doesn't straighten the whole head evenly.", false],
+    ["두상을 부위로 나눠서, 어디를 얼마나 펼지 읽는 거예요.", "두상을 부위로 나눠,\\N어디를 얼마나 펼지 읽어요.", "You read where and how much, zone by zone.", false],
+    ["톱은 십 퍼센트만, 살짝 볼륨을 살리고.", "톱은 10%만,\\N살짝 볼륨을 살리고.", "Top: only 10%, keep the volume.", false],
+    ["페이스라인은 삼십 퍼센트로, 얼굴을 감싸요.", "페이스라인은 30%로,\\N얼굴을 감싸요.", "Face line: 30%, framing the face.", false],
+    ["백은 십오 퍼센트로, 자연스럽게 연결하고.", "백은 15%로,\\N자연스럽게 연결하고.", "Back: 15%, blend it naturally.", false],
+    ["네이프는 칠십 퍼센트로, 확실히 펴서 정리해요.", "네이프는 70%로,\\N확실히 펴서 정리해요.", "Nape: 70%, straighten it clean.", false],
+    ["이 비율을 읽어내는 게, 진짜 볼륨매직이에요.", "이 비율을 읽어내는 게,\\N진짜 볼륨매직이에요.", "Reading these ratios is the real volume magic.", false],
+    ["당신의 곱슬은, 어디를 펴야 할까요?", "당신의 곱슬은,\\N어디를 펴야 할까요?", "Your frizz — where should it be straightened?", false]
+  ],
+  "segments": [
+    {"anim": "dusang_zones", "numLine": 4, "untilLine": 9, "tail": 1.4}
+  ],
+  "_notes": "볼륨매직 정본(S2) + 형 지적 '네이프 빠짐' 반영해 4존(톱10·페이스30·백15·네이프70). 장마철 훅. 존별 자기 줄에서 등장. ※실사(매직여자)는 소스 확보 후 인서트 추가 예정."
+}

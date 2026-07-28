@@ -126,14 +126,16 @@ def _dusang_zones_frames(frames_dir: Path, lines: list, num_line: int, total: fl
     f_title = ImageFont.truetype(KYOBO, 92); f_lab = ImageFont.truetype(KYOBO, 38)
     f_pct = ImageFont.truetype(NSQR, 64); f_why = ImageFont.truetype(KYOBO, 20)
     BLUE=(120,190,255); GREEN=(130,220,150); YEL=(255,212,0); ORANGE=(255,140,60); GREY=(150,158,170)
-    nl = lines[num_line]; z0, z1 = nl.start, nl.end
-    step = (z1 - z0) / 4.0
+    # 각 존은 자기 나레이션 줄(num_line, +1, +2, +3)에서 등장. 마지막 줄 없으면 num_line 기준 분할.
+    def _z0(k):
+        idx = num_line + k
+        return lines[idx].start if idx < len(lines) else lines[num_line].start + k * 0.9
     # (라벨,색,목표%,박스중심,원위연결점,등장시각,호각도)
     Z = [
-        ("톱",        BLUE,   10, (430,555),  (CX, CY-R),       z0+0.0*step, (-108,-72)),
-        ("페이스라인", GREEN,  30, (250,860),  (CX-R+18,CY-30),  z0+1.0*step, (150,210)),
-        ("백",        YEL,    40, (830,860),  (CX+R-18,CY-30),  z0+2.0*step, (-30,30)),
-        ("네이프라인", ORANGE, 70, (560,1250), (CX, CY+R),       z0+3.0*step, (72,108)),
+        ("톱",        BLUE,   10, (430,555),  (CX, CY-R),       _z0(0), (-108,-72)),
+        ("페이스라인", GREEN,  30, (250,860),  (CX-R+18,CY-30),  _z0(1), (150,210)),
+        ("백",        YEL,    15, (830,860),  (CX+R-18,CY-30),  _z0(2), (-30,30)),
+        ("네이프라인", ORANGE, 70, (560,1250), (CX, CY+R),       _z0(3), (72,108)),
     ]
     def ease(t): t=max(0,min(1,t)); return t*t*(3-2*t)
     def kct(d,cx,y,txt,fnt,fill):
