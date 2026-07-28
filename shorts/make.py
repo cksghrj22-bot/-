@@ -128,7 +128,7 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
     creds["speed"] = v.get("speed", creds.get("speed"))
     phrases = [tuple(p) for p in m["phrases"]]
     narr = " ".join(p[0] for p in phrases)
-    lines, _ = syncbuild.build(narr, phrases, creds, wd / "narr.mp3")
+    lines, narr_path = syncbuild.build(narr, phrases, creds, wd / "narr.mp3")
     total = max(l.end for l in lines)
 
     # 2) 세그먼트 → 연속 base (footage 스트리밍 추출 + 검은카드)
@@ -197,7 +197,7 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
     out_path = Path(out) if out else wd / (m.get("title", "output").replace(" ", "_") + ".mp4")
     R.render(str(comp), script, str(out_path),
              bgm=bgm, bgm_volume=SS.BGM_VOLUME, style=SS.SUB, layout="full",
-             workdir=str(wd), narration=str(wd / "narr.mp3"),
+             workdir=str(wd), narration=str(narr_path),
              outro=m.get("outro"), outro_style=SS.OUTRO_CARD if m.get("outro") else None)
     return out_path
 
