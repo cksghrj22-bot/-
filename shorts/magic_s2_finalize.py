@@ -53,9 +53,9 @@ def _frames(fdir: Path, win, top_t, back_t, nape_t, cx, cy, r, fps=30):
         # 톱→정수리
         if t >= top_t:
             d.rectangle([352, 320, 556, 374], fill=(*DARK, 255)); d.text((360, 322), "정수리", font=f_lab, fill=LAB)
-        # 백→뒤통수 (백 잔상 완전히 덮게 y683부터)
+        # 백→뒤통수 (백 잔상 완전히 덮게 y674부터 — 옛 백 윗획 '....' 잔상까지 덮음)
         if t >= back_t:
-            d.rectangle([653, 683, 886, 744], fill=(*DARK, 255)); d.text((662, 690), "뒤통수", font=f_lab, fill=LAB)
+            d.rectangle([653, 674, 886, 746], fill=(*DARK, 255)); d.text((662, 690), "뒤통수", font=f_lab, fill=LAB)
         # 뒷목
         if t >= nape_t:
             a = int(255 * ease((t - nape_t) / 0.45)); cnt = int(70 * ease((t - nape_t) / 0.7))
@@ -82,7 +82,7 @@ def _detect_circle(frame_png):
     return cx, cy, r
 
 
-def finalize(s2, out, win=(13.5, 22.35), top_t=13.8, back_t=17.0, nape_t=18.0):
+def finalize(s2, out, win=(13.5, 22.35), top_t=13.8, back_t=15.9, nape_t=18.0):
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp); fr = tmp / "d.jpg"
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", "21.5", "-i", s2, "-frames:v", "1", str(fr)], check=True)
