@@ -78,10 +78,10 @@ def build(clip_mp4: str | Path, A: float, B: float,
             "Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, "
             "Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, "
             "Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\n"
-            f"{_style('title', SS.POP_TITLE)}\n{_style('cap', SS.POP_SUB)}\n[Events]\n"
+            f"{_style('title', SS.POP_TITLE)}\n{_style('cap', SS.SUB)}\n[Events]\n"
             "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n"
             f"Dialogue: 0,{_ts(0)},{_ts(DUR)},title,,0,0,0,,{SS.pop_title(title_yellow, title_white)}\n")
-    body = "".join(f"Dialogue: 0,{_ts(s)},{_ts(e)},cap,,0,0,0,,{SS.pop_ko_en(ko, en)}\n"
+    body = "".join(f"Dialogue: 0,{_ts(s)},{_ts(e)},cap,,0,0,0,,{SS.ko_en(ko, en)}\n"
                    for s, e, ko, en in cues)
     ass = out_mp4.with_suffix(".ass"); ass.write_text(head + body, encoding="utf-8")
     vf = (f"[0:v]crop={crop},{WARM},drawbox=c=black@{DIM}:t=fill,scale=1080:1080,fps=30,setsar=1[v];"
@@ -121,21 +121,40 @@ def qc(path: Path, expect_dur: float) -> None:
         raise RuntimeError(f"QC실패 길이 {dur:.1f}s ≠ 예상 {expect_dur:.1f}s")
 
 
+def _wrap2(words: list[str], per: int = 15) -> str:
+    """단어 리스트를 ≤2줄로 배치(각 줄 ~per자). 우리 정본 쇼츠 자막 규격(≤2줄·짧게)."""
+    text = " ".join(words)
+    if len(text) <= per:
+        return text
+    # 중앙 근처 단어 경계에서 2줄로 분할
+    best = None; acc = 0
+    for i, wd in enumerate(words[:-1]):
+        acc += len(wd) + 1
+        if best is None or abs(acc - len(text) / 2) < best[0]:
+            best = (abs(acc - len(text) / 2), i)
+    i = best[1]
+    return " ".join(words[:i + 1]) + r"\N" + " ".join(words[i + 1:])
+
+
 def cues_from_diar(diar_json: str | Path, A: float, B: float, teacher_only: bool = False):
     """diar_p(프록시정렬)에서 [A,B] 자막 큐 자동추출(한글). 영어는 호출측이 채운다.
-    teacher_only=False면 질문(학생)도 포함 = 맥락 살림(형 지시)."""
+    ⚠️2026-07-29 형 지적 수정: 토큰은 단어 단위라 **공백으로 조인**(안 그러면 글자 다 겹침).
+    한 큐 ≤ 약 22자(넘으면 새 큐), 렌더 시 ≤2줄로 래핑. teacher_only=False=학생질문 포함(맥락)."""
     w = json.load(open(diar_json))
     tea = Counter(x["spk"] for x in w).most_common(1)[0][0]
     seg = [x for x in w if A <= x["s"] <= B and (not teacher_only or x["spk"] == tea)]
     cues = []; cur = []
+    def flush(pad):
+        words = [c["t"].strip() for c in cur if c["t"].strip()]
+        if words:
+            cues.append((round(cur[0]["s"] - A, 2), round(cur[-1]["e"] - A + pad, 2), _wrap2(words)))
     for x in seg:
-        cur.append(x); j = "".join(c["t"] for c in cur); d = cur[-1]["e"] - cur[0]["s"]
-        if x["t"].strip().endswith(('.', '?', '!', '요', '다', '까', '고', '지', '네', '든', '야', '죠')) or len(j) >= 16 or d >= 3.6:
-            cues.append((round(cur[0]["s"] - A, 2), round(cur[-1]["e"] - A + 0.4, 2),
-                         "".join(c["t"] for c in cur).strip())); cur = []
+        cur.append(x)
+        j = " ".join(c["t"] for c in cur); d = cur[-1]["e"] - cur[0]["s"]
+        if x["t"].strip().endswith(('.', '?', '!', '요', '다', '까', '고', '지', '네', '든', '야', '죠')) or len(j) >= 22 or d >= 3.6:
+            flush(0.35); cur = []
     if cur:
-        cues.append((round(cur[0]["s"] - A, 2), round(cur[-1]["e"] - A + 0.5, 2),
-                     "".join(c["t"] for c in cur).strip()))
+        flush(0.5)
     return cues, tea
 
 
