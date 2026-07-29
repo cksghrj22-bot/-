@@ -73,6 +73,7 @@ FORBIDDEN_LABELS = {'심화복습', '심화·복습', '종합 실습', '종합�
 
 # ── 배치 규칙 (검증이 강제) ───────────────────────────
 RULES = dict(
-    max_per_day = 3,            # 하루 최대 과목수(레벨 서로 달라야)
-    teacher_span_min_months = 3 # 각 선생님은 최소 이만큼 월에 걸쳐 분산(몰림 방지)
+    max_per_day = 3,             # 하루 최대 과목수(레벨 서로 달라야)
+    teacher_span_min_months = 3, # 각 선생님은 최소 이만큼 월에 걸쳐 분산(몰림 방지)
+    max_same_weekday = 4         # 한 선생님이 같은 요일에 몰릴 수 있는 최대(요일 벽 방지)
 )

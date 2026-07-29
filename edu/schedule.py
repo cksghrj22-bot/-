@@ -6,7 +6,7 @@ validate() : 규칙 위반을 리스트로 반환. 하나라도 있으면 build 
              → 가짜 과목·과목 누락·같은 레벨 같은날 충돌·몰림을 '코드가' 막는다.
 """
 import datetime, random
-from collections import defaultdict
+from collections import defaultdict, Counter
 from . import spec
 
 
@@ -60,13 +60,17 @@ def build():
             items.append((ideal, teacher, label, lset))
     items.sort(key=lambda x: (x[0], x[1]))
 
+    from collections import Counter
     DATA = defaultdict(list)
     day_lv = defaultdict(set)      # 그날 사용된 레벨
     day_tc = defaultdict(set)      # 그날 강의하는 선생님
+    tc_wd = defaultdict(Counter)   # 선생님별 요일 사용횟수(요일 분산용)
+    day_load = Counter()           # 날짜별 과목수(하루 몰림 완화)
     misplaced = []
     for ideal, teacher, label, lset in items:
         done = False
         for off in range(0, len(weeks) + 2):        # 이상적 주에서 가까운 순 탐색
+            cands = []
             for wk in (ideal + off, ideal - off):
                 if wk not in byweek:
                     continue
@@ -75,11 +79,17 @@ def build():
                         continue
                     if teacher in day_tc[dt]:        # 같은 선생님 하루 2번 방지
                         continue
-                    day_lv[dt] |= lset; day_tc[dt].add(teacher)
-                    DATA[dt].append((label, teacher, spec.lvtxt(lset)))
-                    done = True; break
-                if done:
-                    break
+                    cands.append(dt)
+            if cands:
+                # 그 선생님이 '덜 쓴 요일' 우선 → 요일이 골고루 흩어짐(화요일 벽 방지).
+                # 동률이면 그날 과목수 적은 쪽, 그다음 재현 가능한 순서.
+                cands.sort(key=lambda dt: (tc_wd[teacher][dt.weekday()], day_load[dt],
+                                           dt.weekday(), dt.toordinal()))
+                dt = cands[0]
+                day_lv[dt] |= lset; day_tc[dt].add(teacher)
+                tc_wd[teacher][dt.weekday()] += 1; day_load[dt] += 1
+                DATA[dt].append((label, teacher, spec.lvtxt(lset)))
+                done = True
             if done:
                 break
         if not done:
@@ -162,5 +172,16 @@ def validate(DATA):
     for d, l, t, lvt in reg:
         if not (spec.WIN_START <= d <= spec.WIN_END):
             problems.append(f"기간 밖 과목: {d} {l}")
+
+    # 8) 요일 벽 방지 — 한 선생님이 같은 요일에 과도하게 몰리면 안 됨
+    wd_by_t = defaultdict(Counter)
+    for d, l, t, lvt in reg:
+        wd_by_t[t][d.weekday()] += 1
+    cap = spec.RULES['max_same_weekday']
+    wd = ['월', '화', '수', '목', '금', '토', '일']
+    for t, c in wd_by_t.items():
+        for w, n in c.items():
+            if n > cap:
+                problems.append(f"{t} 요일 몰림: {wd[w]}요일 {n}회(최대 {cap})")
 
     return problems
