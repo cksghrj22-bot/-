@@ -308,6 +308,14 @@ def _require(m: dict) -> None:
             errs.append("[message] 큰 중앙 메시지카드(bigcard) 없음. 의도면 waive:[\"bigcard\"].")
         if segs and not (segs[0].get("bigcard") or segs[0].get("black")):
             print("⚠️ [message] '메시지로 시작' 권장 — 첫 세그를 bigcard/검은 훅카드로 여는 게 정본 줄기.")
+    # 실사 필수 선언(어느 스템이든) — 실사가 메시지의 '본체'인 영상은 애니만으로 렌더 금지.
+    # ⚠️부시시편 사고(2026-07-29): message 스템이라 아래 magic 게이트를 안 타 → 실사 없이
+    #   애니(strand_zones)만 대사 3~11 전부를 덮어 렌더됨. 형 "영상 써서 하고 애니는 설명에만".
+    #   재발 방지: 실사가 본체인 매니페스트는 "require_실사": true 로 선언 → src 없으면 거부.
+    if m.get("require_실사") and not any(s.get("src") for s in segs) and "실사" not in waived:
+        errs.append("[require_실사] 실사(src) 세그먼트 없음 — 이 영상은 실사가 본체다. "
+                    "애니만 렌더 금지(부시시편 사고 재발방지). 드라이브 footage fileId를 src로 넣어라. "
+                    "진짜 의도면 waive:[\"실사\"]+_notes 사유.")
     if stem == "magic":
         # 실사(사람 매직하는 장면) 기본 필수 — 계속 빠뜨린 최악의 실수(형 "빼지마 절대").
         if not any(s.get("src") for s in segs) and "실사" not in waived:
