@@ -1,0 +1,48 @@
+{
+  "title": "겉매직 — 어디를 얼만큼 펴야 할까요",
+  "stem": "message",
+  "waive": ["bw"],
+  "outro": "SNS에 일기를 쓰고 있어요",
+  "voice": {
+    "stability": 0.42,
+    "style": 0.15,
+    "speed": 1.05
+  },
+  "bgm": "/tmp/claude-0/0fb0e5b8-eaea-542a-a0d3-be17b390f310/scratchpad/bgm_산책로.mp3",
+  "phrases": [
+    ["매직했는데, 볼륨이 폭삭 죽어본 적 있으세요?", "매직했는데,\\N볼륨이 폭삭 죽어봤나요?", "Straightened your hair — but the volume died?", false],
+    ["오늘 오신 분도, 그게 제일 불편하셨대요.", "오늘 오신 분도,\\N그게 제일 불편했대요.", "Today's guest hated exactly that.", false],
+    ["매직은, 머리를 다 펴는 게 아니에요.", "매직은,\\N머리를 다 펴는 게 아니에요.", "Straightening isn't flattening everything.", false],
+    ["겉만 얇게 펴는, '겉매직'이 있어요.", "겉만 얇게 펴는,\\N'겉매직'이 있어요.", "There is surface-only straightening.", false],
+    ["그 사람 손질을, 돕는 거예요.", "그 사람 손질을,\\N돕는 거예요.", "It's to help their own styling.", false],
+    ["이분은 손질을 잘하시는 분이라,", "이분은 손질을\\N잘하시는 분이라,", "She styles her own hair well,", false],
+    ["볼륨 죽는 걸 제일 싫어하셨어요.", "볼륨 죽는 걸\\N제일 싫어하셨어요.", "so she hated losing volume most.", false],
+    ["그래서 정수리는, 아주 얇은 겉만 폈어요.", "정수리는,\\N아주 얇은 겉만.", "Crown — only the thinnest surface.", false],
+    ["밑은 누르지 않고, 자연스럽게 연결만 했어요.", "밑은 누르지 않고,\\N자연스럽게 연결만.", "Underneath — blended, not pressed.", false],
+    ["페이스라인은 곱슬이 제일 심해서,", "페이스라인은\\N곱슬이 제일 심해서,", "The face line curls the most,", false],
+    ["조금 더 강한 약으로 한 번 더 잡았어요.", "조금 더 강한 약으로,\\N한 번 더.", "so a stronger pass there.", false],
+    ["뒤통수는 겉을 감싸는 얇은 부분만,", "뒤통수는\\N겉 감싸는 얇은 부분만,", "The back — only the thin outer layer,", false],
+    ["살짝 더 강하게 폈어요.", "살짝 더 강하게.", "a touch stronger.", false],
+    ["부위마다, 얼만큼 어느 면적으로 펼지.", "부위마다,\\N얼만큼 어느 면적으로.", "Each area — how much, how wide.", false],
+    ["그걸 읽어야, 손질이 편해져요.", "그걸 읽어야,\\N손질이 편해져요.", "Read that, and styling gets easy.", false],
+    ["겉매직은, 다 펴는 게 아니라", "겉매직은,\\N다 펴는 게 아니라", "Surface straightening isn't flattening —", false],
+    ["그 사람 손질을 돕는 일이에요.", "그 사람 손질을\\N돕는 일이에요.", "it's helping them style.", false],
+    ["당신의 매직은, 어디를 얼만큼 펴고 있나요?", "당신의 매직은,\\N어디를 얼만큼 펴나요?", "Your straightening — where, and how much?", false]
+  ],
+  "require_실사": true,
+  "segments": [
+    {"black": true, "bigcard": true, "untilLine": 0,
+     "_기획": "훅 검은 카드 — '볼륨 폭삭 죽어봤나요?' 공감 반전. 실사 아직 안 켜짐(메시지로 연다)."},
+    {"src": "SCAN후채움", "ss": 0, "frame": "portrait", "untilLine": 5,
+     "_기획": "실사 도입 — 겉매직 시술 전체 인상(겉만 얇게 펴는 장면). 대사 2~5(오늘 손님/매직은 다펴기X/겉매직 정의/손질 돕기). ⛔영상문방구 video-XXX 스캔 후 fileId·ss 채움."},
+    {"src": "SCAN후채움", "ss": 0, "frame": "portrait", "untilLine": 9,
+     "_기획": "실사 정수리 — 정수리 아주 얇은 겉만 펴는 손동작 + 밑은 연결. 대사 6~9(손질 잘하는 손님/볼륨 싫어함/정수리 얇게/밑 연결)."},
+    {"src": "SCAN후채움", "ss": 0, "hflip": true, "frame": "portrait", "untilLine": 13,
+     "_기획": "실사 페이스라인+뒤통수 — 페이스라인 강하게 덧방·뒤통수 겉 얇게. 대사 10~13(페이스라인 강하게/뒤통수 얇은 겉만). hflip=반복감 제거."},
+    {"src": "SCAN후채움", "ss": 0, "frame": "portrait", "untilLine": 17,
+     "_기획": "실사 마무리 — 부위 읽고 결 정리(손질 편해지는 결과). 대사 14~17(부위마다 얼만큼 면적/읽어야 손질 편함/겉매직=손질 돕기)."},
+    {"black": true, "bigcard": true, "untilLine": 17, "tail": 2.8,
+     "_기획": "엔딩 검은 카드 — 판정형 질문 '어디를 얼만큼 펴나요?' + SNS 아웃트로(끝 2.6s). tail 2.8=아웃트로 충돌 자동방지(엔진이 알아서 해주지만 명시)."}
+  ],
+  "_notes": "겉매직 케이스 교육 쇼츠(형 2026-07-29 구술). 서사=볼륨매직「전체 안 펴고 어디를 얼만큼」+「펌=손질」의 실제 증거. ⭐구조: 실사(겉매직 부위별 시술)가 본체 — 도입/정수리/페이스라인+뒤통수/마무리 4개 실사 세그로 부위별 시술을 그대로 보여줌(애니 없이 실사만, 부시시 교훈=실사 본체). 컬러(waive bw). SNS 아웃트로 default-on. 검은 bigcard 2개(훅·엔딩). ⛔실사 src 4칸 'SCAN후채움' — 영상문방구(1S2KqnyOUqjxxqsLeJ5_feZKcYQsOcaV8)의 video-XXX_singular_display.MOV 업로드 완료 후 부위별로 판별해 fileId·ss 채워야 렌더 성립. 대본 정본=content/대본/2026-07-29_겉매직_어디를얼만큼_손질을돕는다.md."
+}
