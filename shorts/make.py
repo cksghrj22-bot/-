@@ -239,8 +239,8 @@ def _strand_zones_frames(frames_dir: Path, lines: list, num_line: int, total: fl
     # (라벨, 색, 손상%, y0, y1, 박스중심, 등장시각, 코어여부)
     Z = [
         ("자연곱슬",  BLUE,   10, TOP,  560,  (760, 470),  _z0(1), False),
-        ("녹은+탄",   ORANGE, 60, 560,  1010, (760, 785),  _z0(2), False),
-        ("만성 손상", RED,    95, 1010, BOT,  (760, 1250), _z0(3), True),
+        ("녹은+탄",   ORANGE, 60, 560,  1010, (760, 780),  _z0(2), False),
+        ("만성손상",  RED,    95, 1010, BOT,  (760, 1120), _z0(3), True),
     ]
     def ease(t): t=max(0,min(1,t)); return t*t*(3-2*t)
     def kct(d,cx,y,txt,fnt,fill):
