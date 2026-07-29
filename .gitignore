@@ -10,3 +10,5 @@ scratchpad/
 # 렌더 산출물(시안 영상) — 드라이브로 업로드, git엔 안 넣음
 out_batch_*/
 out/
+# 렌더 중간산출물(base.mp4·narr·ass 등) — 매니페스트 빌드 캐시, 커밋 안 함
+_build/
