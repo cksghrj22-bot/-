@@ -277,6 +277,47 @@ def _strand_zones_frames(frames_dir: Path, lines: list, num_line: int, total: fl
         img.save(frames_dir / f"z{i:04d}.png")
 
 
+# 브랜드 표준 SNS 아웃트로 — message/mind/product의 default-on 값(계속 빠지던 것).
+DEFAULT_SNS_OUTRO = "SNS에 일기를 쓰고 있어요"
+_OUTRO_STEMS = ("message", "mind", "product")
+
+
+def _normalize(m: dict) -> None:
+    """표준요소 **자동 주입** — '깜빡해서 빠지는' 것을 구조로 차단(형 2026-07-29 '문제는 고쳐도 계속 빠진다는거').
+
+    아웃트로는 이제 opt-in이 아니라 **default-on**: message/mind/product 스템은 매니페스트에
+    outro가 없어도 표준 SNS 아웃트로가 자동으로 붙는다. 빼려면 명시적으로 waive:["outro"]+_notes 사유.
+    → 사람이 매번 넣어야 발동하던 구조(=까먹으면 누락)를 뒤집는다: 넣는 게 기본, 빼는 게 예외.
+    """
+    stem = m.get("stem")
+    waived = set(m.get("waive", []))
+    if stem in _OUTRO_STEMS and "outro" not in waived and not m.get("outro"):
+        m["outro"] = DEFAULT_SNS_OUTRO
+        print(f"ⓘ [auto] {stem} 스템 표준 SNS 아웃트로 자동 주입: '{DEFAULT_SNS_OUTRO}' "
+              f"— 매니페스트에 없어 기본값 적용(빼려면 waive:[\"outro\"]+_notes 사유).")
+
+
+def _ensure_outro_tail(m: dict) -> None:
+    """아웃트로↔엔딩카드 **충돌 자동방지**(형 2026-07-29 발견). 아웃트로는 영상 끝 outro_dur초에
+    중앙정렬로 뜬다. 마지막 세그가 중앙 카드(black/bigcard)면 아웃트로와 겹쳐 글자가 깨진다
+    (부시시편 44s 실증) → 손으로 tail 안 맞춰도 되게 총 tail을 outro_dur+여유 이상으로 자동 확보.
+    """
+    segs = m.get("segments") or []
+    if not (m.get("outro") and segs):
+        return
+    outro_dur = float(SS.OUTRO_CARD.get("dur", 2.6))
+    need = outro_dur + 0.3
+    last = segs[-1]
+    if not (last.get("black") or last.get("bigcard")):
+        return  # 마지막이 하단자막/실사면 중앙 아웃트로와 안 겹침
+    seg_tails = sum(float(s.get("tail", 0.0)) for s in segs)
+    if seg_tails < need:
+        bump = round(need - seg_tails, 3)
+        last["tail"] = round(float(last.get("tail", 0.0)) + bump, 3)
+        print(f"ⓘ [auto] 아웃트로↔엔딩카드 충돌방지 — 마지막 세그 tail +{bump:.2f}s "
+              f"(총 tail {need:.2f}s 확보 → 카드 종료 후 아웃트로 단독표시).")
+
+
 def _require(m: dict) -> None:
     """줄기별 필수요소 검증. 기본은 강제(잊어서 빠뜨리는 실수 차단)하되, **의도적 예외는 `waive`로 허용**.
 
@@ -298,9 +339,17 @@ def _require(m: dict) -> None:
     # 공통: 메시지로 시작 — 첫 줄이 핵심 물음/메시지여야(빈 줄 금지)
     if phrases and not (phrases[0][0] or "").strip():
         errs.append("오프닝 메시지(phrases[0]) 비어있음")
-    # 아웃트로: 메시지·제품·마인드 계열 전부 SNS 아웃트로 기본 필수(계속 빠뜨린 부분)
-    if stem in ("message", "mind", "product") and not m.get("outro") and "outro" not in waived:
-        errs.append(f"[{stem}] outro(SNS 아웃트로) 누락 — 계속 빠뜨린 부분. 의도면 waive:[\"outro\"].")
+    # 아웃트로: 메시지·제품·마인드 계열 전부 SNS 아웃트로 기본 필수(계속 빠뜨린 부분).
+    # ⚠️_normalize가 먼저 자동 주입하므로 여기서 '누락'은 사실상 안 뜬다. 남은 유일한 탈출구=waive인데,
+    #   조용히 빠지던 게 문제였으므로(형 '고쳐도 계속 빠진다') **waive는 _notes 사유 필수 + 큰 경고**로 막는다.
+    if stem in _OUTRO_STEMS and "outro" not in waived and not m.get("outro"):
+        errs.append(f"[{stem}] outro(SNS 아웃트로) 누락 — 표준요소. (_normalize 자동주입 미작동?) 의도면 waive:[\"outro\"]+_notes.")
+    if "outro" in waived:
+        if not (m.get("_notes") or "").strip():
+            errs.append("[outro waive] 아웃트로를 뺐다면 _notes에 **사유 필수** — 조용한 누락 방지(형 '고쳐도 계속 빠진다').")
+        else:
+            print("⚠️⚠️ [outro WAIVED] SNS 아웃트로를 의도적으로 뺐다. 정말 맞나? "
+                  "(message/mind/product 표준요소·사유=_notes) — 미용 message편은 waive 금지가 기본.")
     if stem in ("message", "mind"):
         if not any(s.get("bw") for s in segs) and "bw" not in waived:
             errs.append("[message] 흑백(bw) 세그먼트 누락. 컬러가 메시지에 유리하면 waive:[\"bw\"].")
@@ -335,7 +384,9 @@ def _require(m: dict) -> None:
 def make(manifest_path: str | Path, out: str | Path | None = None,
          workdir: str | Path | None = None) -> Path:
     m = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
-    _require(m)   # 줄기 필수요소 강제 — 누락이면 여기서 멈춤
+    _normalize(m)          # 표준요소 자동 주입(아웃트로 default-on) — 깜빡 누락 구조 차단
+    _ensure_outro_tail(m)  # 아웃트로↔엔딩카드 충돌 자동방지(tail 자동 확보)
+    _require(m)            # 줄기 필수요소 강제 — 누락이면 여기서 멈춤
     wd = Path(workdir) if workdir else Path(manifest_path).resolve().parent / "_build"
     wd.mkdir(parents=True, exist_ok=True)
 

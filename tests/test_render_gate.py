@@ -83,5 +83,69 @@ class TestLengthGate(unittest.TestCase):
         self.assertIn("duration", inspect.signature(verify_render.verify).parameters)
 
 
+class TestOutroDefaultOn(unittest.TestCase):
+    """SNS 아웃트로가 '고쳐도 계속 빠지는' 것을 구조로 잠근다(형 2026-07-29).
+
+    배경: 아웃트로가 opt-in(매니페스트에 매번 넣어야 발동)이라 새 매니페스트마다 깜빡하면 누락 +
+    waive로 조용히 빠짐 → 부시시편에서 두 번 빠짐. 이제 default-on(자동주입)·waive는 사유 강제로 잠근다.
+    """
+
+    def _base(self, **extra):
+        m = {"stem": "message", "phrases": [["훅", "훅", None, False]],
+             "segments": [{"black": True, "bigcard": True, "untilLine": 0}]}
+        m.update(extra)
+        return m
+
+    def test_outro_auto_injected_when_missing(self):
+        # message/mind/product는 outro가 없어도 _normalize가 표준값을 자동으로 넣는다.
+        from shorts import make
+        for stem in ("message", "mind", "product"):
+            m = self._base(stem=stem)
+            self.assertNotIn("outro", m)
+            make._normalize(m)
+            self.assertEqual(m.get("outro"), make.DEFAULT_SNS_OUTRO,
+                             f"{stem}: 아웃트로 자동주입 실패 — default-on이 깨졌다")
+
+    def test_outro_not_injected_when_waived(self):
+        # 명시적으로 waive했으면 자동주입하지 않는다(의도 존중).
+        from shorts import make
+        m = self._base(waive=["outro"])
+        make._normalize(m)
+        self.assertNotIn("outro", m)
+
+    def test_waive_outro_requires_reason(self):
+        # 아웃트로를 뺐는데 _notes 사유가 없으면 게이트가 막는다(조용한 누락 차단).
+        # bw·bigcard도 waive해 다른 게이트를 배제 → 오직 '아웃트로 사유 없음'만 남게 격리.
+        from shorts import make
+        m = self._base(waive=["outro", "bw", "bigcard"])   # _notes 없음
+        with self.assertRaises(ValueError) as cm:
+            make._require(m)
+        self.assertIn("outro", str(cm.exception))
+
+    def test_waive_outro_with_reason_passes(self):
+        from shorts import make
+        m = self._base(waive=["outro", "bw", "bigcard"], _notes="의도적으로 뺀 사유 있음")
+        make._require(m)   # 사유 있으면 통과(예외 없음)
+
+    def test_ensure_outro_tail_prevents_collision(self):
+        # 마지막이 중앙 카드(bigcard)이고 tail이 부족하면 아웃트로와 겹친다 → 자동으로 tail을 늘린다.
+        from shorts import make
+        from shorts import shortstyle as SS
+        outro_dur = float(SS.OUTRO_CARD.get("dur", 2.6))
+        m = self._base(outro=make.DEFAULT_SNS_OUTRO,
+                       segments=[{"black": True, "bigcard": True, "untilLine": 0, "tail": 0.5}])
+        make._ensure_outro_tail(m)
+        total_tail = sum(float(s.get("tail", 0.0)) for s in m["segments"])
+        self.assertGreaterEqual(total_tail, outro_dur,
+                                "아웃트로↔엔딩카드 충돌방지 tail 자동확보 실패")
+
+    def test_ensure_outro_tail_noop_without_outro(self):
+        # 아웃트로가 없으면 tail을 건드리지 않는다.
+        from shorts import make
+        m = self._base(segments=[{"black": True, "bigcard": True, "untilLine": 0, "tail": 0.5}])
+        make._ensure_outro_tail(m)
+        self.assertEqual(m["segments"][-1]["tail"], 0.5)
+
+
 if __name__ == "__main__":
     unittest.main()
