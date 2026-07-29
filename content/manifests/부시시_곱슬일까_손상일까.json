@@ -1,0 +1,111 @@
+{
+  "title": "부시시함의 원인은 곱슬일까 손상일까",
+  "stem": "message",
+  "waive": ["bw", "outro"],
+  "voice": {
+    "stability": 0.42,
+    "style": 0.15,
+    "speed": 1.05
+  },
+  "bgm": "/tmp/claude-0/0fb0e5b8-eaea-542a-a0d3-be17b390f310/scratchpad/bgm_산책로.mp3",
+  "phrases": [
+    [
+      "부시시함의 원인, 곱슬일까요 손상일까요?",
+      "부시시함의 원인,\\N곱슬일까요 손상일까요?",
+      "Frizz — is it curl, or damage?",
+      false
+    ],
+    [
+      "머리가 부푸는 것 때문에, 불편한 분 많으시죠.",
+      "머리가 부푸는 것 때문에,\\N불편한 분 많으시죠.",
+      "Puffy hair bothers a lot of people.",
+      false
+    ],
+    [
+      "그런데 원인을 모르면, 엉뚱한 곳을 잡습니다.",
+      "원인을 모르면,\\N엉뚱한 곳을 잡습니다.",
+      "Miss the cause, fix the wrong thing.",
+      false
+    ],
+    [
+      "이 머리는 잦은 염색에, 220도 아이롱까지 썼어요.",
+      "잦은 염색에,\\N220도 아이롱까지.",
+      "Frequent dye, plus a 220C iron.",
+      false
+    ],
+    [
+      "뿌리 3센티까지만, 진짜 타고난 곱슬이에요.",
+      "뿌리 3cm까지만,\\N진짜 타고난 곱슬.",
+      "Only the first 3cm is real curl.",
+      false
+    ],
+    [
+      "그 아래부터는, 녹은 손상과 탄 손상이 섞여요.",
+      "그 아래는,\\N녹은 손상과 탄 손상.",
+      "Below that, melt and burn damage mix.",
+      false
+    ],
+    [
+      "끝으로 갈수록, 열도 염색도 더 쌓였고요.",
+      "끝으로 갈수록,\\N열도 염색도 더 쌓여요.",
+      "Toward the ends, more heat and dye.",
+      false
+    ],
+    [
+      "그래서 끝은, 속심까지 상한 만성 손상이에요.",
+      "끝은 속심까지,\\N상한 만성 손상.",
+      "The ends are damaged to the core.",
+      false
+    ],
+    [
+      "여기에 강한 매직약을 쓰면, 확 상해버려요.",
+      "강한 매직약을 쓰면,\\N확 상해버려요.",
+      "A strong relaxer here just wrecks it.",
+      false
+    ],
+    [
+      "약한 펌제가 든 클리닉제로, 140도로 조심히.",
+      "약펌 든 클리닉제로,\\N140도로 조심히.",
+      "Gentle clinic care, 140C, careful.",
+      false
+    ],
+    [
+      "곱슬인지 손상인지, 어디까지인지 읽어야 해요.",
+      "곱슬인지 손상인지,\\N어디까지인지 읽어요.",
+      "Read curl vs damage, and how far.",
+      false
+    ],
+    [
+      "그래야 오래가는, 예쁜 결이 됩니다.",
+      "그래야 오래가는,\\N예쁜 결이 됩니다.",
+      "That is how a lasting result is made.",
+      false
+    ],
+    [
+      "당신의 부시시함은, 곱슬일까요 손상일까요?",
+      "당신의 부시시함은,\\N곱슬일까요 손상일까요?",
+      "Your frizz — curl, or damage?",
+      false
+    ]
+  ],
+  "segments": [
+    {
+      "black": true,
+      "bigcard": true,
+      "untilLine": 0
+    },
+    {
+      "anim": "strand_zones",
+      "numLine": 3,
+      "untilLine": 11,
+      "tail": 0.6
+    },
+    {
+      "black": true,
+      "bigcard": true,
+      "untilLine": 12,
+      "tail": 1.2
+    }
+  ],
+  "_notes": "부시시함 원인=곱슬 vs 손상 교육 쇼츠(형 구술). 컬러(waive bw)·SNS아웃트로 없음(waive outro). strand_zones 애니: 모발 뿌리→끝 손상 그라데이션(자연곱슬 10% / 녹은+탄 60% / 만성 95%, 끝일수록 손상게이지↑·만성은 속심 코어선). 검은 bigcard 2개(훅·엔딩). 실사 모발 인서트(얼굴X·모발중앙)는 형 코드방서 드라이브 스캔 후 v2 삽입 예정."
+}

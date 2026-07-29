@@ -218,6 +218,65 @@ def _dusang_zones_frames(frames_dir: Path, lines: list, num_line: int, total: fl
         img.save(frames_dir / f"z{i:04d}.png")
 
 
+def _strand_zones_frames(frames_dir: Path, lines: list, num_line: int, total: float,
+                         seg_start: float = 0.0, fps: int = 30) -> None:
+    """모발 한 가닥(뿌리→끝) 손상 그라데이션 도식. num_line부터 구간(자연곱슬→녹은+탄→만성) 순차 등장.
+    끝으로 갈수록 손상%가 커지고(게이지), 만성 구간은 속심(내부)까지 파고드는 코어선으로 표현."""
+    from PIL import Image, ImageDraw, ImageFont
+    frames_dir.mkdir(parents=True, exist_ok=True)
+    for p in frames_dir.glob("*.png"):
+        p.unlink()
+    W, H = 1080, 1920
+    BG = (18, 20, 26)
+    f_title = ImageFont.truetype(KYOBO, 92); f_lab = ImageFont.truetype(KYOBO, 40)
+    f_pct = ImageFont.truetype(NSQR, 58); f_tag = ImageFont.truetype(KYOBO, 30)
+    BLUE=(120,190,255); ORANGE=(255,140,60); RED=(235,70,70); GREY=(90,96,110); DGREY=(150,158,170)
+    CX = 380; HW = 44; TOP = 380; BOT = 1520
+    def _z0(k):
+        idx = num_line + k
+        base = lines[idx].start if idx < len(lines) else lines[num_line].start + k * 0.9
+        return base - seg_start
+    # (라벨, 색, 손상%, y0, y1, 박스중심, 등장시각, 코어여부)
+    Z = [
+        ("자연곱슬",  BLUE,   10, TOP,  560,  (760, 470),  _z0(1), False),
+        ("녹은+탄",   ORANGE, 60, 560,  1010, (760, 785),  _z0(2), False),
+        ("만성 손상", RED,    95, 1010, BOT,  (760, 1250), _z0(3), True),
+    ]
+    def ease(t): t=max(0,min(1,t)); return t*t*(3-2*t)
+    def kct(d,cx,y,txt,fnt,fill):
+        ws=txt.split(" "); gap=fnt.size*0.30; wd=[d.textlength(w,font=fnt) for w in ws]
+        tot=sum(wd)+gap*(len(ws)-1); x=cx-tot/2
+        for w,ww in zip(ws,wd): d.text((x,y),w,font=fnt,fill=fill); x+=ww+gap
+    N = max(1, round(total * fps))
+    for i in range(N):
+        t = i / fps
+        img = Image.new("RGB", (W, H), BG); d = ImageDraw.Draw(img)
+        kct(d, W/2, 120, "곱슬? 손상?", f_title, (255,212,0))
+        d.text((CX-150, TOP-42), "뿌리", font=f_tag, fill=DGREY)
+        d.text((CX-140, BOT+6), "끝", font=f_tag, fill=DGREY)
+        d.rounded_rectangle([CX-HW, TOP, CX+HW, BOT], radius=HW, outline=GREY, width=4)
+        for label,col,dmg,y0,y1,(bx,by),t0,core in Z:
+            a = ease((t - t0) / 0.8)
+            if a <= 0:
+                continue
+            fill_y1 = y0 + (y1 - y0) * a
+            d.rounded_rectangle([CX-HW+3, y0, CX+HW-3, fill_y1], radius=HW-3, fill=col)
+            if core and a > 0.4:
+                ca = ease((a - 0.4) / 0.6)
+                d.line([(CX, y0+10), (CX, y0 + (y1 - y0 - 20) * ca)], fill=(70,12,12), width=10)
+            cy = (y0 + y1) / 2
+            d.line([(CX+HW, cy), (bx-160, by)], fill=col, width=3)
+            d.ellipse([CX+HW-6, cy-6, CX+HW+6, cy+6], fill=col)
+            bw, bh = 320, 150; x0, yy0 = bx - bw//2, by - bh//2
+            d.rounded_rectangle([x0, yy0, x0+bw, yy0+bh], radius=16, fill=(28,32,42), outline=col, width=3)
+            d.text((x0+22, yy0+14), label, font=f_lab, fill=col)
+            d.text((x0+22, yy0+62), f"손상 {int(dmg*a)}%", font=f_pct, fill=col)
+            bx0, by0 = x0+22, yy0+128; blen = 276
+            d.rounded_rectangle([bx0, by0, bx0+blen, by0+12], radius=6, fill=(50,55,66))
+            d.rounded_rectangle([bx0, by0, bx0+int(blen*dmg/100*a), by0+12], radius=6, fill=col)
+        img.save(frames_dir / f"z{i:04d}.png")
+
+
 def _require(m: dict) -> None:
     """줄기별 필수요소 검증. 기본은 강제(잊어서 빠뜨리는 실수 차단)하되, **의도적 예외는 `waive`로 허용**.
 
@@ -309,6 +368,8 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
             fdir = wd / f"anim_seg_{k:02d}"
             if seg["anim"] == "dusang_zones":
                 _dusang_zones_frames(fdir, lines, seg.get("numLine", 2), dur, seg_start=prev_end)
+            elif seg["anim"] == "strand_zones":
+                _strand_zones_frames(fdir, lines, seg.get("numLine", 2), dur, seg_start=prev_end)
             subprocess.run(["ffmpeg", "-v", "error", "-y", "-framerate", "30",
                             "-i", str(fdir / "z%04d.png"), "-t", f"{dur:.3f}",
                             "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "19", str(out_seg)], check=True)
