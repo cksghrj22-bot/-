@@ -1,0 +1,158 @@
+{
+  "title": "상담 — 손님이 원하는 네 가지 라인",
+  "stem": "message",
+  "waive": [
+    "bw"
+  ],
+  "outro": "SNS에 일기를 쓰고 있어요",
+  "voice": {
+    "stability": 0.42,
+    "style": 0.15,
+    "speed": 1.05
+  },
+  "bgm": "/tmp/claude-0/0fb0e5b8-eaea-542a-a0d3-be17b390f310/scratchpad/bgm_산책로.mp3",
+  "phrases": [
+    [
+      "상담이 길어야, 잘하는 걸까요?",
+      "상담이 길어야,\\N잘하는 걸까요?",
+      "Does a long consult mean a good one?",
+      false
+    ],
+    [
+      "저는 상담이, 금방 끝나는 편이에요.",
+      "저는 상담이,\\N금방 끝나요.",
+      "My consultations end quickly.",
+      false
+    ],
+    [
+      "손님이 원하는 건, 딱 네 가지거든요.",
+      "손님이 원하는 건,\\N딱 네 가지.",
+      "Clients want one of just four things.",
+      false
+    ],
+    [
+      "첫째는 기능이에요.",
+      "첫째, 기능.",
+      "First — function.",
+      false
+    ],
+    [
+      "가볍게, 더 예쁘게 내고 싶은 분.",
+      "가볍게, 더 예쁘게\\N내고 싶은 분.",
+      "Lighter, prettier styling.",
+      false
+    ],
+    [
+      "둘째는 어울림이에요.",
+      "둘째, 어울림.",
+      "Second — fit.",
+      false
+    ],
+    [
+      "이목구비랑 골격에, 맞추고 싶은 분.",
+      "이목구비·골격에\\N맞추고 싶은 분.",
+      "Matched to features and bone structure.",
+      false
+    ],
+    [
+      "셋째는 무드예요.",
+      "셋째, 무드.",
+      "Third — mood.",
+      false
+    ],
+    [
+      "직급이 바뀌고, 상황이 바뀐 걸 표현하고 싶은 분.",
+      "직급·상황 변화를\\N머리로 표현하고 싶은 분.",
+      "Expressing a new role or moment.",
+      false
+    ],
+    [
+      "넷째는 패션이에요.",
+      "넷째, 패션.",
+      "Fourth — fashion.",
+      false
+    ],
+    [
+      "보헤미안, 미니멀, 패션 언어로 풀고 싶은 분.",
+      "보헤미안·미니멀,\\N패션 언어로.",
+      "Bohemian, minimal — in fashion terms.",
+      false
+    ],
+    [
+      "저는 어느 라인인지, 먼저 읽어요.",
+      "저는 어느 라인인지,\\N먼저 읽어요.",
+      "I read which line first.",
+      false
+    ],
+    [
+      "그 라인으로만 좁히니까, 금방 끝나요.",
+      "그 라인으로 좁히니,\\N금방 끝나요.",
+      "Narrow to that line — it's fast.",
+      false
+    ],
+    [
+      "근데 목적은, 정확히 알죠.",
+      "근데 목적은,\\N정확히 알죠.",
+      "But the purpose is exact.",
+      false
+    ],
+    [
+      "상담은 시간이 아니라, 방향이에요.",
+      "상담은 시간이 아니라,\\N방향이에요.",
+      "A consult isn't time — it's direction.",
+      false
+    ],
+    [
+      "당신은 어떤 라인의, 머리를 원하세요?",
+      "당신은 어떤 라인의,\\N머리를 원하세요?",
+      "Which line do you want?",
+      false
+    ]
+  ],
+  "require_실사": true,
+  "segments": [
+    {
+      "black": true,
+      "bigcard": true,
+      "untilLine": 0,
+      "_기획": "훅 검은카드 — '상담이 길어야 잘하는 걸까요?'"
+    },
+    {
+      "src": "1bfTN3n9lqQG_coIfSjyabj_s-DDAZRgM",
+      "ss": 80,
+      "frame": "portrait",
+      "untilLine": 2,
+      "_실사": "IMG_2145 상담 진단차트 그리는 손(도입: 금방 끝남/네 가지)"
+    },
+    {
+      "src": "1bfTN3n9lqQG_coIfSjyabj_s-DDAZRgM",
+      "ss": 70,
+      "frame": "portrait",
+      "untilLine": 6,
+      "_실사": "IMG_2145 진단차트 시트(①기능 ②어울림)"
+    },
+    {
+      "src": "1bfTN3n9lqQG_coIfSjyabj_s-DDAZRgM",
+      "ss": 106,
+      "hflip": true,
+      "frame": "portrait",
+      "untilLine": 10,
+      "_실사": "IMG_2145 손 제스처(③무드 ④패션) hflip"
+    },
+    {
+      "src": "1bfTN3n9lqQG_coIfSjyabj_s-DDAZRgM",
+      "ss": 94,
+      "frame": "portrait",
+      "untilLine": 14,
+      "_실사": "IMG_2145 손님 착석(라인 읽기·방향)"
+    },
+    {
+      "black": true,
+      "bigcard": true,
+      "untilLine": 15,
+      "tail": 2.8,
+      "_기획": "엔딩 검은카드 — '어떤 라인의 머리를 원하세요?' + 아웃트로"
+    }
+  ],
+  "_notes": "상담 4라인 편(형 2026-07-30 구술). 서사='상담은 주파수다' 실전 방법론(기능/어울림/무드/패션 판별). 실사=IMG_2145 상담데스크·진단차트·손님. 컬러(waive bw). SNS 아웃트로. 검은 bigcard 2(훅·엔딩). 대본=content/대본/2026-07-30_상담_네가지라인_방향을읽는다.md."
+}
