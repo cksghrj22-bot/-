@@ -492,8 +492,12 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
         cand = wd / bgm
         bgm = str(cand) if cand.exists() else bgm
     out_path = Path(out) if out else wd / (m.get("title", "output").replace(" ", "_") + ".mp4")
+    # 자막 높이 오버라이드(POV 등 헤어가 화면 아래 있을 때 자막을 위로): sub_margin_v
+    sub_style = dict(SS.SUB)
+    if m.get("sub_margin_v") is not None:
+        sub_style["margin_v"] = int(m["sub_margin_v"])
     R.render(str(comp), script, str(out_path),
-             bgm=bgm, bgm_volume=SS.BGM_VOLUME, style=SS.SUB, layout="full",
+             bgm=bgm, bgm_volume=SS.BGM_VOLUME, style=sub_style, layout="full",
              workdir=str(wd), narration=str(narr_path),
              outro=m.get("outro"), outro_style=SS.OUTRO_CARD if m.get("outro") else None)
     return out_path
