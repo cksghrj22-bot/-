@@ -319,9 +319,13 @@ def _bang_sparkle_frames(frames_dir: Path, lines: list, num_line: int, total: fl
         for (px, py, pr, pc) in [(180, 380, 60, (255, 214, 194)), (900, 520, 44, (255, 224, 236)),
                                  (150, 1300, 52, (255, 224, 236)), (930, 1360, 66, (214, 236, 255))]:
             d.ellipse([px-pr, py-pr, px+pr, py+pr], fill=(*pc, 90))
-        # 목·얼굴
+        # 목 + 둥근 두상 헤어(얼굴보다 크게·위 둥글게) + 옆 긴머리 — 항상 존재
         d.rounded_rectangle([CX-70, CY+R-70, CX+70, CY+R+120], radius=30, fill=SKIN_L)
-        d.ellipse([CX-R, CY-R, CX+R, CY+R], fill=SKIN, outline=(230, 195, 175), width=5)
+        d.ellipse([CX-R-28, CY-R-50, CX+R+28, CY+R+24], fill=HAIR)             # 둥근 두상
+        for sgn in (-1, 1):                                                     # 옆으로 흐르는 긴 머리
+            d.polygon([(CX+sgn*(R+16), CY-R+130), (CX+sgn*(R+42), CY+R+150),
+                       (CX+sgn*(R-26), CY+R+150), (CX+sgn*(R-14), CY-30)], fill=HAIR)
+        d.ellipse([CX-R, CY-R, CX+R, CY+R], fill=SKIN, outline=(230, 195, 175), width=5)  # 얼굴
         # 볼터치
         d.ellipse([EXL-58, EY+92, EXL+18, EY+140], fill=(*BLUSH, 150))
         d.ellipse([EXR-18, EY+92, EXR+58, EY+140], fill=(*BLUSH, 150))
@@ -335,29 +339,17 @@ def _bang_sparkle_frames(frames_dir: Path, lines: list, num_line: int, total: fl
             d.ellipse([ex+10, EY+6, ex+22, EY+18], fill=(255, 255, 255, 220))    # 작은 광채
         # 입(방긋)
         d.arc([CX-42, EY+70, CX+42, EY+130], 20, 160, fill=(200, 120, 110), width=8)
-        # 앞머리(위에서 찰랑 내려옴) — 이마를 덮고 눈매 위까지
-        browY = (CY - R) + int((EY - 44 - (CY - R)) * grow)   # 앞머리 끝 y(눈썹 위)
+        # 앞머리(일자뱅) — 이마에 곧게, 찰랑 내려옴. 위는 두상에 붙고 아래 단은 일자
         if grow > 0.02:
-            # 메인 프린지: 머리 위 반원 + 물결 아랫단(sway)
-            top = CY - R - 24
-            pts = [(CX - R + 20, top)]
-            segn = 10
-            for s_ in range(segn + 1):
-                x = CX - R + 40 + (2 * R - 80) * s_ / segn
-                wob = _m.sin(s_ / segn * _m.pi) * 22
-                dip = -abs((s_ / segn) - 0.5) * 60 + 30      # 가운데 살짝 내려온 프린지
-                y = browY + wob + dip + (sway if s_ % 2 else sway * 0.6)
-                pts.append((x, y))
-            pts.append((CX + R - 20, top))
-            d.polygon(pts, fill=HAIR)
-            # 옆머리(귀 옆으로 흐르는 기장)
-            for sgn in (-1, 1):
-                d.polygon([(CX + sgn*(R-10), top+40), (CX + sgn*(R+26), CY+40),
-                           (CX + sgn*(R-40), CY+120), (CX + sgn*(R-70), CY-40)], fill=HAIR)
-            # 결 라인(찰랑 강조)
-            for k in range(-3, 4):
-                x0 = CX + k * 60
-                d.line([(x0, browY-70), (x0 + sway*0.8, browY+18)], fill=(*HAIR_D, 160), width=5)
+            fW = int(R * 0.80)                        # 앞머리 폭(이마 덮음)
+            topY = CY - R - 6                          # 이마 위 시작(두상에 붙음)
+            browY = topY + int((EY - 46 - topY) * grow)   # 끝이 눈썹 위로 내려옴
+            sx = sway * 0.5
+            d.rectangle([CX - fW + sx, topY - 30, CX + fW + sx, browY - 30], fill=HAIR)      # 위 채움
+            d.rounded_rectangle([CX - fW + sx, browY - 60, CX + fW + sx, browY], radius=26, fill=HAIR)  # 아래 일자단(살짝 둥근 끝)
+            for k in range(-4, 5):                     # 결(가는 세로선)
+                x0 = CX + k * int(fW / 4.2) + sx
+                d.line([(x0, browY - 50), (x0 + sway * 0.4, browY - 6)], fill=(*HAIR_D, 150), width=4)
         # 눈 반짝 별(눈매 강조) — 크게·글로우
         if spark > 0.05:
             a = int(255 * spark)
