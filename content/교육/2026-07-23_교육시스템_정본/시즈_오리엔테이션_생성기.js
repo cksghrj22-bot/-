@@ -175,6 +175,40 @@ s.addText("맨즈(옴므)는 와이 원장 STAGE 0~7 별도 줄기 · 특강(연
   { x:0.6, y:6.75, w:12, h:0.35, fontFace:SANS, fontSize:11.5, color:GRAY });
 s.addNotes("정규 5개 라인, 선생님 6명. 각자 자기 라인을 레벨 순서로 진행. 총 70과목.");
 
+// ══════════ 4B. 전체 과목 목록 (선생님별) — 2장 ══════════
+const ALLSUBJ = {
+  '창엽': ['가위 파지·도구','헤드·바디·핑거 포지션','스퀘어 원랭스','그라쥬에이션(스퀘어)','그라쥬에이션(라운드)','레이어(N.Inversion)','레이어(Flat)','질감처리(질감·양감)'],
+  '이호': ['두상·얼굴형 분석','고객상담·이미지컨설팅','디자인 수정·리터치','휩시컷(가발)','샤에컷(가발)','간이시험 40분','쉬즈컷(가발)','사모님보브(가발)'],
+  '신후': ['남성 아이롱펌','모류교정','디지털 와인딩 설계','C컬 중간머리','S컬 중간머리','손상모 복구','룩북 단발 C컬','룩북 중간 C·S컬','룩북 긴머리 S컬'],
+  '성희': ['모발학(구조·ph)','머리 말리는 법','콜드펌원리+세척·크리프','호리존탈(기본)','다데+다이애거널','씽(Thin)','히피 트위스트','호일펌','스핀스왈로+핀컬','스트레이트+볼륨매직','단발 디자인콜드펌','긴머리 디자인콜드펌','트렌드 분석·시안','디자인분석+약제선택','상담+결과예측'],
+  '보미': ['블로우·롤 드라이','텐션·결 정리','기본 세팅','기본 땋기(브레이드)','피쉬본·콘로우','믹스 브레이드','클래식 번','포니테일 변형','핀워크·고정력','혼주·신부 업스타일','웨이브 업스타일','가발·헤어피스','방송·촬영 헤어','실전 완성','인플루언서 스타일'],
+  '차노': ['펌제 원리','열펌 도구','매직 스트레이트','연화·테스트','디지털·셋팅펌 와인딩','아이롱 기본','질감마스터 1','질감마스터 2','질감마스터 3','형용사 이론','형용사 실습1(가발)','형용사 실습2(가발)','일본 이미지분류체계','퍼스널컬러와 구조','골격과 구조커트'],
+};
+const SUBJ_LINE = { '창엽':'커트 기초 (L1·2)','이호':'커트 디자인·시그니처 (L3~5)','신후':'열펌 · 룩북','성희':'콜드펌','보미':'업스타일 · 브레이드','차노':'디자인 방법 · 미감' };
+function subjectSlide(teachers, pageLabel){
+  s = p.addSlide(); s.background = { color: CREAM };
+  brand(s, "ALL SUBJECTS");
+  kicker(s, "전체 과목 · 선생님별 · "+pageLabel);
+  title(s, "누가 무엇을 가르치나", 1.55);
+  const cw=3.95, gap=0.3, x0=0.55, yTop=2.35;
+  teachers.forEach((t,ci)=>{
+    const x=x0+ci*(cw+gap);
+    const list=ALLSUBJ[t];
+    s.addShape(p.ShapeType.rect, { x, y:yTop, w:cw, h:0.62, fill:{color:TCOL[t]} });
+    s.addText(t, { x:x+0.22, y:yTop, w:cw*0.55, h:0.62, fontFace:SANS, bold:true, fontSize:16, color:"FFFFFF", valign:"middle" });
+    s.addText(list.length+"과목", { x:x+cw*0.5, y:yTop, w:cw*0.5-0.2, h:0.62, fontFace:SANS, bold:true, fontSize:11, color:"FFFFFF", align:"right", valign:"middle" });
+    s.addText(SUBJ_LINE[t], { x:x+0.22, y:yTop+0.62, w:cw-0.4, h:0.34, fontFace:SANS, fontSize:10.5, color:TCOL[t], valign:"middle" });
+    const ly=yTop+0.95, lh=(list.length>12?0.25:0.32);
+    list.forEach((sub,i)=>{
+      const yy=ly+i*lh;
+      s.addText((i+1)+".", { x:x+0.22, y:yy, w:0.4, h:lh, fontFace:SANS, fontSize:9.5, color:TCOL[t], valign:"middle" });
+      s.addText(sub, { x:x+0.6, y:yy, w:cw-0.75, h:lh, fontFace:SANS, fontSize:(list.length>12?10:11), color:"3a362f", valign:"middle" });
+    });
+  });
+}
+subjectSlide(['창엽','이호','신후'], "1/2 · 커트 · 열펌");
+subjectSlide(['성희','보미','차노'], "2/2 · 콜드펌 · 업스타일 · 디자인방법");
+
 // ══════════ 5. SCHEDULE ══════════
 s = p.addSlide(); s.background = { color: CREAM };
 brand(s, "SCHEDULE");
