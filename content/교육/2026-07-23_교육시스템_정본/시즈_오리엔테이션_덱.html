@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ATNOWN 2026 · 시즈 오리엔테이션</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{--cream:#F7F5F1;--ink:#111;--gold:#A8895E;--gray:#9B958C;--line:#E4DFD6;}
+  body{background:#e8e5df;color:var(--ink);font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;padding:28px 16px;}
+  .deck{max-width:960px;margin:0 auto;}
+  .slide{background:var(--cream);border:1px solid var(--line);margin-bottom:20px;padding:52px 56px;position:relative;overflow:hidden;min-height:300px;}
+  .serif{font-family:"Cormorant Garamond","Times New Roman",serif;}
+  .mono{position:absolute;top:34px;left:56px;display:flex;align-items:center;gap:14px;}
+  .an{width:34px;height:34px;border:1.5px solid var(--ink);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:"Cormorant Garamond",serif;font-weight:700;font-size:15px;letter-spacing:1px;}
+  .mlabel{font-size:10px;letter-spacing:.28em;color:var(--gray);font-weight:700;}
+  .vlabel{position:absolute;right:20px;top:50%;transform:translateY(-50%) rotate(180deg);writing-mode:vertical-rl;font-size:10px;letter-spacing:.3em;color:var(--gray);font-weight:700;}
+  .goldrule{height:1px;background:var(--gold);width:52px;position:relative;}
+  .goldrule::after{content:"";position:absolute;right:0;top:-2px;width:5px;height:5px;background:var(--gold);border-radius:50%;}
+  .cover{min-height:440px;display:flex;flex-direction:column;justify-content:center;}
+  .cover h1{font-size:58px;line-height:1.03;font-weight:600;letter-spacing:.01em;}
+  .cover h1 .g{color:var(--gold);}
+  .cover .krsub{font-size:17px;margin-top:22px;font-weight:500;}
+  .cover .encap{font-size:11px;letter-spacing:.2em;color:var(--gray);margin-top:8px;font-weight:700;}
+  .icons{display:flex;gap:26px;margin-top:34px;flex-wrap:wrap;}
+  .ico{display:flex;flex-direction:column;align-items:center;gap:7px;}
+  .ico .c{width:26px;height:26px;border:1.3px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;}
+  .ico .l{font-size:9px;letter-spacing:.12em;color:var(--gray);font-weight:700;}
+  .kicker{font-size:11px;letter-spacing:.24em;color:var(--gold);font-weight:700;margin-bottom:14px;}
+  .slide h2{font-family:"Cormorant Garamond","Times New Roman",serif;font-size:38px;font-weight:600;line-height:1.1;}
+  .slide .goal{font-size:14px;color:#666;margin-top:10px;font-style:italic;}
+  .num{font-family:"Cormorant Garamond",serif;font-size:15px;color:var(--gold);font-weight:700;letter-spacing:.1em;}
+  .otable{margin-top:24px;width:100%;border-collapse:collapse;}
+  .otable td{padding:13px 4px;border-bottom:1px solid var(--line);vertical-align:baseline;}
+  .otable .bn{font-family:"Cormorant Garamond",serif;font-size:20px;color:var(--gold);font-weight:700;width:52px;}
+  .otable .bt{font-size:15px;font-weight:700;}
+  .otable .bd{font-size:12px;color:var(--gray);padding-left:14px;}
+  .otable .who{font-size:11px;font-weight:800;color:var(--gold);white-space:nowrap;text-align:right;}
+  .big{font-family:"Cormorant Garamond",serif;font-size:120px;line-height:.8;color:var(--gold);opacity:.9;position:absolute;right:56px;bottom:36px;font-weight:600;}
+  .points{margin-top:20px;list-style:none;max-width:640px;}
+  .points li{font-size:14.5px;padding:9px 0 9px 24px;border-bottom:1px solid var(--line);position:relative;color:#333;}
+  .points li:last-child{border-bottom:none;}
+  .points li::before{content:"—";position:absolute;left:0;color:var(--gold);font-weight:700;}
+  .points li b{color:var(--ink);}
+  .teacher{position:absolute;top:34px;right:56px;font-size:11px;font-weight:800;color:var(--cream);background:var(--ink);padding:3px 11px;border-radius:20px;letter-spacing:.03em;}
+  .master{min-height:360px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+  .master h2{font-size:44px;}
+  .master .sub{font-size:14px;color:var(--gray);margin-top:16px;letter-spacing:.05em;}
+  .foot{text-align:center;font-size:10px;letter-spacing:.35em;color:#b7b1a6;font-weight:700;margin:26px 0 4px;}
+  .fignote{position:absolute;right:56px;bottom:30px;font-size:10px;color:#cfc8bb;letter-spacing:.12em;}
+  /* 여정 스텝 */
+  .journey{display:flex;gap:0;margin-top:30px;align-items:stretch;flex-wrap:wrap;}
+  .jstep{flex:1;min-width:150px;border-left:2px solid var(--gold);padding:6px 14px 10px;position:relative;}
+  .jstep:first-child{border-left:none;padding-left:0;}
+  .jstep .je{font-size:30px;}
+  .jstep .jl{font-size:11px;color:var(--gold);font-weight:800;margin-top:8px;letter-spacing:.05em;}
+  .jstep .jt{font-size:16px;font-weight:900;margin-top:3px;}
+  .jstep .jd{font-size:12px;color:#666;margin-top:6px;line-height:1.5;}
+  /* 코스 카드 */
+  .courses{display:flex;gap:16px;margin-top:28px;flex-wrap:wrap;}
+  .cco{flex:1;min-width:180px;border:1px solid var(--line);background:#fff;border-radius:4px;padding:22px 20px;text-align:center;}
+  .cco .cn{font-size:20px;font-weight:900;}
+  .cco .cy{font-size:15px;font-weight:800;color:var(--gold);margin-top:5px;}
+  .cco .cd{font-size:12.5px;color:#6a655c;margin-top:9px;line-height:1.5;}
+  /* KPI 칩 */
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;}
+  .chip{background:#fff;border:2px solid var(--gold);color:var(--ink);border-radius:24px;padding:9px 18px;font-size:15px;font-weight:800;}
+  .lead{font-size:15px;color:#444;margin-top:14px;line-height:1.7;max-width:660px;}
+  .lead b{color:var(--gold);}
+  /* Q&A */
+  .qa{min-height:420px;display:flex;flex-direction:column;justify-content:center;}
+  .qa h2{font-size:56px;}
+  .qbox{margin-top:26px;display:flex;flex-direction:column;gap:12px;max-width:640px;}
+  .qrow{display:flex;gap:12px;align-items:flex-start;font-size:14.5px;color:#333;}
+  .qrow .qm{font-family:"Cormorant Garamond",serif;color:var(--gold);font-weight:700;font-size:20px;line-height:1;flex-shrink:0;width:22px;}
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- COVER -->
+  <div class="slide cover">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">ATNOWN ACADEMY</div></div>
+    <div class="vlabel">ORIENTATION</div>
+    <h1 class="serif">2026<br><span class="g">EDUCATION</span> SYSTEM</h1>
+    <div class="krsub">시즈 오리엔테이션 — 우리가 어떻게 디자이너가 되는가</div>
+    <div class="encap">FOUNDATION → FIGHTER → SNS → DESIGNER</div>
+    <div class="icons">
+      <div class="ico"><div class="c">🌱</div><div class="l">1·2 기초</div></div>
+      <div class="ico"><div class="c">⚔️</div><div class="l">3 전투원</div></div>
+      <div class="ico"><div class="c">📱</div><div class="l">4 SNS</div></div>
+      <div class="ico"><div class="c">👑</div><div class="l">5 디자이너</div></div>
+    </div>
+    <div class="fignote">2026 하반기 · 8월 2째주 → 12월</div>
+  </div>
+
+  <!-- 큰 그림 : 5단계 여정 -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">THE JOURNEY</div></div>
+    <div class="kicker">큰 그림 · 이 순서대로 큰다</div>
+    <h2 class="serif">Level 1 → 5</h2>
+    <div class="goal">손이랑 마음부터 → 혼자 서는 디자이너까지</div>
+    <div class="journey">
+      <div class="jstep"><div class="je">🌱</div><div class="jl">LV 1·2</div><div class="jt">완전 기초</div><div class="jd">가위 잡는 것부터. "왜 이 일을 하는지" 먼저 심고 기본기를 몸에 붙인다.</div></div>
+      <div class="jstep"><div class="je">⚔️</div><div class="jl">LV 3</div><div class="jt">실전 전투원</div><div class="jd">진짜 손님 앞에. 배운 걸로 현장에서 부딪히며 실력을 굳힌다.</div></div>
+      <div class="jstep"><div class="je">📱</div><div class="jl">LV 4</div><div class="jt">SNS 소통</div><div class="jd">실력 + 나를 보여주는 힘. SNS로 손님이 나를 찾아오게 만든다.</div></div>
+      <div class="jstep"><div class="je">👑</div><div class="jl">LV 5</div><div class="jt">디자이너</div><div class="jd">손님을 오게 하고 끝까지 케어. 여기까지 오면 승급!</div></div>
+    </div>
+  </div>
+
+  <!-- 코스 -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">COURSES</div></div>
+    <div class="kicker">어느 코스로 가느냐 · 기간만 다르다</div>
+    <h2 class="serif">Omme · Hannam · Cheongdam</h2>
+    <div class="courses">
+      <div class="cco"><div class="cn">옴므</div><div class="cy">2년</div><div class="cd">남자 전문 (맨즈)<br>와이 원장 STAGE</div></div>
+      <div class="cco"><div class="cn">한남</div><div class="cy">2년 6개월</div><div class="cd">업스타일 빼고 다<br>디자이너 후 마지막 레벨 이수</div></div>
+      <div class="cco"><div class="cn">청담</div><div class="cy">3년</div><div class="cd">업스타일까지 전부<br>풀 커리큘럼</div></div>
+    </div>
+    <div class="fignote">※ 한남은 청담보다 6개월 짧다 (업스타일 제외)</div>
+  </div>
+
+  <!-- 커리큘럼 한눈에 : 선생님 라인 -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">CURRICULUM</div></div>
+    <div class="kicker">누가 무엇을 가르치나 · 정규 70과목</div>
+    <h2 class="serif">6 Teachers · 5 Lines</h2>
+    <table class="otable">
+      <tr><td class="bn serif">CUT</td><td class="bt">커트</td><td class="bd">기초(L1·2) → 디자인·시그니처(L3~5)</td><td class="who">창엽 · 이호</td></tr>
+      <tr><td class="bn serif">PERM</td><td class="bt">열펌 · 룩북</td><td class="bd">남성 열펌·설계 → 여성 디자인 → 룩북</td><td class="who">신후</td></tr>
+      <tr><td class="bn serif">COLD</td><td class="bt">콜드펌</td><td class="bd">이론 → 와인딩 → 기법 → 디자인 → 트렌드</td><td class="who">성희</td></tr>
+      <tr><td class="bn serif">UP</td><td class="bt">업스타일</td><td class="bd">드라이·브레이드 → 업스타일 → 방송헤어</td><td class="who">보미</td></tr>
+      <tr><td class="bn serif">DES</td><td class="bt">디자인 방법</td><td class="bd">열펌 기초 → 질감 → 형용사 → 이미지·구조</td><td class="who">차노</td></tr>
+    </table>
+    <div class="fignote">맨즈(옴므)는 와이 원장 STAGE 0~7 별도 줄기</div>
+  </div>
+
+  <!-- 일정 -->
+  <div class="slide">
+    <div class="teacher">08/10 → 12/06</div>
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">SCHEDULE</div></div>
+    <div class="num">2026 하반기</div>
+    <h2 class="serif">언제 · 어떻게</h2>
+    <div class="goal">아침 07:30~09:30 · 월·토 휴무 · 요일 골고루 배분</div>
+    <ul class="points">
+      <li>정규교육 <b>8월 2째주 ~ 12월 첫주</b> — 화·수·목·금·일에 배분</li>
+      <li>하루 한 과목 원칙, <b>레벨이 다르면 같은 날 병행</b> (내 레벨 것만 들으면 됨)</li>
+      <li><b>모델데이</b> 매월 2·4째주 금 (모델 2명↑ 시 시행) · 저녁</li>
+      <li><b>특강</b> 매월 3째주 금 — 와이·연교·신후·재아·승현</li>
+      <li><b>입봉시험 12/21 (월)</b></li>
+    </ul>
+    <div class="fignote">상세는 「교육일정 캘린더」 참조 (색=선생님 / L태그=레벨)</div>
+  </div>
+
+  <!-- 준비물·과제 규칙 -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">HOW TO PREPARE</div></div>
+    <div class="kicker">시즈가 지킬 것 · 준비물 · 과제</div>
+    <h2 class="serif">Come Ready</h2>
+    <ul class="points">
+      <li>준비물은 수업 <b>전날까지</b> 세팅 — 도구·마네킹·약제 미리 챙기기</li>
+      <li>과제는 다음 수업 <b>시작 전</b> 제출 (촬영·리포트)</li>
+      <li>가발·모델모는 <b>되돌릴 수 없다</b> → 길게 시작, 신중히</li>
+      <li>약제·열기구는 <b>안전 먼저</b> — 온도·시간 기록, 화상 주의</li>
+      <li>과목별 준비물·주의는 <b>「과목별 준비물·과제·주의」 문서</b>로 배포</li>
+    </ul>
+    <div class="big serif">✓</div>
+  </div>
+
+  <!-- 디자이너 되는 조건 -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">BECOME A DESIGNER</div></div>
+    <div class="kicker">헤어디자이너 쇼 기준 · 승급</div>
+    <h2 class="serif">How You Level Up</h2>
+    <div class="lead">4·5레벨은 <b>각자 디자이너가 되는 레벨</b>. 인스타 헤어쇼(시그니처 쇼)로 실력을 눈으로 보여준다.<br>· <b>4레벨</b> — 기존 정량 기준 <b>50% 통과</b> · <b>5레벨</b> — <b>80% 통과</b> 시 쇼 기준 성립</div>
+    <div class="lead" style="margin-top:18px;">아래 <b>최종 조건</b>을 채우면 시험과 무관하게 <b>무조건 디자이너</b> (KPI):</div>
+    <div class="chips">
+      <span class="chip">모델 100명</span><span class="chip">매출 500</span><span class="chip">시그니처 60</span><span class="chip">리뷰 70</span><span class="chip">조회수 10만</span>
+    </div>
+  </div>
+
+  <!-- SNS 규칙 -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">SNS</div></div>
+    <div class="kicker">나를 알리는 능력 · 필수</div>
+    <h2 class="serif">Show Yourself</h2>
+    <div class="goal">SNS = 나의 생각 · 연습을 올려 손님이 나를 찾게 만드는 힘</div>
+    <ul class="points">
+      <li><b>1·2레벨</b> — 주 <b>1개</b> 업로드 (나의 생각·연습)</li>
+      <li><b>3·4레벨</b> — 주 <b>2개</b> 업로드 (나의 생각·연습)</li>
+      <li>실력 + 표현력을 함께 키워 손님을 오게 하고 케어할 수 있게 한다</li>
+    </ul>
+    <div class="big serif">SNS</div>
+  </div>
+
+  <!-- Q&A -->
+  <div class="slide qa">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">Q &amp; A</div></div>
+    <div class="vlabel">ASK ANYTHING</div>
+    <div class="goldrule" style="margin-bottom:22px;"></div>
+    <h2 class="serif">Q &amp; A</h2>
+    <div class="qbox">
+      <div class="qrow"><span class="qm">Q</span><span>내 레벨 수업만 들으면 되나요? — 네, 캘린더의 <b>내 레벨(L태그)</b> 과목만.</span></div>
+      <div class="qrow"><span class="qm">Q</span><span>준비물은 어디서 봐요? — <b>과목별 준비물·과제·주의</b> 문서에 선생님별로.</span></div>
+      <div class="qrow"><span class="qm">Q</span><span>디자이너는 시험만 통과하면? — 쇼 기준 <b>또는</b> KPI 최종조건 충족 시.</span></div>
+      <div class="qrow"><span class="qm">Q</span><span>모델데이·특강은 언제? — 매월 2·4주 금(모델) · 3주 금(특강).</span></div>
+    </div>
+    <div class="fignote">— 무엇이든 물어보세요 —</div>
+  </div>
+
+  <!-- CLOSING -->
+  <div class="slide master">
+    <div class="goldrule" style="margin-bottom:26px;"></div>
+    <h2 class="serif">손이랑 마음부터<br>혼자 서는 디자이너까지</h2>
+    <div class="sub">AT NOWN · 2026 EDUCATION</div>
+  </div>
+
+  <div class="foot">A T &nbsp; N O W N &nbsp; · &nbsp; S E E Z &nbsp; O R I E N T A T I O N</div>
+</div>
+</body>
+</html>
