@@ -121,22 +121,6 @@ brand(s, "THE STANDARD", true);
 })();
 s.addNotes("판단 기준: 머리를 할 수 있다 → 디자이너로 우뚝 선다. 설명은 대표님.");
 
-// ══════════ 1D. 유안·범진 영상 (자리만) ══════════
-s = p.addSlide(); s.background = { color: CREAM };
-brand(s, "VIDEO");
-title(s, "유안 · 범진", 1.7);
-(function(){
-  const names=["유안","범진"], cw=5.95, x0=0.6, gap=0.33, y=2.9;
-  names.forEach((nm,i)=>{
-    const x=x0+i*(cw+gap);
-    s.addShape(p.ShapeType.roundRect, { x, y, w:cw, h:3.2, rectRadius:0.12, fill:{color:"111114"} });
-    s.addShape(p.ShapeType.ellipse, { x:x+cw/2-0.55, y:y+1.0, w:1.1, h:1.1, fill:{color:GOLD} });
-    s.addText("▶", { x:x+cw/2-0.55, y:y+1.0, w:1.1, h:1.1, fontFace:SANS, bold:true, fontSize:28, color:"111114", align:"center", valign:"middle" });
-    s.addText(nm, { x, y:y+2.3, w:cw, h:0.5, fontFace:SANS, bold:true, fontSize:18, color:"FFFFFF", align:"center" });
-  });
-})();
-s.addNotes("유안·범진 영상 재생 자리. (영상 파일/링크는 발표 전 삽입)");
-
 // ══════════ 2. THE JOURNEY ══════════
 s = p.addSlide(); s.background = { color: CREAM };
 brand(s, "THE JOURNEY");
