@@ -54,29 +54,25 @@ s.addText("당신은", { x:1, y:2.1, w:11.3, h:0.7, fontFace:SANS, fontSize:24, 
 s.addText("어떤 디자이너가\n되고 싶어요?", { x:1, y:2.8, w:11.33, h:2.4, fontFace:SERIF, fontSize:60, color:GOLD, align:"center", lineSpacingMultiple:1.08 });
 s.addNotes("질문 던지기. 각자 머릿속에 '되고 싶은 디자이너(이상향)'를 그려보게 한다. 답은 뒤 워드월/대화로.");
 
-// beat ② 현재 → (강) → 이상향
+// beat ② 현재 → (강) → 이상향  (도식만)
 s = p.addSlide(); s.background = { color: CREAM };
-brand(s, "NOW vs DREAM");
-kicker(s, "지금의 나 · 그리고 되고 싶은 나");
+brand(s, "NOW / DREAM");
 (function(){
-  const ny=3.5, r=2.0;
+  const ny=3.1, r=2.0;
   s.addShape(p.ShapeType.ellipse, { x:0.9, y:ny, w:r, h:r, fill:{color:CARDBG}, line:{color:INK,width:2} });
-  s.addText("지금의 나\n(초급)", { x:0.9, y:ny, w:r, h:r, fontFace:SANS, bold:true, fontSize:16, color:INK, align:"center", valign:"middle" });
+  s.addText("지금의 나", { x:0.9, y:ny, w:r, h:r, fontFace:SANS, bold:true, fontSize:17, color:INK, align:"center", valign:"middle" });
   s.addShape(p.ShapeType.ellipse, { x:W-0.9-r, y:ny, w:r, h:r, fill:{color:GOLD} });
-  s.addText("되고 싶은\n디자이너\n(이상향)", { x:W-0.9-r, y:ny, w:r, h:r, fontFace:SERIF, bold:true, fontSize:18, color:"FFFFFF", align:"center", valign:"middle" });
-  // 사이의 '강'
-  s.addShape(p.ShapeType.rect, { x:0.9+r+0.2, y:ny+0.35, w:(W-0.9-r)-(0.9+r+0.2)-0.2, h:r-0.7, fill:{color:"E9E3D8"} });
-  s.addText("고객이 나를 찾아오게 만들어야\n건널 수 있는 강", { x:0.9+r+0.2, y:ny+0.35, w:(W-0.9-r)-(0.9+r+0.2)-0.2, h:r-0.7, fontFace:SANS, bold:true, fontSize:16, color:"8a7f66", align:"center", valign:"middle" });
+  s.addText("이상향", { x:W-0.9-r, y:ny, w:r, h:r, fontFace:SERIF, bold:true, fontSize:22, color:"FFFFFF", align:"center", valign:"middle" });
+  s.addShape(p.ShapeType.rect, { x:0.9+r+0.2, y:ny+0.4, w:(W-0.9-r)-(0.9+r+0.2)-0.2, h:r-0.8, fill:{color:"E9E3D8"} });
+  s.addText("고객이 나를 찾아오게", { x:0.9+r+0.2, y:ny+0.4, w:(W-0.9-r)-(0.9+r+0.2)-0.2, h:r-0.8, fontFace:SANS, bold:true, fontSize:18, color:"8a7f66", align:"center", valign:"middle" });
 })();
-s.addText("이상향과 지금 사이엔 '강'이 있다 — 손님이 나를 찾아오게 만드는 것.", { x:0.6, y:6.2, w:12, h:0.4, fontFace:SANS, fontSize:13.5, color:"555555", align:"center" });
-s.addNotes("현재와 이상향 사이의 간극 = '고객이 나를 찾아오게 만드는 것'. 이 강을 어떻게 건널까?");
+s.addNotes("현재와 이상향, 그 사이 = 고객이 나를 찾아오게. (설명은 대표님)");
 
-// beat ③ 디딤돌 (한 번에 못 건넌다)
+// beat ③ 디딤돌 (도식만)
 s = p.addSlide(); s.background = { color: CREAM };
 brand(s, "STEPPING STONES");
-kicker(s, "한 번에 못 건넌다 · 디딤돌을 하나씩");
 (function(){
-  const ny=3.5, r=2.0, cy=ny+r/2;
+  const ny=3.1, r=2.0, cy=ny+r/2;
   s.addShape(p.ShapeType.ellipse, { x:0.6, y:ny, w:r, h:r, fill:{color:CARDBG}, line:{color:INK,width:2} });
   s.addText("지금의 나", { x:0.6, y:ny, w:r, h:r, fontFace:SANS, bold:true, fontSize:15, color:INK, align:"center", valign:"middle" });
   s.addShape(p.ShapeType.ellipse, { x:W-0.6-r, y:ny, w:r, h:r, fill:{color:GOLD} });
@@ -90,72 +86,56 @@ kicker(s, "한 번에 못 건넌다 · 디딤돌을 하나씩");
     s.addText(t, { x, y:cy-sw/2+dip, w:sw, h:sw, fontFace:SANS, bold:true, fontSize:12, color:"5a4c2e", align:"center", valign:"middle" });
   });
 })();
-s.addText("이상향은 한 걸음에 못 간다 — 초디부터 디딤돌(역경·과정)을 하나씩 밟아 건넌다.", { x:0.6, y:6.2, w:12, h:0.4, fontFace:SANS, fontSize:13.5, color:"555555", align:"center" });
-s.addNotes("이상향은 한 번에 도달 불가. 초디부터 디딤돌(역경)을 하나씩 밟는 '과정'이 곧 성장. 이게 플레이어의 길.");
+s.addNotes("한 번에 못 건넌다 — 디딤돌을 하나씩. (설명은 대표님)");
 
-// beat ④ 두 갈래 (반성)
+// beat ④ 두 갈래 (도식만 · 키워드)
 s = p.addSlide(); s.background = { color: CREAM };
 brand(s, "TWO PATHS");
-kicker(s, "두 갈래 길");
-title(s, "디딤돌이냐, 타협이냐", 1.6);
+title(s, "두 갈래", 1.6);
 (function(){
-  // 윗길 ✓
-  s.addShape(p.ShapeType.roundRect, { x:0.6, y:2.7, w:12.13, h:1.55, rectRadius:0.12, fill:{color:"F3EEE3"}, line:{color:GOLD,width:1.5} });
-  s.addText("○", { x:0.85, y:2.7, w:0.6, h:1.55, fontFace:SERIF, bold:true, fontSize:26, color:GOLD, align:"center", valign:"middle" });
-  s.addText([{text:"디딤돌을 하나씩 밟는다  ",options:{bold:true,color:INK}},{text:"→ 역경·과정을 지난다 → ",options:{color:"555555"}},{text:"이상향에 닿는다",options:{bold:true,color:GOLD}}],
-    { x:1.5, y:2.9, w:11, h:0.5, fontFace:SANS, fontSize:16, valign:"middle" });
-  s.addText("느려 보여도, 결국 원하는 디자이너가 되는 유일한 길", { x:1.5, y:3.5, w:11, h:0.5, fontFace:SANS, fontSize:13, color:"6a655c", valign:"middle" });
-  // 아랫길 ✗
-  s.addShape(p.ShapeType.roundRect, { x:0.6, y:4.5, w:12.13, h:1.75, rectRadius:0.12, fill:{color:"EFEEEC"}, line:{color:"C9C3B7",width:1.25} });
-  s.addText("✕", { x:0.85, y:4.5, w:0.6, h:1.75, fontFace:SANS, bold:true, fontSize:24, color:"9a948a", align:"center", valign:"middle" });
-  s.addText([{text:"이상향만 높이 잡는다  ",options:{bold:true,color:"555555"}},{text:"→ 디딤돌을 건너뛴다 → 안 된다 → ",options:{color:"8a847a"}},{text:"타협",options:{bold:true,color:"8a5a5a"}}],
-    { x:1.5, y:4.7, w:11, h:0.5, fontFace:SANS, fontSize:16, valign:"middle" });
-  s.addText("→ '미용은 그냥 생계수단' → 평범하게 먹고사는 데서 멈춘다", { x:1.5, y:5.35, w:11, h:0.5, fontFace:SANS, fontSize:14, bold:true, color:"8a5a5a", valign:"middle" });
-  s.addText("요즘 디딤돌을 생각하는 사람이 드물다 — 우리가 돌아봐야 할 지점", { x:1.5, y:5.8, w:11, h:0.4, fontFace:SANS, fontSize:12.5, color:"6a655c", valign:"middle" });
+  s.addShape(p.ShapeType.roundRect, { x:0.6, y:2.9, w:12.13, h:1.4, rectRadius:0.12, fill:{color:"F3EEE3"}, line:{color:GOLD,width:1.5} });
+  s.addText([{text:"디딤돌  ",options:{bold:true,color:INK}},{text:"→ 과정 → ",options:{color:"8a7f66"}},{text:"이상향",options:{bold:true,color:GOLD}}],
+    { x:0.6, y:2.9, w:12.13, h:1.4, fontFace:SERIF, fontSize:30, align:"center", valign:"middle" });
+  s.addShape(p.ShapeType.roundRect, { x:0.6, y:4.55, w:12.13, h:1.4, rectRadius:0.12, fill:{color:"EFEEEC"}, line:{color:"C9C3B7",width:1.25} });
+  s.addText([{text:"이상향만 높이  ",options:{bold:true,color:"8a847a"}},{text:"→ 건너뜀 → ",options:{color:"9a948a"}},{text:"타협",options:{bold:true,color:"8a5a5a"}}],
+    { x:0.6, y:4.55, w:12.13, h:1.4, fontFace:SERIF, fontSize:30, align:"center", valign:"middle" });
 })();
-s.addNotes("두 갈래. 윗길: 디딤돌→과정→도달. 아랫길: 이상향만 높이→건너뜀→좌절→타협→'미용=생계수단' 평범. 요즘 디딤돌을 잊고 이상향만 높다가 타협하는 걸 우리가 돌아보자는 취지. (여기서 대표님이 직접 풀어 설명)");
+s.addNotes("윗길 디딤돌→과정→이상향 / 아랫길 이상향만 높이→건너뜀→타협. 취지 설명은 대표님이 직접.");
 
-// beat ⑤ 마무리 문구 (dark)
+// beat ⑤ 마무리 (키워드 한 단어)
 s = p.addSlide(); s.background = { color: INK };
-goldDot(s, W/2-0.36, 2.7);
-s.addText("이상향보다,\n오늘의 디딤돌.", { x:1, y:3.0, w:11.33, h:2.0, fontFace:SERIF, fontSize:52, color:CREAM, align:"center", lineSpacingMultiple:1.1 });
-s.addText("— 초디의 한 걸음이 곧 그 길이다", { x:1, y:5.1, w:11.33, h:0.5, fontFace:SANS, fontSize:16, color:GOLD, align:"center" });
-s.addNotes("마무리 한 줄. 이상향은 방향, 디딤돌은 오늘 할 일. 여기서 시스템 설명으로 자연스럽게 넘어간다.");
+goldDot(s, W/2-0.36, 3.1);
+s.addText("오늘의 디딤돌", { x:1, y:3.4, w:11.33, h:1.4, fontFace:SERIF, fontSize:58, color:CREAM, align:"center" });
+s.addNotes("마무리 키워드. 설명은 대표님.");
 
-// ══════════ 1C. 판단 기준 전환 (dark) ══════════
+// ══════════ 1C. 판단 기준 전환 (dark · 도식만) ══════════
 s = p.addSlide(); s.background = { color: INK };
 brand(s, "THE STANDARD", true);
-s.addText("우리의 판단 기준이 바뀝니다", { x:1, y:1.7, w:11.33, h:0.6, fontFace:SANS, fontSize:20, color:"C9C3B7", align:"center" });
 (function(){
-  s.addShape(p.ShapeType.roundRect, { x:1.1, y:2.7, w:5.0, h:2.5, rectRadius:0.14, fill:{color:"24242A"}, line:{color:"3a3a44",width:1} });
-  s.addText("예전", { x:1.1, y:2.95, w:5.0, h:0.4, fontFace:SANS, bold:true, fontSize:13, color:"8a8f9a", align:"center", charSpacing:2 });
-  s.addText("\"머리를\n할 수 있다\"", { x:1.1, y:3.35, w:5.0, h:1.7, fontFace:SERIF, bold:true, fontSize:32, color:"C9C3B7", align:"center", valign:"middle", lineSpacingMultiple:1.05 });
-  s.addText("→", { x:6.1, y:2.7, w:1.13, h:2.5, fontFace:SANS, bold:true, fontSize:40, color:GOLD, align:"center", valign:"middle" });
-  s.addShape(p.ShapeType.roundRect, { x:7.23, y:2.7, w:5.0, h:2.5, rectRadius:0.14, fill:{color:GOLD} });
-  s.addText("이제", { x:7.23, y:2.95, w:5.0, h:0.4, fontFace:SANS, bold:true, fontSize:13, color:"5a4a2a", align:"center", charSpacing:2 });
-  s.addText("\"디자이너로\n우뚝 선다\"", { x:7.23, y:3.35, w:5.0, h:1.7, fontFace:SERIF, bold:true, fontSize:32, color:"1A1815", align:"center", valign:"middle", lineSpacingMultiple:1.05 });
+  const y=2.9, h=2.6;
+  s.addShape(p.ShapeType.roundRect, { x:1.1, y, w:5.0, h, rectRadius:0.14, fill:{color:"24242A"}, line:{color:"3a3a44",width:1} });
+  s.addText("\"머리를\n할 수 있다\"", { x:1.1, y, w:5.0, h, fontFace:SERIF, bold:true, fontSize:34, color:"C9C3B7", align:"center", valign:"middle", lineSpacingMultiple:1.05 });
+  s.addText("→", { x:6.1, y, w:1.13, h, fontFace:SANS, bold:true, fontSize:44, color:GOLD, align:"center", valign:"middle" });
+  s.addShape(p.ShapeType.roundRect, { x:7.23, y, w:5.0, h, rectRadius:0.14, fill:{color:GOLD} });
+  s.addText("\"디자이너로\n우뚝 선다\"", { x:7.23, y, w:5.0, h, fontFace:SERIF, bold:true, fontSize:34, color:"1A1815", align:"center", valign:"middle", lineSpacingMultiple:1.05 });
 })();
-s.addText("기술을 익혔느냐가 아니라 — 손님을 오게 하고 케어하는, 디자이너로 설 수 있느냐로 본다.", { x:1, y:5.6, w:11.33, h:0.5, fontFace:SANS, fontSize:14, color:"9aa0ab", align:"center" });
-s.addNotes("핵심 선언: 판단 기준을 '머리를 할 수 있다(기술 완료)'에서 '디자이너로 우뚝 선다(유입·케어·브랜드)'로 옮긴다. 개편의 방향.");
+s.addNotes("판단 기준: 머리를 할 수 있다 → 디자이너로 우뚝 선다. 설명은 대표님.");
 
-// ══════════ 1D. 롤모델 — 유안·범진 영상 예시 ══════════
+// ══════════ 1D. 유안·범진 영상 (자리만) ══════════
 s = p.addSlide(); s.background = { color: CREAM };
-brand(s, "ROLE MODEL");
-kicker(s, "먼저 디딤돌을 밟은 사람들 · 영상 예시");
-title(s, "유안 · 범진 — 이렇게 건넜다", 1.6);
+brand(s, "VIDEO");
+title(s, "유안 · 범진", 1.7);
 (function(){
-  const names=["유안","범진"], cw=5.95, x0=0.6, gap=0.33, y=2.75;
+  const names=["유안","범진"], cw=5.95, x0=0.6, gap=0.33, y=2.9;
   names.forEach((nm,i)=>{
     const x=x0+i*(cw+gap);
-    s.addShape(p.ShapeType.roundRect, { x, y, w:cw, h:2.9, rectRadius:0.12, fill:{color:"111114"} });
-    s.addShape(p.ShapeType.ellipse, { x:x+cw/2-0.5, y:y+0.75, w:1.0, h:1.0, fill:{color:GOLD} });
-    s.addText("▶", { x:x+cw/2-0.5, y:y+0.75, w:1.0, h:1.0, fontFace:SANS, bold:true, fontSize:26, color:"111114", align:"center", valign:"middle" });
-    s.addText(nm + " 영상", { x, y:y+1.95, w:cw, h:0.4, fontFace:SANS, bold:true, fontSize:16, color:"FFFFFF", align:"center" });
-    s.addText("(발표 때 영상 재생 — 링크 삽입 자리)", { x, y:y+2.35, w:cw, h:0.35, fontFace:SANS, fontSize:11.5, color:"8a8f9a", align:"center" });
+    s.addShape(p.ShapeType.roundRect, { x, y, w:cw, h:3.2, rectRadius:0.12, fill:{color:"111114"} });
+    s.addShape(p.ShapeType.ellipse, { x:x+cw/2-0.55, y:y+1.0, w:1.1, h:1.1, fill:{color:GOLD} });
+    s.addText("▶", { x:x+cw/2-0.55, y:y+1.0, w:1.1, h:1.1, fontFace:SANS, bold:true, fontSize:28, color:"111114", align:"center", valign:"middle" });
+    s.addText(nm, { x, y:y+2.3, w:cw, h:0.5, fontFace:SANS, bold:true, fontSize:18, color:"FFFFFF", align:"center" });
   });
 })();
-s.addText("같은 초디에서 디딤돌을 하나씩 밟아 디자이너로 선 실제 예시 — 영상으로 보여준다.", { x:0.6, y:5.95, w:12, h:0.4, fontFace:SANS, fontSize:13, color:"555555", align:"center" });
-s.addNotes("유안·범진의 실제 성장 영상을 재생. (영상 파일/링크는 발표 전 삽입) — '너희도 이 길을 건널 수 있다'는 증거.");
+s.addNotes("유안·범진 영상 재생 자리. (영상 파일/링크는 발표 전 삽입)");
 
 // ══════════ 2. THE JOURNEY ══════════
 s = p.addSlide(); s.background = { color: CREAM };
