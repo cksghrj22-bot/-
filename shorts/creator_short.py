@@ -81,8 +81,18 @@ def build(clip_mp4: str | Path, A: float, B: float,
             f"{_style('title', SS.POP_TITLE)}\n{_style('cap', SS.SUB)}\n[Events]\n"
             "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n"
             f"Dialogue: 0,{_ts(0)},{_ts(DUR)},title,,0,0,0,,{SS.pop_title(title_yellow, title_white)}\n")
-    body = "".join(f"Dialogue: 0,{_ts(s)},{_ts(e)},cap,,0,0,0,,{SS.ko_en(ko, en)}\n"
-                   for s, e, ko, en in cues)
+    # 겹침 제거(2026-07-30 형 '싱크 밀림'): 각 자막 끝을 다음 자막 시작 전까지 클램프 → 한 번에 하나만.
+    cc = sorted(cues, key=lambda c: c[0])
+    fixed = []
+    for i, (s, e, ko, en) in enumerate(cc):
+        if i + 1 < len(cc):
+            e = min(e, cc[i + 1][0] - 0.05)
+        if e - s >= 0.4:                       # 너무 짧아진 큐는 버림(깜빡임 방지)
+            fixed.append((s, e, ko, en))
+    # 고정 위치·중앙앵커(형 '위치 일정하게·어지럽지 않게'): 줄 수 무관 항상 같은 자리(하단 밴드).
+    POS = r"{\an5\pos(540,1640)}"
+    body = "".join(f"Dialogue: 0,{_ts(s)},{_ts(e)},cap,,0,0,0,,{POS}{SS.ko_en(ko, en)}\n"
+                   for s, e, ko, en in fixed)
     ass = out_mp4.with_suffix(".ass"); ass.write_text(head + body, encoding="utf-8")
     vf = (f"[0:v]crop={crop},{WARM},drawbox=c=black@{DIM}:t=fill,scale=1080:1080,fps=30,setsar=1[v];"
           f"color=c=black:s={CANVAS[0]}x{CANVAS[1]}:d={DUR}[bg];[bg][v]overlay=0:{VY}[b1];"
