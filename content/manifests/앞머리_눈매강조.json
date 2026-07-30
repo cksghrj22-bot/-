@@ -1,0 +1,139 @@
+{
+  "title": "앞머리 — 눈매를 강조하는 디자인",
+  "stem": "message",
+  "waive": [
+    "bw"
+  ],
+  "outro": "SNS에 일기를 쓰고 있어요",
+  "voice": {
+    "stability": 0.42,
+    "style": 0.15,
+    "speed": 1.05
+  },
+  "bgm": "/tmp/claude-0/0fb0e5b8-eaea-542a-a0d3-be17b390f310/scratchpad/bgm_산책로.mp3",
+  "phrases": [
+    [
+      "앞머리, 이마 가리려고만 자르시나요?",
+      "앞머리, 이마 가리려고만\\N자르시나요?",
+      "Do you cut bangs just to hide your forehead?",
+      false
+    ],
+    [
+      "앞머리의 진짜 역할은, 따로 있어요.",
+      "앞머리의 진짜 역할은,\\N따로 있어요.",
+      "Bangs have another real job.",
+      false
+    ],
+    [
+      "보통은 이마 가리고, 어려 보이려고,",
+      "보통은 이마 가리고,\\N어려 보이려고,",
+      "Usually to hide the forehead, look younger,",
+      false
+    ],
+    [
+      "중안부 짧게, 이미지 바꾸려고 자르죠.",
+      "중안부 짧게,\\N이미지 바꾸려고.",
+      "shorten the mid-face, change the look.",
+      false
+    ],
+    [
+      "근데 앞머리는, 눈매를 강조하는 디자인이에요.",
+      "근데 앞머리는,\\N눈매를 강조하는 디자인.",
+      "But bangs are a design that frames the eyes.",
+      false
+    ],
+    [
+      "특히 눈이 예쁜 분은,",
+      "특히 눈이 예쁜 분은,",
+      "Especially if your eyes are pretty,",
+      false
+    ],
+    [
+      "눈이 강조되는 앞머리가, 정말 예뻐요.",
+      "눈이 강조되는 앞머리가,\\N정말 예뻐요.",
+      "bangs that highlight the eyes look great.",
+      false
+    ],
+    [
+      "팁 하나, 시스루뱅보다",
+      "팁 하나,\\N시스루뱅보다",
+      "A tip — more than see-through bangs,",
+      false
+    ],
+    [
+      "살짝 더 무게감 있게 하면,",
+      "살짝 더 무게감 있게 하면,",
+      "give them a little more weight,",
+      false
+    ],
+    [
+      "눈이 더 살아나요.",
+      "눈이 더 살아나요.",
+      "and the eyes stand out more.",
+      false
+    ],
+    [
+      "앞머리는 가리는 게 아니라,",
+      "앞머리는 가리는 게 아니라,",
+      "Bangs aren't for hiding —",
+      false
+    ],
+    [
+      "보여줄 걸 강조하는 거예요.",
+      "보여줄 걸\\N강조하는 거예요.",
+      "they emphasize what to show.",
+      false
+    ],
+    [
+      "당신의 앞머리는, 뭘 강조하고 있나요?",
+      "당신의 앞머리는,\\N뭘 강조하고 있나요?",
+      "Your bangs — what are they emphasizing?",
+      false
+    ]
+  ],
+  "require_실사": true,
+  "segments": [
+    {
+      "black": true,
+      "bigcard": true,
+      "untilLine": 0,
+      "_기획": "훅 검은카드 — '앞머리 이마 가리려고만 자르시나요?'"
+    },
+    {
+      "src": "1RZPi4kkLVgazRp_QE3W8YwEvg2U4vTkh",
+      "ss": 1,
+      "frame": "portrait",
+      "untilLine": 3,
+      "_실사": "SNOW2 앞머리 앞모습(통념 구간)"
+    },
+    {
+      "src": "1RZPi4kkLVgazRp_QE3W8YwEvg2U4vTkh",
+      "ss": 9,
+      "frame": "portrait",
+      "untilLine": 6,
+      "_실사": "SNOW2 눈매 강조 앞머리(재정의·미소)"
+    },
+    {
+      "src": "1RZPi4kkLVgazRp_QE3W8YwEvg2U4vTkh",
+      "ss": 18,
+      "frame": "portrait",
+      "untilLine": 9,
+      "_실사": "SNOW2 앞머리 만지는 컷(팁 무게감)"
+    },
+    {
+      "src": "1RZPi4kkLVgazRp_QE3W8YwEvg2U4vTkh",
+      "ss": 28,
+      "frame": "portrait",
+      "untilLine": 11,
+      "_실사": "SNOW2 정면 앞머리(강조하는 것)"
+    },
+    {
+      "black": true,
+      "bigcard": true,
+      "untilLine": 12,
+      "tail": 2.8,
+      "_기획": "엔딩 검은카드 — '뭘 강조하고 있나요?' + 아웃트로"
+    }
+  ],
+  "_notes": "앞머리=눈매 강조 재정의(형 구술·주제뱅크 H1). 실사=SNOW 2.MP4(형 제공 앞모습 셀피·앞머리가 눈매 감쌈). 얼굴 위·몸 아래라 자막 기본(아래). 대본=content/대본/2026-07-30_앞머리_눈매강조_새기준.md."
+}
