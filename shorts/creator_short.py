@@ -19,7 +19,7 @@ REPO = Path("/home/user/-")
 WARM = ("eq=saturation=0.90:contrast=1.06:brightness=0.02,"
         "colorbalance=rm=0.03:bm=-0.03:rh=0.02:bh=-0.03,"
         "curves=all='0/0.03 0.5/0.5 1/0.98'")
-DIM = 0.22
+DIM = 0.12        # 영상 디밍(2026-07-30 형 화질점검 — 0.22는 탁함, 낮춰 선명·밝게)
 VY = 460          # 정사각 영상 y(상단밴드 바로 아래) — 형 승인(v3)
 CANVAS = (1080, 1920)
 
@@ -80,7 +80,9 @@ def build(clip_mp4: str | Path, A: float, B: float,
             "Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\n"
             f"{_style('title', SS.POP_TITLE)}\n{_style('cap', SS.SUB)}\n[Events]\n"
             "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n"
-            f"Dialogue: 0,{_ts(0)},{_ts(DUR)},title,,0,0,0,,{SS.pop_title(title_yellow, title_white)}\n")
+            # 제목 = 메인키워드 하나(2026-07-30 형). white 비면 노랑 키워드 1줄, 있으면 2톤.
+            f"Dialogue: 0,{_ts(0)},{_ts(DUR)},title,,0,0,0,,"
+            f"{SS.POP_YELLOW + title_yellow if not title_white else SS.pop_title(title_yellow, title_white)}\n")
     # 겹침 제거(2026-07-30 형 '싱크 밀림'): 각 자막 끝을 다음 자막 시작 전까지 클램프 → 한 번에 하나만.
     cc = sorted(cues, key=lambda c: c[0])
     fixed = []
@@ -102,7 +104,7 @@ def build(clip_mp4: str | Path, A: float, B: float,
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(A), "-t", str(DUR),
         "-i", str(clip_mp4), "-i", str(REPO / "shorts/assets/bgm_piano_long.mp3"),
         "-filter_complex", vf, "-map", "[vout]", "-map", "[aout]",
-        "-c:v", "libx264", "-preset", "medium", "-crf", "19", "-pix_fmt", "yuv420p",
+        "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p",
         "-r", "30", "-c:a", "aac", "-b:a", "192k", "-shortest", str(out_mp4)], check=True)
     qc(out_mp4, DUR)
     return out_mp4
