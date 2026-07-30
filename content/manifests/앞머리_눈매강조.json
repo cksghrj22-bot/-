@@ -107,11 +107,10 @@
       "_실사": "SNOW2 앞머리 앞모습(통념 구간)"
     },
     {
-      "src": "1RZPi4kkLVgazRp_QE3W8YwEvg2U4vTkh",
-      "ss": 9,
-      "frame": "portrait",
+      "anim": "bang_sparkle",
       "untilLine": 6,
-      "_실사": "SNOW2 눈매 강조 앞머리(재정의·미소)"
+      "tail": 0.3,
+      "_기획": "귀여운 캐릭터 애니(설명 인서트) — 앞머리가 찰랑 내려오며 눈이 반짝. 대사 5~7(앞머리=눈매 강조/눈 예쁜 분/눈 강조 앞머리 예뻐요) 위. 말=그림: '눈매 강조' 나올 때 정확히 눈 반짝."
     },
     {
       "src": "1RZPi4kkLVgazRp_QE3W8YwEvg2U4vTkh",

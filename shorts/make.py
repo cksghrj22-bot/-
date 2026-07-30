@@ -277,6 +277,102 @@ def _strand_zones_frames(frames_dir: Path, lines: list, num_line: int, total: fl
         img.save(frames_dir / f"z{i:04d}.png")
 
 
+# ── 귀여운 캐릭터: 앞머리 찰랑 내려오고 눈 반짝(앞머리=눈매 강조 설명 인서트) ────────
+def _bang_sparkle_frames(frames_dir: Path, lines: list, num_line: int, total: float,
+                         seg_start: float = 0.0, fps: int = 30) -> None:
+    """둥근 얼굴 캐릭터: ①앞머리 없음 → ②앞머리가 찰랑 내려옴 → ③앞머리가 눈매를 감싸며 눈이 반짝.
+    '앞머리는 눈매를 강조하는 디자인'을 귀엽게 시각화(실사 사이 설명 인서트)."""
+    from PIL import Image, ImageDraw
+    import math as _m
+    frames_dir.mkdir(parents=True, exist_ok=True)
+    for p in frames_dir.glob("*.png"):
+        p.unlink()
+    W, H = 1080, 1920
+    CX, CY, R = W // 2, 840, 300               # 얼굴 중심·반지름
+    SKIN = (255, 227, 209); SKIN_L = (255, 214, 194)
+    HAIR = (74, 52, 40); HAIR_D = (54, 36, 27)
+    BLUSH = (255, 170, 165); EYE = (60, 44, 40); YEL = (255, 214, 66)
+    EY = CY - 30                               # 눈 y
+    EXL, EXR = CX - 118, CX + 118              # 좌우 눈 x
+
+    def sm(x): x = max(0.0, min(1.0, x)); return x * x * (3 - 2 * x)
+
+    def star(d, cx, cy, s, col, a=255):
+        pts = []
+        for k in range(8):
+            ang = _m.pi / 4 * k
+            rr = s if k % 2 == 0 else s * 0.4
+            pts.append((cx + rr * _m.cos(ang), cy + rr * _m.sin(ang)))
+        d.polygon(pts, fill=(*col, a))
+
+    N = max(1, round(total * fps))
+    for i in range(N):
+        t = i / (N - 1) if N > 1 else 1.0
+        grow = sm((t - 0.28) / 0.30)           # 앞머리 내려오는 진행(0→1)
+        spark = sm((t - 0.60) / 0.30)          # 눈 반짝 진행
+        sway = _m.sin(t * _m.pi * 5) * 14 * grow   # 찰랑(좌우 흔들)
+        edge = min(1.0, i / 6, (N - 1 - i) / 6)
+
+        img = Image.new("RGB", (W, H), (255, 243, 232))   # 크림 배경
+        d = ImageDraw.Draw(img, "RGBA")
+        # 배경 파스텔 점
+        for (px, py, pr, pc) in [(180, 380, 60, (255, 214, 194)), (900, 520, 44, (255, 224, 236)),
+                                 (150, 1300, 52, (255, 224, 236)), (930, 1360, 66, (214, 236, 255))]:
+            d.ellipse([px-pr, py-pr, px+pr, py+pr], fill=(*pc, 90))
+        # 목·얼굴
+        d.rounded_rectangle([CX-70, CY+R-70, CX+70, CY+R+120], radius=30, fill=SKIN_L)
+        d.ellipse([CX-R, CY-R, CX+R, CY+R], fill=SKIN, outline=(230, 195, 175), width=5)
+        # 볼터치
+        d.ellipse([EXL-58, EY+92, EXL+18, EY+140], fill=(*BLUSH, 150))
+        d.ellipse([EXR-18, EY+92, EXR+58, EY+140], fill=(*BLUSH, 150))
+        # 눈(반짝하면 커지고 광채)
+        eg = 1.0 + 0.12 * spark
+        for ex in (EXL, EXR):
+            ew, eh = int(52*eg), int(66*eg)
+            d.ellipse([ex-ew, EY-eh, ex+ew, EY+eh], fill=(255, 255, 255))
+            d.ellipse([ex-int(38*eg), EY-int(46*eg), ex+int(38*eg), EY+int(46*eg)], fill=EYE)
+            d.ellipse([ex-14, EY-28, ex+6, EY-8], fill=(255, 255, 255))          # 큰 광채
+            d.ellipse([ex+10, EY+6, ex+22, EY+18], fill=(255, 255, 255, 220))    # 작은 광채
+        # 입(방긋)
+        d.arc([CX-42, EY+70, CX+42, EY+130], 20, 160, fill=(200, 120, 110), width=8)
+        # 앞머리(위에서 찰랑 내려옴) — 이마를 덮고 눈매 위까지
+        browY = (CY - R) + int((EY - 44 - (CY - R)) * grow)   # 앞머리 끝 y(눈썹 위)
+        if grow > 0.02:
+            # 메인 프린지: 머리 위 반원 + 물결 아랫단(sway)
+            top = CY - R - 24
+            pts = [(CX - R + 20, top)]
+            segn = 10
+            for s_ in range(segn + 1):
+                x = CX - R + 40 + (2 * R - 80) * s_ / segn
+                wob = _m.sin(s_ / segn * _m.pi) * 22
+                dip = -abs((s_ / segn) - 0.5) * 60 + 30      # 가운데 살짝 내려온 프린지
+                y = browY + wob + dip + (sway if s_ % 2 else sway * 0.6)
+                pts.append((x, y))
+            pts.append((CX + R - 20, top))
+            d.polygon(pts, fill=HAIR)
+            # 옆머리(귀 옆으로 흐르는 기장)
+            for sgn in (-1, 1):
+                d.polygon([(CX + sgn*(R-10), top+40), (CX + sgn*(R+26), CY+40),
+                           (CX + sgn*(R-40), CY+120), (CX + sgn*(R-70), CY-40)], fill=HAIR)
+            # 결 라인(찰랑 강조)
+            for k in range(-3, 4):
+                x0 = CX + k * 60
+                d.line([(x0, browY-70), (x0 + sway*0.8, browY+18)], fill=(*HAIR_D, 160), width=5)
+        # 눈 반짝 별(눈매 강조) — 크게·글로우
+        if spark > 0.05:
+            a = int(255 * spark)
+            tw = 0.7 + 0.3 * _m.sin(t * _m.pi * 8)
+            for (sx, sy, sz, sc, sa) in [(EXR + 92, EY - 78, 58, YEL, a), (EXL - 92, EY - 64, 42, YEL, int(a*0.95)),
+                                         (EXR + 46, EY + 66, 30, (255, 255, 255), int(a*0.85)),
+                                         (EXL - 52, EY + 72, 24, (255, 255, 255), int(a*0.8))]:
+                d.ellipse([sx-sz, sy-sz, sx+sz, sy+sz], fill=(*sc, int(sa*0.18)))   # 글로우
+                star(d, sx, sy, sz * tw, sc, sa)
+        if edge < 1.0:                          # 앞뒤 페이드
+            ov = Image.new("RGBA", (W, H), (255, 243, 232, int(255 * (1 - edge))))
+            img = Image.alpha_composite(img.convert("RGBA"), ov).convert("RGB")
+        img.save(frames_dir / f"z{i:04d}.png")
+
+
 # 브랜드 표준 SNS 아웃트로 — message/mind/product의 default-on 값(계속 빠지던 것).
 DEFAULT_SNS_OUTRO = "SNS에 일기를 쓰고 있어요"
 _OUTRO_STEMS = ("message", "mind", "product")
@@ -429,6 +525,8 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
                 _dusang_zones_frames(fdir, lines, seg.get("numLine", 2), dur, seg_start=prev_end)
             elif seg["anim"] == "strand_zones":
                 _strand_zones_frames(fdir, lines, seg.get("numLine", 2), dur, seg_start=prev_end)
+            elif seg["anim"] == "bang_sparkle":
+                _bang_sparkle_frames(fdir, lines, seg.get("numLine", 2), dur, seg_start=prev_end)
             subprocess.run(["ffmpeg", "-v", "error", "-y", "-framerate", "30",
                             "-i", str(fdir / "z%04d.png"), "-t", f"{dur:.3f}",
                             "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "19", str(out_seg)], check=True)
