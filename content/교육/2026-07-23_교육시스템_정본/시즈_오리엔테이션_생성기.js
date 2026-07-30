@@ -102,25 +102,6 @@ title(s, "두 갈래", 1.6);
 })();
 s.addNotes("윗길 디딤돌→과정→이상향 / 아랫길 이상향만 높이→건너뜀→타협. 취지 설명은 대표님이 직접.");
 
-// beat ⑤ 마무리 (키워드 한 단어)
-s = p.addSlide(); s.background = { color: INK };
-goldDot(s, W/2-0.36, 3.1);
-s.addText("오늘의 디딤돌", { x:1, y:3.4, w:11.33, h:1.4, fontFace:SERIF, fontSize:58, color:CREAM, align:"center" });
-s.addNotes("마무리 키워드. 설명은 대표님.");
-
-// ══════════ 1C. 판단 기준 전환 (dark · 도식만) ══════════
-s = p.addSlide(); s.background = { color: INK };
-brand(s, "THE STANDARD", true);
-(function(){
-  const y=2.9, h=2.6;
-  s.addShape(p.ShapeType.roundRect, { x:1.1, y, w:5.0, h, rectRadius:0.14, fill:{color:"24242A"}, line:{color:"3a3a44",width:1} });
-  s.addText("\"머리를\n할 수 있다\"", { x:1.1, y, w:5.0, h, fontFace:SERIF, bold:true, fontSize:34, color:"C9C3B7", align:"center", valign:"middle", lineSpacingMultiple:1.05 });
-  s.addText("→", { x:6.1, y, w:1.13, h, fontFace:SANS, bold:true, fontSize:44, color:GOLD, align:"center", valign:"middle" });
-  s.addShape(p.ShapeType.roundRect, { x:7.23, y, w:5.0, h, rectRadius:0.14, fill:{color:GOLD} });
-  s.addText("\"디자이너로\n우뚝 선다\"", { x:7.23, y, w:5.0, h, fontFace:SERIF, bold:true, fontSize:34, color:"1A1815", align:"center", valign:"middle", lineSpacingMultiple:1.05 });
-})();
-s.addNotes("판단 기준: 머리를 할 수 있다 → 디자이너로 우뚝 선다. 설명은 대표님.");
-
 // ══════════ 2. THE JOURNEY ══════════
 s = p.addSlide(); s.background = { color: CREAM };
 brand(s, "THE JOURNEY");
@@ -322,36 +303,6 @@ title(s, "직급 승급, 이렇게 채점", 1.6);
 })();
 s.addText("※ 이건 직급(레벨) 승급 채점표 · 디자이너 승급(헤어쇼 기준·무조건 KPI)은 앞장 참고 — 둘은 다릅니다.", { x:0.6, y:6.75, w:12, h:0.35, fontFace:SANS, fontSize:11.5, color:GRAY, align:"center" });
 s.addNotes("이건 '직급(레벨) 승급심사' 점수표(점수_계산표.html 정본). 시즈1~3 합격75↑, 시즈4~5 합격80↑. ↔ 디자이너 승급은 별개(헤어쇼 정량기준+무조건 KPI, 앞장). 두 개를 섞지 말 것.");
-
-// ══════════ 7B-2. 과목 100% 미이수 시 채점 기준 ══════════
-s = p.addSlide(); s.background = { color: CREAM };
-brand(s, "SCORING · PARTIAL");
-kicker(s, "실기 과목당 15점 · 100% 이수 못했을 때");
-title(s, "과목을 다 못 채우면?", 1.6);
-(function(){
-  const tiers=[
-    ["100% 완벽 이수","15","만점"],
-    ["80% 이상 (대부분)","12","−3"],
-    ["60% 이상 (절반↑)","9","−6"],
-    ["40% 이상 (미흡)","6","−9"],
-    ["40% 미만 · 미이수","0","실격"],
-  ];
-  const x0=1.4, w=10.5, y0=2.75, rh=0.72;
-  // 헤더
-  s.addShape(p.ShapeType.rect, { x:x0, y:y0, w:w, h:0.5, fill:{color:INK} });
-  s.addText("이수 정도", { x:x0+0.3, y:y0, w:w*0.5, h:0.5, fontFace:SANS, bold:true, fontSize:12.5, color:"FFFFFF", valign:"middle" });
-  s.addText("점수 (15점 만점)", { x:x0+w*0.5, y:y0, w:w*0.5-0.3, h:0.5, fontFace:SANS, bold:true, fontSize:12.5, color:GOLD, align:"right", valign:"middle" });
-  tiers.forEach((t,i)=>{
-    const ry=y0+0.5+i*rh;
-    if(i%2) s.addShape(p.ShapeType.rect,{x:x0,y:ry,w:w,h:rh,fill:{color:"F1ECE2"}});
-    const last = (i===tiers.length-1);
-    s.addText(t[0], { x:x0+0.3, y:ry, w:w*0.55, h:rh, fontFace:SANS, bold:true, fontSize:15, color:(last?"8a5a5a":INK), valign:"middle" });
-    s.addText(t[1], { x:x0+w*0.55, y:ry, w:w*0.22, h:rh, fontFace:SERIF, bold:true, fontSize:24, color:(last?"8a5a5a":GOLD), align:"center", valign:"middle" });
-    s.addText(t[2], { x:x0+w*0.77, y:ry, w:w*0.23-0.3, h:rh, fontFace:SANS, bold:true, fontSize:13, color:"888888", align:"right", valign:"middle" });
-  });
-})();
-s.addText("＋ 준비물 미비·시간 초과·모델 미확보는 항목별 추가 감점 · 두 과목 각각 이 기준으로 채점", { x:0.6, y:6.75, w:12, h:0.35, fontFace:SANS, fontSize:11.5, color:"6a655c", align:"center" });
-s.addNotes("과목당 15점을 이수 정도로 차등: 100%=15, 80%↑=12, 60%↑=9, 40%↑=6, 미이수=0. '다 못 채우면 그만큼 깎인다'를 명확히. (구간·점수는 시안 — 대표님 확정 후 고정)");
 
 // ══════════ 7C. 4·5레벨 승급 기준 (디자이너로 가는 관문) ══════════
 s = p.addSlide(); s.background = { color: CREAM };
