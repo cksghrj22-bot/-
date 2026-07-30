@@ -122,6 +122,41 @@ s.addText("이상향보다,\n오늘의 디딤돌.", { x:1, y:3.0, w:11.33, h:2.0
 s.addText("— 초디의 한 걸음이 곧 그 길이다", { x:1, y:5.1, w:11.33, h:0.5, fontFace:SANS, fontSize:16, color:GOLD, align:"center" });
 s.addNotes("마무리 한 줄. 이상향은 방향, 디딤돌은 오늘 할 일. 여기서 시스템 설명으로 자연스럽게 넘어간다.");
 
+// ══════════ 1C. 판단 기준 전환 (dark) ══════════
+s = p.addSlide(); s.background = { color: INK };
+brand(s, "THE STANDARD", true);
+s.addText("우리의 판단 기준이 바뀝니다", { x:1, y:1.7, w:11.33, h:0.6, fontFace:SANS, fontSize:20, color:"C9C3B7", align:"center" });
+(function(){
+  s.addShape(p.ShapeType.roundRect, { x:1.1, y:2.7, w:5.0, h:2.5, rectRadius:0.14, fill:{color:"24242A"}, line:{color:"3a3a44",width:1} });
+  s.addText("예전", { x:1.1, y:2.95, w:5.0, h:0.4, fontFace:SANS, bold:true, fontSize:13, color:"8a8f9a", align:"center", charSpacing:2 });
+  s.addText("\"머리를\n할 수 있다\"", { x:1.1, y:3.35, w:5.0, h:1.7, fontFace:SERIF, bold:true, fontSize:32, color:"C9C3B7", align:"center", valign:"middle", lineSpacingMultiple:1.05 });
+  s.addText("→", { x:6.1, y:2.7, w:1.13, h:2.5, fontFace:SANS, bold:true, fontSize:40, color:GOLD, align:"center", valign:"middle" });
+  s.addShape(p.ShapeType.roundRect, { x:7.23, y:2.7, w:5.0, h:2.5, rectRadius:0.14, fill:{color:GOLD} });
+  s.addText("이제", { x:7.23, y:2.95, w:5.0, h:0.4, fontFace:SANS, bold:true, fontSize:13, color:"5a4a2a", align:"center", charSpacing:2 });
+  s.addText("\"디자이너로\n우뚝 선다\"", { x:7.23, y:3.35, w:5.0, h:1.7, fontFace:SERIF, bold:true, fontSize:32, color:"1A1815", align:"center", valign:"middle", lineSpacingMultiple:1.05 });
+})();
+s.addText("기술을 익혔느냐가 아니라 — 손님을 오게 하고 케어하는, 디자이너로 설 수 있느냐로 본다.", { x:1, y:5.6, w:11.33, h:0.5, fontFace:SANS, fontSize:14, color:"9aa0ab", align:"center" });
+s.addNotes("핵심 선언: 판단 기준을 '머리를 할 수 있다(기술 완료)'에서 '디자이너로 우뚝 선다(유입·케어·브랜드)'로 옮긴다. 개편의 방향.");
+
+// ══════════ 1D. 롤모델 — 유안·범진 영상 예시 ══════════
+s = p.addSlide(); s.background = { color: CREAM };
+brand(s, "ROLE MODEL");
+kicker(s, "먼저 디딤돌을 밟은 사람들 · 영상 예시");
+title(s, "유안 · 범진 — 이렇게 건넜다", 1.6);
+(function(){
+  const names=["유안","범진"], cw=5.95, x0=0.6, gap=0.33, y=2.75;
+  names.forEach((nm,i)=>{
+    const x=x0+i*(cw+gap);
+    s.addShape(p.ShapeType.roundRect, { x, y, w:cw, h:2.9, rectRadius:0.12, fill:{color:"111114"} });
+    s.addShape(p.ShapeType.ellipse, { x:x+cw/2-0.5, y:y+0.75, w:1.0, h:1.0, fill:{color:GOLD} });
+    s.addText("▶", { x:x+cw/2-0.5, y:y+0.75, w:1.0, h:1.0, fontFace:SANS, bold:true, fontSize:26, color:"111114", align:"center", valign:"middle" });
+    s.addText(nm + " 영상", { x, y:y+1.95, w:cw, h:0.4, fontFace:SANS, bold:true, fontSize:16, color:"FFFFFF", align:"center" });
+    s.addText("(발표 때 영상 재생 — 링크 삽입 자리)", { x, y:y+2.35, w:cw, h:0.35, fontFace:SANS, fontSize:11.5, color:"8a8f9a", align:"center" });
+  });
+})();
+s.addText("같은 초디에서 디딤돌을 하나씩 밟아 디자이너로 선 실제 예시 — 영상으로 보여준다.", { x:0.6, y:5.95, w:12, h:0.4, fontFace:SANS, fontSize:13, color:"555555", align:"center" });
+s.addNotes("유안·범진의 실제 성장 영상을 재생. (영상 파일/링크는 발표 전 삽입) — '너희도 이 길을 건널 수 있다'는 증거.");
+
 // ══════════ 2. THE JOURNEY ══════════
 s = p.addSlide(); s.background = { color: CREAM };
 brand(s, "THE JOURNEY");
@@ -323,6 +358,58 @@ title(s, "직급 승급, 이렇게 채점", 1.6);
 })();
 s.addText("※ 이건 직급(레벨) 승급 채점표 · 디자이너 승급(헤어쇼 기준·무조건 KPI)은 앞장 참고 — 둘은 다릅니다.", { x:0.6, y:6.75, w:12, h:0.35, fontFace:SANS, fontSize:11.5, color:GRAY, align:"center" });
 s.addNotes("이건 '직급(레벨) 승급심사' 점수표(점수_계산표.html 정본). 시즈1~3 합격75↑, 시즈4~5 합격80↑. ↔ 디자이너 승급은 별개(헤어쇼 정량기준+무조건 KPI, 앞장). 두 개를 섞지 말 것.");
+
+// ══════════ 7C. 4·5레벨 승급 기준 (디자이너로 가는 관문) ══════════
+s = p.addSlide(); s.background = { color: CREAM };
+brand(s, "LEVEL 4·5");
+kicker(s, "디자이너로 가는 마지막 관문");
+title(s, "4·5레벨 승급 기준", 1.6);
+(function(){
+  const cols=[
+    { lv:"4레벨", tag:"쇼 50% 통과", rows:[["채점","합격 80점↑ (실기30·SNS30 중심)"],["헤어쇼","기존 정량기준 50% 통과"],["방향","현장 실전 + SNS로 유입 시작"]] },
+    { lv:"5레벨", tag:"쇼 80% 통과", rows:[["채점","합격 80점↑"],["헤어쇼","기존 정량기준 80% 통과 → 디자이너"],["방향","혼자 서는 디자이너 · 케어까지"]] },
+  ];
+  const cw=5.95, x0=0.6, gap=0.33, y0=2.75;
+  cols.forEach((c,ci)=>{
+    const x=x0+ci*(cw+gap);
+    s.addShape(p.ShapeType.roundRect, { x, y:y0, w:cw, h:3.1, rectRadius:0.12, fill:{color:CARDBG}, line:{color:GOLD,width:1.5} });
+    s.addText(c.lv, { x:x+0.3, y:y0+0.25, w:cw*0.5, h:0.5, fontFace:SERIF, bold:true, fontSize:26, color:INK, valign:"middle" });
+    s.addText(c.tag, { x:x+cw*0.45, y:y0+0.3, w:cw*0.5-0.3, h:0.42, fontFace:SANS, bold:true, fontSize:12, color:"FFFFFF", align:"center", valign:"middle", fill:{color:GOLD} });
+    c.rows.forEach((r,ri)=>{
+      const ry=y0+0.95+ri*0.68;
+      s.addText(r[0], { x:x+0.3, y:ry, w:1.3, h:0.6, fontFace:SANS, bold:true, fontSize:13, color:GOLD, valign:"middle" });
+      s.addText(r[1], { x:x+1.5, y:ry, w:cw-1.8, h:0.6, fontFace:SANS, fontSize:12.5, color:"3a362f", valign:"middle" });
+    });
+  });
+})();
+s.addText("＋ 최종 KPI(모델100·매출500·시그니처60·리뷰70·조회수10만) 달성 시 — 쇼·정량 무관하게 무조건 디자이너.", { x:0.6, y:6.05, w:12, h:0.4, fontFace:SANS, fontSize:12.5, bold:true, color:"6a655c", align:"center" });
+s.addNotes("4레벨=쇼 50% 통과, 5레벨=쇼 80% 통과로 디자이너. 채점은 둘 다 80↑. KPI 채우면 지름길.");
+
+// ══════════ 7D. 샵 개편 → 디자이너 기준 변경 (강조) ══════════
+s = p.addSlide(); s.background = { color: CREAM };
+brand(s, "RENEWAL");
+kicker(s, "한남 · 맨즈 · 플레이스 개편");
+title(s, "디자이너 되는 기준이 바뀐다", 1.6);
+(function(){
+  const items=[
+    ["샵 개편","한남·맨즈·플레이스 개편에 맞춰 디자이너 승급 기준·시점이 조정됨"],
+    ["1~3레벨 즉시 적용","지금 1~3레벨 아이들에게 바로 적용된다"],
+  ];
+  let y=2.75;
+  items.forEach((r,i)=>{
+    s.addShape(p.ShapeType.ellipse, { x:0.62, y:y+0.06, w:0.5, h:0.5, fill:{color:INK} });
+    s.addText(String(i+1), { x:0.62, y:y+0.06, w:0.5, h:0.5, fontFace:SERIF, bold:true, fontSize:16, color:GOLD, align:"center", valign:"middle" });
+    s.addText(r[0], { x:1.35, y:y-0.05, w:11, h:0.42, fontFace:SANS, bold:true, fontSize:17, color:INK });
+    s.addText(r[1], { x:1.35, y:y+0.38, w:11.2, h:0.4, fontFace:SANS, fontSize:13, color:"555555" });
+    y += 1.0;
+  });
+  // 강조 박스 (SNS 마케팅 못 채우면 밀림)
+  s.addShape(p.ShapeType.roundRect, { x:0.6, y:4.95, w:12.13, h:1.35, rectRadius:0.12, fill:{color:"2A211A"} });
+  s.addText("⚠  단, SNS 마케팅력 기준을 못 채우면 — 밀린다", { x:1.0, y:5.15, w:11.3, h:0.55, fontFace:SANS, bold:true, fontSize:19, color:GOLD, valign:"middle" });
+  s.addText("빨라진 만큼, '나를 알리고 손님을 오게 하는 힘(SNS)'이 안 되면 승급은 미뤄진다.", { x:1.0, y:5.75, w:11.3, h:0.45, fontFace:SANS, fontSize:13.5, color:"D7D1C6", valign:"middle" });
+})();
+s.addText("※ 구체 기준일자는 개편 확정본 반영 예정", { x:0.6, y:6.55, w:12, h:0.3, fontFace:SANS, fontSize:11, color:GRAY, align:"center" });
+s.addNotes("샵 개편으로 디자이너 기준·시점 조정, 1~3레벨 즉시 적용. 핵심 강조: SNS 마케팅력 못 채우면 밀린다 — 빨라진 만큼 유입력이 관건. 정확한 날짜는 개편 확정 시 갱신.");
 
 // ══════════ 8. Q&A (dark) ══════════
 s = p.addSlide(); s.background = { color: INK };
