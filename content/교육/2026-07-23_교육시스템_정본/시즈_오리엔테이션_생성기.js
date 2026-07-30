@@ -327,7 +327,7 @@ kpi.forEach((k,i)=>{
   s.addShape(p.ShapeType.roundRect, { x, y:5.55, w:kw, h:0.62, rectRadius:0.12, fill:{color:GOLD} });
   s.addText(k, { x:x+0.05, y:5.55, w:kw-0.1, h:0.62, fontFace:SANS, bold:true, fontSize:13, color:"FFFFFF", align:"center", valign:"middle" });
 });
-s.addText("SNS — 1·2레벨 주 1개 / 3·4레벨 주 2개 (나의 생각·연습)로 나를 알리는 힘까지",
+s.addText("SNS — 1~3레벨 주 2개(월 8·누적 35↑) / 4~5레벨 최소 주 3개(총 50)로 나를 알리는 힘까지",
   { x:0.62, y:6.5, w:12, h:0.35, fontFace:SANS, fontSize:12, color:"6A655C" });
 s.addNotes("승급은 시그니처 쇼(인스타 헤어쇼)로 증명 — 4레벨 정량기준 50%, 5레벨 80% 통과 시. 정량기준: 포트폴리오30·인스타3개월·매출300~400만·리뷰월10·모델50명. 그리고 최종 KPI(모델100·매출500·시그니처60·리뷰70·조회수10만) 달성 시엔 무조건 디자이너 승급.");
 
@@ -338,8 +338,8 @@ kicker(s, "직급(레벨) 승급심사 · 점수 계산표 · 만점 100");
 title(s, "직급 승급, 이렇게 채점", 1.6);
 (function(){
   const cols=[
-    { head:"시즈 1~3", pass:"합격 75점↑", rows:[["실기","45","3과목 × 15"],["연습","15","월 16회↑ 3점·매일 40분↑"],["SNS","10","월 10회↑ 10점"],["팀교육","10","매달 1회·총 5회 (확인 후 카톡 보고)"],["교육과제","10","기간 내 이행"],["PPT","10","발표"]] },
-    { head:"시즈 4~5", pass:"합격 80점↑", rows:[["실기","30","두 과목(각 15)·준비물 감점"],["SNS","30","시그니처 5개월 30개"],["PPT","10","발표"],["교육과제","10","기간 내 이행"],["태도","10","지각 회당 -1"],["연습","10","연습 횟수"]] },
+    { head:"시즈 1~3", pass:"합격 75점↑", rows:[["실기","30","2과목 × 15"],["연습","20","월 16회↑·매일 40분↑"],["SNS","20","주 2개·월 8개·누적 35↑"],["팀교육","10","매달 1회·총 5회 (확인 후 카톡)"],["교육과제","10","기간 내 이행"],["PPT","10","발표"]] },
+    { head:"시즈 4~5", pass:"합격 80점↑", rows:[["실기","30","두 과목(각 15)·준비물 감점"],["SNS","30","최소 주 3개·총 50개(시그니처)"],["PPT","10","발표"],["교육과제","10","기간 내 이행"],["태도","10","지각 회당 -1"],["연습","10","연습 횟수"]] },
   ];
   const cw=5.95, x0=0.6, gap=0.33, y0=2.75;
   cols.forEach((c,ci)=>{
@@ -358,6 +358,36 @@ title(s, "직급 승급, 이렇게 채점", 1.6);
 })();
 s.addText("※ 이건 직급(레벨) 승급 채점표 · 디자이너 승급(헤어쇼 기준·무조건 KPI)은 앞장 참고 — 둘은 다릅니다.", { x:0.6, y:6.75, w:12, h:0.35, fontFace:SANS, fontSize:11.5, color:GRAY, align:"center" });
 s.addNotes("이건 '직급(레벨) 승급심사' 점수표(점수_계산표.html 정본). 시즈1~3 합격75↑, 시즈4~5 합격80↑. ↔ 디자이너 승급은 별개(헤어쇼 정량기준+무조건 KPI, 앞장). 두 개를 섞지 말 것.");
+
+// ══════════ 7B-2. 과목 100% 미이수 시 채점 기준 ══════════
+s = p.addSlide(); s.background = { color: CREAM };
+brand(s, "SCORING · PARTIAL");
+kicker(s, "실기 과목당 15점 · 100% 이수 못했을 때");
+title(s, "과목을 다 못 채우면?", 1.6);
+(function(){
+  const tiers=[
+    ["100% 완벽 이수","15","만점"],
+    ["80% 이상 (대부분)","12","−3"],
+    ["60% 이상 (절반↑)","9","−6"],
+    ["40% 이상 (미흡)","6","−9"],
+    ["40% 미만 · 미이수","0","실격"],
+  ];
+  const x0=1.4, w=10.5, y0=2.75, rh=0.72;
+  // 헤더
+  s.addShape(p.ShapeType.rect, { x:x0, y:y0, w:w, h:0.5, fill:{color:INK} });
+  s.addText("이수 정도", { x:x0+0.3, y:y0, w:w*0.5, h:0.5, fontFace:SANS, bold:true, fontSize:12.5, color:"FFFFFF", valign:"middle" });
+  s.addText("점수 (15점 만점)", { x:x0+w*0.5, y:y0, w:w*0.5-0.3, h:0.5, fontFace:SANS, bold:true, fontSize:12.5, color:GOLD, align:"right", valign:"middle" });
+  tiers.forEach((t,i)=>{
+    const ry=y0+0.5+i*rh;
+    if(i%2) s.addShape(p.ShapeType.rect,{x:x0,y:ry,w:w,h:rh,fill:{color:"F1ECE2"}});
+    const last = (i===tiers.length-1);
+    s.addText(t[0], { x:x0+0.3, y:ry, w:w*0.55, h:rh, fontFace:SANS, bold:true, fontSize:15, color:(last?"8a5a5a":INK), valign:"middle" });
+    s.addText(t[1], { x:x0+w*0.55, y:ry, w:w*0.22, h:rh, fontFace:SERIF, bold:true, fontSize:24, color:(last?"8a5a5a":GOLD), align:"center", valign:"middle" });
+    s.addText(t[2], { x:x0+w*0.77, y:ry, w:w*0.23-0.3, h:rh, fontFace:SANS, bold:true, fontSize:13, color:"888888", align:"right", valign:"middle" });
+  });
+})();
+s.addText("＋ 준비물 미비·시간 초과·모델 미확보는 항목별 추가 감점 · 두 과목 각각 이 기준으로 채점", { x:0.6, y:6.75, w:12, h:0.35, fontFace:SANS, fontSize:11.5, color:"6a655c", align:"center" });
+s.addNotes("과목당 15점을 이수 정도로 차등: 100%=15, 80%↑=12, 60%↑=9, 40%↑=6, 미이수=0. '다 못 채우면 그만큼 깎인다'를 명확히. (구간·점수는 시안 — 대표님 확정 후 고정)");
 
 // ══════════ 7C. 4·5레벨 승급 기준 (디자이너로 가는 관문) ══════════
 s = p.addSlide(); s.background = { color: CREAM };
