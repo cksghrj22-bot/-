@@ -23,8 +23,8 @@
   .pen { font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif; font-weight:700; letter-spacing:-0.02em; }
 
   header { text-align:center; padding:22px 20px 8px; }
-  header h1 { font-family:var(--hand); font-weight:700; letter-spacing:0; font-size:clamp(30px,5vw,60px); color:#DFC57E; line-height:1.15; }
-  header p  { font-family:var(--hand); color:#b9beca; font-size:clamp(17px,2vw,24px); margin-top:6px; }
+  header h1 { font-family:var(--hand); font-weight:700; letter-spacing:0; font-size:clamp(24px,3.4vw,42px); color:#DFC57E; line-height:1.15; }
+  header p  { font-family:var(--hand); color:#b9beca; font-size:clamp(14px,1.5vw,19px); margin-top:6px; }
 
   .stage { display:flex; height:100vh; }
   .main { flex:1; min-width:0; display:flex; flex-direction:column; }
@@ -207,7 +207,7 @@ function renderCloud(){
   for (const [key, v] of entries){
     seen.add(key);
     let el = cloud.querySelector(`[data-key="${CSS.escape(key)}"]`);
-    let size = 24 + (v.n / max) * 56;               // 24px ~ 80px (기존보다 작게)
+    let size = 16 + (v.n / max) * 30;               // 16px ~ 46px (더 작게 — 잘 보이게)
     const html = v.label + (v.n > 1 ? `<small>×${v.n}</small>` : '');
     if (!el){
       el = document.createElement('div');
@@ -220,8 +220,8 @@ function renderCloud(){
     if (el.innerHTML !== html) el.innerHTML = html;
     el.style.fontSize = size + 'px';
     // 화면 밖으로 넘치지 않게 — 폭이 구름보다 넓으면 들어올 때까지 줄인다(긴 단어 대비)
-    const maxW = W * 0.88;
-    while (el.offsetWidth > maxW && size > 15){ size -= 3; el.style.fontSize = size + 'px'; }
+    const maxW = W * 0.8;
+    while (el.offsetWidth > maxW && size > 13){ size -= 2; el.style.fontSize = size + 'px'; }
 
     // 크기를 먼저 입힌 뒤 실측 → 중앙 나선을 돌며 안 겹치는 첫 자리에 놓는다
     const w = el.offsetWidth + 26, h = el.offsetHeight + 12;
