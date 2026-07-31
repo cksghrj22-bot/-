@@ -92,9 +92,13 @@ def extract(file_id: str, ss: float, t: float, out: str | Path,
     import time as _time
     out = Path(out)
     _tok = tok
+    _cache = Path("/tmp/vid_cache") / f"{file_id}.mp4"   # 원본 로컬 캐시 우선(Drive throttle 회피)
     for _att in range(6):                # Drive rate throttle(403) 대비 재시도 + 토큰 갱신
-        url, hdr = authorized_source(file_id, _tok)
-        cmd = ["ffmpeg", "-v", "error", "-headers", hdr, "-ss", str(ss), "-i", url, "-t", str(t)]
+        if _cache.is_file():
+            _src, _hdrs = str(_cache), None
+        else:
+            url, hdr = authorized_source(file_id, _tok); _src, _hdrs = url, hdr
+        cmd = ["ffmpeg", "-v", "error"] + (["-headers", _hdrs] if _hdrs else []) + ["-ss", str(ss), "-i", _src, "-t", str(t)]
         if vf:
             cmd += ["-vf", vf]
         cmd += (["-c:a", "aac", "-b:a", "128k"] if with_audio else ["-an"])
