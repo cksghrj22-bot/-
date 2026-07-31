@@ -154,6 +154,75 @@ def build():
             if not moved:
                 misplaced.append((f'이동실패 L{level}', f'{src_m}→{dst_m}'))
 
+    # ── 선생님별 월 균등화: 한 선생님이 특정 달에 몰리지 않게(8~11월 균등, 12월은 일수
+    #    적어 자연히 적게). 무거운 달에서 가벼운 달로 제약 지키며 한 과목씩 이동. ──
+    def _tmonth_counts(tc):
+        c = Counter()
+        for d in DATA:
+            if isinstance(d, datetime.date):
+                for _l, _t, _v in DATA[d]:
+                    if _t == tc:
+                        c[d.month] += 1
+        return c
+
+    def _move_month(tc, from_m, to_m):
+        capw = spec.RULES['max_same_weekday']
+        # 출발월의 레벨별 개수(그 달에서 레벨이 0이 되는 과목은 빼지 않도록 보존)
+        mcnt = Counter()
+        for dd in DATA:
+            if isinstance(dd, datetime.date) and dd.month == from_m:
+                for _l2, _t2, _v2 in DATA[dd]:
+                    if _t2 not in ('모델', '특강', '시험') and _v2:
+                        for x in _v2.replace('L', '').split('·'):
+                            if x != '0':
+                                mcnt[int(x)] += 1
+        srcs = sorted(((d, i, DATA[d][i]) for d in list(DATA)
+                       if isinstance(d, datetime.date) and d.month == from_m
+                       for i, (l, t, v) in enumerate(DATA[d]) if t == tc),
+                      key=lambda x: (x[0].toordinal(), x[2][0]))
+        tdays = set(d for d in DATA if isinstance(d, datetime.date)
+                    for _l, _t, _v in DATA[d] if _t == tc)
+        for d0, i0, (lab, _t, lvt) in srcs:
+            lset = _lset_of(lvt); others = tdays - {d0}
+            if any(mcnt[x] <= 1 for x in lset):        # 그 달의 마지막 해당 레벨이면 보존
+                continue
+            cands = sorted(
+                (d for wk in weeks for d in wk_dates[wk]
+                 if d.month == to_m and d != d0
+                 and d.weekday() not in spec.TEACHER_OFF.get(tc, ())
+                 and not (lset & day_lv[d]) and tc not in day_tc[d]
+                 and day_load[d] < spec.RULES['max_per_day']
+                 and tc_wd[tc][d.weekday()] < capw
+                 and all(abs((d - o).days) != 1 for o in others)),
+                key=lambda d: (tc_wd[tc][d.weekday()], day_load[d], d.toordinal()))
+            if not cands:
+                continue
+            d1 = cands[0]
+            DATA[d0].pop(i0); day_load[d0] -= 1; tc_wd[tc][d0.weekday()] -= 1; day_tc[d0].discard(tc)
+            day_lv[d0] = set().union(*[_lset_of(x[2]) for x in DATA[d0]
+                                       if x[1] not in ('모델', '특강', '시험')]) if DATA[d0] else set()
+            DATA[d1].append((lab, tc, lvt))
+            day_lv[d1] |= lset; day_tc[d1].add(tc); tc_wd[tc][d1.weekday()] += 1; day_load[d1] += 1
+            return True
+        return False
+
+    MAIN = [8, 9, 10, 11]        # 12월(stub)은 이동 목적지에서 제외 — 자연히 적게 둠
+    for tc in spec.TRACKS:
+        for _ in range(len(spec.TRACKS[tc]) * 3):
+            cnt = _tmonth_counts(tc)
+            src = max([8, 9, 10, 11, 12], key=lambda m: (cnt[m], -m))
+            order = sorted(MAIN, key=lambda m: (cnt[m], m))
+            if cnt[src] - cnt[order[0]] <= 1:
+                break
+            done = False
+            for dst in order:
+                if dst == src or cnt[src] - cnt[dst] <= 1:
+                    continue
+                if _move_month(tc, src, dst):
+                    done = True; break
+            if not done:
+                break
+
     # ── 연달아 방지: 같은 선생님이 이어진 날(±1일)에 붙으면, 뒤 과목을 같은 달 안에서
     #    비어있는 '안 붙는' 날로 일자만 옮긴다(월은 그대로). 재현 위해 결정적으로 처리. ──
     cap = spec.RULES['max_same_weekday']

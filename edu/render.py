@@ -149,9 +149,41 @@ def _level_matrix(DATA):
             f'<tbody>{rows}</tbody><tfoot>{foot}</tfoot></table>')
 
 
+def _teacher_month_matrix(DATA):
+    """선생님 × 월 수업 개수 표 HTML — DATA에서 직접 집계."""
+    import datetime
+    from collections import defaultdict, Counter
+    tm = defaultdict(Counter)
+    for d, v in DATA.items():
+        if not isinstance(d, datetime.date):
+            continue
+        for label, t, lvt in v:
+            if t in ('모델', '특강', '시험'):
+                continue
+            tm[t][d.month] += 1
+    months = [8, 9, 10, 11, 12]
+    order = [t for t in spec.TEACHERS if t in tm]
+    head = '<tr><th>선생님</th>' + ''.join(f'<th>{m}월</th>' for m in months) + '<th class="sum">합계</th></tr>'
+    rows = ''; coltot = Counter(); grand = 0
+    for t in order:
+        r = tm[t]; rowsum = sum(r[m] for m in months); grand += rowsum
+        cells = ''
+        for m in months:
+            n = r[m]; coltot[m] += n
+            cells += f'<td class="{"z" if n == 0 else ""}">{n}</td>'
+        rows += (f'<tr><td class="mo" style="color:{spec.COL[t]}">{t}</td>{cells}'
+                 f'<td class="sum">{rowsum}</td></tr>')
+    foot = ('<tr class="tot"><td class="mo">합계</td>'
+            + ''.join(f'<td>{coltot[m]}</td>' for m in months)
+            + f'<td class="sum">{grand}</td></tr>')
+    return (f'<table class="lvmx"><thead>{head}</thead>'
+            f'<tbody>{rows}</tbody><tfoot>{foot}</tfoot></table>')
+
+
 def render_all(DATA):
     """배포용 통합본 — 시스템 요약 + 스케줄표 + 과목별 준비물 을 한 문서로."""
     lvmx = _level_matrix(DATA)
+    tmmx = _teacher_month_matrix(DATA)
     roles = ''.join(
         f'<tr><td class="rt" style="color:{spec.COL[t]}">{t}</td><td>{_esc(role)}</td>'
         f'<td class="rl">{_esc(lv)}</td></tr>' for t, role, lv in ROLES)
@@ -256,6 +288,10 @@ table.lvmx{{border-collapse:collapse;background:#fff;border:1px solid var(--line
 <h3 style="font-size:15px;font-weight:900;margin-bottom:8px">월 × 레벨 교육 개수</h3>
 {lvmx}
 <div class="note" style="margin-top:10px">· 표의 숫자 = 그 달에 열리는 <b>해당 레벨 과목 수</b> (맨즈 별도 · 특강·모델데이·시험 제외).<br>· 12월은 12/6에 정규가 끝나 첫 주(약 1주)만 있어 개수가 적습니다.</div>
+<div style="height:16px"></div>
+<h3 style="font-size:15px;font-weight:900;margin-bottom:8px">선생님별 · 월 수업 개수</h3>
+{tmmx}
+<div class="note" style="margin-top:10px">· 한 선생님이 특정 달에 몰리지 않게 <b>8~11월은 고르게</b> 폈습니다. 12월은 수업일(약 1주)이 적어 자연히 적습니다.</div>
 </div>
 
 <div class="sec" id="prep"><div class="sh">MATERIALS</div><div class="st">② 과목별 준비물 · 과제 · 주의 <span style="font-size:13px;color:var(--gray);font-weight:700">(총 {prep_total}과목)</span></div>
