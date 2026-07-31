@@ -75,6 +75,8 @@ def build():
                 if wk not in byweek:
                     continue
                 for dt in wk_dates[wk]:
+                    if dt.weekday() in spec.TEACHER_OFF.get(teacher, ()):  # 선생님 휴무 요일
+                        continue
                     if lset & day_lv[dt]:            # 같은 레벨 이미 있음 → 불가
                         continue
                     if teacher in day_tc[dt]:        # 같은 선생님 하루 2번 방지
@@ -183,5 +185,10 @@ def validate(DATA):
         for w, n in c.items():
             if n > cap:
                 problems.append(f"{t} 요일 몰림: {wd[w]}요일 {n}회(최대 {cap})")
+
+    # 9) 선생님별 휴무 요일 준수 (예: 와이=화·일 배제 → 수·목·금만)
+    for d, l, t, lvt in reg:
+        if d.weekday() in spec.TEACHER_OFF.get(t, ()):
+            problems.append(f"{t} 휴무 요일 배치: {d}({wd[d.weekday()]}) {l}")
 
     return problems
