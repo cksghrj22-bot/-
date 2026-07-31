@@ -72,7 +72,7 @@ body{{background:#e8e5df;color:var(--ink);font-family:-apple-system,"Apple SD Go
 <h1>교육 일정 캘린더 — 8월 2째주 ~ 12월</h1>
 <div class="sub">정규교육 <b>8/10 ~ 12/6</b> (입봉시험 12/21 앞) · <b>기본 아침교육 {spec.MORNING}</b> · <b>모델작업은 {spec.EVENING}</b> · 월·토 휴무 · 맨즈(옴므) 별도</div></div>
 <div class="legend">{legend}</div>
-<div class="note">· <b>선생님별로 전 구간(8월~12월 첫주)에 넓게 펼침</b> — 한 사람이 특정 달·요일에 몰리지 않게 로또식 배분.<br>· <b>레벨이 다르면 같은 날 중복 가능</b> — 과목마다 레벨(L1~L5) 태그. 같은 레벨은 같은 날 겹치지 않게, 다른 레벨은 병행. 칸 앞 작은 L태그가 레벨.<br>· <b>기본은 아침 교육({spec.MORNING})</b> — 이론·실습은 아침에.<br>· <b>모델 작업은 저녁({spec.EVENING})</b> — 모델데이(2·4주 금)·룩북/촬영 등 실제 모델 세우는 실습은 저녁에 해서 영업·수업에 지장 없게. 특강은 3째주 금. 이벤트 금요일엔 정규 아침수업 미편성.</div>
+<div class="note">· <b>기본은 아침 교육 {spec.MORNING}</b>, <b>모델 작업은 {spec.EVENING}</b>.<br>· 특강 = 3째주 금 · 모델데이 = 2·4주 금 · 입봉시험 <b>12/21(월)</b> · 월·토 휴무.<br>· 칸 앞 <b>L1~L5</b>는 과목 레벨 표기.</div>
 {months}
 <div class="foot">A T &nbsp; N O W N &nbsp;·&nbsp; 8 ~ 12 월 교육 일정</div>
 </div></body></html>'''
