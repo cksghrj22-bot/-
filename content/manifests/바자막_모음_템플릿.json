@@ -13,33 +13,34 @@
     ["예뻐 보이는 머리와, 나한테 맞는 머리는 다릅니다.", "'예뻐 보이는 머리'와 '맞는 머리'는 다릅니다.", null, false],
     ["염색 주기보다, 손상 관리가 먼저예요.", "염색 주기보다, 손상 관리가 먼저예요.", null, false]
   ],
+  "_배치원칙": "형 2026-07-31 '깨끗하게 정렬 X — 들쭉날쭉 의식의 흐름'. 바 x·y를 컷마다 위/중/아래·좌/우로 흩뿌리고, 태그도 본문과 어긋나게 offset(정렬 컬럼 금지). 순서 무관·랜덤 모음과 한 몸.",
   "segments": [
     {"img": "/tmp/bar_demo/bg1.png", "untilLine": 0,
-     "bars": [{"text": "미용 상식", "color": "green", "y": 690, "fs": 34},
-              {"text": "머리 감고 바로 자면,\n볼륨은 다 죽어요.", "color": "white"}]},
+     "bars": [{"text": "미용 상식", "color": "green", "x": 90, "y": 520, "fs": 34},
+              {"text": "머리 감고 바로 자면,\n볼륨은 다 죽어요.", "color": "white", "x": 160, "y": 590}]},
 
     {"img": "/tmp/bar_demo/bg2.png", "untilLine": 1,
-     "bars": [{"text": "원장 생각", "color": "pink", "y": 690, "fs": 34},
-              {"text": "펌은 유지가 아니라,\n손질을 쉽게 하려는 거예요.", "color": "cyan"}]},
+     "bars": [{"text": "원장 생각", "color": "pink", "x": 470, "y": 930, "fs": 34},
+              {"text": "펌은 유지가 아니라,\n손질을 쉽게 하려는 거예요.", "color": "cyan", "x": 250, "y": 1000}]},
 
     {"img": "/tmp/bar_demo/bg3.png", "untilLine": 2,
-     "bars": [{"text": "미용 상식", "color": "green", "y": 690, "fs": 34},
-              {"text": "매직해도 안 펴지는 곱슬,\n자리를 못 짚은 거예요.", "color": "white"}]},
+     "bars": [{"text": "미용 상식", "color": "green", "x": 130, "y": 1150, "fs": 34},
+              {"text": "매직해도 안 펴지는 곱슬,\n자리를 못 짚은 거예요.", "color": "white", "x": 60, "y": 1220}]},
 
     {"img": "/tmp/bar_demo/bg4.png", "untilLine": 3,
-     "bars": [{"text": "원장 생각", "color": "pink", "y": 690, "fs": 34},
-              {"text": "앞머리는 이마 가리기가 아니라,\n눈매를 살리는 거예요.", "color": "black"}]},
+     "bars": [{"text": "원장 생각", "color": "pink", "x": 360, "y": 500, "fs": 34},
+              {"text": "앞머리는 이마 가리기가 아니라,\n눈매를 살리는 거예요.", "color": "black", "x": 120, "y": 570}]},
 
     {"img": "/tmp/bar_demo/bg5.png", "untilLine": 4,
-     "bars": [{"text": "미용 상식", "color": "green", "y": 690, "fs": 34},
-              {"text": "볼륨매직은\n머리 전체를 펴는 게 아니에요.", "color": "white"}]},
+     "bars": [{"text": "미용 상식", "color": "green", "x": 70, "y": 900, "fs": 34},
+              {"text": "볼륨매직은\n머리 전체를 펴는 게 아니에요.", "color": "white", "x": 200, "y": 970}]},
 
     {"img": "/tmp/bar_demo/bg6.png", "untilLine": 5,
-     "bars": [{"text": "원장 생각", "color": "pink", "y": 690, "fs": 34},
-              {"text": "'예뻐 보이는 머리'와\n'맞는 머리'는 다릅니다.", "color": "cyan"}]},
+     "bars": [{"text": "원장 생각", "color": "pink", "x": 500, "y": 1120, "fs": 34},
+              {"text": "'예뻐 보이는 머리'와\n'맞는 머리'는 다릅니다.", "color": "cyan", "x": 300, "y": 1190}]},
 
     {"img": "/tmp/bar_demo/bg7.png", "untilLine": 6, "tail": 0.6,
-     "bars": [{"text": "미용 상식", "color": "green", "y": 700, "fs": 34},
-              {"text": "염색 주기보다,\n손상 관리가 먼저예요.", "color": "white"}]}
+     "bars": [{"text": "미용 상식", "color": "green", "x": 170, "y": 600, "fs": 34},
+              {"text": "염색 주기보다,\n손상 관리가 먼저예요.", "color": "white", "x": 90, "y": 670}]}
   ]
 }
