@@ -376,6 +376,73 @@ def _bang_sparkle_frames(frames_dir: Path, lines: list, num_line: int, total: fl
         img.save(frames_dir / f"z{i:04d}.png")
 
 
+def _curl_zones_frames(frames_dir: Path, lines: list, num_line: int, total: float,
+                       seg_start: float = 0.0, fps: int = 30) -> None:
+    """악성 곱슬이 잘 생기는 부위 도식(옆모습 머리) — 앞머리라인·페이스라인/관자놀이·구렛나루·
+    뒤통수·뒷목이 순차로 빨갛게 반짝인다. '그 자리를 빨리 찾아' 대사 위 설명 인서트(형 2026-07-31)."""
+    from PIL import Image, ImageDraw, ImageFont
+    import math as _m
+    frames_dir.mkdir(parents=True, exist_ok=True)
+    for p in frames_dir.glob("*.png"):
+        p.unlink()
+    W, H = 1080, 1920
+    HAIR = (74, 52, 40); SKIN = (255, 224, 205); RED = (232, 74, 60); DK = (60, 44, 40)
+    CX, CY, R = 470, 820, 300                   # 머리(옆모습) 중심·반지름
+    f_ti = ImageFont.truetype(NSQR, 58); f_lb = ImageFont.truetype(NSQR, 40)   # NSQR=공백 렌더 OK(교보는 공백 두부)
+
+    def sm(x): x = max(0.0, min(1.0, x)); return x * x * (3 - 2 * x)
+
+    # 존: (라벨, 존점 xy, 라벨앵커 xy, 등장순서 0~4)  — 옆모습(얼굴이 오른쪽)
+    zones = [
+        ("앞머리 라인", (past := (CX + 150, CY - R + 70)), (past[0] + 150, past[1] - 40), 0),
+        ("페이스라인", (CX + R - 18, CY - 40), (CX + R + 40, CY - 70), 1),
+        ("구렛나루", (CX + R - 70, CY + 150), (CX + R + 40, CY + 170), 2),
+        ("뒤통수", (CX - R + 90, CY - 80), (CX - R - 40, CY - 120), 3),
+        ("뒷목 라인", (CX - R + 150, CY + R - 40), (CX - R + 10, CY + R + 70), 4),
+    ]
+    N = max(1, round(total * fps))
+    for i in range(N):
+        t = i / (N - 1) if N > 1 else 1.0
+        edge = min(1.0, i / 6, (N - 1 - i) / 6)
+        img = Image.new("RGB", (W, H), (255, 243, 232))
+        d = ImageDraw.Draw(img, "RGBA")
+        # 제목
+        ti = "악성 곱슬이 잘 생기는 곳"
+        tw = d.textlength(ti, font=f_ti)
+        d.text((W / 2 - tw / 2, 300), ti, font=f_ti, fill=DK)
+        # 옆모습 머리: 두상(하어) + 얼굴 프로필(스킨) + 코 + 귀 + 목
+        d.ellipse([CX - R, CY - R, CX + R, CY + R], fill=HAIR)                         # 두상(머리카락)
+        d.rounded_rectangle([CX + 40, CY + R - 60, CX + 190, CY + R + 150], radius=40, fill=SKIN)  # 목
+        d.pieslice([CX - R + 30, CY - R + 30, CX + R + 120, CY + R + 20], -90, 95, fill=SKIN)      # 얼굴(앞쪽) 스킨
+        d.polygon([(CX + R + 78, CY - 20), (CX + R + 128, CY + 34), (CX + R + 74, CY + 46)], fill=SKIN)  # 코
+        d.ellipse([CX + 150, CY + 60, CX + 214, CY + 150], fill=(245, 205, 186), outline=(210, 170, 150), width=4)  # 귀
+        # 헤어라인(앞머리 경계) 살짝
+        d.arc([CX - R + 20, CY - R + 20, CX + R - 10, CY + R - 20], -70, 40, fill=(54, 36, 27), width=6)
+        # 존 순차 등장(빨간 글로우 + 펄스 + 라벨·리더선)
+        seg = 1.0 / len(zones)
+        for (lab, (zx, zy), (lx, ly), order) in zones:
+            ap = sm((t - order * seg * 0.7) / (seg * 0.9))
+            if ap <= 0.02:
+                continue
+            pulse = 0.72 + 0.28 * _m.sin(t * _m.pi * 6 + order)
+            gl = int(52 * ap)
+            for rr, aa in ((int(46 * pulse), 60), (int(30 * pulse), 120)):
+                d.ellipse([zx - rr, zy - rr, zx + rr, zy + rr], fill=(*RED, int(aa * ap)))
+            d.ellipse([zx - 13, zy - 13, zx + 13, zy + 13], fill=(*RED, int(255 * ap)))
+            # 라벨 박스 + 리더선
+            right = lx >= zx
+            d.line([(zx, zy), (lx, ly + 20)], fill=(*RED, int(220 * ap)), width=4)
+            lw = d.textlength(lab, font=f_lb)
+            bx0 = lx if right else lx - lw
+            d.rounded_rectangle([bx0 - 16, ly - 6, bx0 + lw + 16, ly + 52], radius=14,
+                                fill=(*DK, int(220 * ap)))
+            d.text((bx0, ly), lab, font=f_lb, fill=(255, 255, 255, int(255 * ap)))
+        if edge < 1.0:
+            ov = Image.new("RGBA", (W, H), (255, 243, 232, int(255 * (1 - edge))))
+            img = Image.alpha_composite(img.convert("RGBA"), ov).convert("RGB")
+        img.save(frames_dir / f"z{i:04d}.png")
+
+
 # 브랜드 표준 SNS 아웃트로 — message/mind/product의 default-on 값(계속 빠지던 것).
 DEFAULT_SNS_OUTRO = "SNS에 일기를 쓰고 있어요"
 _OUTRO_STEMS = ("message", "mind", "product")
@@ -537,6 +604,8 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
                 _strand_zones_frames(fdir, lines, seg.get("numLine", 2), dur, seg_start=prev_end)
             elif seg["anim"] == "bang_sparkle":
                 _bang_sparkle_frames(fdir, lines, seg.get("numLine", 2), dur, seg_start=prev_end)
+            elif seg["anim"] == "curl_zones":
+                _curl_zones_frames(fdir, lines, seg.get("numLine", 2), dur, seg_start=prev_end)
             subprocess.run(["ffmpeg", "-v", "error", "-y", "-framerate", "30",
                             "-i", str(fdir / "z%04d.png"), "-t", f"{dur:.3f}",
                             "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "19", str(out_seg)], check=True)

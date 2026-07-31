@@ -19,31 +19,13 @@
       false
     ],
     [
-      "매직이 안 되는 게, 아니에요.",
-      "매직이 안 되는 게,\\N아니에요.",
-      "It's not that it can't be straightened.",
+      "그냥 곱슬과 악성 곱슬은, 펴는 방법이 달라요.",
+      "그냥 곱슬과 악성 곱슬은,\\N펴는 방법이 달라요.",
+      "Mild and severe curls need different methods.",
       false
     ],
     [
-      "곱슬도, 다 같은 곱슬이 아니거든요.",
-      "곱슬도,\\N다 같은 곱슬이 아니거든요.",
-      "Not all curls are the same.",
-      false
-    ],
-    [
-      "그냥 곱슬과 악성 곱슬은, 자리가 달라요.",
-      "그냥 곱슬과 악성 곱슬은,\\N자리가 달라요.",
-      "Mild and severe curls sit in different spots.",
-      false
-    ],
-    [
-      "눈에 보이는 곱슬도, 안 보이는 곱슬도 있어요.",
-      "보이는 곱슬도,\\N안 보이는 곱슬도 있어요.",
-      "Some curls you see, some you don't.",
-      false
-    ],
-    [
-      "악성 곱슬은, 기다린다고 펴지지 않아요.",
+      "악성 곱슬은, 그냥 기다린다고 펴지지 않아요.",
       "악성 곱슬은,\\N기다린다고 펴지지 않아요.",
       "Severe curls won't relax by waiting.",
       false
@@ -55,33 +37,27 @@
       false
     ],
     [
-      "강한 열로, 빨리 약을 입혀야",
-      "강한 열로,\\N빨리 약을 입혀야",
-      "hit it with strong heat, quick product,",
+      "강한 열로, 약을 입혀야",
+      "강한 열로,\\N약을 입혀야",
+      "hit it with strong heat and product,",
       false
     ],
     [
-      "다른 부분이 안 상하고 펴져요.",
-      "다른 부분이\\N안 상하고 펴져요.",
-      "so the rest stays undamaged.",
+      "다른 부분이 안 상하고, 이 부분이 펴져요.",
+      "다른 부분이 안 상하고,\\N이 부분이 펴져요.",
+      "so the rest stays safe and this part relaxes.",
       false
     ],
     [
-      "매직이 안 되던 게, 아니라",
-      "매직이 안 되던 게,\\N아니라",
-      "It wasn't that magic failed —",
+      "매직이 안 되는 게 아니라, 어떻게 펴는지 몰라서예요.",
+      "매직이 안 되는 게 아니라,\\N어떻게 펴는지 몰라서예요.",
+      "It's not that magic fails — the method just wasn't right.",
       false
     ],
     [
-      "악성 곱슬 자리를, 못 짚었던 거예요.",
-      "악성 곱슬 자리를,\\N못 짚었던 거예요.",
-      "the severe-curl spot just wasn't read.",
-      false
-    ],
-    [
-      "당신의 곱슬은, 어디가 악성인가요?",
-      "당신의 곱슬은,\\N어디가 악성인가요?",
-      "Your curls — where's the stubborn one?",
+      "심한 곱슬이라고 무작정 기다렸다면, 앞으로는 이렇게 펴보세요.",
+      "심한 곱슬이라고 무작정 기다렸다면,\\N앞으로는 이렇게 펴보세요.",
+      "If you've just waited — try straightening it this way.",
       false
     ]
   ],
@@ -91,39 +67,45 @@
       "black": true,
       "bigcard": true,
       "untilLine": 0,
-      "_기획": "훅 검은 카드 — '매직해도 안 펴지는 곱슬 있죠?' 공감. 실사 아직 안 켜짐(메시지로 연다)."
+      "_기획": "훅 검은 카드 — '매직해도 안 펴지는 곱슬 있죠?' 공감. 메시지로 연다."
     },
     {
       "src": "1QhDy-2xxKomQq-9LcbFcuMqb_U2LNSkx",
       "ss": 12,
       "frame": "portrait",
+      "untilLine": 2,
+      "_기획": "실사 도입 — video-1119 젖은 채로 열매직(POV 약 도포). 대사 1~2(그냥곱슬≠악성곱슬 펴는 법 다름/악성곱슬 기다린다고 안됨). 자막 위(전역 1150)."
+    },
+    {
+      "anim": "curl_zones",
       "untilLine": 4,
-      "_기획": "실사 도입 — video-1119 젖은 채로 열매직(POV 약 도포·헤어라인 짓기). 대사 1~4. 형 지시='젖은 채로 매직하는 장면'(마른 아이롱 936 X). 밑쏠림→자막 위(전역 sub_margin_v 1150)."
+      "sub_margin_v": 410,
+      "_기획": "악성곱슬 존 애니(옆모습 도식·5부위 반짝: 앞머리라인·페이스라인·구렛나루·뒤통수·뒷목). 대사 3~4(그 자리를 빨리 찾아서/강한 열로 약을 입혀야) '그 자리'를 눈으로. 도식은 위쪽이 차서 자막 아래(410)."
     },
     {
       "src": "1QhDy-2xxKomQq-9LcbFcuMqb_U2LNSkx",
-      "ss": 46,
+      "ss": 60,
       "hflip": true,
       "frame": "portrait",
-      "untilLine": 8,
-      "_기획": "실사 시술핵심 — video-1119 젖은 채로 약 도포 부위별(짓기). 대사 5~8(기다린다고 안 됨/자리 빨리 찾아/강한 열 빨리 약/다른 부분 안 상함). hflip=반복감 제거. 자막 위."
+      "untilLine": 5,
+      "_기획": "실사 시술 — video-1119 젖은 약 도포 부위별(짓기). 대사 5(다른 부분 안 상하고 이 부분이 펴져요). hflip. 자막 위."
     },
     {
       "src": "1Fku3f3DA4HaVIYQ7_ZTMeqkF22nfmwkg",
       "ss": 15,
       "frame": "portrait",
-      "untilLine": 10,
+      "untilLine": 6,
       "sub_margin_v": 410,
-      "_기획": "실사 마무리 — video-805 완성 결과물(매끈 스트레이트). 대사 9~10. 형 '끝 장면 잘 썼다'. ⭐이 컷은 윗부분(머리)이 잘 나와서 자막을 다시 아래로(sub_margin_v 410)=영상 안 가림(형 지시)."
+      "_기획": "실사 완성컷 — video-805 매끈 스트레이트 결과. 대사 6(매직 안 되는 게 아니라 어떻게 펴는지 몰라서). 형 '끝 장면 잘 썼다'. 윗부분 머리 잘 나와 자막 아래(410)."
     },
     {
       "black": true,
       "bigcard": true,
-      "untilLine": 11,
+      "untilLine": 7,
       "tail": 2.8,
-      "_기획": "엔딩 검은 카드 — 판정형 질문 '어디가 악성인가요?' + SNS 아웃트로. tail 2.8=아웃트로 충돌 자동방지."
+      "_기획": "엔딩 검은 카드 — CTA '심한 곱슬이라고 무작정 기다렸다면, 앞으로는 이렇게 펴보세요' + SNS 아웃트로. tail 2.8=충돌 방지."
     }
   ],
   "sub_margin_v": 1150,
-  "_notes": "열매직(악성곱슬) 케이스 교육 쇼츠(형 2026-07-31 구술). 재정의=매직 안 되는 게 아니라 악성곱슬 '자리'를 못 짚은 것. 실사=형 안경 POV 열매직 시술(밑 쏠림→자막 위로 sub_margin_v=1150·겉매직과 동일). ⭐실사가 본체(도입/시술핵심/마무리 3세그). 컬러(waive bw). SNS 아웃트로 default-on. 검은 bigcard 2개(훅·엔딩). ⛔실사 src 3칸 'SCAN_PENDING' — 형이 올리는 'video…' 영상 도착 후 가운데 잘 보이는(정확히 나온) 구간 스캔해 fileId·ss 채워야 렌더 성립(안경 POV라 흔들림 구간 회피). 대본 정본=content/대본/2026-07-31_열매직_악성곱슬_자리를짚어야.md."
+  "_notes": "열매직(악성곱슬) 케이스 교육 쇼츠(형 2026-07-31 구술·텍스트표로 2회 개정). 재정의=매직 안 되는 게 아니라 어떻게 펴는지(악성곱슬 자리) 몰라서. 실사=젖은 채로 열매직 POV(video-1119·형 '마른 936 말고 젖은 매직')+완성컷(video-805). ⭐구조: 훅→젖은매직 실사→악성곱슬 존 애니(중간 삽입·형 지시)→젖은매직 실사→완성컷(자막 아래)→CTA 엔딩. 세그별 자막: 실사=위(1150·밑쏠림)/존애니·완성컷=아래(410·윗부분 살림). 컬러(waive bw). SNS 아웃트로. 1분 미만. 대본=content/대본/2026-07-31_열매직_악성곱슬_자리를짚어야.md."
 }
