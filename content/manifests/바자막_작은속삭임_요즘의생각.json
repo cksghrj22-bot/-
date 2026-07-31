@@ -1,234 +1,39 @@
 {
   "title": "큰 소리보다 작은 속삭임 (요즘의 생각·정체성)",
   "stem": "story",
-  "_notes": "🆕 바자막 '요즘의 생각' 하루일기(형 2026-07-31 구술: 사토 오키 조용한 껌 디자인이 살아남음/남들 방법=아류/멋있어질수록 정체성 잃는 함정/내 존재 자체가 정체성/큰소리보다 작은 속삭임). 형 배경지정 = 예쁜 내가 한 헤어+핀터레스트 예쁜헤어+인테리어+내사진(조용한 메시지를 예쁜 비주얼 위에 얹어 '조용해도 보게' 만드는 장치). 장치2=cyan(형광하늘) 줄기바 1개/컷 — cyan만 이어읽으면 논리 완성(조용한게 살아남음→아류→정체성 잃음→내 존재→나를 봄→내 관점→속삭임). 장치3=사진 켄번즈. ✅형 실사 5장 인입(2026-08-01): 1·6=IMG_2568 보브(예쁜 내 헤어)/2=IMG_2330 에디토리얼 샤기(레퍼)/3=IMG_2331 카멜커피/4=IMG_0043 백스테이지 단체(내 사진)/5=IMG_1782 오마카세. 원본=업로드폴더, 렌더용 복사=/tmp/bar_demo/ph_*.jpg. 마지막=검은화면 밑 1/3 한마디. 바텍스트=나레 verbatim.",
-  "voice": {
-    "stability": 0.42,
-    "style": 0.15,
-    "similarity_boost": 0.85,
-    "speed": 1.02
-  },
+  "handmade": true,
+  "_notes": "🆕 바자막 '요즘의 생각' 저녁 매거진B 톤(형 2026-08-01 브리프: AI연출·사람이 무심하게 툭 만든 투박함/의식의흐름·깊고 진정성/너무 진지도 가볍지도 X/정보가치/저녁 4~5장 매거진B). 형 구술=사토 오키 채택 안 된 조용한 껌 디자인이 살아남음→남들처럼 멋내면 정체성 잃음→내 존재 자체가 답→나를 들여다봄→큰소리보다 작은 속삭임. ✅적용전략(우리가 잡은 실수·전달력): ①바텍=나레 verbatim(하단자막 자동제외) ②cyan 형광하늘 줄기바 1개/컷=cyan만 이어읽어도 논리완성(끝까지 당김) ③1컷 훅+정보앵커(사토 오키)로 정보가치 ④단순배경 가독성(형 '배경 복잡하면 글 안 보인다'→바는 얼굴 피해 plain 영역/블러밴드에) ⑤handmade=바 무심한 미세기울기 자동(양산해도 인간미) ⑥켄번즈 정적탈피 ⑦QC loudnorm I=-16 ⑧라임 부호 ⑨저녁톤 speed 1.02. ⚠️SNS 아웃트로는 의도적 생략(엔딩=검은화면 속삭임 한마디가 여운). ⚠️형 얼굴 등장 금지(2026-08-01 '내가 등장하기는 아직 싫어')→형 나온 백스테이지 단체컷(IMG_0043) 제외. 모델 헤어컷·사물컷은 형 아니므로 OK. 배치=①보브 ②에디토리얼(레퍼) ③카멜(취향=내 존재) ④오마카세(나를 들여다봄) ⑤검은화면. busy컷은 바를 plain영역에. 양산=문장5쌍+사진(형 무등장)만 갈아끼우면 재현. ⚠️인스타 인사이트 API=이 자동세션 없음(형 IG토큰 코드방에서만)→nak__ta__ 레퍼+유튜브 바이럴20 원칙 적용.",
+  "voice": {"stability": 0.42, "style": 0.15, "similarity_boost": 0.85, "speed": 1.02},
   "bgm": "/home/user/-/shorts/assets/bgm_piano_long.mp3",
   "phrases": [
-    [
-      "시끄러운 세상에서,",
-      "시끄러운 세상에서,",
-      null,
-      false
-    ],
-    [
-      "조용한 게 살아남더라.",
-      "조용한 게 살아남더라.",
-      null,
-      false
-    ],
-    [
-      "남들과 같은 방법은,",
-      "남들과 같은 방법은,",
-      null,
-      false
-    ],
-    [
-      "결국 아류였고.",
-      "결국 아류였고.",
-      null,
-      false
-    ],
-    [
-      "멋있어지려 할수록,",
-      "멋있어지려 할수록,",
-      null,
-      false
-    ],
-    [
-      "정체성만 잃었다.",
-      "정체성만 잃었다.",
-      null,
-      false
-    ],
-    [
-      "결국 다른 건,",
-      "결국 다른 건,",
-      null,
-      false
-    ],
-    [
-      "내 존재 자체였다.",
-      "내 존재 자체였다.",
-      null,
-      false
-    ],
-    [
-      "그래서 요즘,",
-      "그래서 요즘,",
-      null,
-      false
-    ],
-    [
-      "나를 자꾸 들여다본다.",
-      "나를 자꾸 들여다본다.",
-      null,
-      false
-    ],
-    [
-      "세상은 이렇게 보지만,",
-      "세상은 이렇게 보지만,",
-      null,
-      false
-    ],
-    [
-      "저는 이렇게 보기도 해요.",
-      "저는 이렇게 보기도 해요.",
-      null,
-      false
-    ],
-    [
-      "큰 소리보다, 작은 속삭임.",
-      "큰 소리보다,\n작은 속삭임.",
-      null,
-      false
-    ]
+    ["사토 오키의, 채택 안 된 아이디어들.", "사토 오키의,\n채택 안 된 아이디어들.", null, false],
+    ["그 중 제일 조용한 게, 끝까지 살아남았다.", "제일 조용한 게,\n끝까지 살아남았다.", null, false],
+    ["남들처럼 멋내려 할수록,", "남들처럼 멋내려 할수록,", null, false],
+    ["정체성만 잃더라.", "정체성만 잃더라.", null, false],
+    ["결국 다른 건,", "결국 다른 건,", null, false],
+    ["내 존재, 자체였다.", "내 존재 자체였다.", null, false],
+    ["그래서 요즘은,", "그래서 요즘은,", null, false],
+    ["나를 자꾸, 들여다본다.", "나를 자꾸 들여다본다.", null, false],
+    ["크게 외치기보다, 작은 속삭임에 끌리는 요즘이다.", "크게 외치기보다,\n작은 속삭임에 끌리는 요즘.", null, false]
   ],
   "segments": [
-    {
-      "img": "/tmp/bar_demo/ph_hair1.jpg",
-      "untilLine": 1,
-      "kenburns": true,
-      "bars": [
-        {
-          "text": "시끄러운 세상에서,",
-          "color": "white",
-          "x": 100,
-          "y": 520,
-          "fs": 46
-        },
-        {
-          "text": "조용한 게 살아남더라.",
-          "color": "cyan",
-          "x": 300,
-          "y": 680,
-          "fs": 52
-        }
-      ]
-    },
-    {
-      "img": "/tmp/bar_demo/ph_editorial.jpg",
-      "untilLine": 3,
-      "kenburns": true,
-      "bars": [
-        {
-          "text": "남들과 같은 방법은,",
-          "color": "white",
-          "x": 110,
-          "y": 500,
-          "fs": 46
-        },
-        {
-          "text": "결국 아류였고.",
-          "color": "cyan",
-          "x": 420,
-          "y": 660,
-          "fs": 52
-        }
-      ]
-    },
-    {
-      "img": "/tmp/bar_demo/ph_cafe.jpg",
-      "untilLine": 5,
-      "kenburns": true,
-      "bars": [
-        {
-          "text": "멋있어지려 할수록,",
-          "color": "white",
-          "x": 120,
-          "y": 540,
-          "fs": 46
-        },
-        {
-          "text": "정체성만 잃었다.",
-          "color": "cyan",
-          "x": 400,
-          "y": 700,
-          "fs": 52
-        }
-      ]
-    },
-    {
-      "img": "/tmp/bar_demo/ph_me.jpg",
-      "untilLine": 7,
-      "kenburns": true,
-      "bars": [
-        {
-          "text": "결국 다른 건,",
-          "color": "white",
-          "x": 130,
-          "y": 520,
-          "fs": 46
-        },
-        {
-          "text": "내 존재 자체였다.",
-          "color": "cyan",
-          "x": 360,
-          "y": 670,
-          "fs": 54
-        }
-      ]
-    },
-    {
-      "img": "/tmp/bar_demo/ph_dining.jpg",
-      "untilLine": 9,
-      "kenburns": true,
-      "bars": [
-        {
-          "text": "그래서 요즘,",
-          "color": "white",
-          "x": 120,
-          "y": 520,
-          "fs": 46
-        },
-        {
-          "text": "나를 자꾸 들여다본다.",
-          "color": "cyan",
-          "x": 320,
-          "y": 670,
-          "fs": 50
-        }
-      ]
-    },
-    {
-      "img": "/tmp/bar_demo/ph_hair1.jpg",
-      "untilLine": 11,
-      "kenburns": true,
-      "bars": [
-        {
-          "text": "세상은 이렇게 보지만,",
-          "color": "white",
-          "x": 100,
-          "y": 500,
-          "fs": 46
-        },
-        {
-          "text": "저는 이렇게 보기도 해요.",
-          "color": "cyan",
-          "x": 300,
-          "y": 660,
-          "fs": 50
-        }
-      ]
-    },
-    {
-      "img": "/tmp/bar_demo/p7_black.png",
-      "untilLine": 12,
-      "tail": 1.0,
-      "bars": [
-        {
-          "text": "큰 소리보다,\n작은 속삭임.",
-          "color": "cyan",
-          "x": "center",
-          "y": 1280,
-          "fs": 44
-        }
-      ]
-    }
+    {"img": "/tmp/bar_demo/ph_hair1.jpg", "untilLine": 1, "kenburns": true,
+     "bars": [{"text": "사토 오키의,\n채택 안 된 아이디어들.", "color": "white", "x": 90, "y": 400, "fs": 44},
+              {"text": "제일 조용한 게,\n끝까지 살아남았다.", "color": "cyan", "x": 120, "y": 590, "fs": 50}]},
+
+    {"img": "/tmp/bar_demo/ph_editorial.jpg", "untilLine": 3, "kenburns": true,
+     "bars": [{"text": "남들처럼 멋내려 할수록,", "color": "white", "x": 110, "y": 1180, "fs": 46},
+              {"text": "정체성만 잃더라.", "color": "cyan", "x": 320, "y": 1320, "fs": 52}]},
+
+    {"img": "/tmp/bar_demo/ph_cafe.jpg", "untilLine": 5, "kenburns": true,
+     "bars": [{"text": "결국 다른 건,", "color": "white", "x": 100, "y": 360, "fs": 46},
+              {"text": "내 존재 자체였다.", "color": "cyan", "x": 280, "y": 490, "fs": 52}]},
+
+    {"img": "/tmp/bar_demo/ph_dining.jpg", "untilLine": 7, "kenburns": true,
+     "bars": [{"text": "그래서 요즘은,", "color": "white", "x": 110, "y": 360, "fs": 46},
+              {"text": "나를 자꾸 들여다본다.", "color": "cyan", "x": 300, "y": 490, "fs": 50}]},
+
+    {"img": "/tmp/bar_demo/p7_black.png", "untilLine": 8, "tail": 1.2,
+     "bars": [{"text": "크게 외치기보다,\n작은 속삭임에 끌리는 요즘.", "color": "cyan", "x": "center", "y": 1240, "fs": 44}]}
   ]
 }

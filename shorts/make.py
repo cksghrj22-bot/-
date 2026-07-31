@@ -83,6 +83,16 @@ def _image_still(file_id: str, dur: float, out_seg, tok: str | None = None,
             time.sleep(3 * (att + 1)); tok = DS.access_token(); url = DS.MEDIA_URL.format(fid=file_id)
         else:
             raise RuntimeError(f"이미지 다운로드 실패({file_id}): {r.stderr.strip()[:300]}")
+    # 큰 원본 축소(양산 안정성 — 4~5천px 사진 kenburns가 100MB·수분 폭주하던 것 차단, 형 2026-08-01).
+    # 최종 캔버스가 1080x1920라 긴 변 2000px면 zoom 1.1배까지 충분. 로컬/캐시/다운로드 경로 공통 적용.
+    try:
+        from PIL import Image as _PImg
+        _im = _PImg.open(png)
+        if max(_im.size) > 2000:
+            _im.thumbnail((2000, 2000), _PImg.LANCZOS)
+            _im.convert("RGB").save(png)
+    except Exception:
+        pass
     # 배경(블러 커버) + 전경(contain) 합성 정지 클립
     if kenburns:
         n = max(1, int(dur * 30))
@@ -150,9 +160,15 @@ def _bar_png(text: str, color: str, x, y: int, out_png, fontsize: int = 56, rot:
     return box_h
 
 
-def _apply_bars(out_seg, bars: list, wd, k: int) -> None:
+# 양산 토글: handmade=true면 바마다 이 각도를 index로 돌려 '무심하게 손으로 툭' 기울인다
+# (형 2026-08-01 'AI가 만든 투박한 인간적인 느낌 유지'+'양산형'). 결정론적 → 편마다 재현.
+_HANDMADE_TILT = (-1.8, 1.3, -1.1, 2.0, -1.5, 1.0, -2.2, 1.6, -0.9, 1.9)
+
+
+def _apply_bars(out_seg, bars: list, wd, k: int, handmade: bool = False) -> None:
     """세그 클립(out_seg) 위에 seg['bars'] 색 바들을 얹어 덮어쓴다. 각 바 PNG를 overlay로 합성.
-    바에 y 없으면 이전 바 아래로 자동 스택. t0(초)=등장 시각(기본 0=처음부터·캐러셀식 모두 보임)."""
+    바에 y 없으면 이전 바 아래로 자동 스택. t0(초)=등장 시각(기본 0=처음부터·캐러셀식 모두 보임).
+    handmade=True면 rot 미지정 바에 결정론적 미세 기울기 자동(양산해도 투박한 인간미 유지)."""
     bar_pngs = []
     run_y = None
     start_y = 748              # 첫 바 기본 상단(밴드 285 아래·중앙보다 살짝 위)
@@ -161,8 +177,11 @@ def _apply_bars(out_seg, bars: list, wd, k: int) -> None:
         y = bar.get("y")
         if y is None:
             y = start_y if run_y is None else run_y
+        _rot = bar.get("rot")
+        if _rot is None:
+            _rot = _HANDMADE_TILT[(k * 3 + bi) % len(_HANDMADE_TILT)] if handmade else 0.0
         bh = _bar_png(bar["text"], bar.get("color", "white"), bar.get("x", 76), y, bp,
-                      fontsize=int(bar.get("fs", 56)), rot=float(bar.get("rot", 0.0)))
+                      fontsize=int(bar.get("fs", 56)), rot=float(_rot))
         run_y = int(y) + bh + 20
         bar_pngs.append((bp, float(bar.get("t0", 0.0))))
     tmp = Path(wd) / f"seg_{k:02d}_bars.mp4"
@@ -871,7 +890,7 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
                                     seg.get("bw", False), float(seg.get("zoom", 1.0))),
                        tok=tok)
         if seg.get("bars"):                        # b롤/사진 위에 색 바자막 스토리 얹기(형 2026-07-31)
-            _apply_bars(out_seg, seg["bars"], wd, k)
+            _apply_bars(out_seg, seg["bars"], wd, k, handmade=bool(m.get("handmade")))
         seg_files.append(out_seg)
         prev_end = seg_end
     video_total = total + tail
