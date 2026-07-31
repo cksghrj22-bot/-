@@ -61,21 +61,28 @@ def _image_still(file_id: str, dur: float, out_seg, tok: str | None = None,
     """드라이브 사진 1장 → 세로(1080x1920) 정지 클립. 사진 꽉 차게(contain) + 잘림 방지 위해
     같은 사진 블러 확대본을 배경으로 깔아 여백 없이 '자막↔사진 일체화'(형 2026-07-31 맛집 슬라이드쇼).
     kenburns=True면 아주 느린 줌(기본은 정지 — 형 '기교보다 기본')."""
-    import time
-    tok = tok or DS.access_token()
-    url = DS.MEDIA_URL.format(fid=file_id)
+    import time, shutil
     png = Path(out_seg).with_suffix(".src.png")
-    # 다운로드(원본 사진 프레임) — 403 throttle 대비 재시도
-    for att in range(4):
-        r = subprocess.run(["ffmpeg", "-v", "error", "-y", "-headers", f"Authorization: Bearer {tok}\r\n",
-                            "-i", url, "-frames:v", "1",
-                            "-vf", "scale='min(2160,iw)':'min(2160,ih)':force_original_aspect_ratio=decrease",
-                            str(png)], capture_output=True, text=True)
-        if r.returncode == 0 and png.exists():
-            break
-        time.sleep(1.5 * (att + 1)); tok = DS.access_token(); url = DS.MEDIA_URL.format(fid=file_id)
+    # 로컬 캐시 우선(Drive rate throttle 회피 — 사전 다운로드분 재사용). fid가 로컬 경로면 그대로 사용.
+    cache = Path("/tmp/img_cache") / f"{file_id}.png"
+    if Path(str(file_id)).is_file():
+        shutil.copy(str(file_id), png)
+    elif cache.is_file():
+        shutil.copy(str(cache), png)
     else:
-        raise RuntimeError(f"이미지 다운로드 실패({file_id}): {r.stderr.strip()[:300]}")
+        tok = tok or DS.access_token()
+        url = DS.MEDIA_URL.format(fid=file_id)
+        for att in range(5):
+            r = subprocess.run(["ffmpeg", "-v", "error", "-y", "-headers", f"Authorization: Bearer {tok}\r\n",
+                                "-i", url, "-frames:v", "1",
+                                "-vf", "scale='min(2160,iw)':'min(2160,ih)':force_original_aspect_ratio=decrease",
+                                str(png)], capture_output=True, text=True)
+            if r.returncode == 0 and png.exists():
+                cache.parent.mkdir(parents=True, exist_ok=True); shutil.copy(str(png), str(cache))
+                break
+            time.sleep(3 * (att + 1)); tok = DS.access_token(); url = DS.MEDIA_URL.format(fid=file_id)
+        else:
+            raise RuntimeError(f"이미지 다운로드 실패({file_id}): {r.stderr.strip()[:300]}")
     # 배경(블러 커버) + 전경(contain) 합성 정지 클립
     if kenburns:
         n = max(1, int(dur * 30))
