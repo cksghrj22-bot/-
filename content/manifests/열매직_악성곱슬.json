@@ -55,9 +55,15 @@
       false
     ],
     [
-      "심한 곱슬이라고 무작정 기다렸다면, 앞으로는 이렇게 펴보세요.",
-      "심한 곱슬이라고 무작정 기다렸다면,\\N앞으로는 이렇게 펴보세요.",
-      "If you've just waited — try straightening it this way.",
+      "심한 곱슬이라고, 무작정 기다렸다면",
+      "심한 곱슬이라고,\\N무작정 기다렸다면",
+      "If you've just kept waiting on stubborn curls —",
+      false
+    ],
+    [
+      "앞으로는, 이렇게 펴보세요.",
+      "앞으로는,\\N이렇게 펴보세요.",
+      "from now on, straighten it this way.",
       false
     ]
   ],
@@ -100,17 +106,17 @@
     },
     {
       "src": "1QhDy-2xxKomQq-9LcbFcuMqb_U2LNSkx",
-      "ss": 177,
+      "ss": 173,
       "frame": "portrait",
-      "untilLine": 6,
-      "_기획": "실사 열매직(아이롱) — video-1119 ss177 장갑 끼고 약 바른 상태에서 매직기 press(형 확정 '맨오른쪽 장갑'=젖은 열매직). 대사 6(매직 안 되는 게 아니라 어떻게 펴는지 몰라서)=마지막 메시지 강조. 자막 위(POV 밑쏠림)."
+      "untilLine": 7,
+      "_기획": "실사 약매직(아이롱) — video-1119 ss173 장갑·약 바른 상태 매직기 press(형 확정 '약매직 맞아'). 대사 6~7(매직 안 되는 게 아니라 어떻게 펴는지 몰라서 / 심한 곱슬이라고 무작정 기다렸다면)=약매직 영상으로 강조. '심한곱슬…까지 약매직 영상'(형). 자막 위."
     },
     {
       "black": true,
       "bigcard": true,
-      "untilLine": 7,
+      "untilLine": 8,
       "tail": 2.8,
-      "_기획": "엔딩 검은 카드 — CTA '심한 곱슬이라고 무작정 기다렸다면, 앞으로는 이렇게 펴보세요' + SNS 아웃트로. tail 2.8=충돌 방지."
+      "_기획": "엔딩 검은 메시지 카드 — 'CTA 앞으로는 이렇게 펴보세요'만 메시지 전달(형 지시) + SNS 아웃트로. tail 2.8=충돌 방지."
     }
   ],
   "sub_margin_v": 1150,
