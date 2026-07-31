@@ -1,0 +1,127 @@
+{
+  "title": "열매직 — 악성 곱슬은 자리를 짚어야",
+  "stem": "message",
+  "waive": [
+    "bw"
+  ],
+  "outro": "SNS에 일기를 쓰고 있어요",
+  "voice": {
+    "stability": 0.42,
+    "style": 0.15,
+    "speed": 1.05
+  },
+  "bgm": "/tmp/claude-0/0fb0e5b8-eaea-542a-a0d3-be17b390f310/scratchpad/bgm_산책로.mp3",
+  "phrases": [
+    [
+      "매직해도, 안 펴지는 곱슬 있죠?",
+      "매직해도,\\N안 펴지는 곱슬 있죠?",
+      "Straightening that just won't take?",
+      false
+    ],
+    [
+      "매직이 안 되는 게, 아니에요.",
+      "매직이 안 되는 게,\\N아니에요.",
+      "It's not that it can't be straightened.",
+      false
+    ],
+    [
+      "곱슬도, 다 같은 곱슬이 아니거든요.",
+      "곱슬도,\\N다 같은 곱슬이 아니거든요.",
+      "Not all curls are the same.",
+      false
+    ],
+    [
+      "그냥 곱슬과 악성 곱슬은, 자리가 달라요.",
+      "그냥 곱슬과 악성 곱슬은,\\N자리가 달라요.",
+      "Mild and severe curls sit in different spots.",
+      false
+    ],
+    [
+      "눈에 보이는 곱슬도, 안 보이는 곱슬도 있어요.",
+      "보이는 곱슬도,\\N안 보이는 곱슬도 있어요.",
+      "Some curls you see, some you don't.",
+      false
+    ],
+    [
+      "악성 곱슬은, 기다린다고 펴지지 않아요.",
+      "악성 곱슬은,\\N기다린다고 펴지지 않아요.",
+      "Severe curls won't relax by waiting.",
+      false
+    ],
+    [
+      "그 자리를 빨리 찾아서,",
+      "그 자리를 빨리 찾아서,",
+      "Find that spot fast,",
+      false
+    ],
+    [
+      "강한 열로, 빨리 약을 입혀야",
+      "강한 열로,\\N빨리 약을 입혀야",
+      "hit it with strong heat, quick product,",
+      false
+    ],
+    [
+      "다른 부분이 안 상하고 펴져요.",
+      "다른 부분이\\N안 상하고 펴져요.",
+      "so the rest stays undamaged.",
+      false
+    ],
+    [
+      "매직이 안 되던 게, 아니라",
+      "매직이 안 되던 게,\\N아니라",
+      "It wasn't that magic failed —",
+      false
+    ],
+    [
+      "악성 곱슬 자리를, 못 짚었던 거예요.",
+      "악성 곱슬 자리를,\\N못 짚었던 거예요.",
+      "the severe-curl spot just wasn't read.",
+      false
+    ],
+    [
+      "당신의 곱슬은, 어디가 악성인가요?",
+      "당신의 곱슬은,\\N어디가 악성인가요?",
+      "Your curls — where's the stubborn one?",
+      false
+    ]
+  ],
+  "require_실사": true,
+  "segments": [
+    {
+      "black": true,
+      "bigcard": true,
+      "untilLine": 0,
+      "_기획": "훅 검은 카드 — '매직해도 안 펴지는 곱슬 있죠?' 공감. 실사 아직 안 켜짐(메시지로 연다)."
+    },
+    {
+      "src": "SCAN_PENDING",
+      "ss": 0,
+      "frame": "portrait",
+      "untilLine": 4,
+      "_기획": "실사 도입 — 열매직 시술 인상(악성곱슬 부위 짚어 강한 열). 대사 1~4(매직 안 되는 게 아니라/곱슬 다름/자리 다름/보이는·안 보이는 곱슬). ⛔형 안경 POV 영상 도착 후 가운데 잘 보이는 구간 스캔해 fileId·ss 채움."
+    },
+    {
+      "src": "SCAN_PENDING",
+      "ss": 0,
+      "frame": "portrait",
+      "untilLine": 8,
+      "_기획": "실사 시술 핵심 — 악성곱슬 자리에 강한 열·빠른 약 도포(다른 부분 보호). 대사 5~8(기다린다고 안 됨/자리 빨리 찾아/강한 열 빨리 약/다른 부분 안 상함). 가운데 잘 보이는 구간."
+    },
+    {
+      "src": "SCAN_PENDING",
+      "ss": 0,
+      "frame": "portrait",
+      "untilLine": 10,
+      "_기획": "실사 마무리 — 펴진 결과/부위 확인(재정의 매듭). 대사 9~10(매직 안 되던 게 아니라/자리를 못 짚은 것). 가운데 잘 보이는 구간."
+    },
+    {
+      "black": true,
+      "bigcard": true,
+      "untilLine": 11,
+      "tail": 2.8,
+      "_기획": "엔딩 검은 카드 — 판정형 질문 '어디가 악성인가요?' + SNS 아웃트로. tail 2.8=아웃트로 충돌 자동방지."
+    }
+  ],
+  "sub_margin_v": 1150,
+  "_notes": "열매직(악성곱슬) 케이스 교육 쇼츠(형 2026-07-31 구술). 재정의=매직 안 되는 게 아니라 악성곱슬 '자리'를 못 짚은 것. 실사=형 안경 POV 열매직 시술(밑 쏠림→자막 위로 sub_margin_v=1150·겉매직과 동일). ⭐실사가 본체(도입/시술핵심/마무리 3세그). 컬러(waive bw). SNS 아웃트로 default-on. 검은 bigcard 2개(훅·엔딩). ⛔실사 src 3칸 'SCAN_PENDING' — 형이 올리는 'video…' 영상 도착 후 가운데 잘 보이는(정확히 나온) 구간 스캔해 fileId·ss 채워야 렌더 성립(안경 POV라 흔들림 구간 회피). 대본 정본=content/대본/2026-07-31_열매직_악성곱슬_자리를짚어야.md."
+}
