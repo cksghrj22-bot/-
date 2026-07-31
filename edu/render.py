@@ -117,9 +117,42 @@ def _cal_pieces(DATA):
     return legend, months
 
 
+def _level_matrix(DATA):
+    """월 × 레벨(L1~L5) 과목 개수 표 HTML — DATA에서 직접 집계(실제 배치와 항상 일치)."""
+    import datetime
+    from collections import defaultdict, Counter
+    mx = defaultdict(Counter)          # month -> {level: count}
+    for d, v in DATA.items():
+        if not isinstance(d, datetime.date):
+            continue
+        for label, t, lvt in v:
+            if t in ('모델', '특강', '시험') or not lvt:
+                continue
+            for x in lvt.replace('L', '').split('·'):
+                if x != '0':           # 맨즈(L0) 제외
+                    mx[d.month][int(x)] += 1
+    months = [m for m in (8, 9, 10, 11, 12) if m in mx]
+    head = '<tr><th>월</th>' + ''.join(f'<th>L{lv}</th>' for lv in range(1, 6)) + '<th class="sum">합계</th></tr>'
+    rows = ''
+    coltot = Counter(); grand = 0
+    for m in months:
+        r = mx[m]; rowsum = sum(r[lv] for lv in range(1, 6)); grand += rowsum
+        cells = ''
+        for lv in range(1, 6):
+            n = r[lv]; coltot[lv] += n
+            cells += f'<td class="{"z" if n == 0 else ""}">{n}</td>'
+        rows += f'<tr><td class="mo">{m}월</td>{cells}<td class="sum">{rowsum}</td></tr>'
+    foot = ('<tr class="tot"><td class="mo">합계</td>'
+            + ''.join(f'<td>{coltot[lv]}</td>' for lv in range(1, 6))
+            + f'<td class="sum">{grand}</td></tr>')
+    return (f'<table class="lvmx"><thead>{head}</thead>'
+            f'<tbody>{rows}</tbody><tfoot>{foot}</tfoot></table>')
+
+
 def render_all(DATA):
     """배포용 통합본 — 시스템 요약 + 스케줄표 + 과목별 준비물 을 한 문서로."""
     legend, months = _cal_pieces(DATA)
+    lvmx = _level_matrix(DATA)
     roles = ''.join(
         f'<tr><td class="rt" style="color:{spec.COL[t]}">{t}</td><td>{_esc(role)}</td>'
         f'<td class="rl">{_esc(lv)}</td></tr>' for t, role, lv in ROLES)
@@ -153,6 +186,13 @@ table.roles{{width:100%;border-collapse:collapse;background:#fff;border:1px soli
 table.roles td{{padding:10px 14px;border-top:1px solid var(--line);font-size:13.5px;}}
 table.roles tr:first-child td{{border-top:0;}}
 .roles .rt{{font-weight:900;width:78px;}} .roles .rl{{text-align:right;color:var(--gray);font-weight:800;width:90px;}}
+table.lvmx{{border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;width:100%;max-width:520px;}}
+.lvmx th,.lvmx td{{padding:9px 10px;text-align:center;font-size:13.5px;border:1px solid var(--line);}}
+.lvmx thead th{{background:var(--ink);color:var(--cream);font-weight:800;border-color:#333;}}
+.lvmx .mo{{font-weight:900;background:var(--cream);}}
+.lvmx .sum{{font-weight:900;background:#f3efe7;}}
+.lvmx td.z{{color:#c25b5b;font-weight:800;}}
+.lvmx tfoot .tot td{{font-weight:900;background:#efeae1;border-top:2px solid var(--ink);}}
 .legend{{background:var(--cream);border:1px solid var(--line);border-radius:10px;padding:13px 16px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:9px 15px;}}
 .lg{{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;}}
 .lg i{{width:14px;height:14px;border-radius:4px;display:inline-block;}}
@@ -213,6 +253,10 @@ table.roles tr:first-child td{{border-top:0;}}
 <div style="height:12px"></div>
 <table class="roles"><tr><td class="rt">선생님</td><td>담당</td><td class="rl">레벨</td></tr>{roles}</table>
 <div class="note" style="margin-top:14px">· 레벨은 과목마다 <b>L1~L5</b>로 표기 · 맨즈(옴므)는 별도 트랙(공간이 달라 병행).</div>
+<div style="height:16px"></div>
+<h3 style="font-size:15px;font-weight:900;margin-bottom:8px">월 × 레벨 교육 개수</h3>
+{lvmx}
+<div class="note" style="margin-top:10px">· 표의 숫자 = 그 달에 열리는 <b>해당 레벨 과목 수</b> (맨즈 별도 · 특강·모델데이·시험 제외).<br>· 12월은 12/6에 정규가 끝나 첫 주(약 1주)만 있어 개수가 적습니다.</div>
 </div>
 
 <div class="sec" id="sch"><div class="sh">SCHEDULE</div><div class="st">② 일정 스케줄표 (8~12월)</div>
