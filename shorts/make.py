@@ -676,9 +676,15 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
     black_line_idx = set()
     bigcard_idx = set()   # 큰 중앙 메시지카드(검은화면·물음/핵심메시지 확대)
     line_margin = {}      # 세그별 자막 높이 오버라이드(li→margin_v). 세그에 sub_margin_v 있으면 그 라인만 위치 바뀜.
+    nosub_idx = set()     # 자막 제외 라인(형 2026-07-31 "애니 도식 위에 자막 얹으면 도식이 가려짐 → 그땐 자막 빼라"). 도식이 자체 텍스트로 메시지 전달.
     tail = 0.0
     for k, seg in enumerate(m["segments"]):
         seg_end = lines[seg["untilLine"]].end
+        if seg.get("nosub"):                       # 자막 빼는 세그(도식이 화면을 채워 자막이 가릴 때)
+            for _li, _ln in enumerate(lines):
+                _mid = (_ln.start + _ln.end) / 2
+                if prev_end <= _mid < seg_end:
+                    nosub_idx.add(_li)
         if "sub_margin_v" in seg:                 # 세그 지정 자막높이(예: 완성컷=아래·POV도포=위)
             _segm = int(seg["sub_margin_v"])
             for _li, _ln in enumerate(lines):
@@ -759,6 +765,8 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
     # 4) 자막 Line(훅/엔딩=검은카드 중앙 / bigcard=큰 중앙 메시지) + 렌더
     tl = []
     for li, ln in enumerate(lines):
+        if li in nosub_idx:                       # 자막 제외(도식 세그) — 도식이 가려지지 않게
+            continue
         if li in bigcard_idx:
             txt = r"{\an5\fs104\b1}" + ln.text   # 큰 중앙 메시지카드(강조)
         elif li in black_line_idx:
