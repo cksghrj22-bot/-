@@ -115,6 +115,45 @@ def build():
         else:
             misplaced.append((teacher, label))
 
+    # ── 배치 후 수동 이동(spec.MANUAL_MOVES) — 제약 지키며 월 간 재배치 ──
+    def _lset_of(lvt):
+        return frozenset(int(x) for x in lvt.replace('L', '').split('·') if x)
+    for level, src_m, dst_m, cnt in getattr(spec, 'MANUAL_MOVES', []):
+        for _ in range(cnt):
+            # 출발월에서 그 레벨을 점유한 과목(재현 위해 정렬) 중 옮길 수 있는 것 선택
+            srcs = sorted(
+                ((d, i, lab, tc, lvt)
+                 for d in list(DATA) if isinstance(d, datetime.date) and d.month == src_m
+                 for i, (lab, tc, lvt) in enumerate(DATA[d])
+                 if tc not in ('모델', '특강', '시험') and level in _lset_of(lvt)),
+                key=lambda x: (x[3], x[0].toordinal(), x[2]))
+            moved = False
+            for d0, i0, lab, tc, lvt in srcs:
+                lset = _lset_of(lvt)
+                # 도착월에서 빈 자리(같은레벨X·같은선생님X·휴무X·이벤트금X·정원)
+                dsts = sorted(d for wk in weeks for d in wk_dates[wk]
+                              if d.month == dst_m
+                              and d.weekday() not in spec.TEACHER_OFF.get(tc, ())
+                              and not (lset & day_lv[d]) and tc not in day_tc[d]
+                              and day_load[d] < spec.RULES['max_per_day'])
+                if not dsts:
+                    continue
+                d1 = dsts[0]
+                # 원위치에서 제거
+                DATA[d0].pop(i0)
+                day_load[d0] -= 1; tc_wd[tc][d0.weekday()] -= 1
+                day_tc[d0].discard(tc)
+                day_lv[d0] = set().union(*[_lset_of(x[2]) for x in DATA[d0]
+                                           if x[1] not in ('모델', '특강', '시험')]) if DATA[d0] else set()
+                # 새 위치에 추가
+                DATA[d1].append((lab, tc, lvt))
+                day_lv[d1] |= lset; day_tc[d1].add(tc)
+                tc_wd[tc][d1.weekday()] += 1; day_load[d1] += 1
+                moved = True
+                break
+            if not moved:
+                misplaced.append((f'이동실패 L{level}', f'{src_m}→{dst_m}'))
+
     # 금 이벤트 + 시험
     for m in (8, 9, 10, 11, 12):
         for idx, fd in enumerate(_fridays(2026, m), 1):
