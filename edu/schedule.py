@@ -58,11 +58,15 @@ def build():
     from itertools import zip_longest
     items = []
     for teacher, subs in spec.TRACKS.items():
-        groups = {}                      # lset -> [(label,lset)] (등장 순서 유지)
+        groups = {}                      # lset -> [labels] (등장 순서 유지)
         for label, lset in subs:
-            groups.setdefault(lset, []).append((label, lset))
-        interleaved = [x for tup in zip_longest(*groups.values())
-                       for x in tup if x is not None]
+            groups.setdefault(lset, []).append(label)
+        # 라운드로빈 순서를 '레벨 높은 쪽부터'(L5→L1)로 두어 L5도 초반(8월)에 등장.
+        # 선형 배치와 합쳐지면 각 레벨이 8~11월 전 구간에 고르게 흩어진다.
+        order_ls = sorted(groups, key=lambda s: -max(s))    # L5..L1
+        cols = [list(zip(groups[ls], [ls] * len(groups[ls]))) for ls in order_ls]
+        interleaved = [cell for tup in zip_longest(*cols)
+                       for cell in tup if cell is not None]  # [(label, lset), ...]
         n = len(interleaved)
         for i, (label, lset) in enumerate(interleaved):
             ideal = round(i * wmax / (n - 1)) if n > 1 else 0
