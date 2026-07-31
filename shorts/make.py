@@ -56,6 +56,41 @@ def _frame_vf(frame: str, hflip: bool, bw: bool = False, zoom: float = 1.0) -> s
     return f"{fl}crop=ih*4/5:ih,scale={w}:{h},crop=1080:1350,pad=1080:1920:0:285:black,fps=30{gray}"
 
 
+def _image_still(file_id: str, dur: float, out_seg, tok: str | None = None,
+                 kenburns: bool = False) -> None:
+    """드라이브 사진 1장 → 세로(1080x1920) 정지 클립. 사진 꽉 차게(contain) + 잘림 방지 위해
+    같은 사진 블러 확대본을 배경으로 깔아 여백 없이 '자막↔사진 일체화'(형 2026-07-31 맛집 슬라이드쇼).
+    kenburns=True면 아주 느린 줌(기본은 정지 — 형 '기교보다 기본')."""
+    import time
+    tok = tok or DS.access_token()
+    url = DS.MEDIA_URL.format(fid=file_id)
+    png = Path(out_seg).with_suffix(".src.png")
+    # 다운로드(원본 사진 프레임) — 403 throttle 대비 재시도
+    for att in range(4):
+        r = subprocess.run(["ffmpeg", "-v", "error", "-y", "-headers", f"Authorization: Bearer {tok}\r\n",
+                            "-i", url, "-frames:v", "1",
+                            "-vf", "scale='min(2160,iw)':'min(2160,ih)':force_original_aspect_ratio=decrease",
+                            str(png)], capture_output=True, text=True)
+        if r.returncode == 0 and png.exists():
+            break
+        time.sleep(1.5 * (att + 1)); tok = DS.access_token(); url = DS.MEDIA_URL.format(fid=file_id)
+    else:
+        raise RuntimeError(f"이미지 다운로드 실패({file_id}): {r.stderr.strip()[:300]}")
+    # 배경(블러 커버) + 전경(contain) 합성 정지 클립
+    if kenburns:
+        n = max(1, int(dur * 30))
+        fg = (f"[0]scale=1188:2112:force_original_aspect_ratio=decrease,"
+              f"zoompan=z='min(zoom+0.0006,1.10)':d={n}:s=1080x1920:fps=30:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'[fg]")
+    else:
+        fg = "[0]scale=1080:1920:force_original_aspect_ratio=decrease,fps=30[fg]"
+    fc = ("[0]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,"
+          "boxblur=luma_radius=42:luma_power=1,eq=brightness=-0.05[bg];"
+          + fg + ";[bg][fg]overlay=(W-w)/2:(H-h)/2,fps=30,format=yuv420p[v]")
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-loop", "1", "-t", f"{dur:.3f}", "-i", str(png),
+                    "-filter_complex", fc, "-map", "[v]",
+                    "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "20", str(out_seg)], check=True)
+
+
 # ── 화이팅 애니: 주먹을 들어올리는 데이터 모션(흑백 위 노랑 포인트) ───────────────
 def _fist_raise_frames(frames_dir: Path, lines: list, line_idx: int, fps: int = 30) -> tuple[float, float]:
     """line_idx(화이팅 줄) 구간에 주먹이 아래→위로 솟구치고 '화이팅!'이 터진다. RGBA 오버레이."""
@@ -664,6 +699,10 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
     creds["voice_settings"] = {**creds["voice_settings"],
                                **{k: v[k] for k in ("stability", "style", "similarity_boost") if k in v}}
     creds["speed"] = v.get("speed", creds.get("speed"))
+    if v.get("voice_id"):            # 보이스 오버라이드(예: 맛집=벨라 등 다른 레퍼런스 보이스·형 2026-07-31)
+        creds["voice_id"] = v["voice_id"]
+    if v.get("model_id"):
+        creds["model_id"] = v["model_id"]
     phrases = [tuple(p) for p in m["phrases"]]
     narr = " ".join(p[0] for p in phrases)
     lines, narr_path = syncbuild.build(narr, phrases, creds, wd / "narr.mp3")
@@ -719,6 +758,8 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
             subprocess.run(["ffmpeg", "-v", "error", "-y", "-framerate", "30",
                             "-i", str(fdir / "z%04d.png"), "-t", f"{dur:.3f}",
                             "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "19", str(out_seg)], check=True)
+        elif seg.get("img"):
+            _image_still(seg["img"], dur, out_seg, tok=tok, kenburns=seg.get("kenburns", False))
         else:
             DS.extract(seg["src"], seg["ss"], dur, out_seg,
                        vf=_frame_vf(seg.get("frame", "landscape"), seg.get("hflip", False),
