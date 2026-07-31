@@ -357,10 +357,21 @@ def _bang_sparkle_frames(frames_dir: Path, lines: list, num_line: int, total: fl
             pts.append((CX + xEdge, browY))                      # 아랫단: 눈 위 수평 직선(오른→왼)
             pts.append((CX - xEdge, browY))
             d.polygon(pts, fill=HAIR)
+            # 뿌리 살짝 띄움(볼륨·공중감) — 납작 블록 X. ①뿌리 리프트 반달(밝은 톤)로 부풀린 결,
+            # ②가르마에서 좌우로 흐르는 볼륨 광 → 이마는 덮되 앞머리가 떠 보임(형 지시 '살짝 띄고').
+            HAIR_L = (108, 80, 62)
+            liftY = crownY + int(46 * grow)                       # 뿌리 볼륨 정점(살짝 아래)
+            d.ellipse([CX - xEdge*0.62, crownY + 8, CX + xEdge*0.62, liftY + 40],
+                      fill=(*HAIR_L, 90))                          # 뿌리 반달 볼륨(은은한 밝은 톤)
+            for k in range(-3, 4):                                # 가르마→좌우 흐르는 볼륨 광(가는 곡선)
+                u = k / 3.4
+                xr = CX + xEdge * u * 0.82
+                d.line([(CX + xEdge*u*0.16, liftY - 6), (xr + sway*0.3, browY - 18)],
+                       fill=(*HAIR_L, 120), width=3)
             for k in range(-4, 5):                                # 결(가는 세로선·직선단까지·미세 찰랑)
                 u = k / 4.5
                 x0 = CX + xEdge * u * 0.9
-                d.line([(x0, crownY + 40), (x0 + sway * 0.35, browY - 6)], fill=(*HAIR_D, 150), width=4)
+                d.line([(x0, liftY), (x0 + sway * 0.35, browY - 6)], fill=(*HAIR_D, 150), width=4)
         # 눈 반짝 별(눈매 강조) — 크게·글로우
         if spark > 0.05:
             a = int(255 * spark)
