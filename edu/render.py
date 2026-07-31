@@ -151,7 +151,6 @@ def _level_matrix(DATA):
 
 def render_all(DATA):
     """배포용 통합본 — 시스템 요약 + 스케줄표 + 과목별 준비물 을 한 문서로."""
-    legend, months = _cal_pieces(DATA)
     lvmx = _level_matrix(DATA)
     roles = ''.join(
         f'<tr><td class="rt" style="color:{spec.COL[t]}">{t}</td><td>{_esc(role)}</td>'
@@ -233,7 +232,8 @@ table.lvmx{{border-collapse:collapse;background:#fff;border:1px solid var(--line
 <div class="cover"><div class="t">AT NOWN · 2026 EDUCATION</div>
 <h1>2026 하반기 교육 — 전체 안내</h1>
 <p>교육 시스템 · 일정 스케줄표 · 과목별 준비물 (한 문서 배포용)</p></div>
-<div class="toc"><a href="#sys">① 교육 시스템</a><a href="#sch">② 일정 스케줄표</a><a href="#prep">③ 과목별 준비물</a></div>
+<div class="toc"><a href="#sys">① 교육 시스템</a><a href="#prep">② 과목별 준비물</a></div>
+<div class="note" style="margin-bottom:0">📅 <b>일정 스케줄표(8~12월 캘린더)는 가시성을 위해 별도 문서</b>로 제공합니다 — 「교육일정_캘린더_2026」 파일 참고.</div>
 
 <div class="sec" id="sys"><div class="sh">SYSTEM</div><div class="st">① 교육 시스템</div>
 <div class="grid2">
@@ -258,13 +258,7 @@ table.lvmx{{border-collapse:collapse;background:#fff;border:1px solid var(--line
 <div class="note" style="margin-top:10px">· 표의 숫자 = 그 달에 열리는 <b>해당 레벨 과목 수</b> (맨즈 별도 · 특강·모델데이·시험 제외).<br>· 12월은 12/6에 정규가 끝나 첫 주(약 1주)만 있어 개수가 적습니다.</div>
 </div>
 
-<div class="sec" id="sch"><div class="sh">SCHEDULE</div><div class="st">② 일정 스케줄표 (8~12월)</div>
-<div class="legend">{legend}</div>
-<div class="note">· 기본 아침 교육 {spec.MORNING}, 모델 작업은 {spec.EVENING}.<br>· 특강 = 3째주 금 · 모델데이 = 2·4주 금 · 입봉시험 <b>12/21(월)</b> · 월·토 휴무.<br>· 칸 앞 <b>L1~L5</b>는 과목 레벨.</div>
-{months}
-</div>
-
-<div class="sec" id="prep"><div class="sh">MATERIALS</div><div class="st">③ 과목별 준비물 · 과제 · 주의 <span style="font-size:13px;color:var(--gray);font-weight:700">(총 {prep_total}과목)</span></div>
+<div class="sec" id="prep"><div class="sh">MATERIALS</div><div class="st">② 과목별 준비물 · 과제 · 주의 <span style="font-size:13px;color:var(--gray);font-weight:700">(총 {prep_total}과목)</span></div>
 <div class="warn">⚠️ 준비물·과제·주의 내용은 현장 표준 기준 <b>초안</b>입니다 — 각 선생님이 실제 수업 기준으로 검수·확정 후 최종 배포.</div>
 <div class="nav">{prep_nav}</div>
 {prep_body}
