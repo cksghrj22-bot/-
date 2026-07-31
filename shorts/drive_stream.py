@@ -102,8 +102,9 @@ def extract(file_id: str, ss: float, t: float, out: str | Path,
         r = subprocess.run(cmd, capture_output=True, text=True, timeout=1200)
         if r.returncode == 0:
             return out
-        if "403" in r.stderr or "Forbidden" in r.stderr:   # quota/rate → 백오프 후 토큰 갱신 재시도
-            _time.sleep(5 * (_att + 1)); _tok = access_token(); continue
+        _e = r.stderr
+        if any(s in _e for s in ("403", "Forbidden", "Invalid data", "truncat", "Server returned", "timed out", "reset")):
+            _time.sleep(5 * (_att + 1)); _tok = access_token(); continue   # quota/rate/잘린 응답 → 재시도
         break
     raise RuntimeError(f"extract 실패: {r.stderr.strip()[:400]}")
 
