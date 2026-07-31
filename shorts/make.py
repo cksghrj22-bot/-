@@ -92,7 +92,7 @@ def _image_still(file_id: str, dur: float, out_seg, tok: str | None = None,
         fg = "[0]scale=1080:1920:force_original_aspect_ratio=decrease,fps=30[fg]"
     fc = ("[0]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,"
           "boxblur=luma_radius=42:luma_power=1,eq=brightness=-0.05[bg];"
-          + fg + ";[bg][fg]overlay=(W-w)/2:(H-h)/2,fps=30,format=yuv420p[v]")
+          + fg + ";[bg][fg]overlay=(W-w)/2:(H-h)/2,fps=30,setsar=1,format=yuv420p[v]")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-loop", "1", "-t", f"{dur:.3f}", "-i", str(png),
                     "-filter_complex", fc, "-map", "[v]",
                     "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "20", str(out_seg)], check=True)
