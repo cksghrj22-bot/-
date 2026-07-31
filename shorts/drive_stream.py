@@ -89,17 +89,23 @@ def extract(file_id: str, ss: float, t: float, out: str | Path,
             vf: str | None = SPEC_VF, crf: int = 20, tok: str | None = None,
             with_audio: bool = False) -> Path:
     """[ss, ss+t] 구간만 스트리밍으로 잘라 out에 저장(통다운 없음). vf=None이면 원본 프레이밍."""
-    url, hdr = authorized_source(file_id, tok)
+    import time as _time
     out = Path(out)
-    cmd = ["ffmpeg", "-v", "error", "-headers", hdr, "-ss", str(ss), "-i", url, "-t", str(t)]
-    if vf:
-        cmd += ["-vf", vf]
-    cmd += (["-c:a", "aac", "-b:a", "128k"] if with_audio else ["-an"])
-    cmd += ["-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", str(crf), str(out), "-y"]
-    r = subprocess.run(cmd, capture_output=True, text=True, timeout=1200)
-    if r.returncode != 0:
-        raise RuntimeError(f"extract 실패: {r.stderr.strip()[:400]}")
-    return out
+    _tok = tok
+    for _att in range(6):                # Drive rate throttle(403) 대비 재시도 + 토큰 갱신
+        url, hdr = authorized_source(file_id, _tok)
+        cmd = ["ffmpeg", "-v", "error", "-headers", hdr, "-ss", str(ss), "-i", url, "-t", str(t)]
+        if vf:
+            cmd += ["-vf", vf]
+        cmd += (["-c:a", "aac", "-b:a", "128k"] if with_audio else ["-an"])
+        cmd += ["-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", str(crf), str(out), "-y"]
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=1200)
+        if r.returncode == 0:
+            return out
+        if "403" in r.stderr or "Forbidden" in r.stderr:   # quota/rate → 백오프 후 토큰 갱신 재시도
+            _time.sleep(5 * (_att + 1)); _tok = access_token(); continue
+        break
+    raise RuntimeError(f"extract 실패: {r.stderr.strip()[:400]}")
 
 
 def frame(file_id: str, at: float, out: str | Path, width: int = 360,
