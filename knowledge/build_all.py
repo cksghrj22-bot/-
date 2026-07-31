@@ -8,6 +8,7 @@ from shorts import drive_stream as DS, gdrive
 from shorts.creator_short import _wrap2, _style, _ts, WARM, DIM, VY, CANVAS
 sys.path.insert(0, os.path.dirname(__file__))
 from manifest30 import SHORTS, ORIG
+from titles import TITLES
 
 REPO = "/home/user/-"; HERE = os.path.dirname(__file__)
 NSQR = "/root/.fonts/nsqr_eb.ttf"
@@ -56,7 +57,8 @@ def cues_from(words, keeps):
 
 
 def build_one(idx, tok):
-    name, clip, keeps, (ty, tw) = SHORTS[idx]
+    name, clip, keeps, _ = SHORTS[idx]
+    ty, tw = TITLES[idx]
     wd = f"{HERE}/_wd_{idx}"; os.makedirs(wd, exist_ok=True)
     fid = ORIG[clip]; words = json.load(open(f"{HERE}/orig_{clip}.words.json"))
     # 1) keep 구간 개별 추출→concat
@@ -85,7 +87,8 @@ def build_one(idx, tok):
     vf = (f"[0:v]{WARM},drawbox=c=black@{DIM}:t=fill,setsar=1[v];"
           f"color=c=black:s={CANVAS[0]}x{CANVAS[1]}:d={DUR}[bg];[bg][v]overlay=0:{VY}[b1];"
           f"[b1]subtitles={ass},fade=t=out:st={DUR-0.6}:d=0.6[vout];"
-          f"[1:a]volume=0.14,afade=t=out:st={DUR-1.5}:d=1.5[bgm];[0:a][bgm]amix=inputs=2:duration=first:dropout_transition=0[aout]")
+          f"[0:a]highpass=f=95[vo];[1:a]volume=0.14,afade=t=out:st={DUR-1.5}:d=1.5[bgm];"
+          f"[vo][bgm]amix=inputs=2:duration=first:dropout_transition=0,afade=t=out:st={DUR-0.8}:d=0.8[aout]")
     main = f"{wd}/main.mp4"
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", joined, "-i", f"{REPO}/shorts/assets/bgm_piano_long.mp3",
         "-filter_complex", vf, "-map", "[vout]", "-map", "[aout]",
@@ -116,8 +119,6 @@ def build_one(idx, tok):
 if __name__ == "__main__":
     a, b = int(sys.argv[1]), int(sys.argv[2])
     for i in range(a, b):
-        if i == 0:
-            continue  # 엘레강스는 완성본
         try:
             build_one(i, DS.access_token())
         except Exception as e:
