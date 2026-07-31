@@ -149,6 +149,25 @@ def _level_matrix(DATA):
             f'<tbody>{rows}</tbody><tfoot>{foot}</tfoot></table>')
 
 
+def _month_total_matrix(DATA):
+    """월별 총 수업 개수 종합(과목 실수 = 선생님 기준 합계) HTML."""
+    import datetime
+    from collections import Counter
+    mt = Counter()
+    for d, v in DATA.items():
+        if not isinstance(d, datetime.date):
+            continue
+        for label, t, lvt in v:
+            if t not in ('모델', '특강', '시험'):
+                mt[d.month] += 1
+    months = [8, 9, 10, 11, 12]
+    head = '<tr><th>구분</th>' + ''.join(f'<th>{m}월</th>' for m in months) + '<th class="sum">합계</th></tr>'
+    row = ('<tr><td class="mo">총 수업</td>'
+           + ''.join(f'<td>{mt[m]}</td>' for m in months)
+           + f'<td class="sum">{sum(mt.values())}</td></tr>')
+    return f'<table class="lvmx"><thead>{head}</thead><tbody>{row}</tbody></table>'
+
+
 def _teacher_month_matrix(DATA):
     """선생님 × 월 수업 개수 표 HTML — DATA에서 직접 집계."""
     import datetime
@@ -184,6 +203,7 @@ def render_all(DATA):
     """배포용 통합본 — 시스템 요약 + 스케줄표 + 과목별 준비물 을 한 문서로."""
     lvmx = _level_matrix(DATA)
     tmmx = _teacher_month_matrix(DATA)
+    mtmx = _month_total_matrix(DATA)
     roles = ''.join(
         f'<tr><td class="rt" style="color:{spec.COL[t]}">{t}</td><td>{_esc(role)}</td>'
         f'<td class="rl">{_esc(lv)}</td></tr>' for t, role, lv in ROLES)
@@ -284,6 +304,9 @@ table.lvmx{{border-collapse:collapse;background:#fff;border:1px solid var(--line
 <div style="height:12px"></div>
 <table class="roles"><tr><td class="rt">선생님</td><td>담당</td><td class="rl">레벨</td></tr>{roles}</table>
 <div class="note" style="margin-top:14px">· 레벨은 과목마다 <b>L1~L5</b>로 표기 · 맨즈(옴므)는 별도 트랙(공간이 달라 병행).</div>
+<div style="height:16px"></div>
+<h3 style="font-size:15px;font-weight:900;margin-bottom:8px">월별 총 수업 개수</h3>
+{mtmx}
 <div style="height:16px"></div>
 <h3 style="font-size:15px;font-weight:900;margin-bottom:8px">월 × 레벨 교육 개수</h3>
 {lvmx}
