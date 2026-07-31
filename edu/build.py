@@ -14,6 +14,7 @@ OUT_DIR = os.path.join(os.path.dirname(__file__), '..',
                        'content', '교육', '2026-07-23_교육시스템_정본')
 CAL = '교육일정_캘린더_2026.html'
 PREP = '과목별_준비물_과제_주의사항.html'
+ALL = '교육_전체안내_배포용.html'
 
 
 def prep_consistency():
@@ -49,7 +50,9 @@ def main(write=True):
             f.write(render.render_calendar(DATA))
         with open(os.path.join(OUT_DIR, PREP), 'w', encoding='utf-8') as f:
             f.write(render.render_prep())
-        print("   →", CAL); print("   →", PREP)
+        with open(os.path.join(OUT_DIR, ALL), 'w', encoding='utf-8') as f:
+            f.write(render.render_all(DATA))
+        print("   →", CAL); print("   →", PREP); print("   →", ALL)
     return 0
 
 

@@ -78,6 +78,159 @@ body{{background:#e8e5df;color:var(--ink);font-family:-apple-system,"Apple SD Go
 </div></body></html>'''
 
 
+# ── 선생님별 담당(배포 요약용) ── 사실만: 트랙 성격 + 레벨 범위 ──
+ROLES = [
+    ('창엽', '커트 기초', 'L1·L2'), ('이호', '커트 디자인·시그니처', 'L3~L5'),
+    ('신후', '열펌·룩북', 'L3~L5'), ('성희', '콜드펌', 'L1~L5'),
+    ('보미', '업스타일·브레이드', 'L1~L5'), ('차노', '디자인 미감·방법', 'L1~L5'),
+    ('와이', '맨즈(옴므) STAGE 0~7', '별도'),
+]
+
+
+def _cal_pieces(DATA):
+    """캘린더의 범례·월표를 (legend_html, months_html)로 반환 — 통합본에서 재사용."""
+    def month_html(y, m):
+        cal = calendar.Calendar(firstweekday=6); rows = ''
+        for wk in cal.monthdatescalendar(y, m):
+            cells = ''
+            for d in wk:
+                if d.month != m:
+                    cells += '<td class="pad"></td>'; continue
+                cls = 'day off' if d.weekday() in (0, 5) else 'day'
+                inner = f'<div class="dn">{d.day}</div>'
+                for label, key, lvt in DATA.get(d, []):
+                    bd = f'<b class="lvb">{lvt}</b>' if lvt else ''
+                    inner += f'<span class="ev" style="background:{spec.COL[key]};color:#fff;">{bd}{_esc(label)}</span>'
+                cells += f'<td class="{cls}">{inner}</td>'
+            rows += f'<tr>{cells}</tr>'
+        return (f'<div class="mcal"><div class="mtitle">2026 · {m}월</div>'
+                '<table class="mc"><thead><tr><th class="sun">일</th><th>월</th><th>화</th>'
+                '<th>수</th><th>목</th><th>금</th><th class="sat">토</th></tr></thead>'
+                f'<tbody>{rows}</tbody></table></div>')
+    months = ''.join(month_html(2026, m) for m in (8, 9, 10, 11, 12))
+    legend = ''.join(f'<span class="lg"><i style="background:{c}"></i>{n}</span>' for n, c in
+        [('창엽 (커트 L1·2)', spec.COL['창엽']), ('이호 (커트 L3~5)', spec.COL['이호']),
+         ('차노 (미감·디자인방법)', spec.COL['차노']), ('신후 (열펌·룩북)', spec.COL['신후']),
+         ('성희 (콜드펌)', spec.COL['성희']), ('보미 (업스타일)', spec.COL['보미']),
+         ('와이 (맨즈 STAGE)', spec.COL['와이']),
+         ('모델데이', spec.COL['모델']), ('특강 (3째주 금)', spec.COL['특강']), ('입봉시험', spec.COL['시험'])])
+    return legend, months
+
+
+def render_all(DATA):
+    """배포용 통합본 — 시스템 요약 + 스케줄표 + 과목별 준비물 을 한 문서로."""
+    legend, months = _cal_pieces(DATA)
+    roles = ''.join(
+        f'<tr><td class="rt" style="color:{spec.COL[t]}">{t}</td><td>{_esc(role)}</td>'
+        f'<td class="rl">{_esc(lv)}</td></tr>' for t, role, lv in ROLES)
+    prep_total = sum(len(r) for _, _, _, r in TEACHERS) + len(MENS[3])
+    prep_nav = ''.join(f'<span class="chip" style="--c:{c}">{_esc(n)}</span>'
+                       for n, _, c, _ in list(TEACHERS) + [MENS])
+    prep_body = ''.join(_prep_block(*t) for t in TEACHERS) + _prep_block(*MENS)
+    return f'''<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>앳나운 2026 하반기 교육 — 전체 안내 (배포용)</title>
+<style>
+*{{margin:0;padding:0;box-sizing:border-box;}}
+:root{{--cream:#F7F5F1;--ink:#1c1a17;--gold:#A8895E;--gray:#6a655c;--line:#E4DFD6;}}
+body{{background:#efece6;color:var(--ink);font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.5;padding:24px 14px 70px;}}
+.wrap{{max-width:1000px;margin:0 auto;}}
+.cover{{background:var(--ink);color:var(--cream);border-radius:16px;padding:34px 30px;margin-bottom:16px;}}
+.cover .t{{font-size:12px;letter-spacing:.24em;color:var(--gold);font-weight:800;}}
+.cover h1{{font-size:29px;font-weight:900;margin:9px 0 8px;line-height:1.2;}}
+.cover p{{font-size:14px;color:#d7d1c6;}}
+.toc{{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 26px;}}
+.toc a{{background:#fff;border:1px solid var(--line);border-radius:22px;padding:7px 15px;font-size:13.5px;font-weight:800;color:var(--ink);text-decoration:none;}}
+.sec{{margin:30px 0;}}
+.sh{{font-size:13px;letter-spacing:.14em;color:var(--gold);font-weight:800;margin-bottom:4px;}}
+.st{{font-size:22px;font-weight:900;margin-bottom:14px;border-bottom:2px solid var(--ink);padding-bottom:8px;}}
+.grid2{{display:grid;grid-template-columns:1fr 1fr;gap:12px;}}
+.card{{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;}}
+.card h3{{font-size:14px;font-weight:900;margin-bottom:9px;color:var(--gold);}}
+.card ul{{list-style:none;font-size:13.5px;}} .card li{{padding:3px 0 3px 14px;position:relative;}}
+.card li:before{{content:"·";position:absolute;left:2px;color:var(--gold);font-weight:900;}}
+table.roles{{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;}}
+table.roles td{{padding:10px 14px;border-top:1px solid var(--line);font-size:13.5px;}}
+table.roles tr:first-child td{{border-top:0;}}
+.roles .rt{{font-weight:900;width:78px;}} .roles .rl{{text-align:right;color:var(--gray);font-weight:800;width:90px;}}
+.legend{{background:var(--cream);border:1px solid var(--line);border-radius:10px;padding:13px 16px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:9px 15px;}}
+.lg{{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;}}
+.lg i{{width:14px;height:14px;border-radius:4px;display:inline-block;}}
+.note{{font-size:12.5px;color:#555;background:var(--cream);border:1px solid var(--line);border-radius:10px;padding:12px 16px;line-height:1.7;margin-bottom:16px;}}
+.warn{{background:#fff7e8;border:1px solid #e8d9b0;border-radius:11px;padding:12px 15px;font-size:12.5px;color:#7a6a3c;font-weight:600;margin-bottom:16px;}}
+.mcal{{background:var(--cream);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:12px;}}
+.mtitle{{font-size:18px;font-weight:800;margin-bottom:10px;}}
+.mc{{width:100%;border-collapse:collapse;table-layout:fixed;}}
+.mc th{{font-size:11px;font-weight:800;color:var(--gray);padding:6px 0;border-bottom:2px solid var(--ink);}}
+.mc th.sun{{color:#c25b5b;}} .mc th.sat{{color:#5b7ac2;}}
+.mc td{{border:1px solid var(--line);vertical-align:top;height:74px;padding:5px 6px;background:#fff;}}
+.mc td.pad{{background:transparent;border:none;}} .mc td.off{{background:#f0ede7;}}
+.dn{{font-size:11px;font-weight:800;color:#9b958c;margin-bottom:3px;}}
+.ev{{display:block;font-size:9.5px;font-weight:800;border-radius:3px;padding:2px 5px;margin-top:3px;line-height:1.25;}}
+.ev .lvb{{background:rgba(255,255,255,.28);border-radius:3px;padding:0 3px;margin-right:3px;font-size:8.5px;}}
+.chip{{background:#fff;border:1.5px solid var(--c);color:var(--c);border-radius:20px;padding:5px 13px;font-size:13px;font-weight:800;}}
+.nav{{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px;}}
+.tsec{{margin-bottom:20px;}}
+.thead{{background:#fff;border:1px solid var(--line);border-radius:12px 12px 0 0;padding:14px 18px;}}
+.tname{{font-size:18px;font-weight:900;display:flex;align-items:center;gap:10px;}}
+.tname .cnt{{font-size:11.5px;font-weight:800;color:#fff;background:var(--gray);border-radius:11px;padding:2px 9px;}}
+.tsub{{font-size:12.5px;color:var(--gray);font-weight:600;margin-top:3px;}}
+.rows{{background:#fff;border:1px solid var(--line);border-top:0;border-radius:0 0 12px 12px;overflow:hidden;}}
+.row{{display:flex;gap:12px;padding:13px 16px;border-top:1px solid var(--line);}}
+.row:first-child{{border-top:0;}}
+.rnum{{flex-shrink:0;width:30px;height:30px;border-radius:8px;color:#fff;font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center;}}
+.rbody{{flex:1;min-width:0;}}
+.rtitle{{font-size:15px;font-weight:900;margin-bottom:7px;}}
+.rgrid{{display:flex;flex-direction:column;gap:5px;}}
+.cell{{display:flex;gap:8px;align-items:flex-start;}}
+.lab{{flex-shrink:0;font-size:11px;font-weight:800;border-radius:6px;padding:2px 8px;color:#fff;min-width:46px;text-align:center;}}
+.lab-p{{background:#3F6F5F;}} .lab-h{{background:#B5793A;}} .lab-w{{background:#B5563F;}}
+.txt{{font-size:13px;color:#3a362f;}}
+.foot{{text-align:center;font-size:11px;letter-spacing:.28em;color:#b7b1a6;font-weight:700;margin:26px 0 4px;}}
+@media(max-width:720px){{.grid2{{grid-template-columns:1fr;}}.mc td{{height:auto;}}.ev{{font-size:9px;}}}}
+</style></head>
+<body><div class="wrap">
+<div class="cover"><div class="t">AT NOWN · 2026 EDUCATION</div>
+<h1>2026 하반기 교육 — 전체 안내</h1>
+<p>교육 시스템 · 일정 스케줄표 · 과목별 준비물 (한 문서 배포용)</p></div>
+<div class="toc"><a href="#sys">① 교육 시스템</a><a href="#sch">② 일정 스케줄표</a><a href="#prep">③ 과목별 준비물</a></div>
+
+<div class="sec" id="sys"><div class="sh">SYSTEM</div><div class="st">① 교육 시스템</div>
+<div class="grid2">
+<div class="card"><h3>기간 · 시간</h3><ul>
+<li>정규교육 <b>8/10 ~ 12/6</b> · 입봉시험 <b>12/21(월)</b></li>
+<li>기본 <b>아침 교육 {spec.MORNING}</b></li>
+<li>모델 작업은 <b>{spec.EVENING}</b></li>
+<li>휴무 <b>월 · 토</b> (전원)</li>
+</ul></div>
+<div class="card"><h3>이벤트 · 요일 규칙</h3><ul>
+<li>특강 = 매월 <b>3째주 금</b></li>
+<li>모델데이 = 매월 <b>2·4째주 금</b></li>
+<li>와이(맨즈) = <b>수·목·금</b>만 (화·일 휴무)</li>
+<li>이호 = <b>화요일 제외</b></li>
+</ul></div>
+</div>
+<div style="height:12px"></div>
+<table class="roles"><tr><td class="rt">선생님</td><td>담당</td><td class="rl">레벨</td></tr>{roles}</table>
+<div class="note" style="margin-top:14px">· 레벨은 과목마다 <b>L1~L5</b>로 표기 · 맨즈(옴므)는 별도 트랙(공간이 달라 병행).</div>
+</div>
+
+<div class="sec" id="sch"><div class="sh">SCHEDULE</div><div class="st">② 일정 스케줄표 (8~12월)</div>
+<div class="legend">{legend}</div>
+<div class="note">· 기본 아침 교육 {spec.MORNING}, 모델 작업은 {spec.EVENING}.<br>· 특강 = 3째주 금 · 모델데이 = 2·4주 금 · 입봉시험 <b>12/21(월)</b> · 월·토 휴무.<br>· 칸 앞 <b>L1~L5</b>는 과목 레벨.</div>
+{months}
+</div>
+
+<div class="sec" id="prep"><div class="sh">MATERIALS</div><div class="st">③ 과목별 준비물 · 과제 · 주의 <span style="font-size:13px;color:var(--gray);font-weight:700">(총 {prep_total}과목)</span></div>
+<div class="warn">⚠️ 준비물·과제·주의 내용은 현장 표준 기준 <b>초안</b>입니다 — 각 선생님이 실제 수업 기준으로 검수·확정 후 최종 배포.</div>
+<div class="nav">{prep_nav}</div>
+{prep_body}
+</div>
+
+<div class="foot">A T &nbsp; N O W N &nbsp;·&nbsp; 2 0 2 6 &nbsp; 하 반 기 &nbsp; 교 육</div>
+</div></body></html>'''
+
+
 # ── 준비물·과제·주의 (시즈 배포용) ────────────────────
 def _prep_block(name, sub, color, rows):
     h = (f'<section class="tsec"><div class="thead" style="border-left:6px solid {color}">'
