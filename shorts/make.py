@@ -322,9 +322,9 @@ def _bang_sparkle_frames(frames_dir: Path, lines: list, num_line: int, total: fl
         # 목 + 둥근 두상 헤어(얼굴보다 크게·위 둥글게) + 옆 긴머리 — 항상 존재
         d.rounded_rectangle([CX-70, CY+R-70, CX+70, CY+R+120], radius=30, fill=SKIN_L)
         d.ellipse([CX-R-28, CY-R-50, CX+R+28, CY+R+24], fill=HAIR)             # 둥근 두상
-        for sgn in (-1, 1):                                                     # 옆으로 흐르는 긴 머리
-            d.polygon([(CX+sgn*(R+16), CY-R+130), (CX+sgn*(R+42), CY+R+150),
-                       (CX+sgn*(R-26), CY+R+150), (CX+sgn*(R-14), CY-30)], fill=HAIR)
+        for sgn in (-1, 1):                                                     # 옆으로 흐르는 긴 머리(두상에 밀착·뾰족X)
+            d.polygon([(CX+sgn*(R+4), CY-R+150), (CX+sgn*(R+18), CY+R+150),
+                       (CX+sgn*(R-30), CY+R+150), (CX+sgn*(R-14), CY-20)], fill=HAIR)
         d.ellipse([CX-R, CY-R, CX+R, CY+R], fill=SKIN, outline=(230, 195, 175), width=5)  # 얼굴
         # 볼터치
         d.ellipse([EXL-58, EY+92, EXL+18, EY+140], fill=(*BLUSH, 150))
@@ -342,25 +342,25 @@ def _bang_sparkle_frames(frames_dir: Path, lines: list, num_line: int, total: fl
         # 앞머리 — 옆단은 얼굴 원 곡선을 따르되(사각 블록 X) **아랫단은 눈 위에서 직선**으로 멈춰
         # 눈을 가리지 않는다 → 눈매가 드러나 강조됨(형 지시: 눈에서 직선·눈 안 가림).
         if grow > 0.02:
-            sx = sway * 0.5
             crownY = CY - R - 6                                   # 이마 위 시작(두상에 붙음)
             eyeTopFull = EY - 82                                  # 눈 위 여유(반짝여 커진 눈도 안 가림)
             browY = crownY + int((eyeTopFull - crownY) * grow)    # 눈 바로 위에서 멈춤(직선단)
             cphi = max(-0.985, min(0.985, (CY - browY) / R))
             phi_side = _m.acos(cphi)                              # 옆단이 얼굴 원에 닿는 각(0=정수리)
-            xEdge = R * _m.sin(phi_side)
+            Rin = R - 3                                           # 얼굴선 안쪽으로 flush(삐져나옴 0)
+            xEdge = Rin * _m.sin(phi_side)
             steps = 30
-            pts = []
-            for s in range(steps + 1):                            # 윗변: 얼굴 원 크라운 따라(곡선)
+            pts = []                                              # 윗변=얼굴 원 크라운·아랫변=눈 위 직선
+            for s in range(steps + 1):                            # → 원의 현(chord). 두상에 정확히 flush·좌우 대칭.
                 phi = -phi_side + 2 * phi_side * s / steps
-                pts.append((CX + R * _m.sin(phi) + sx, CY - R * _m.cos(phi)))
-            pts.append((CX + xEdge + sx, browY))                  # 아랫단: 눈 위 수평 직선(오른→왼)
-            pts.append((CX - xEdge + sx, browY))
+                pts.append((CX + Rin * _m.sin(phi), CY - Rin * _m.cos(phi)))
+            pts.append((CX + xEdge, browY))                      # 아랫단: 눈 위 수평 직선(오른→왼)
+            pts.append((CX - xEdge, browY))
             d.polygon(pts, fill=HAIR)
-            for k in range(-4, 5):                                # 결(가는 세로선·직선단까지)
+            for k in range(-4, 5):                                # 결(가는 세로선·직선단까지·미세 찰랑)
                 u = k / 4.5
-                x0 = CX + xEdge * u * 0.9 + sx
-                d.line([(x0, crownY + 40), (x0 + sway * 0.4, browY - 6)], fill=(*HAIR_D, 150), width=4)
+                x0 = CX + xEdge * u * 0.9
+                d.line([(x0, crownY + 40), (x0 + sway * 0.35, browY - 6)], fill=(*HAIR_D, 150), width=4)
         # 눈 반짝 별(눈매 강조) — 크게·글로우
         if spark > 0.05:
             a = int(255 * spark)
