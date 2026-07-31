@@ -31,9 +31,9 @@
       false
     ],
     [
-      "겉만 얇게 펴는, '겉매직'이 있어요.",
-      "겉만 얇게 펴는,\\N'겉매직'이 있어요.",
-      "There is surface-only straightening.",
+      "겉만 얇게 펴는 게, 겉매직이에요.",
+      "겉만 얇게 펴는 게,\\N겉매직이에요.",
+      "That's surface-only straightening.",
       false
     ],
     [
@@ -49,8 +49,8 @@
       false
     ],
     [
-      "볼륨 죽는 걸 제일 싫어하셨어요.",
-      "볼륨 죽는 걸\\N제일 싫어하셨어요.",
+      "볼륨 죽는 게 제일 싫으셨대요.",
+      "볼륨 죽는 게\\N제일 싫으셨대요.",
       "so she hated losing volume most.",
       false
     ],
