@@ -51,11 +51,20 @@ def build():
         ds = sorted(byweek[wi]); random.seed(700 + wi); random.shuffle(ds)
         wk_dates[wi] = ds
 
-    # 각 선생님을 전 구간에 고르게 펼침 (과목 i → 주 round(i*wmax/(N-1)))
+    # 레벨이 특정 달에 쏠리지 않고 매달 L1~L5가 골고루 열리게:
+    #  ① 선생님 안에서 레벨셋별로 묶고, 라운드로빈(L1a,L2a,…,L1b,L2b,…)으로 섞은 뒤
+    #  ② 그 섞인 순서를 전 구간(8~12월)에 선형으로 펼친다.
+    # → 각 레벨이 한 선생님 안에서 앞·중간·뒤로 흩어지고, 하루/달 몰림도 없다.
+    from itertools import zip_longest
     items = []
     for teacher, subs in spec.TRACKS.items():
-        n = len(subs)
-        for i, (label, lset) in enumerate(subs):
+        groups = {}                      # lset -> [(label,lset)] (등장 순서 유지)
+        for label, lset in subs:
+            groups.setdefault(lset, []).append((label, lset))
+        interleaved = [x for tup in zip_longest(*groups.values())
+                       for x in tup if x is not None]
+        n = len(interleaved)
+        for i, (label, lset) in enumerate(interleaved):
             ideal = round(i * wmax / (n - 1)) if n > 1 else 0
             items.append((ideal, teacher, label, lset))
     items.sort(key=lambda x: (x[0], x[1]))
@@ -67,10 +76,13 @@ def build():
     tc_wd = defaultdict(Counter)   # 선생님별 요일 사용횟수(요일 분산용)
     day_load = Counter()           # 날짜별 과목수(하루 몰림 완화)
     misplaced = []
+    cap = spec.RULES['max_same_weekday']
     for ideal, teacher, label, lset in items:
-        done = False
-        for off in range(0, len(weeks) + 2):        # 이상적 주에서 가까운 순 탐색
-            cands = []
+        # 이상적 주 근처에서 후보를 모으되, 첫 후보가 나와도 +2주까지 더 훑어
+        # '덜 쓴 요일'을 고를 여지를 준다(요일 벽 방지 + 이상적 주 근접 유지).
+        cands = []          # (dt, off) — off=이상적 주와의 거리
+        found_off = None
+        for off in range(0, len(weeks) + 2):
             for wk in (ideal + off, ideal - off):
                 if wk not in byweek:
                     continue
@@ -81,20 +93,22 @@ def build():
                         continue
                     if teacher in day_tc[dt]:        # 같은 선생님 하루 2번 방지
                         continue
-                    cands.append(dt)
-            if cands:
-                # 그 선생님이 '덜 쓴 요일' 우선 → 요일이 골고루 흩어짐(화요일 벽 방지).
-                # 동률이면 그날 과목수 적은 쪽, 그다음 재현 가능한 순서.
-                cands.sort(key=lambda dt: (tc_wd[teacher][dt.weekday()], day_load[dt],
-                                           dt.weekday(), dt.toordinal()))
-                dt = cands[0]
-                day_lv[dt] |= lset; day_tc[dt].add(teacher)
-                tc_wd[teacher][dt.weekday()] += 1; day_load[dt] += 1
-                DATA[dt].append((label, teacher, spec.lvtxt(lset)))
-                done = True
-            if done:
+                    cands.append((dt, off))
+            if cands and found_off is None:
+                found_off = off
+            if found_off is not None and off >= found_off + 2:
                 break
-        if not done:
+        if cands:
+            # ① 요일 cap 넘는 후보는 뒤로(있으면 피함) ② 덜 쓴 요일 ③ 이상적 주 근접
+            # ④ 그날 과목수 적은 쪽 ⑤ 재현 가능한 순서
+            cands.sort(key=lambda c: (tc_wd[teacher][c[0].weekday()] >= cap,
+                                      tc_wd[teacher][c[0].weekday()], c[1],
+                                      day_load[c[0]], c[0].weekday(), c[0].toordinal()))
+            dt = cands[0][0]
+            day_lv[dt] |= lset; day_tc[dt].add(teacher)
+            tc_wd[teacher][dt.weekday()] += 1; day_load[dt] += 1
+            DATA[dt].append((label, teacher, spec.lvtxt(lset)))
+        else:
             misplaced.append((teacher, label))
 
     # 금 이벤트 + 시험
