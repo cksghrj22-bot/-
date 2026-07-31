@@ -21,6 +21,8 @@ def prep_consistency():
     problems = []
     prep_by_teacher = {name: [g for g, *_ in rows] for name, _, _, rows in TEACHERS}
     for teacher, subs in spec.TRACKS.items():
+        if teacher == '와이':
+            continue   # 맨즈 STAGE는 별도 줄기 — 시즈 준비물 문서 대상 아님
         want = [lab for lab, _ in subs]
         got = prep_by_teacher.get(teacher)
         if got is None:

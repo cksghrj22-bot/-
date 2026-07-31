@@ -35,6 +35,7 @@ def render_calendar(DATA):
         [('창엽 (커트 L1·2)', spec.COL['창엽']), ('이호 (커트 L3~5)', spec.COL['이호']),
          ('차노 (미감·디자인방법)', spec.COL['차노']), ('신후 (열펌·룩북)', spec.COL['신후']),
          ('성희 (콜드펌)', spec.COL['성희']), ('보미 (업스타일)', spec.COL['보미']),
+         ('와이 (맨즈 STAGE)', spec.COL['와이']),
          ('모델데이', spec.COL['모델']), ('특강 (3째주 금)', spec.COL['특강']), ('입봉시험', spec.COL['시험'])])
     return f'''<!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
