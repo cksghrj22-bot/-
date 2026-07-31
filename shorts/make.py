@@ -378,27 +378,31 @@ def _bang_sparkle_frames(frames_dir: Path, lines: list, num_line: int, total: fl
 
 def _curl_zones_frames(frames_dir: Path, lines: list, num_line: int, total: float,
                        seg_start: float = 0.0, fps: int = 30) -> None:
-    """악성 곱슬이 잘 생기는 부위 도식(옆모습 머리) — 앞머리라인·페이스라인/관자놀이·구렛나루·
-    뒤통수·뒷목이 순차로 빨갛게 반짝인다. '그 자리를 빨리 찾아' 대사 위 설명 인서트(형 2026-07-31)."""
+    """악성 곱슬이 잘 생기는 부위 도식 — 위에서 본 두상(원)에 부위별 빨간 아크가 순차로 켜진다.
+    승인된 dusang_zones 원형 스타일(형 '얼굴 그리지 마라'). 앞=위·뒤=아래. 대사 '그 자리를 빨리 찾아' 위."""
     from PIL import Image, ImageDraw, ImageFont
     import math as _m
     frames_dir.mkdir(parents=True, exist_ok=True)
     for p in frames_dir.glob("*.png"):
         p.unlink()
     W, H = 1080, 1920
-    HAIR = (74, 52, 40); SKIN = (255, 224, 205); RED = (232, 74, 60); DK = (60, 44, 40)
-    CX, CY, R = 470, 820, 300                   # 머리(옆모습) 중심·반지름
-    f_ti = ImageFont.truetype(NSQR, 58); f_lb = ImageFont.truetype(NSQR, 40)   # NSQR=공백 렌더 OK(교보는 공백 두부)
+    RED = (232, 74, 60); DK = (60, 44, 40); GREY = (150, 130, 120)
+    CX, CY, R = 540, 980, 300                   # 위에서 본 두상(원)
+    f_ti = ImageFont.truetype(NSQR, 58); f_fb = ImageFont.truetype(NSQR, 40); f_lb = ImageFont.truetype(NSQR, 42)
 
     def sm(x): x = max(0.0, min(1.0, x)); return x * x * (3 - 2 * x)
 
-    # 존: (라벨, 존점 xy, 라벨앵커 xy, 등장순서 0~4)  — 옆모습(얼굴이 오른쪽)
+    def pt(deg, rad):   # 0°=위(앞)·시계방향
+        a = _m.radians(deg - 90)
+        return (CX + rad * _m.cos(a), CY + rad * _m.sin(a))
+
+    # 존: (라벨, 대표각(들), 라벨각, 등장순서) — 앞=위(0°)/뒤=아래(180°). 좌우 대칭은 각도 리스트로.
     zones = [
-        ("앞머리 라인", (past := (CX + 150, CY - R + 70)), (past[0] + 150, past[1] - 40), 0),
-        ("페이스라인", (CX + R - 18, CY - 40), (CX + R + 40, CY - 70), 1),
-        ("구렛나루", (CX + R - 70, CY + 150), (CX + R + 40, CY + 170), 2),
-        ("뒤통수", (CX - R + 90, CY - 80), (CX - R - 40, CY - 120), 3),
-        ("뒷목 라인", (CX - R + 150, CY + R - 40), (CX - R + 10, CY + R + 70), 4),
+        ("앞머리 라인", [0], 0, 0),
+        ("페이스라인", [-42, 42], 42, 1),
+        ("구렛나루", [-72, 72], 72, 2),
+        ("뒤통수", [180], 180, 3),
+        ("뒷목 라인", [150, 210], 205, 4),
     ]
     N = max(1, round(total * fps))
     for i in range(N):
@@ -406,37 +410,35 @@ def _curl_zones_frames(frames_dir: Path, lines: list, num_line: int, total: floa
         edge = min(1.0, i / 6, (N - 1 - i) / 6)
         img = Image.new("RGB", (W, H), (255, 243, 232))
         d = ImageDraw.Draw(img, "RGBA")
-        # 제목
         ti = "악성 곱슬이 잘 생기는 곳"
         tw = d.textlength(ti, font=f_ti)
-        d.text((W / 2 - tw / 2, 300), ti, font=f_ti, fill=DK)
-        # 옆모습 머리: 두상(하어) + 얼굴 프로필(스킨) + 코 + 귀 + 목
-        d.ellipse([CX - R, CY - R, CX + R, CY + R], fill=HAIR)                         # 두상(머리카락)
-        d.rounded_rectangle([CX + 40, CY + R - 60, CX + 190, CY + R + 150], radius=40, fill=SKIN)  # 목
-        d.pieslice([CX - R + 30, CY - R + 30, CX + R + 120, CY + R + 20], -90, 95, fill=SKIN)      # 얼굴(앞쪽) 스킨
-        d.polygon([(CX + R + 78, CY - 20), (CX + R + 128, CY + 34), (CX + R + 74, CY + 46)], fill=SKIN)  # 코
-        d.ellipse([CX + 150, CY + 60, CX + 214, CY + 150], fill=(245, 205, 186), outline=(210, 170, 150), width=4)  # 귀
-        # 헤어라인(앞머리 경계) 살짝
-        d.arc([CX - R + 20, CY - R + 20, CX + R - 10, CY + R - 20], -70, 40, fill=(54, 36, 27), width=6)
-        # 존 순차 등장(빨간 글로우 + 펄스 + 라벨·리더선)
+        d.text((W / 2 - tw / 2, 360), ti, font=f_ti, fill=DK)
+        # 두상 원(위에서 봄) + 앞/뒤 표시(원 안쪽·라벨과 안 겹치게)
+        d.ellipse([CX - R, CY - R, CX + R, CY + R], outline=GREY, width=8)
+        for (txt, dy) in (("앞", -R + 46), ("뒤", R - 86)):
+            w = d.textlength(txt, font=f_fb); d.text((CX - w / 2, CY + dy), txt, font=f_fb, fill=(*GREY, 200))
         seg = 1.0 / len(zones)
-        for (lab, (zx, zy), (lx, ly), order) in zones:
-            ap = sm((t - order * seg * 0.7) / (seg * 0.9))
+        for (lab, angs, lang, order) in zones:
+            ap = sm((t - order * seg * 0.72) / (seg * 0.9))
             if ap <= 0.02:
                 continue
             pulse = 0.72 + 0.28 * _m.sin(t * _m.pi * 6 + order)
-            gl = int(52 * ap)
-            for rr, aa in ((int(46 * pulse), 60), (int(30 * pulse), 120)):
-                d.ellipse([zx - rr, zy - rr, zx + rr, zy + rr], fill=(*RED, int(aa * ap)))
-            d.ellipse([zx - 13, zy - 13, zx + 13, zy + 13], fill=(*RED, int(255 * ap)))
-            # 라벨 박스 + 리더선
-            right = lx >= zx
-            d.line([(zx, zy), (lx, ly + 20)], fill=(*RED, int(220 * ap)), width=4)
+            for ang in angs:                                  # 부위 빨간 아크(원 위) + 글로우 점
+                d.arc([CX - R, CY - R, CX + R, CY + R], ang - 90 - 16, ang - 90 + 16,
+                      fill=(*RED, int(255 * ap)), width=16)
+                zx, zy = pt(ang, R)
+                for rr, aa in ((int(40 * pulse), 70), (int(24 * pulse), 130)):
+                    d.ellipse([zx - rr, zy - rr, zx + rr, zy + rr], fill=(*RED, int(aa * ap)))
+                d.ellipse([zx - 12, zy - 12, zx + 12, zy + 12], fill=(*RED, int(255 * ap)))
+            # 라벨 박스 + 리더선(대표각에서·화면 안으로 클램프)
+            zx, zy = pt(lang, R)
+            lx, ly = pt(lang, R + 118)
             lw = d.textlength(lab, font=f_lb)
-            bx0 = lx if right else lx - lw
-            d.rounded_rectangle([bx0 - 16, ly - 6, bx0 + lw + 16, ly + 52], radius=14,
-                                fill=(*DK, int(220 * ap)))
-            d.text((bx0, ly), lab, font=f_lb, fill=(255, 255, 255, int(255 * ap)))
+            bx0 = lx - (0 if lx >= CX else lw)                 # 오른쪽존=오른쪽으로/왼쪽존=왼쪽으로
+            bx0 = max(28, min(bx0, W - 28 - lw))               # 화면 안으로 클램프
+            d.line([(zx, zy), (bx0 + lw / 2, ly)], fill=(*RED, int(210 * ap)), width=4)
+            d.rounded_rectangle([bx0 - 18, ly - 30, bx0 + lw + 18, ly + 30], radius=16, fill=(*DK, int(225 * ap)))
+            d.text((bx0, ly - 26), lab, font=f_lb, fill=(255, 255, 255, int(255 * ap)))
         if edge < 1.0:
             ov = Image.new("RGBA", (W, H), (255, 243, 232, int(255 * (1 - edge))))
             img = Image.alpha_composite(img.convert("RGBA"), ov).convert("RGB")
