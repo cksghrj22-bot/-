@@ -112,30 +112,40 @@ _BAR_PALETTE = {              # 색이름 → (박스 RGB, 글자 RGB). 흰/검/
 }
 
 
-def _bar_png(text: str, color: str, x, y: int, out_png, fontsize: int = 56) -> int:
+def _bar_png(text: str, color: str, x, y: int, out_png, fontsize: int = 56, rot: float = 0.0) -> int:
     """색 바자막 1개를 투명 1080x1920 위에 그려 PNG로 저장. 반환=박스 높이(다음 바 자동 스택용).
-    박스는 글자폭에 딱 맞고(좌정렬·왼쪽 x), 줄바꿈은 매니페스트의 \\n으로만. 검정만 살짝 투명."""
+    박스는 글자폭에 딱 맞고(좌정렬·왼쪽 x), 줄바꿈은 매니페스트의 \\n으로만. 검정만 살짝 투명.
+    rot(도)=바를 살짝 기울여 '손으로 툭 붙인' 투박한 느낌(형 2026-08-01 '사람이 만든것처럼')."""
     from PIL import Image, ImageDraw, ImageFont
     bg, fg = _BAR_PALETTE.get(color, _BAR_PALETTE["white"])
     fnt = ImageFont.truetype(NSQR, fontsize)
     lines = str(text).split("\n")
-    img = Image.new("RGBA", (1080, 1920), (0, 0, 0, 0))
-    d = ImageDraw.Draw(img)
     asc, desc = fnt.getmetrics()
     line_h = asc + desc
     pad_x, pad_y, gap = 32, 18, 8
-    widths = [d.textlength(ln, font=fnt) for ln in lines]
+    _m = ImageDraw.Draw(Image.new("RGBA", (8, 8)))
+    widths = [_m.textlength(ln, font=fnt) for ln in lines]
     tw = max(widths) if widths else 0
     box_w = int(tw) + pad_x * 2
     box_h = line_h * len(lines) + gap * (len(lines) - 1) + pad_y * 2
     bx = (1080 - box_w) // 2 if x == "center" else int(x)
     by = int(y)
     a = 232 if color == "black" else 255
-    d.rounded_rectangle([bx, by, bx + box_w, by + box_h], radius=7, fill=bg + (a,))
-    ty = by + pad_y
+    # 박스를 타이트 캔버스에 그려 (회전 대비) 그 뒤 전체 프레임에 합성
+    box = Image.new("RGBA", (box_w, box_h), (0, 0, 0, 0))
+    bd = ImageDraw.Draw(box)
+    bd.rounded_rectangle([0, 0, box_w - 1, box_h - 1], radius=7, fill=bg + (a,))
+    ty = pad_y
     for ln in lines:
-        d.text((bx + pad_x, ty), ln, font=fnt, fill=fg + (255,))
+        bd.text((pad_x, ty), ln, font=fnt, fill=fg + (255,))
         ty += line_h + gap
+    img = Image.new("RGBA", (1080, 1920), (0, 0, 0, 0))
+    if rot:
+        cx, cy = bx + box_w / 2, by + box_h / 2          # 원래 박스 중심 기준 회전(위치 유지)
+        rb = box.rotate(float(rot), expand=True, resample=Image.BICUBIC)
+        img.alpha_composite(rb, (int(cx - rb.width / 2), int(cy - rb.height / 2)))
+    else:
+        img.alpha_composite(box, (bx, by))
     img.save(out_png)
     return box_h
 
@@ -152,7 +162,7 @@ def _apply_bars(out_seg, bars: list, wd, k: int) -> None:
         if y is None:
             y = start_y if run_y is None else run_y
         bh = _bar_png(bar["text"], bar.get("color", "white"), bar.get("x", 76), y, bp,
-                      fontsize=int(bar.get("fs", 56)))
+                      fontsize=int(bar.get("fs", 56)), rot=float(bar.get("rot", 0.0)))
         run_y = int(y) + bh + 20
         bar_pngs.append((bp, float(bar.get("t0", 0.0))))
     tmp = Path(wd) / f"seg_{k:02d}_bars.mp4"
