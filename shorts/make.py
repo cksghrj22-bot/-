@@ -824,7 +824,10 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
         else:
             txt = ln.text
         tl.append(Line(text=txt, start=ln.start, end=ln.end))
-    script = Script(lines=tl, title=None)
+    _title_ov = m.get("title_overlay")               # 상단 노랑 제목 밴드(정본 채널 스타일·형 '훅 뽑아 제목 넣어라')
+    if isinstance(_title_ov, list) and len(_title_ov) == 2:
+        _title_ov = SS.pop_title(_title_ov[0], _title_ov[1])
+    script = Script(lines=tl, title=_title_ov or None)
 
     bgm = m.get("bgm")
     if bgm and not Path(bgm).is_absolute():
