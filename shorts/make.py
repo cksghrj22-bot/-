@@ -506,9 +506,16 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
     prev_end = 0.0
     black_line_idx = set()
     bigcard_idx = set()   # 큰 중앙 메시지카드(검은화면·물음/핵심메시지 확대)
+    line_margin = {}      # 세그별 자막 높이 오버라이드(li→margin_v). 세그에 sub_margin_v 있으면 그 라인만 위치 바뀜.
     tail = 0.0
     for k, seg in enumerate(m["segments"]):
         seg_end = lines[seg["untilLine"]].end
+        if "sub_margin_v" in seg:                 # 세그 지정 자막높이(예: 완성컷=아래·POV도포=위)
+            _segm = int(seg["sub_margin_v"])
+            for _li, _ln in enumerate(lines):
+                _mid = (_ln.start + _ln.end) / 2
+                if prev_end <= _mid < seg_end:
+                    line_margin[_li] = _segm
         seg_tail = float(seg.get("tail", 0.0))
         dur = max(0.1, seg_end - prev_end) + seg_tail
         tail += seg_tail
@@ -583,6 +590,8 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
             txt = r"{\an5\fs104\b1}" + ln.text   # 큰 중앙 메시지카드(강조)
         elif li in black_line_idx:
             txt = r"{\an5}" + ln.text
+        elif li in line_margin:                  # 세그별 자막 높이(\an2 하단기준 y=1920-margin)
+            txt = (r"{\pos(540,%d)}" % (1920 - line_margin[li])) + ln.text
         else:
             txt = ln.text
         tl.append(Line(text=txt, start=ln.start, end=ln.end))
