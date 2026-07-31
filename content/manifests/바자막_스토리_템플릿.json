@@ -1,0 +1,36 @@
+{
+  "title": "미용실 '예쁘게 해주세요'가 위험한 이유 (바자막 스토리)",
+  "stem": "story",
+  "_notes": "🆕 색 바자막 서사 스템 데모(형 2026-07-31 '의미없는 b롤 뒤에·자랑거리/궁금증 앞에 다양한 색 바자막 1~3개, 장수 넘기며 스토리 서사'). 참고=nak__ta__ 인스타 캐러셀. 바텍스트=나레 verbatim(하단자막 자동 제외). ⚠️이 파일의 img는 데모용 뉴트럴 플레이스홀더(/tmp/bar_demo/bgN.png) — 발행 땐 각 seg의 img를 형 살롱 b롤 fileId(또는 src 영상)로 교체만 하면 됨. 바 색/문구는 그대로 재사용.",
+  "voice": {"stability": 0.42, "style": 0.15, "similarity_boost": 0.85, "speed": 1.05},
+  "bgm": "/home/user/-/shorts/assets/bgm_piano_long.mp3",
+  "phrases": [
+    ["미용실 가서, 알아서 예쁘게 해주세요, 하시죠?", "미용실 가서 '예쁘게 해주세요' 하시죠?", null, false],
+    ["근데 그 말이,", "근데 그 말이,", null, false],
+    ["열에 아홉은 후회로 돌아옵니다.", "열에 아홉은 후회로 돌아옵니다.", null, false],
+    ["예뻐 보이는 머리와,", "'예뻐 보이는 머리'와", null, false],
+    ["나한테 맞는 머리는 다릅니다.", "'나한테 맞는 머리'는 다릅니다.", null, false],
+    ["그래서 자르기 전에,", "그래서 자르기 전에,", null, false],
+    ["얼굴형을 삼십 분 먼저 봅니다.", "얼굴형을 30분 먼저 봅니다.", null, false],
+    ["머리가 아니라, 인상이 바뀌는 이유예요.", "머리가 아니라, 인상이 바뀌는 이유예요.", null, false]
+  ],
+  "segments": [
+    {"img": "/tmp/bar_demo/bg1.png", "untilLine": 0,
+     "bars": [{"text": "미용실 가서\n'예쁘게 해주세요' 하시죠?", "color": "white", "y": 760}]},
+
+    {"img": "/tmp/bar_demo/bg2.png", "untilLine": 2,
+     "bars": [{"text": "근데 그 말이,", "color": "black", "y": 720},
+              {"text": "열에 아홉은\n후회로 돌아옵니다.", "color": "cyan"}]},
+
+    {"img": "/tmp/bar_demo/bg3.png", "untilLine": 4,
+     "bars": [{"text": "'예뻐 보이는 머리'와", "color": "white", "y": 720},
+              {"text": "'나한테 맞는 머리'는\n다릅니다.", "color": "black"}]},
+
+    {"img": "/tmp/bar_demo/bg4.png", "untilLine": 6,
+     "bars": [{"text": "그래서 자르기 전에,", "color": "white", "y": 720},
+              {"text": "얼굴형을 30분\n먼저 봅니다.", "color": "cyan"}]},
+
+    {"img": "/tmp/bar_demo/bg5.png", "untilLine": 7, "tail": 2.2,
+     "bars": [{"text": "머리가 아니라,\n인상이 바뀌는 이유예요.", "color": "black", "y": 780}]}
+  ]
+}

@@ -98,6 +98,82 @@ def _image_still(file_id: str, dur: float, out_seg, tok: str | None = None,
                     "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "20", str(out_seg)], check=True)
 
 
+# ── 바자막(색 바) 스토리 오버레이 — 인스타 캐러셀식 서사(형 2026-07-31 지시) ──────────
+#   "의미없는 b롤 뒤에, 혹은 신기한거·자랑거리·중요정보·궁금증 앞에 다양한 색 바자막 1~3개
+#    깔고, 장수 넘기며 스토리 서사를 만든다"(참고=nak__ta__ 캐러셀). 나레이션 verbatim을
+#   화면 위 색 박스로 얹어 '읽는 맛'을 준다. 바텍스트=나레 그대로 → 바 세그는 하단자막 자동 제외.
+_BAR_PALETTE = {              # 색이름 → (박스 RGB, 글자 RGB). 흰/검/시안/핑크/노랑/연두.
+    "white":  ((246, 246, 246), (17, 17, 17)),
+    "black":  ((8, 8, 8),       (245, 245, 245)),
+    "cyan":   ((150, 229, 244), (12, 20, 24)),
+    "pink":   ((247, 162, 192), (26, 14, 20)),
+    "yellow": ((255, 212, 0),   (22, 18, 4)),
+    "green":  ((178, 224, 122), (14, 26, 10)),
+}
+
+
+def _bar_png(text: str, color: str, x, y: int, out_png, fontsize: int = 56) -> int:
+    """색 바자막 1개를 투명 1080x1920 위에 그려 PNG로 저장. 반환=박스 높이(다음 바 자동 스택용).
+    박스는 글자폭에 딱 맞고(좌정렬·왼쪽 x), 줄바꿈은 매니페스트의 \\n으로만. 검정만 살짝 투명."""
+    from PIL import Image, ImageDraw, ImageFont
+    bg, fg = _BAR_PALETTE.get(color, _BAR_PALETTE["white"])
+    fnt = ImageFont.truetype(NSQR, fontsize)
+    lines = str(text).split("\n")
+    img = Image.new("RGBA", (1080, 1920), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    asc, desc = fnt.getmetrics()
+    line_h = asc + desc
+    pad_x, pad_y, gap = 32, 18, 8
+    widths = [d.textlength(ln, font=fnt) for ln in lines]
+    tw = max(widths) if widths else 0
+    box_w = int(tw) + pad_x * 2
+    box_h = line_h * len(lines) + gap * (len(lines) - 1) + pad_y * 2
+    bx = (1080 - box_w) // 2 if x == "center" else int(x)
+    by = int(y)
+    a = 232 if color == "black" else 255
+    d.rounded_rectangle([bx, by, bx + box_w, by + box_h], radius=7, fill=bg + (a,))
+    ty = by + pad_y
+    for ln in lines:
+        d.text((bx + pad_x, ty), ln, font=fnt, fill=fg + (255,))
+        ty += line_h + gap
+    img.save(out_png)
+    return box_h
+
+
+def _apply_bars(out_seg, bars: list, wd, k: int) -> None:
+    """세그 클립(out_seg) 위에 seg['bars'] 색 바들을 얹어 덮어쓴다. 각 바 PNG를 overlay로 합성.
+    바에 y 없으면 이전 바 아래로 자동 스택. t0(초)=등장 시각(기본 0=처음부터·캐러셀식 모두 보임)."""
+    bar_pngs = []
+    run_y = None
+    start_y = 748              # 첫 바 기본 상단(밴드 285 아래·중앙보다 살짝 위)
+    for bi, bar in enumerate(bars):
+        bp = Path(wd) / f"bar_{k:02d}_{bi}.png"
+        y = bar.get("y")
+        if y is None:
+            y = start_y if run_y is None else run_y
+        bh = _bar_png(bar["text"], bar.get("color", "white"), bar.get("x", 76), y, bp,
+                      fontsize=int(bar.get("fs", 56)))
+        run_y = int(y) + bh + 20
+        bar_pngs.append((bp, float(bar.get("t0", 0.0))))
+    tmp = Path(wd) / f"seg_{k:02d}_bars.mp4"
+    cmd = ["ffmpeg", "-v", "error", "-y", "-i", str(out_seg)]
+    for bp, _ in bar_pngs:
+        cmd += ["-i", str(bp)]
+    fc = ""
+    cur = "[0:v]"
+    for idx, (bp, t0) in enumerate(bar_pngs):
+        nxt = f"[b{idx}]"
+        en = f":enable='gte(t,{t0:.2f})'" if t0 > 0 else ""
+        fc += f"{cur}[{idx + 1}:v]overlay=0:0{en}{nxt};"
+        cur = nxt
+    fc = fc.rstrip(";")
+    cmd += ["-filter_complex", fc, "-map", cur,
+            "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "19", str(tmp)]
+    subprocess.run(cmd, check=True)
+    Path(out_seg).unlink(missing_ok=True)
+    tmp.rename(out_seg)
+
+
 # ── 화이팅 애니: 주먹을 들어올리는 데이터 모션(흑백 위 노랑 포인트) ───────────────
 def _fist_raise_frames(frames_dir: Path, lines: list, line_idx: int, fps: int = 30) -> tuple[float, float]:
     """line_idx(화이팅 줄) 구간에 주먹이 아래→위로 솟구치고 '화이팅!'이 터진다. RGBA 오버레이."""
@@ -630,8 +706,8 @@ def _require(m: dict) -> None:
     segs = m.get("segments", [])
     waived = set(m.get("waive", []))   # 의도적 예외(유동적)
     errs = []
-    if stem not in ("message", "mind", "product", "magic", "case"):
-        errs.append("stem 미지정('message'/'product'/'magic'/'case')")
+    if stem not in ("message", "mind", "product", "magic", "case", "story"):
+        errs.append("stem 미지정('message'/'product'/'magic'/'case'/'story')")
     if not phrases:
         errs.append("phrases 없음")
     # 공통: 메시지로 시작 — 첫 줄이 핵심 물음/메시지여야(빈 줄 금지)
@@ -675,6 +751,13 @@ def _require(m: dict) -> None:
             errs.append("[case] 진단 도식(anim) 없음 — 개념 1컷 시각화가 케이스 스템 표준. 의도면 waive:[\"도식\"].")
         if segs and not (segs[0].get("bigcard") or segs[0].get("black")):
             print("⚠️ [case] '메시지로 시작' 권장 — 첫 세그를 훅카드로 여는 게 정본.")
+    if stem == "story":
+        # 새 스템 '색 바자막 서사형'(2026-07-31 이찬호 지시 → 디렉터 설계). 참고=nak__ta__ 캐러셀.
+        # 표준요소: ①색 바자막(bars) 세그가 본체(장수 넘기며 서사) ②바텍스트=나레 verbatim.
+        # b롤은 img(사진)든 src(영상)든 무관 — 바가 메시지를 나른다('의미없는 b롤 뒤에' 원칙).
+        if not any(s.get("bars") for s in segs):
+            errs.append("[story] 색 바자막(bars) 세그 없음 — 스토리 스템의 본체다. 세그에 bars:[{text,color}] 넣어라.")
+        # 바텍스트가 나레(phrases disp)와 실제로 이어지는지(verbatim 원칙)는 렌더가 자동 nosub로 보장.
     if stem == "magic":
         # 실사(사람 매직하는 장면) 기본 필수 — 계속 빠뜨린 최악의 실수(형 "빼지마 절대").
         if not any(s.get("src") for s in segs) and "실사" not in waived:
@@ -731,6 +814,11 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
                 _mid = (_ln.start + _ln.end) / 2
                 if prev_end <= _mid < seg_end:
                     nosub_idx.add(_li)
+        if seg.get("bars") and seg.get("nosub", True) is not False:   # 바자막=텍스트 본체 → 하단자막 자동 제외(중복 방지)
+            for _li, _ln in enumerate(lines):
+                _mid = (_ln.start + _ln.end) / 2
+                if prev_end <= _mid < seg_end:
+                    nosub_idx.add(_li)
         if "sub_margin_v" in seg:                 # 세그 지정 자막높이(예: 완성컷=아래·POV도포=위)
             _segm = int(seg["sub_margin_v"])
             for _li, _ln in enumerate(lines):
@@ -772,6 +860,8 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
                        vf=_frame_vf(seg.get("frame", "landscape"), seg.get("hflip", False),
                                     seg.get("bw", False), float(seg.get("zoom", 1.0))),
                        tok=tok)
+        if seg.get("bars"):                        # b롤/사진 위에 색 바자막 스토리 얹기(형 2026-07-31)
+            _apply_bars(out_seg, seg["bars"], wd, k)
         seg_files.append(out_seg)
         prev_end = seg_end
     video_total = total + tail
