@@ -339,17 +339,31 @@ def _bang_sparkle_frames(frames_dir: Path, lines: list, num_line: int, total: fl
             d.ellipse([ex+10, EY+6, ex+22, EY+18], fill=(255, 255, 255, 220))    # 작은 광채
         # 입(방긋)
         d.arc([CX-42, EY+70, CX+42, EY+130], 20, 160, fill=(200, 120, 110), width=8)
-        # 앞머리(일자뱅) — 이마에 곧게, 찰랑 내려옴. 위는 두상에 붙고 아래 단은 일자
+        # 앞머리 — 둥근 얼굴에 맞춰 이마를 덮는 곡선 뱅(사각 블록 X·형 지시).
+        # 윗변·옆단은 얼굴 원 곡선을 그대로 따라가고(옆단이 원 위 browY 높이에 정확히 닿음),
+        # 아랫단만 가운데가 살짝 처진 부드러운 곡선 = 진짜 앞머리 모양.
         if grow > 0.02:
-            fW = int(R * 0.80)                        # 앞머리 폭(이마 덮음)
-            topY = CY - R - 6                          # 이마 위 시작(두상에 붙음)
-            browY = topY + int((EY - 46 - topY) * grow)   # 끝이 눈썹 위로 내려옴
             sx = sway * 0.5
-            d.rectangle([CX - fW + sx, topY - 30, CX + fW + sx, browY - 30], fill=HAIR)      # 위 채움
-            d.rounded_rectangle([CX - fW + sx, browY - 60, CX + fW + sx, browY], radius=26, fill=HAIR)  # 아래 일자단(살짝 둥근 끝)
-            for k in range(-4, 5):                     # 결(가는 세로선)
-                x0 = CX + k * int(fW / 4.2) + sx
-                d.line([(x0, browY - 50), (x0 + sway * 0.4, browY - 6)], fill=(*HAIR_D, 150), width=4)
+            crownY = CY - R - 6                                   # 이마 위 시작(두상에 붙음)
+            browY = crownY + int((EY - 40 - crownY) * grow)       # 끝이 눈썹 위로 내려옴
+            cphi = max(-0.985, min(0.985, (CY - browY) / R))
+            phi_side = _m.acos(cphi)                              # 옆단이 얼굴 원에 닿는 각(0=정수리)
+            xEdge = R * _m.sin(phi_side)
+            dip = 30 * grow                                       # 가운데 처짐(둥근 뱅)
+            steps = 30
+            pts = []
+            for s in range(steps + 1):                            # 윗변: 얼굴 원 크라운 따라
+                phi = -phi_side + 2 * phi_side * s / steps
+                pts.append((CX + R * _m.sin(phi) + sx, CY - R * _m.cos(phi)))
+            for s in range(steps + 1):                            # 아랫단: 오른쪽→가운데(처짐)→왼쪽
+                u = 1 - 2 * s / steps
+                pts.append((CX + xEdge * u + sx, browY + dip * (1 - u * u)))
+            d.polygon(pts, fill=HAIR)
+            for k in range(-4, 5):                                # 결(가는 세로선·곡선 따라)
+                u = k / 4.5
+                x0 = CX + xEdge * u * 0.92 + sx
+                yb = browY + dip * (1 - u * u)
+                d.line([(x0, crownY + 40), (x0 + sway * 0.4, yb - 8)], fill=(*HAIR_D, 150), width=4)
         # 눈 반짝 별(눈매 강조) — 크게·글로우
         if spark > 0.05:
             a = int(255 * spark)
