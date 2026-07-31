@@ -1,0 +1,127 @@
+{
+  "title": "사모님 머리, 핵심은 커트 밸런스예요",
+  "stem": "message",
+  "waive": [
+    "bw"
+  ],
+  "outro": "SNS에 일기를 쓰고 있어요",
+  "voice": {
+    "stability": 0.42,
+    "style": 0.15,
+    "speed": 1.05
+  },
+  "bgm": "/tmp/claude-0/0fb0e5b8-eaea-542a-a0d3-be17b390f310/scratchpad/bgm_산책로.mp3",
+  "phrases": [
+    [
+      "사모님 머리, 핵심은 커트 밸런스예요.",
+      "사모님 머리,\\N핵심은 커트 밸런스예요.",
+      "For a lady's cut, the key is cut balance.",
+      false
+    ],
+    [
+      "인스타에 예뻐 보이는 머리, 많죠.",
+      "인스타에 예뻐 보이는 머리, 많죠.",
+      "Lots of hair looks pretty on Instagram.",
+      false
+    ],
+    [
+      "근데 그 컷은, 밸런스가 안 맞아요.",
+      "근데 그 컷은,\\N밸런스가 안 맞아요.",
+      "But those cuts — the balance is off.",
+      false
+    ],
+    [
+      "실제 관리 면에선, 많이 부족합니다.",
+      "실제 관리 면에선,\\N많이 부족합니다.",
+      "For real upkeep, they fall short.",
+      false
+    ],
+    [
+      "사모님들은, 자기 밸런스를 정확히 아세요.",
+      "사모님들은,\\N자기 밸런스를 정확히 아세요.",
+      "Ladies know their own balance exactly.",
+      false
+    ],
+    [
+      "사진 그대로 자르면, 안 어울리는 걸 금방 아시죠.",
+      "사진 그대로 자르면,\\N안 어울리는 걸 금방 아시죠.",
+      "Cut it just like a photo, they spot the mismatch fast.",
+      false
+    ],
+    [
+      "그래서 정확히 맞춰드려야 해요.",
+      "그래서 정확히 맞춰드려야 해요.",
+      "So you have to match them precisely.",
+      false
+    ],
+    [
+      "길이, 층, 웨이트, 질감, 손질법까지.",
+      "길이, 층, 웨이트,\\N질감, 손질법까지.",
+      "Length, layers, weight, texture, styling.",
+      false
+    ],
+    [
+      "이건 커트 이해도가 높아야, 맞출 수 있어요.",
+      "이건 커트 이해도가 높아야,\\N맞출 수 있어요.",
+      "Only deep cut knowledge can match all that.",
+      false
+    ],
+    [
+      "조금만 맞춰드리면, 충성 고객이 되세요.",
+      "조금만 맞춰드리면,\\N충성 고객이 되세요.",
+      "Match them even a little, they become loyal.",
+      false
+    ],
+    [
+      "커트가 고민이거나 불편하셨다면, 댓글로 남겨주세요.",
+      "커트가 고민이거나 불편하셨다면,\\N댓글로 남겨주세요.",
+      "If your cut worries you, leave a comment.",
+      false
+    ]
+  ],
+  "require_실사": true,
+  "segments": [
+    {
+      "black": true,
+      "bigcard": true,
+      "untilLine": 0,
+      "_기획": "훅 검은 빅카드 — '사모님 머리, 핵심은 커트 밸런스' 메시지로 연다."
+    },
+    {
+      "src": "1SSJbbNQuZDg2TZ61rESUHa_beVhZ85DR",
+      "ss": 4,
+      "frame": "landscape",
+      "untilLine": 2,
+      "_기획": "실사 시술 도입 — IMG_7796 ss4 사모님 숏컷 시술(측면). 대사 1~2(인스타 예뻐보이는 머리 많은데 밸런스 안맞음)."
+    },
+    {
+      "src": "1NGuHpWAN1t9rMZUfl1ue2D1mqsutJcH8",
+      "ss": 3,
+      "frame": "landscape",
+      "untilLine": 6,
+      "_기획": "실사 시술 맞춤 — IMG_9607 ss3 컷 맞춰가는 장면. 대사 3~6(관리면 부족/사모님은 자기밸런스 앎/사진대로 자르면 안어울림/정확히 맞춰드려야)."
+    },
+    {
+      "src": "1jjwFcF6sqZGkWHu1VmTqTuYtSbvkS2G-",
+      "ss": 8,
+      "frame": "landscape",
+      "untilLine": 7,
+      "_기획": "실사 컷 디테일 — IMG_9610 ss8 완성 뒤태(층·뒷목 라인·길이·웨이트 잘 보임·얼굴無). 대사 7(길이·층·웨이트·질감·손질법)."
+    },
+    {
+      "src": "18HCkDUPgWQCtbfZA05kwJMlKx6Tu_kRa",
+      "ss": 3,
+      "frame": "landscape",
+      "untilLine": 9,
+      "_기획": "실사 완성 손질 — IMG_9507 ss3 완성 스타일 손질(측면). 대사 8~9(커트 이해도 높아야 맞춤/조금만 맞춰드리면 충성 고객)."
+    },
+    {
+      "black": true,
+      "bigcard": true,
+      "untilLine": 10,
+      "tail": 2.8,
+      "_기획": "엔딩 검은 빅카드 — CTA(커트 고민·불편하면 댓글) + SNS 아웃트로. tail 2.8=아웃트로 충돌방지."
+    }
+  ],
+  "_notes": "사모님 커트 밸런스 교육 쇼츠(형 2026-07-31 구술·대본 유실→복구). 재정의=인스타 예뻐보이는 머리 ≠ 밸런스 좋은 커트. 전문성 5요소(길이·층·웨이트·질감·손질법)+충성고객 서사. 실사=사모님 숏컷 시술+완성(형 2026-07-31 인입 4K). 형 '얼굴 나와도 OK'. 3막(시술→컷디테일 뒤태→완성 손질). stem message·컬러(waive bw)·SNS 아웃트로. 대본=content/대본/2026-07-31_사모님머리_커트밸런스.md. _레퍼런스=커트편 바이럴 확인은 렌더 후 첨부 예정(형 워크플로우)."
+}
