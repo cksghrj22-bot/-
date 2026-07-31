@@ -154,6 +154,132 @@ def build():
             if not moved:
                 misplaced.append((f'이동실패 L{level}', f'{src_m}→{dst_m}'))
 
+    # ── 연달아 방지: 같은 선생님이 이어진 날(±1일)에 붙으면, 뒤 과목을 같은 달 안에서
+    #    비어있는 '안 붙는' 날로 일자만 옮긴다(월은 그대로). 재현 위해 결정적으로 처리. ──
+    cap = spec.RULES['max_same_weekday']
+    def _tdays(tc):
+        return sorted(d for d in DATA if isinstance(d, datetime.date)
+                      for _l, _t, _v in DATA[d] if _t == tc)
+    nudges = []
+
+    def _try_move(tc, day, ds, same_month=True):
+        """tc의 `day` 과목을 안 붙는·요일상한 지키는 빈 날로 이동. same_month=False면 달 이동 허용."""
+        i0 = next((i for i, (l, t, v) in enumerate(DATA[day]) if t == tc), None)
+        if i0 is None:
+            return None
+        lab, _t, lvt = DATA[day][i0]; lset = _lset_of(lvt)
+        others = set(ds) - {day}
+        cands = sorted(
+            (d for wk in weeks for d in wk_dates[wk]
+             if (d.month == day.month if same_month else True) and d != day
+             and d.weekday() not in spec.TEACHER_OFF.get(tc, ())
+             and not (lset & day_lv[d]) and tc not in day_tc[d]
+             and day_load[d] < spec.RULES['max_per_day']
+             and tc_wd[tc][d.weekday()] < cap                  # 요일 상한 지킴
+             and all(abs((d - o).days) != 1 for o in others)),  # 안 붙는 날
+            key=lambda d: (tc_wd[tc][d.weekday()], abs((d - day).days), day_load[d], d.toordinal()))
+        if not cands:
+            return None
+        d1 = cands[0]
+        DATA[day].pop(i0)
+        day_load[day] -= 1; tc_wd[tc][day.weekday()] -= 1; day_tc[day].discard(tc)
+        day_lv[day] = set().union(*[_lset_of(x[2]) for x in DATA[day]
+                                    if x[1] not in ('모델', '특강', '시험')]) if DATA[day] else set()
+        DATA[d1].append((lab, tc, lvt))
+        day_lv[d1] |= lset; day_tc[d1].add(tc); tc_wd[tc][d1.weekday()] += 1; day_load[d1] += 1
+        nudges.append((tc, lab, day, d1))
+        return d1
+
+    guard = 0
+    changed = True
+    while changed and guard < 300:
+        changed = False; guard += 1
+        for tc in spec.TRACKS:
+            ds = _tdays(tc)
+            pair = next(((a, b) for a, b in zip(ds, ds[1:]) if (b - a).days == 1), None)
+            if not pair:
+                continue
+            a, b = pair
+            if _try_move(tc, b, ds) or _try_move(tc, a, ds):  # 뒤 과목 먼저, 안 되면 앞 과목
+                changed = True
+                break
+
+    # 같은 달 안에서 직접은 못 푸는 경우(12월 stub 등): 스왑으로 해결 시도.
+    #   같은 선생님이 그 달에 점유한 '다른 날(occ)'의 과목을 가까운 달로 빼서 occ를 비운 뒤,
+    #   붙어있던 과목을 occ로 옮긴다 → 그 달의 레벨 구성은 최대한 유지하면서 연달아 해소.
+    def _try_swap(tc, day, ds):
+        i0 = next((i for i, (l, t, v) in enumerate(DATA[day]) if t == tc), None)
+        if i0 is None:
+            return None
+        lab, _t, lvt = DATA[day][i0]; lset = _lset_of(lvt)
+        # 그 달의 레벨별 개수(occ를 뺐을 때 어떤 레벨이 0이 되는지 판단)
+        mcnt = Counter()
+        for dd in DATA:
+            if isinstance(dd, datetime.date) and dd.month == day.month:
+                for _l2, _t2, _v2 in DATA[dd]:
+                    if _t2 not in ('모델', '특강', '시험') and _v2:
+                        for x in _v2.replace('L', '').split('·'):
+                            if x != '0':
+                                mcnt[int(x)] += 1
+
+        def _occ_key(o):
+            olv = _lset_of(next(v for l, t, v in DATA[o] if t == tc))
+            loses = any(mcnt[x] <= 1 for x in olv)          # 그 레벨이 달에서 0이 되면 True
+            return (1 if loses else 0, min(olv) if olv else 9, o.toordinal())
+        for occ in sorted((o for o in ds if o != day and o.month == day.month), key=_occ_key):
+            rest = set(ds) - {day, occ}                    # occ·day 비운 뒤 남는 tc 수업일
+            if any(abs((occ - o).days) == 1 for o in rest):
+                continue                                    # occ가 다른 수업일과 붙으면 무의미
+            others_occ = _lset_of('') if not DATA[occ] else set().union(
+                *[_lset_of(x[2]) for x in DATA[occ] if x[1] != tc and x[1] not in ('모델', '특강', '시험')]) if DATA[occ] else set()
+            if lset & others_occ:
+                continue                                    # occ에 같은 레벨(타 선생님) 있으면 불가
+            if tc_wd[tc][occ.weekday()] - 1 + 1 > cap:      # occ 요일 상한(자기 제거 후 재추가)
+                pass
+            moved_occ = _try_move(tc, occ, ds, same_month=False)   # occ 과목을 다른 달로
+            if not moved_occ:
+                continue
+            # 이제 occ는 tc가 비었음 → day 과목을 occ로 이동
+            j = next((k for k, (l, t, v) in enumerate(DATA[day]) if t == tc), None)
+            DATA[day].pop(j)
+            day_load[day] -= 1; tc_wd[tc][day.weekday()] -= 1; day_tc[day].discard(tc)
+            day_lv[day] = set().union(*[_lset_of(x[2]) for x in DATA[day]
+                                        if x[1] not in ('모델', '특강', '시험')]) if DATA[day] else set()
+            DATA[occ].append((lab, tc, lvt))
+            day_lv[occ] |= lset; day_tc[occ].add(tc); tc_wd[tc][occ.weekday()] += 1; day_load[occ] += 1
+            nudges.append((tc, lab, day, occ))
+            return occ
+        return None
+
+    guard = 0
+    changed = True
+    while changed and guard < 300:
+        changed = False; guard += 1
+        for tc in spec.TRACKS:
+            ds = _tdays(tc)
+            pair = next(((a, b) for a, b in zip(ds, ds[1:]) if (b - a).days == 1), None)
+            if not pair:
+                continue
+            a, b = pair
+            if _try_swap(tc, b, ds) or _try_swap(tc, a, ds):
+                changed = True
+                break
+
+    # 스왑으로도 못 풀면 마지막 수단: 그 과목만 가까운 달의 안 붙는 빈 날로 이동(월 이동).
+    guard = 0
+    changed = True
+    while changed and guard < 300:
+        changed = False; guard += 1
+        for tc in spec.TRACKS:
+            ds = _tdays(tc)
+            pair = next(((a, b) for a, b in zip(ds, ds[1:]) if (b - a).days == 1), None)
+            if not pair:
+                continue
+            a, b = pair
+            if _try_move(tc, b, ds, same_month=False) or _try_move(tc, a, ds, same_month=False):
+                changed = True
+                break
+
     # 금 이벤트 + 시험
     for m in (8, 9, 10, 11, 12):
         for idx, fd in enumerate(_fridays(2026, m), 1):
@@ -166,6 +292,7 @@ def build():
     for dt in DATA:                # 표기 순서: 레벨 오름차순
         DATA[dt].sort(key=lambda x: x[2])
     DATA['_misplaced'] = misplaced  # 검증용(렌더 시 무시)
+    DATA['_nudges'] = nudges        # 연달아 해소 이동 기록(보고용·렌더 시 무시)
     return DATA
 
 
@@ -247,5 +374,15 @@ def validate(DATA):
     for d, l, t, lvt in reg:
         if d.weekday() in spec.TEACHER_OFF.get(t, ()):
             problems.append(f"{t} 휴무 요일 배치: {d}({wd[d.weekday()]}) {l}")
+
+    # 10) 같은 선생님이 이어진 날(±1일)에 붙지 않음(연달아 금지)
+    tdays = defaultdict(set)
+    for d, l, t, lvt in reg:
+        tdays[t].add(d)
+    for t, ds in tdays.items():
+        ds = sorted(ds)
+        for a, b in zip(ds, ds[1:]):
+            if (b - a).days == 1:
+                problems.append(f"{t} 연달아: {a}({wd[a.weekday()]})→{b}({wd[b.weekday()]})")
 
     return problems
