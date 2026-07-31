@@ -1,0 +1,141 @@
+{
+  "title": "남자 볼륨매직 — 세게가 아니라 예측이다",
+  "stem": "case",
+  "waive": [
+    "bw"
+  ],
+  "outro": "SNS에 일기를 쓰고 있어요",
+  "voice": {
+    "stability": 0.42,
+    "style": 0.15,
+    "speed": 1.05
+  },
+  "bgm": "/tmp/claude-0/0fb0e5b8-eaea-542a-a0d3-be17b390f310/scratchpad/bgm_산책로.mp3",
+  "phrases": [
+    [
+      "남자 볼륨매직, 세게 하면 오히려 죽어요.",
+      "남자 볼륨매직,\\N세게 하면 오히려 죽어요.",
+      "Men's volume perm — too strong and it dies.",
+      false
+    ],
+    [
+      "요즘 날씨엔, 남자분들도 볼륨매직 많이 오세요.",
+      "요즘 날씨엔,\\N남자분들도 많이 오세요.",
+      "In this weather, men come in for it too.",
+      false
+    ],
+    [
+      "근데 굵기랑 곱슬 정도, 원하는 결과를",
+      "굵기랑 곱슬 정도,\\N원하는 결과를",
+      "But hair thickness, curl, the goal —",
+      false
+    ],
+    [
+      "정확히 예측해서 시술해야 해요.",
+      "정확히 예측해서\\N시술해야 해요.",
+      "you have to predict it precisely.",
+      false
+    ],
+    [
+      "오늘 고객님은, 머리가 얇고 숱이 많아요.",
+      "오늘 고객님은,\\N머리가 얇고 숱이 많아요.",
+      "Today's client: fine hair, but dense.",
+      false
+    ],
+    [
+      "앞머리는 긴 걸 원하시는데, 볼륨은 늘 죽죠.",
+      "앞머리는 긴 걸 원하시는데,\\N볼륨은 늘 죽죠.",
+      "Wants long bangs, but volume always drops.",
+      false
+    ],
+    [
+      "그다음 약을 강하게 쓰면, 머리가 쫄아서 더 죽어요.",
+      "약을 강하게 쓰면,\\N머리가 쫄아서 더 죽어요.",
+      "Push the product too hard and it shrinks, dies more.",
+      false
+    ],
+    [
+      "억지로 기계로 컬 넣으면, 꾸겨지고 건조해져요.",
+      "억지로 컬 넣으면,\\N꾸겨지고 건조해져요.",
+      "Force a curl with the iron and it crumples, dries out.",
+      false
+    ],
+    [
+      "원래 있는 곱슬을 살려서,",
+      "원래 있는 곱슬을 살려서,",
+      "Use the curl he already has,",
+      false
+    ],
+    [
+      "얼마나 더 얹어야 손질이 쉬운지, 빠르게 잡아요.",
+      "얼마나 더 얹어야 쉬운지,\\N빠르게 잡아요.",
+      "then read fast how much more to add for easy styling.",
+      false
+    ],
+    [
+      "그게 남자 볼륨매직의 핵심이에요.",
+      "그게 남자 볼륨매직의\\N핵심이에요.",
+      "That's the core of men's volume perm.",
+      false
+    ],
+    [
+      "당신의 부스스함은 어떤가요? 어떻게 해결하고 계세요?",
+      "당신의 부스스함은 어떤가요?\\N어떻게 해결하고 계세요?",
+      "How's your frizz — how are you handling it?",
+      false
+    ]
+  ],
+  "require_실사": true,
+  "segments": [
+    {
+      "black": true,
+      "bigcard": true,
+      "untilLine": 0,
+      "_기획": "훅 검은 빅카드 — '세게 하면 오히려 죽어요' 역설로 연다(case 스템 표준: 메시지로 시작)."
+    },
+    {
+      "src": "1gkr03RQxKks5rg_v6_qlmsOnDfuH_eCr",
+      "ss": 5,
+      "frame": "portrait",
+      "untilLine": 1,
+      "_기획": "실사 도입 — IMG_2299 ss5 정수리 약 도포(POV). 대사 1(요즘 날씨 남자분들도 많이 오세요). 자막 위(전역 1150·POV 밑쏠림)."
+    },
+    {
+      "anim": "volume_curve",
+      "numLine": 2,
+      "untilLine": 3,
+      "sub_margin_v": 410,
+      "_기획": "🆕 볼륨 곡선(원초 메시지 각인·군더더기 제거·형 '과하지마·메시지 정확히만' 지시). 대사 2~3(굵기·곱슬·원하는결과를 정확히 예측). 곡선이 정점(★=예측)까지 오르다 넘으면 꺾여 추락=역설 한 컷. 도식 자막 아래(410)."
+    },
+    {
+      "src": "1gkr03RQxKks5rg_v6_qlmsOnDfuH_eCr",
+      "ss": 15,
+      "frame": "portrait",
+      "untilLine": 5,
+      "_기획": "실사 케이스 — IMG_2299 ss15 앞머리 약 도포. 대사 4~5(오늘 고객 얇고 숱많음 / 앞머리 길게 원하는데 볼륨 죽음). 자막 위."
+    },
+    {
+      "src": "1gkr03RQxKks5rg_v6_qlmsOnDfuH_eCr",
+      "ss": 88,
+      "frame": "portrait",
+      "untilLine": 7,
+      "_기획": "실사 함정 — IMG_2299 ss88 아이롱 press. 대사 6~7(약 세게→쫄아 죽음 / 억지 컬→꾸겨짐·건조). 세게 하는 시술 장면으로 역효과 강조. 자막 위."
+    },
+    {
+      "src": "1gkr03RQxKks5rg_v6_qlmsOnDfuH_eCr",
+      "ss": 146,
+      "frame": "portrait",
+      "untilLine": 9,
+      "_기획": "실사 해법 — IMG_2299 ss146 아이롱으로 앞머리 컬(볼륨 살림). 대사 8~9(원래 곱슬 살려 / 얼마나 얹을지 빠르게 예측). 자막 위."
+    },
+    {
+      "black": true,
+      "bigcard": true,
+      "untilLine": 11,
+      "tail": 2.8,
+      "_기획": "엔딩 검은 빅카드 — 대사 10(핵심=예측) + CTA 11(당신의 부스스함은? 어떻게 해결하고 계세요?) + SNS 아웃트로. tail 2.8=아웃트로 충돌방지."
+    }
+  ],
+  "sub_margin_v": 1150,
+  "_notes": "남자 볼륨매직 케이스 교육 쇼츠. 🆕새 스템 'case'(오늘의 케이스 진단형·형 2026-07-31 '새 스템 너가 만들어봐' 지시로 디렉터 신설) + 🆕새 애니 'volume_dial'(볼륨 예측 다이얼·형 '새 전달법 역제안' 지시). 재정의=볼륨매직은 약 세게가 아니라 원래 곱슬 살려 얼마나 얹을지 예측. 3막(진단→함정→해법) 실사=IMG_2299 POV 남자 볼륨매직(형 2026-07-31 업로드). 세그: 훅카드→도입도포→볼륨다이얼 애니(개념)→앞머리케이스→아이롱세게(함정)→아이롱볼륨살림(해법)→CTA엔딩. 세그별 자막: 실사=위(1150·POV밑쏠림)/다이얼=아래(410). 컬러(waive bw). SNS 아웃트로. 대본=content/대본/2026-07-31_남자볼륨매직_예측시술.md."
+}

@@ -445,9 +445,97 @@ def _curl_zones_frames(frames_dir: Path, lines: list, num_line: int, total: floa
         img.save(frames_dir / f"z{i:04d}.png")
 
 
+def _volume_curve_frames(frames_dir: Path, lines: list, num_line: int, total: float,
+                         seg_start: float = 0.0, fps: int = 30) -> None:
+    """볼륨 곡선(2026-07-31 이찬호 '수단일 뿐·메시지 정확히만·과하지 마·원초 메시지로 새로' 지시 반영).
+    원초 메시지 = '약을 세게 할수록 볼륨이 오히려 죽는다(정점=예측)'. 이걸 곡선 하나로만 각인:
+    약 세기(x)를 올리면 볼륨(y)이 정점(★=예측)까지 오르다, 넘기면 꺾여 떨어진다. 점 하나가 곡선을 타며 보여줌.
+    군더더기(게이지·막대·라벨 다중) 제거 — 곡선+정점+한 줄 카피뿐."""
+    from PIL import Image, ImageDraw, ImageFont
+    frames_dir.mkdir(parents=True, exist_ok=True)
+    for p in frames_dir.glob("*.png"):
+        p.unlink()
+    W, H = 1080, 1920
+    CREAM = (255, 243, 232); DK = (60, 44, 40); GREY = (176, 158, 146)
+    GREEN = (66, 172, 110); RED = (232, 74, 60); GOLD = (240, 178, 42)
+    X0, X1, Y0, Y1 = 190, 890, 720, 1360             # 플롯 영역(y0=위·볼륨 최대 / y1=아래·0)
+    P_OPT = 0.60                                      # 정점(x 진행도)
+    f_ti = ImageFont.truetype(NSQR, 56); f_lb = ImageFont.truetype(NSQR, 40); f_sm = ImageFont.truetype(NSQR, 34)
+
+    def sm(x): x = max(0.0, min(1.0, x)); return x * x * (3 - 2 * x)
+
+    def vol_of(p):    # 볼륨: 정점까지 상승 → 넘으면 추락(역설)
+        if p <= P_OPT:
+            return sm(p / P_OPT)
+        return 1.0 - 0.82 * sm((p - P_OPT) / (1 - P_OPT))
+
+    def XY(p):
+        return (X0 + (X1 - X0) * p, Y1 - (Y1 - Y0) * vol_of(p))
+
+    N = max(1, round(total * fps))
+    curve = [XY(k / 120) for k in range(121)]
+    px_opt, py_opt = XY(P_OPT)
+    for i in range(N):
+        t = i / (N - 1) if N > 1 else 1.0
+        edge = min(1.0, i / 6, (N - 1 - i) / 6)
+        # 점 진행: 상승(0→정점) → 잠깐 머묾(정점=예측) → 하강(정점→추락)
+        if t < 0.5:
+            p = P_OPT * sm(t / 0.5)
+        elif t < 0.64:
+            p = P_OPT
+        else:
+            p = P_OPT + (1 - P_OPT) * sm((t - 0.64) / 0.36)
+        over = p > P_OPT + 0.02
+        img = Image.new("RGB", (W, H), CREAM); d = ImageDraw.Draw(img, "RGBA")
+        ti = "세게 할수록, 볼륨은 오히려 죽어요"
+        tw = d.textlength(ti, font=f_ti); d.text((W / 2 - tw / 2, 470), ti, font=f_ti, fill=DK)
+        # 축(연한 회색) + 축 라벨
+        d.line([(X0, Y0 - 30), (X0, Y1 + 30)], fill=(*GREY, 180), width=4)
+        d.line([(X0, Y1), (X1 + 30, Y1)], fill=(*GREY, 180), width=4)
+        d.text((X0 - 8, Y0 - 78), "볼륨", font=f_sm, fill=(*GREY, 255))
+        d.text((X0 - 8, Y1 + 20), "약하게", font=f_sm, fill=(*GREY, 255))
+        rt = "세게"; rw = d.textlength(rt, font=f_sm); d.text((X1 + 30 - rw, Y1 + 20), rt, font=f_sm, fill=(*GREY, 255))
+        # 곡선(전체 연하게 → 지나온 구간만 진하게: 정점 전 초록 / 정점 후 빨강)
+        d.line(curve, fill=(*GREY, 150), width=8, joint="curve")
+        traveled = [XY(k / 120) for k in range(121) if k / 120 <= p + 1e-6]
+        if len(traveled) >= 2:
+            upto = [pt for pt in traveled if pt[0] <= px_opt + 1e-6]
+            if len(upto) >= 2:
+                d.line(upto, fill=(*GREEN, 255), width=12, joint="curve")
+            if over:
+                past = [pt for pt in traveled if pt[0] >= px_opt - 1e-6]
+                if len(past) >= 2:
+                    d.line(past, fill=(*RED, 255), width=12, joint="curve")
+        # 정점 ★(예측)
+        _star(d, px_opt, py_opt, 26, GOLD)
+        lab = "적정 = 예측"; lw = d.textlength(lab, font=f_lb)
+        d.text((px_opt - lw / 2, py_opt - 78), lab, font=f_lb, fill=GOLD)
+        # 진행 점
+        cx, cy = XY(p); dot = RED if over else GREEN
+        d.ellipse([cx - 15, cy - 15, cx + 15, cy + 15], fill=(*dot, 255))
+        # 한 줄 카피(상태별)
+        cap = "너무 세면, 쫄아서 죽어요" if over else "딱 얼마나 얹을지 — 그걸 예측"
+        ccol = RED if over else DK
+        cw = d.textlength(cap, font=f_lb); d.text((W / 2 - cw / 2, 1500), cap, font=f_lb, fill=ccol)
+        if edge < 1.0:
+            ov = Image.new("RGBA", (W, H), (*CREAM, int(255 * (1 - edge))))
+            img = Image.alpha_composite(img.convert("RGBA"), ov).convert("RGB")
+        img.save(frames_dir / f"z{i:04d}.png")
+
+
+def _star(d, cx, cy, r, fill):
+    import math as _m
+    pts = []
+    for k in range(10):
+        rr = r if k % 2 == 0 else r * 0.44
+        a = _m.radians(-90 + k * 36)
+        pts.append((cx + rr * _m.cos(a), cy + rr * _m.sin(a)))
+    d.polygon(pts, fill=(*fill, 255))
+
+
 # 브랜드 표준 SNS 아웃트로 — message/mind/product의 default-on 값(계속 빠지던 것).
 DEFAULT_SNS_OUTRO = "SNS에 일기를 쓰고 있어요"
-_OUTRO_STEMS = ("message", "mind", "product")
+_OUTRO_STEMS = ("message", "mind", "product", "case")
 
 
 def _normalize(m: dict) -> None:
@@ -500,8 +588,8 @@ def _require(m: dict) -> None:
     segs = m.get("segments", [])
     waived = set(m.get("waive", []))   # 의도적 예외(유동적)
     errs = []
-    if stem not in ("message", "mind", "product", "magic"):
-        errs.append("stem 미지정('message'/'product'/'magic')")
+    if stem not in ("message", "mind", "product", "magic", "case"):
+        errs.append("stem 미지정('message'/'product'/'magic'/'case')")
     if not phrases:
         errs.append("phrases 없음")
     # 공통: 메시지로 시작 — 첫 줄이 핵심 물음/메시지여야(빈 줄 금지)
@@ -533,6 +621,18 @@ def _require(m: dict) -> None:
         errs.append("[require_실사] 실사(src) 세그먼트 없음 — 이 영상은 실사가 본체다. "
                     "애니만 렌더 금지(부시시편 사고 재발방지). 드라이브 footage fileId를 src로 넣어라. "
                     "진짜 의도면 waive:[\"실사\"]+_notes 사유.")
+    if stem == "case":
+        # 새 스템 '오늘의 케이스 진단형'(2026-07-31 이찬호 "새 스템 너가 만들어봐" → 디렉터 설계).
+        # 표준요소: ①실사가 본체(오늘 손님 시술) ②훅/엔딩 카드 ③진단 도식(개념 시각화).
+        # 3막(진단→함정→해법)을 실사로 굴리고 도식으로 핵심을 박는 케이스 서사 스템.
+        if not any(s.get("src") for s in segs) and "실사" not in waived:
+            errs.append("[case] 실사(오늘 손님 시술 장면 src) 없음 — 케이스 스템의 본체다. 의도면 waive:[\"실사\"]+_notes.")
+        if not any(s.get("bigcard") for s in segs) and "bigcard" not in waived:
+            errs.append("[case] 큰 중앙 메시지카드(bigcard) 없음(훅/엔딩). 의도면 waive:[\"bigcard\"].")
+        if not any(s.get("anim") for s in segs) and "도식" not in waived:
+            errs.append("[case] 진단 도식(anim) 없음 — 개념 1컷 시각화가 케이스 스템 표준. 의도면 waive:[\"도식\"].")
+        if segs and not (segs[0].get("bigcard") or segs[0].get("black")):
+            print("⚠️ [case] '메시지로 시작' 권장 — 첫 세그를 훅카드로 여는 게 정본.")
     if stem == "magic":
         # 실사(사람 매직하는 장면) 기본 필수 — 계속 빠뜨린 최악의 실수(형 "빼지마 절대").
         if not any(s.get("src") for s in segs) and "실사" not in waived:
@@ -608,6 +708,8 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
                 _bang_sparkle_frames(fdir, lines, seg.get("numLine", 2), dur, seg_start=prev_end)
             elif seg["anim"] == "curl_zones":
                 _curl_zones_frames(fdir, lines, seg.get("numLine", 2), dur, seg_start=prev_end)
+            elif seg["anim"] == "volume_curve":
+                _volume_curve_frames(fdir, lines, seg.get("numLine", 2), dur, seg_start=prev_end)
             subprocess.run(["ffmpeg", "-v", "error", "-y", "-framerate", "30",
                             "-i", str(fdir / "z%04d.png"), "-t", f"{dur:.3f}",
                             "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "19", str(out_seg)], check=True)
