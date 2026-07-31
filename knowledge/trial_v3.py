@@ -10,6 +10,8 @@ from manifest30 import SHORTS, ORIG
 from titles import TITLES
 REPO="/home/user/-"; HERE=os.path.dirname(__file__); NSQR="/root/.fonts/nsqr_eb.ttf"
 OUT=f"{HERE}/final30"; FOLDER="1mchAPVsCAluJv3uGDvFdGM0LEg4hlEo4"; VY=460
+# 제목=상단 검은밴드(0~460) 세로중앙 230·가로중앙 540 (형 '위아래로도 가운데')
+TPOS = r"{\an5\pos(540,230)}"
 
 
 def yellow_title(ty, tw):
@@ -79,7 +81,7 @@ def build(idx, tok):
           "Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\n"
           f"{_style('title', SS.POP_TITLE)}\n{_style('cap', SS.SUB)}\n[Events]\n"
           "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n"
-          f"Dialogue: 0,{_ts(0)},{_ts(DUR)},title,,0,0,0,,{yellow_title(ty,tw)}\n")
+          f"Dialogue: 0,{_ts(0)},{_ts(DUR)},title,,0,0,0,,{TPOS}{yellow_title(ty,tw)}\n")
     POS = r"{\an5\pos(540,1640)}"
     body = "".join(f"Dialogue: 0,{_ts(s)},{_ts(e)},cap,,0,0,0,,{POS}{ko}\n" for s, e, ko in cues)
     ass=f"{wd}/s.ass"; open(ass,"w",encoding="utf-8").write(head+body)
