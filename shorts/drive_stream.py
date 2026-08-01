@@ -26,6 +26,9 @@ from __future__ import annotations
 
 import json
 import subprocess
+import threading
+import time as _time
+import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -85,32 +88,99 @@ def probe(file_id: str, tok: str | None = None) -> dict:
             "width": vs.get("width"), "height": vs.get("height")}
 
 
+# ── Drive 접근 시스템 규약 (2026-08-01 형 지시 '우회 말고 근본 해결·문제를 예측하며 일하라') ─────
+#   403을 만날 때마다 우회(acknowledgeAbuse·청크·사본)로 때우면 같은 root가 또 터진다. 3대 실패모드를
+#   원인부터 예방하도록 박는다:
+#     ① abuse-flag 403      → MEDIA_URL에 acknowledgeAbuse=true(상수에 이미 반영)
+#     ② 파일당 다운로드 quota → 파일을 **딱 한 번** 세션캐시에 통다운하고 재사용(재다운 금지)
+#     ③ 계정 rate-limit      → 모든 Drive 요청에 최소간격 throttle + 지수 백오프(하드 호출 금지)
+_DRIVE_CACHE = Path("/tmp/drive_cache")            # 세션 지속 원본 캐시(파일당 1회만 받음)
+_LEGACY_CACHE = Path("/tmp/vid_cache")             # 구 캐시 경로 호환
+_CACHE_MAX = 400 * 1024 * 1024                     # 이 이하만 통다운 캐시(초대형 4K 원본은 스트리밍 유지)
+_THROTTLE = {"t": 0.0, "min": 1.2, "lock": threading.Lock()}
+
+
+def _throttle_wait() -> None:
+    with _THROTTLE["lock"]:
+        dt = _time.time() - _THROTTLE["t"]
+        if dt < _THROTTLE["min"]:
+            _time.sleep(_THROTTLE["min"] - dt)
+        _THROTTLE["t"] = _time.time()
+
+
+def _get_bytes(url: str, tok: str, rng: str | None = None, timeout: int = 120, retries: int = 7):
+    """throttle + 지수백오프로 Range 바이트 안전 수신. (data, tok) 반환."""
+    hdr = {"Authorization": f"Bearer {tok}"}
+    if rng:
+        hdr["Range"] = rng
+    for att in range(retries):
+        _throttle_wait()
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, headers=hdr), timeout=timeout) as r:
+                return r.read(), tok
+        except urllib.error.HTTPError as e:
+            if e.code in (403, 429, 500, 503) and att < retries - 1:
+                _time.sleep(min(90, 6 * (2 ** att)))          # 6,12,24,48,90.. 백오프
+                tok = access_token(); hdr["Authorization"] = f"Bearer {tok}"
+                continue
+            raise
+    raise RuntimeError("Drive GET 실패(백오프 소진)")
+
+
+def ensure_cached(file_id: str, tok: str | None = None) -> Path:
+    """Drive 파일을 세션 캐시에 **딱 한 번** 통다운(청크·throttle·resume). 완전 캐시면 재사용→Drive 호출 0.
+    이게 quota(②)·rate-limit(③) 근본 예방책: 같은 파일을 두 번 받지 않는다."""
+    tok = tok or access_token()
+    for c in (_LEGACY_CACHE / f"{file_id}.mp4", _DRIVE_CACHE / f"{file_id}.bin"):
+        if c.is_file() and c.stat().st_size > 0:       # 이미 받아둔 게 있으면 그대로
+            try:
+                if c.stat().st_size == int(metadata(file_id, tok).get("size", 0)):
+                    return c
+            except Exception:
+                return c
+    size = int(metadata(file_id, tok).get("size", 0))
+    _DRIVE_CACHE.mkdir(parents=True, exist_ok=True)
+    cache = _DRIVE_CACHE / f"{file_id}.bin"
+    have = cache.stat().st_size if cache.is_file() else 0
+    if have > size:
+        cache.unlink(); have = 0
+    url = MEDIA_URL.format(fid=file_id)
+    CH = 8 << 20
+    with open(cache, "ab" if have else "wb") as f:
+        pos = have
+        while pos < size:
+            end = min(pos + CH - 1, size - 1)
+            data, tok = _get_bytes(url, tok, rng=f"bytes={pos}-{end}")
+            f.write(data); pos += len(data)
+    return cache
+
+
 def extract(file_id: str, ss: float, t: float, out: str | Path,
             vf: str | None = SPEC_VF, crf: int = 20, tok: str | None = None,
             with_audio: bool = False) -> Path:
-    """[ss, ss+t] 구간만 스트리밍으로 잘라 out에 저장(통다운 없음). vf=None이면 원본 프레이밍."""
-    import time as _time
+    """[ss, ss+t] 구간을 잘라 out에 저장. **원본은 세션캐시에서 1회만 받아 로컬로 추출**(ffmpeg가 Drive를
+    직접 두드리지 않음 = abuse/quota/rate 근절). 초대형(>_CACHE_MAX)만 스트리밍 유지."""
     out = Path(out)
-    _tok = tok
-    _cache = Path("/tmp/vid_cache") / f"{file_id}.mp4"   # 원본 로컬 캐시 우선(Drive throttle 회피)
-    for _att in range(6):                # Drive rate throttle(403) 대비 재시도 + 토큰 갱신
-        if _cache.is_file():
-            _src, _hdrs = str(_cache), None
-        else:
-            url, hdr = authorized_source(file_id, _tok); _src, _hdrs = url, hdr
-        cmd = ["ffmpeg", "-v", "error"] + (["-headers", _hdrs] if _hdrs else []) + ["-ss", str(ss), "-i", _src, "-t", str(t)]
-        if vf:
-            cmd += ["-vf", vf]
-        cmd += (["-c:a", "aac", "-b:a", "128k"] if with_audio else ["-an"])
-        cmd += ["-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", str(crf), str(out), "-y"]
-        r = subprocess.run(cmd, capture_output=True, text=True, timeout=1200)
-        if r.returncode == 0:
-            return out
-        _e = r.stderr
-        if any(s in _e for s in ("403", "Forbidden", "Invalid data", "truncat", "Server returned", "timed out", "reset")):
-            _time.sleep(5 * (_att + 1)); _tok = access_token(); continue   # quota/rate/잘린 응답 → 재시도
-        break
-    raise RuntimeError(f"extract 실패: {r.stderr.strip()[:400]}")
+    tok = tok or access_token()
+    try:
+        size = int(metadata(file_id, tok).get("size", 0))
+    except Exception:
+        size = 0
+    if size and size <= _CACHE_MAX:
+        src, hdrs = str(ensure_cached(file_id, tok)), None      # 통다운 캐시 → 로컬 추출
+    elif (_LEGACY_CACHE / f"{file_id}.mp4").is_file():
+        src, hdrs = str(_LEGACY_CACHE / f"{file_id}.mp4"), None
+    else:
+        url, hdr = authorized_source(file_id, tok); src, hdrs = url, hdr   # 초대형=스트리밍(acknowledgeAbuse 적용됨)
+    cmd = ["ffmpeg", "-v", "error"] + (["-headers", hdrs] if hdrs else []) + ["-ss", str(ss), "-i", src, "-t", str(t)]
+    if vf:
+        cmd += ["-vf", vf]
+    cmd += (["-c:a", "aac", "-b:a", "128k"] if with_audio else ["-an"])
+    cmd += ["-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", str(crf), str(out), "-y"]
+    r = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
+    if r.returncode != 0:
+        raise RuntimeError(f"extract 실패: {r.stderr.strip()[:400]}")
+    return out
 
 
 def frame(file_id: str, at: float, out: str | Path, width: int = 360,
