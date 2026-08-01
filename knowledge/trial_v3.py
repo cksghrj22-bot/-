@@ -42,6 +42,13 @@ def cues_from(words, keeps):
         if (t and t[-1] in END) or len(j) >= 22 or d >= 3.6 or boundary:
             flush(0.35); cur = []
     if cur: flush(0.5)
+    # 끝의 아주 짧은 종결어 조각(예: '돼.')은 자막이 안 뜨고 잘려 보이므로 직전 자막에 합쳐 완결시킴
+    if len(cues) >= 2:
+        ls, le, lko = cues[-1]
+        ps, pe, pko = cues[-2]
+        if (le - ls) < 0.45 and len(lko.replace('\\N', '')) <= 3:
+            cues[-2] = (ps, max(pe, le), (pko + ' ' + lko).replace('\\N ', '\\N'))
+            cues.pop()
     fixed = []
     for i, (s, e, ko) in enumerate(cues):
         if i + 1 < len(cues): e = min(e, cues[i+1][0] - 0.05)
@@ -57,16 +64,24 @@ def build(idx, tok):
     parts=[]
     for k,(oa,ob) in enumerate(keeps):
         p=f"{wd}/k{k:02d}.mp4"
-        for attempt in range(4):
+        want=ob-oa
+        for attempt in range(5):
             t2 = tok if attempt==0 else DS.access_token()
             r=subprocess.run(["ffmpeg","-v","error","-headers",f"Authorization: Bearer {t2}\r\n",
-                "-ss",f"{oa:.3f}","-i",f"https://www.googleapis.com/drive/v3/files/{fid}?alt=media","-t",f"{ob-oa:.3f}",
+                "-ss",f"{oa:.3f}","-i",f"https://www.googleapis.com/drive/v3/files/{fid}?alt=media","-t",f"{want:.3f}",
                 "-vf","crop=2160:2160:840:0,scale=1080:1080,fps=30,setsar=1","-c:v","libx264","-preset","medium",
                 "-crf","16","-pix_fmt","yuv420p","-r","30","-c:a","aac","-b:a","192k","-y",p],timeout=600)
-            if r.returncode==0: break
+            # 부분다운로드 방지: 실제 길이가 기대보다 크게 짧으면(5XX 잘림) 재시도
+            got=0.0
+            if r.returncode==0:
+                pr=subprocess.run(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0",p],
+                                  capture_output=True,text=True)
+                try: got=float(pr.stdout.strip())
+                except: got=0.0
+            if r.returncode==0 and got >= want-0.4: break
             import time as _t; _t.sleep(2*(attempt+1))
         else:
-            raise RuntimeError(f"extract 실패 {fid} {oa}-{ob}")
+            raise RuntimeError(f"extract 실패/잘림 {fid} {oa}-{ob} (got {got:.1f}/{want:.1f})")
         parts.append(p)
     open(f"{wd}/cc.txt","w").write("".join(f"file '{p}'\n" for p in parts))
     joined=f"{wd}/joined.mp4"
