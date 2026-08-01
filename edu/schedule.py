@@ -349,6 +349,14 @@ def build():
                 changed = True
                 break
 
+    # ── 순서 고정 선생님(예: 창엽): 배치된 날짜를 오름차순으로 두고 1강→끝강 라벨 재정렬 ──
+    for tc in getattr(spec, 'ORDERED_TEACHERS', ()):
+        entries = sorted(((d, i) for d in DATA if isinstance(d, datetime.date)
+                          for i, (l, t, v) in enumerate(DATA[d]) if t == tc),
+                         key=lambda x: (x[0], x[1]))
+        for (d, i), (lab, lset) in zip(entries, spec.TRACKS[tc]):
+            DATA[d][i] = (lab, tc, spec.lvtxt(lset))
+
     # 금 이벤트 + 시험
     for m in (8, 9, 10, 11, 12):
         for idx, fd in enumerate(_fridays(2026, m), 1):
