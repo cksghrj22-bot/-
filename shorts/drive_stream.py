@@ -32,7 +32,7 @@ from pathlib import Path
 
 DEFAULT_SECRETS = Path(__file__).resolve().parent.parent / "secrets" / "gdrive.json"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
-MEDIA_URL = "https://www.googleapis.com/drive/v3/files/{fid}?alt=media"
+MEDIA_URL = "https://www.googleapis.com/drive/v3/files/{fid}?alt=media&acknowledgeAbuse=true"
 META_URL = "https://www.googleapis.com/drive/v3/files/{fid}"
 
 # 스펙 기본 프레이밍: 좌우반전 보정 없음. 4:5 확대크롭 + 상하 검정밴드(캔버스 1080x1920).
