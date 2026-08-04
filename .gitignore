@@ -13,3 +13,6 @@ out/
 # 렌더 중간산출물(base.mp4·narr·ass 등) — 매니페스트 빌드 캐시, 커밋 안 함
 _build/
 _video_out/
+
+# 렌더 트리거 로그(코덱스 최종보고 캐시) — 커밋 안 함
+_render_trigger_logs/
