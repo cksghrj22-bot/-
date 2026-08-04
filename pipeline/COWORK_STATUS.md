@@ -16,3 +16,9 @@
 
 ## 본진 마무리 대기 (본진_실행_큐)
 AGENTS.md 트렁크 반영 · dim 정합 spec.py 0→0.25 · Creator OS 정렬 · verify_render 강화(급전환·발음·밸런스·아웃트로).
+
+## 2026-08-04 Codex 실행 가능 범위 보고
+- 형 직접 지시로 Codex가 `렌더 → QC → YouTube 업로드/예약`까지 맡는다. 이번 지시는 기존 초안 전담 제한의 작업별 예외다.
+- Full Access 실측: 테스트 171개 PASS(2 skipped), YouTube 조회·업로드 OAuth·ElevenLabs·Drive·외부 네트워크 정상.
+- Meta는 `secrets/instagram.json`·`secrets/threads.json`이 없어 Instagram/Threads 발행 불가. 토큰이 들어오면 같은 파이프라인에서 처리 가능.
+- 현재 수락 잡: `content/shorts/2026-08-04/_RENDER_JOB.md`의 두피 자외선·둥근 얼굴 단발 2편. 렌더/QC 후 결과·YouTube ID를 트렁크에 되쓴다.
