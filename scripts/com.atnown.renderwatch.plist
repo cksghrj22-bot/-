@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  앳나운 온디맨드 렌더 감시 — 본진(Mac Studio) LaunchAgent.
+  render_watch.sh 를 상시 살려둔다(죽으면 자동 재시작). 부팅/로그인 시 자동 시작.
+
+  설치(본진에서 1회):
+    chmod +x ~/atnown-repo/scripts/render_watch.sh
+    cp ~/atnown-repo/scripts/com.atnown.renderwatch.plist ~/Library/LaunchAgents/
+    launchctl load ~/Library/LaunchAgents/com.atnown.renderwatch.plist
+  상태확인:  launchctl list | grep atnown ;  tail -f ~/Library/Logs/atnown-renderwatch.log
+  끄기:      launchctl unload ~/Library/LaunchAgents/com.atnown.renderwatch.plist
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.atnown.renderwatch</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>-lc</string>
+    <string>exec "$HOME/atnown-repo/scripts/render_watch.sh"</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>ThrottleInterval</key>
+  <integer>30</integer>
+  <key>StandardOutPath</key>
+  <string>/tmp/atnown-renderwatch.out</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/atnown-renderwatch.err</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+</dict>
+</plist>
