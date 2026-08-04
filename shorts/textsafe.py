@@ -35,10 +35,14 @@ def _cmap(font_path: str) -> frozenset:
 
 
 def missing_glyphs(text: str, font_path: str) -> list[str]:
-    """폰트에 없는 문자 목록(공백 제외). fontTools 없으면 빈 목록(검사 스킵)."""
+    """폰트에 없는 문자 목록(공백 제외).
+
+    fontTools가 없는 로컬 Mac에서도 검사를 조용히 건너뛰지 않고 Pillow의 실제
+    렌더 결과로 폴백한다. 양산 환경이 달라도 이모지·두부 글리프를 놓치지 않는다.
+    """
     cm = _cmap(font_path)
     if not cm:
-        return []
+        return broken_chars(text, font_path)
     return [c for c in dict.fromkeys(text) if c not in (" ", "\n") and ord(c) not in cm]
 
 

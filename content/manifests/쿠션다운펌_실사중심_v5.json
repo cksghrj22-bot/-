@@ -1,0 +1,152 @@
+{
+  "title": "쿠션다운펌 — 눌린 티 없이 자연스럽게",
+  "stem": "case",
+  "outro": "SNS에 일기를 쓰고 있어요",
+  "voice": {
+    "stability": 0.42,
+    "style": 0.15,
+    "speed": 1.05
+  },
+  "bgm": "shorts/assets/bgm_piano_long.mp3",
+  "phrases": [
+    [
+      "다운펌을 했는데, 옆머리가 눌린 티부터 난다면 잘된 걸까요?",
+      "다운펌을 했는데,\\N눌린 티부터 난다면 잘된 걸까요?",
+      "If it looks visibly pressed, is it really a good down-perm?",
+      false
+    ],
+    [
+      "쿠션다운펌은 세게 붙이는 다운펌이 아닙니다.",
+      "쿠션다운펌은\\N세게 붙이는 다운펌이 아닙니다.",
+      "A cushion down-perm is not about pressing harder.",
+      false
+    ],
+    [
+      "핵심은 짓눌린 느낌을 없애고, 자연스럽게 정돈하는 것.",
+      "핵심은 짓눌린 느낌을 없애고,\\N자연스럽게 정돈하는 것.",
+      "The goal is a natural finish without a flattened look.",
+      false
+    ],
+    [
+      "뿌리를 납작하게 눌러 고정하지 않고,",
+      "뿌리를 납작하게\\N눌러 고정하지 않고,",
+      "Do not pin the roots flat.",
+      false
+    ],
+    [
+      "모발이 흐르는 방향을 따라 약을 바릅니다.",
+      "모발이 흐르는 방향을 따라\\N약을 바릅니다.",
+      "Apply along the natural direction of the hair.",
+      false
+    ],
+    [
+      "튀어나오는 부분은 정돈하고,",
+      "튀어나오는 부분은\\N정돈하고,",
+      "Tidy only what sticks out.",
+      false
+    ],
+    [
+      "들어간 부분은 필요한 공기감을 남겨요.",
+      "들어간 부분은\\N필요한 공기감을 남겨요.",
+      "Leave air where the shape needs it.",
+      false
+    ],
+    [
+      "그래서 가까이서 봐도 다운펌한 선이 딱 끊기지 않고,",
+      "가까이서 봐도\\N다운펌한 선이 딱 끊기지 않고,",
+      "There is no harsh pressed line up close.",
+      false
+    ],
+    [
+      "손으로 넘겼을 때도 모발이 자연스럽게 움직입니다.",
+      "손으로 넘겼을 때도\\N모발이 자연스럽게 움직입니다.",
+      "The hair still moves naturally by hand.",
+      false
+    ],
+    [
+      "잘 누른 다운펌보다,",
+      "잘 누른 다운펌보다,",
+      "Better than a tightly pressed down-perm,",
+      false
+    ],
+    [
+      "안 누른 듯 자연스러운 다운펌이 더 좋은 디자인입니다.",
+      "안 누른 듯 자연스러운 다운펌이\\N더 좋은 디자인입니다.",
+      "a natural-looking finish is the better design.",
+      false
+    ],
+    [
+      "다운펌 티를 남길까요, 자연스러운 머리 모양을 남길까요?",
+      "다운펌 티를 남길까요,\\N자연스러운 머리 모양을 남길까요?",
+      "Leave a pressed look, or a natural shape?",
+      false
+    ]
+  ],
+  "require_실사": true,
+  "waive": [
+    "도식"
+  ],
+  "segments": [
+    {
+      "src": "1EGl8Gv7RGwmR3rRvAI0cgNyfi0nOxEK6",
+      "ss": 60,
+      "frame": "portrait",
+      "sub_margin_v": 1240,
+      "untilLine": 0
+    },
+    {
+      "src": "18TCjf4c3PZN_Uw0i_RgnfNfXBtDZi_Ul",
+      "ss": 10,
+      "frame": "portrait",
+      "sub_margin_v": 1220,
+      "untilLine": 3
+    },
+    {
+      "src": "18TCjf4c3PZN_Uw0i_RgnfNfXBtDZi_Ul",
+      "ss": 55,
+      "frame": "portrait",
+      "zoom": 1.04,
+      "sub_margin_v": 1180,
+      "untilLine": 5
+    },
+    {
+      "src": "18TCjf4c3PZN_Uw0i_RgnfNfXBtDZi_Ul",
+      "ss": 110,
+      "frame": "portrait",
+      "sub_margin_v": 1160,
+      "untilLine": 7
+    },
+    {
+      "src": "1EGl8Gv7RGwmR3rRvAI0cgNyfi0nOxEK6",
+      "ss": 65,
+      "frame": "portrait",
+      "sub_margin_v": 1200,
+      "untilLine": 8
+    },
+    {
+      "black": true,
+      "bigcard": true,
+      "untilLine": 10
+    },
+    {
+      "src": "1EGl8Gv7RGwmR3rRvAI0cgNyfi0nOxEK6",
+      "ss": 75,
+      "frame": "portrait",
+      "sub_margin_v": 1200,
+      "untilLine": 11,
+      "tail": 3
+    }
+  ],
+  "sub_margin_v": 1200,
+  "_status": "형 승인 완료 · YouTube 예약공개 2026-08-04 20:00 KST",
+  "_notes": "사용자 피드백에 따라 두상 설계·압력 도식은 메시지를 볼륨매직처럼 보이게 하므로 의도적으로 제외한다. 도포·빗질·모발을 붙이는 장면의 체류시간을 늘리고, 핵심을 ‘다운펌 후 짓눌린 티를 없애 자연스럽게 정돈하는 것’으로 재정의한다.",
+  "status": "scheduled",
+  "link": "https://youtu.be/95bM2fZRXkA",
+  "scheduled_at": "2026-08-04T20:00:00+09:00",
+  "output": {
+    "qc_video": "/Users/chano/Documents/Codex/2026-08-02/github-cli-gh-codex-6/outputs/쿠션다운펌_실사중심_v5_최종시안/쿠션다운펌_실사중심_v5_최종시안_QC.mp4",
+    "frame_qc": "/Users/chano/Documents/Codex/2026-08-02/github-cli-gh-codex-6/outputs/쿠션다운펌_실사중심_v5_최종시안/frame_qc_12.jpg",
+    "youtube_id": "95bM2fZRXkA",
+    "qc": "PASS · 1080x1920 · 30fps · 40.0s · H.264/AAC"
+  }
+}

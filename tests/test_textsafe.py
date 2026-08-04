@@ -1,11 +1,14 @@
 """텍스트 렌더 안전 유틸 테스트 — 글자 깨짐(글리프 부재·폭 초과) 사전차단 검증.
 2026-07-23 이찬호: '글자 저번에도 많이 깨지던데 스스로 고쳐 코드 만들어.'"""
 import unittest
+from pathlib import Path
 from PIL import Image, ImageDraw
 
 from shorts import textsafe
 
-FB = "/usr/share/fonts/truetype/nanum/NanumSquareB.ttf"
+_ROOT = Path(__file__).resolve().parent.parent
+_ASSET_FONT = _ROOT / "assets" / "fonts" / "nsqr_eb.ttf"
+FB = str(_ASSET_FONT) if _ASSET_FONT.exists() else "/usr/share/fonts/truetype/nanum/NanumSquareB.ttf"
 
 
 class TestGlyph(unittest.TestCase):

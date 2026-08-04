@@ -60,6 +60,15 @@ shorts1008.mov · IMG_7461 등 → **과거 시절 영상 = 임베디드 아카�
 > aerial(DJI 4개)·cut 정면/옆·workout 팀훈련·reading 빨간책은 B방이 이미 채움. 남은 null 없음.
 > start(다이나믹 시작초)는 렌더 시 프레임 확인해 조정 — 위 신규분은 임시 0.
 
+## ✅ 다운펌 전용 footage 등록 (2026-08-04 코덱스)
+
+| 클립 | 카테고리 | 드라이브 파일ID | 재사용 구간·역할 |
+|---|---|---|---|
+| `DOWNPERM_1432_APPLY` (`video-1432_right_raw.mp4`) | downperm | `18TCjf4c3PZN_Uw0i_RgnfNfXBtDZi_Ul` | 10·55·110초 부근 — 약 도포·압력·빗 방향·모발 붙이기 접사 |
+| `DOWNPERM_1466_FINISH` (`video-1466_singular_display.mov`) | downperm | `1EGl8Gv7RGwmR3rRvAI0cgNyfi0nOxEK6` | 60~75초 — 완성 두상·공기감·자연스러운 움직임 |
+
+`shorts.broll`에 `downperm` 분류를 추가해 H9 「다운펌 vs 매직」이 전용 footage를 자동 선택한다. 후속 시안 제작·발행은 형 승인 후 진행한다.
+
 ## 🚫 완성 릴스 (배경 재사용 금지 — 발행본)
 진짜자유란·행복이란시야다·가치로승부한다_식당·디자이너의색_배어드는것·남탓안하는사람_채용·
 쇼츠_마인드차이·쇼츠_태도가먼저·A_마인드차이·B_태도가먼저·파이프라인마인드_순서를기다리지마·

@@ -30,6 +30,10 @@ class TestClassify(unittest.TestCase):
         cat, _ = broll.classify("두피 스케일링으로 탈모를 늦춘다")
         self.assertEqual(cat, "scalp")
 
+    def test_다운펌_대본은_downperm(self):
+        cat, _ = broll.classify("다운펌 vs 매직, 옆머리의 눌린 티와 공기감을 비교한다")
+        self.assertEqual(cat, "downperm")
+
     def test_무점수는_기본값_aerial(self):
         cat, scores = broll.classify("ㅁㄴㅇㄹ")
         self.assertEqual(cat, broll.DEFAULT_CATEGORY)
@@ -58,6 +62,11 @@ class TestPick(unittest.TestCase):
 
     def test_없는_카테고리는_None(self):
         self.assertIsNone(broll.pick("존재안함", CATALOG))
+
+    def test_다운펌_카탈로그는_재사용가능(self):
+        chosen = broll.pick("downperm", CATALOG, require_file_id=True)
+        self.assertIsNotNone(chosen)
+        self.assertIn(chosen["id"], {"DOWNPERM_1432_APPLY", "DOWNPERM_1466_FINISH"})
 
 
 class TestUsableFilter(unittest.TestCase):
@@ -117,6 +126,11 @@ class TestSelect(unittest.TestCase):
         synthetic = {"clips": [{"id": "X", "category": "scalp", "file_id": None, "start": 0, "uses": 0}]}
         r = broll.select_for_script("두피 스케일링 탈모 관리", synthetic)
         self.assertFalse(r["ready"])
+
+    def test_H9_다운펌_vs_매직은_전용footage_ready(self):
+        r = broll.select_for_script("H9 다운펌 vs 매직, 눌린 티 없이 자연스럽게", CATALOG)
+        self.assertEqual(r["category"], "downperm")
+        self.assertTrue(r["ready"])
 
 
 if __name__ == "__main__":

@@ -102,7 +102,17 @@ def render(
     # 끝 여운: 마지막에 탁 끊기지 않게 영상·소리를 스륵 페이드아웃한다 (2026-07-17 이찬호).
     v_fade, a_fade = 1.3, 1.6
     v_st = max(0.0, duration - v_fade)
-    filters = [f"{base}ass={ass_path},fade=t=out:st={v_st:.3f}:d={v_fade}[vout]"]
+    # FFmpeg 8은 ass 필터의 위치 인자(`ass=/path`)를 경로에 따라 옵션으로 오인한다.
+    # filename=을 명시하고 filtergraph 예약문자를 이스케이프해 버전·한글 경로에 안전하게 만든다.
+    ass_filter_path = (str(ass_path).replace("\\", "\\\\")
+                       .replace(":", "\\:").replace("'", "\\'"))
+    fonts_dir = Path(__file__).resolve().parent.parent / "assets" / "fonts"
+    fonts_filter_path = (str(fonts_dir).replace("\\", "\\\\")
+                         .replace(":", "\\:").replace("'", "\\'"))
+    filters = [
+        f"{base}ass=filename='{ass_filter_path}':fontsdir='{fonts_filter_path}',"
+        f"fade=t=out:st={v_st:.3f}:d={v_fade}[vout]"
+    ]
     maps = ["-map", "[vout]"]
 
     if narration:
@@ -142,7 +152,10 @@ def render(
     #   한 편(≤50s) 안에서는 루프가 아예 안 일어나게 해결. 여기 페이드는 원래대로 유지(아웃트로 BGM 들려야 함).
     if "[aout]" in maps:
         a_st = max(0.0, duration - a_fade)
-        filters.append(f"[aout]afade=t=out:st={a_st:.3f}:d={a_fade}[aoutf]")
+        filters.append(
+            f"[aout]afade=t=out:st={a_st:.3f}:d={a_fade},"
+            "loudnorm=I=-18:TP=-2:LRA=11[aoutf]"
+        )
         maps = ["[aoutf]" if m == "[aout]" else m for m in maps]
 
     cmd += [

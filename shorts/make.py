@@ -41,8 +41,9 @@ from . import tts, syncbuild, render as R, shortstyle as SS, drive_stream as DS
 
 ROOT = Path(__file__).resolve().parent.parent
 SECRETS = ROOT / "secrets" / "elevenlabs.json"
-KYOBO = "/root/.fonts/KyoboHandwriting2019.ttf"
-NSQR = "/root/.fonts/nsqr_eb.ttf"
+_ASSET_FONTS = ROOT / "assets" / "fonts"
+KYOBO = str(_ASSET_FONTS / "KyoboHandwriting2019.ttf") if (_ASSET_FONTS / "KyoboHandwriting2019.ttf").exists() else "/root/.fonts/KyoboHandwriting2019.ttf"
+NSQR = str(_ASSET_FONTS / "nsqr_eb.ttf") if (_ASSET_FONTS / "nsqr_eb.ttf").exists() else "/root/.fonts/nsqr_eb.ttf"
 
 
 def _frame_vf(frame: str, hflip: bool, bw: bool = False, zoom: float = 1.0) -> str:
@@ -421,6 +422,86 @@ def _strand_zones_frames(frames_dir: Path, lines: list, num_line: int, total: fl
             bx0, by0 = x0+22, yy0+128; blen = 276
             d.rounded_rectangle([bx0, by0, bx0+blen, by0+12], radius=6, fill=(50,55,66))
             d.rounded_rectangle([bx0, by0, bx0+int(blen*dmg/100*a), by0+12], radius=6, fill=col)
+        img.save(frames_dir / f"z{i:04d}.png")
+
+
+# ── 데이터 애니: 두상 부위별 압력 맵(다운펌·볼륨·뿌리 방향 공용) ──────────────
+def _pressure_map_frames(frames_dir: Path, lines: list, num_line: int, total: float,
+                         seg_start: float = 0.0, fps: int = 30,
+                         config: dict | None = None) -> None:
+    """같은 세기로 누르는 방식과 부위별 설계를 대비한다.
+
+    매니페스트에서 title·left/right(label/value/action)를 바꿀 수 있어 다운펌뿐 아니라
+    볼륨·뿌리 방향·두상 보정 콘텐츠에도 재사용한다. 얼굴을 그리지 않고 두상 곡선과
+    접선 방향 화살표만 사용해 기술 메시지를 한 컷에 판독하게 만든다.
+    """
+    from PIL import Image, ImageDraw, ImageFont
+    frames_dir.mkdir(parents=True, exist_ok=True)
+    for p in frames_dir.glob("*.png"):
+        p.unlink()
+    cfg = config or {}
+    left = {"label": "들어간 곳", "strength": 0.32, "level": "여유 있게", "action": "공기 남기기", **cfg.get("left", {})}
+    right = {"label": "나온 곳", "strength": 0.72, "level": "필요한 만큼", "action": "정돈하기", **cfg.get("right", {})}
+    title = cfg.get("title", "압력은 부위마다 다르게")
+    W, H = 1080, 1920
+    BG = (16, 19, 25); PANEL = (29, 34, 45); WHITE = (246, 248, 252)
+    CYAN = (115, 222, 255); YEL = (255, 212, 0); MUTED = (142, 151, 166)
+    f_title = ImageFont.truetype(NSQR, 76)
+    f_lab = ImageFont.truetype(NSQR, 48)
+    f_level = ImageFont.truetype(NSQR, 58)
+    f_small = ImageFont.truetype(NSQR, 48)
+
+    def ease(x):
+        x = max(0.0, min(1.0, x)); return x * x * (3 - 2 * x)
+
+    def centered(d, y, text, font, fill):
+        w = d.textlength(text, font=font)
+        d.text(((W - w) / 2, y), text, font=font, fill=fill)
+
+    start = lines[num_line].start - seg_start if num_line < len(lines) else 0.0
+    compare_line = int(cfg.get("compareLine", num_line + 1))
+    direction_line = int(cfg.get("directionLine", num_line + 2))
+    compare_start = (lines[compare_line].start - seg_start
+                     if compare_line < len(lines) else start + 1.0)
+    direction_start = (lines[direction_line].start - seg_start
+                       if direction_line < len(lines) else start + 3.0)
+    N = max(1, round(total * fps))
+    for i in range(N):
+        t = i / fps
+        intro = ease((t - max(0.0, start)) / 0.7)
+        compare = ease((t - max(0.0, compare_start)) / 0.9)
+        direction = ease((t - max(0.0, direction_start)) / 0.9)
+        img = Image.new("RGB", (W, H), BG); d = ImageDraw.Draw(img)
+        centered(d, 120, title, f_title, YEL)
+
+        # 얼굴이 아닌 옆 두상 곡선. 중앙 점선은 '한 강도' 사고를 둘로 가르는 기준선.
+        box = [225, 390, 855, 1120]
+        d.arc(box, 205, 520, fill=(93, 103, 120), width=8)
+        d.line([(540, 410), (540, 1110)], fill=(70, 78, 92), width=3)
+        for y in range(430, 1090, 30):
+            d.line([(532, y), (548, y)], fill=(83, 91, 106), width=2)
+
+        cards = [
+            (left, 78, CYAN, 1.0 - compare * 0.55),
+            (right, 558, YEL, 0.45 + compare * 0.55),
+        ]
+        for item, x, col, scale in cards:
+            d.rounded_rectangle([x, 1215, x + 444, 1580], radius=28, fill=PANEL, outline=col, width=4)
+            d.text((x + 30, 1247), str(item["label"]), font=f_lab, fill=col)
+            level = str(item["level"]) if intro > 0.05 else ""
+            d.text((x + 30, 1332), level, font=f_level, fill=WHITE)
+            d.text((x + 30, 1423), str(item["action"]), font=f_small, fill=MUTED)
+            d.rounded_rectangle([x + 30, 1510, x + 414, 1532], radius=11, fill=(58, 65, 78))
+            d.rounded_rectangle([x + 30, 1510, x + 30 + int(384 * float(item["strength"]) * scale), 1532], radius=11, fill=col)
+
+        # 뿌리를 수직으로 찍어 누르는 화살표가 아니라 모발 흐름을 따라가는 접선 화살표.
+        if direction > 0:
+            a = int(255 * direction)
+            d.line([(310, 805), (405, 730), (485, 710)], fill=(*CYAN, a), width=14, joint="curve")
+            d.polygon([(485, 710), (451, 690), (460, 731)], fill=(*CYAN, a))
+            d.line([(770, 805), (675, 730), (595, 710)], fill=(*YEL, a), width=14, joint="curve")
+            d.polygon([(595, 710), (629, 690), (620, 731)], fill=(*YEL, a))
+            centered(d, 1660, "뿌리를 붙이지 말고 · 모발 방향을 설계", f_small, WHITE)
         img.save(frames_dir / f"z{i:04d}.png")
 
 
@@ -879,6 +960,11 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
                 _curl_zones_frames(fdir, lines, seg.get("numLine", 2), dur, seg_start=prev_end)
             elif seg["anim"] == "volume_curve":
                 _volume_curve_frames(fdir, lines, seg.get("numLine", 2), dur, seg_start=prev_end)
+            elif seg["anim"] == "pressure_map":
+                _pressure_map_frames(fdir, lines, seg.get("numLine", 2), dur,
+                                     seg_start=prev_end, config=seg.get("pressure_map"))
+            else:
+                raise ValueError(f"지원하지 않는 anim: {seg['anim']}")
             subprocess.run(["ffmpeg", "-v", "error", "-y", "-framerate", "30",
                             "-i", str(fdir / "z%04d.png"), "-t", f"{dur:.3f}",
                             "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "19", str(out_seg)], check=True)
@@ -890,7 +976,17 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
                                     seg.get("bw", False), float(seg.get("zoom", 1.0))),
                        tok=tok)
         if seg.get("bars"):                        # b롤/사진 위에 색 바자막 스토리 얹기(형 2026-07-31)
-            _apply_bars(out_seg, seg["bars"], wd, k, handmade=bool(m.get("handmade")))
+            # line을 지정하면 고정 초가 아니라 실제 TTS 타임스탬프에 맞춰 등장한다.
+            # 문장 길이·보이스 속도가 바뀌어도 두 번째 바가 먼저 뜨는 싱크 오류를 막는다.
+            timed_bars = []
+            for bar in seg["bars"]:
+                b = dict(bar)
+                if "line" in b:
+                    li = int(b.pop("line"))
+                    if 0 <= li < len(lines):
+                        b["t0"] = max(0.0, lines[li].start - prev_end)
+                timed_bars.append(b)
+            _apply_bars(out_seg, timed_bars, wd, k, handmade=bool(m.get("handmade")))
         seg_files.append(out_seg)
         prev_end = seg_end
     video_total = total + tail

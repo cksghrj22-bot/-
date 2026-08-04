@@ -36,12 +36,12 @@ KYOBO = kyobo_family()
 # 한글 자막(하단·검정박스·70) — 정본. EN은 같은 블록 아래줄(54)로 합쳐 '멀어짐/충돌' 원천차단.
 # (한글\N{\fs54}영어 = 한 Dialogue → libass 충돌 재정렬 없음, 간격 바짝.)
 SUB = {
-    "font": KYOBO, "size": 70,
+    "font": KYOBO, "size": 78,
     "primary_color": "&H00FFFFFF", "outline_color": "&H00000000",
     "box_color": "000000", "box_opacity": 100, "border_style": 4,
     "outline": 2, "alignment": 2, "margin_v": 410,   # 블록 하단 y≈1510 = 채널명 UI(하단 380) 위
 }
-EN_INLINE = r"{\fs54\c&HF0F0F0&}"   # 한글 아래 붙는 영어 인라인 태그(바짝)
+EN_INLINE = r"{\fs60\c&HF0F0F0&}"   # 한글 아래 붙는 영어 인라인 태그(바짝)
 EMPHASIS_INLINE = r"{\fs104}"        # 강조 1회 글자확대
 
 # 검은화면 질문 카드(중간 굵은 질문·시작 훅) — 교보 중앙 대형.
