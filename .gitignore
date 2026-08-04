@@ -16,3 +16,14 @@ _video_out/
 
 # 렌더 트리거 로그(코덱스 최종보고 캐시) — 커밋 안 함
 _render_trigger_logs/
+
+# outputs/ 렌더 잡 산출물 — 무거운 중간물/최종물은 드라이브行, git 제외.
+# (감독 프리뷰 contact/ 시트만 추적 유지 → 아래에서 제외 안 함)
+outputs/*/broll/
+outputs/*/vendor/
+outputs/*/work/
+outputs/*/final/
+outputs/*/fonts/
+outputs/*/bin/
+outputs/*/render_config.json
+outputs/_backup/
