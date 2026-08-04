@@ -83,7 +83,7 @@ ROLES = [
     ('창엽', '커트 기초', 'L1·L2'), ('이호', '커트 디자인·시그니처', 'L3~L5'),
     ('신후', '열펌·룩북', 'L3~L5'), ('성희', '콜드펌', 'L1~L5'),
     ('보미', '업스타일·브레이드', 'L1~L5'), ('차노', '디자인 미감·방법', 'L1~L5'),
-    ('와이', '맨즈(옴므) STAGE 0~7', '별도'),
+    ('와이', '맨즈 프로그램(별도 일정)', '별도'),
 ]
 
 
@@ -158,7 +158,7 @@ def _month_total_matrix(DATA):
         if not isinstance(d, datetime.date):
             continue
         for label, t, lvt in v:
-            if t not in ('모델', '특강', '시험'):
+            if t not in ('모델', '특강', '시험', '와이'):   # 맨즈(별도) 제외
                 mt[d.month] += 1
     months = [8, 9, 10, 11, 12]
     head = '<tr><th>구분</th>' + ''.join(f'<th>{m}월</th>' for m in months) + '<th class="sum">합계</th></tr>'
@@ -204,19 +204,25 @@ def render_all(DATA):
     lvmx = _level_matrix(DATA)
     tmmx = _teacher_month_matrix(DATA)
     mtmx = _month_total_matrix(DATA)
-    def _mens_item(lab):
-        rest = lab.replace('맨즈 STAGE', '').strip()      # "00 CS·마인드"
-        num, _, name = rest.partition(' ')                # "00", "CS·마인드"
-        return f'<span class="ms"><b>{_esc(num)}</b>{_esc(name)}</span>'
-    mens_list = ''.join(_mens_item(lab) for lab, _ls in spec.TRACKS['와이'])
     mens_color = spec.COL['와이']
+    # 맨즈 고정 일정(날짜별) + 이후 타임라인 + 릴스/혼합 정책
+    _wd = ['월', '화', '수', '목', '금', '토', '일']
+    mens_rows = ''.join(
+        f'<tr class="{"t" if is_test else ""}"><td class="md">{d.month}/{d.day}'
+        f'<span class="dw">({_wd[d.weekday()]})</span></td>'
+        f'<td>{"🧪 " if is_test else ""}{_esc(title)}</td></tr>'
+        for d, title, is_test in spec.MENS_PROGRAM)
+    mens_list = (f'<table class="menstbl"><tbody>{mens_rows}</tbody></table>'
+                 f'<div class="mtl">'
+                 + ''.join(f'<span class="tl">{_esc(x)}</span>' for x in spec.MENS_TIMELINE)
+                 + f'<span class="tl reels">{_esc(spec.MENS_REELS)}</span></div>')
     roles = ''.join(
         f'<tr><td class="rt" style="color:{spec.COL[t]}">{t}</td><td>{_esc(role)}</td>'
         f'<td class="rl">{_esc(lv)}</td></tr>' for t, role, lv in ROLES)
-    prep_total = sum(len(r) for _, _, _, r in TEACHERS) + len(MENS[3])
+    prep_total = sum(len(r) for _, _, _, r in TEACHERS)
     prep_nav = ''.join(f'<span class="chip" style="--c:{c}">{_esc(n)}</span>'
-                       for n, _, c, _ in list(TEACHERS) + [MENS])
-    prep_body = ''.join(_prep_block(*t) for t in TEACHERS) + _prep_block(*MENS)
+                       for n, _, c, _ in TEACHERS)
+    prep_body = ''.join(_prep_block(*t) for t in TEACHERS)
     return f'''<!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>앳나운 2026 하반기 교육 — 전체 안내 (배포용)</title>
@@ -250,9 +256,15 @@ table.lvmx{{border-collapse:collapse;background:#fff;border:1px solid var(--line
 .lvmx .sum{{font-weight:900;background:#f3efe7;}}
 .lvmx td.z{{color:#c25b5b;font-weight:800;}}
 .lvmx tfoot .tot td{{font-weight:900;background:#efeae1;border-top:2px solid var(--ink);}}
-.mens{{display:flex;flex-wrap:wrap;gap:8px;}}
-.mens .ms{{background:#fff;border:1px solid var(--line);border-left:4px solid {mens_color};border-radius:8px;padding:7px 12px;font-size:13px;font-weight:700;}}
-.mens .ms b{{display:inline-block;min-width:22px;color:{mens_color};font-weight:900;margin-right:5px;}}
+table.menstbl{{border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;width:100%;max-width:520px;}}
+.menstbl td{{padding:9px 13px;border-top:1px solid var(--line);font-size:13.5px;}}
+.menstbl tr:first-child td{{border-top:0;}}
+.menstbl .md{{font-weight:900;width:92px;color:{mens_color};white-space:nowrap;}}
+.menstbl .md .dw{{font-weight:700;color:var(--gray);font-size:11.5px;margin-left:3px;}}
+.menstbl tr.t td{{background:#fbf3f0;}}
+.mtl{{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}}
+.mtl .tl{{background:#fff;border:1px solid var(--line);border-left:4px solid {mens_color};border-radius:8px;padding:7px 12px;font-size:12.5px;font-weight:700;}}
+.mtl .tl.reels{{border-left-color:#B0567F;}}
 .legend{{background:var(--cream);border:1px solid var(--line);border-radius:10px;padding:13px 16px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:9px 15px;}}
 .lg{{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;}}
 .lg i{{width:14px;height:14px;border-radius:4px;display:inline-block;}}
@@ -314,9 +326,9 @@ table.lvmx{{border-collapse:collapse;background:#fff;border:1px solid var(--line
 <table class="roles"><tr><td class="rt">선생님</td><td>담당</td><td class="rl">레벨</td></tr>{roles}</table>
 <div class="note" style="margin-top:14px">· 레벨은 과목마다 <b>L1~L5</b>로 표기 · 맨즈(옴므)는 별도 트랙(공간이 달라 병행).</div>
 <div style="height:16px"></div>
-<h3 style="font-size:15px;font-weight:900;margin-bottom:8px">맨즈(옴므) STAGE 과목 — 와이 원장</h3>
-<div class="mens">{mens_list}</div>
-<div class="note" style="margin-top:10px">· 앳나운 옴므 별도 줄기 · <b>STAGE 00 → 07</b> 순서 진행 · 수·목·금 진행 · 공간이 달라 시즈 교육과 병행.</div>
+<h3 style="font-size:15px;font-weight:900;margin-bottom:8px">맨즈 프로그램 — 와이 원장 (별도 일정)</h3>
+{mens_list}
+<div class="note" style="margin-top:10px">· <b>{spec.MENS_MIX}</b><br>· 🧪 = 테스트 · 12월 이후 큰 줄기(디자인 커트플러스 → 모델워크 실전)와 <b>매달 마지막 주 일요일 릴스 발표</b>는 위 타임라인 참고.</div>
 <div style="height:16px"></div>
 <h3 style="font-size:15px;font-weight:900;margin-bottom:8px">월별 총 수업 개수</h3>
 {mtmx}

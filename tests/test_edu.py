@@ -22,13 +22,13 @@ class TestEduSchedule(unittest.TestCase):
 
     def test_all_70_subjects_placed_once(self):
         reg = [l for d, v in self.DATA.items() if isinstance(d, datetime.date)
-               for l, t, lvt in v if t not in ('모델', '특강', '시험')]
+               for l, t, lvt in v if t not in ('모델', '특강', '시험', '와이')]
         self.assertEqual(len(reg), spec.TOTAL_SUBJECTS)
         self.assertEqual(len(set(reg)), spec.TOTAL_SUBJECTS, "중복 과목 있음")
 
     def test_no_forbidden_fake_subjects(self):
         reg = [l for d, v in self.DATA.items() if isinstance(d, datetime.date)
-               for l, t, lvt in v if t not in ('모델', '특강', '시험')]
+               for l, t, lvt in v if t not in ('모델', '특강', '시험', '와이')]
         for l in reg:
             for bad in spec.FORBIDDEN_LABELS:
                 self.assertNotIn(bad, l, f"가짜 과목 '{bad}' 등장")
@@ -39,7 +39,7 @@ class TestEduSchedule(unittest.TestCase):
                 continue
             used = []
             for l, t, lvt in v:
-                if t in ('모델', '특강', '시험'):
+                if t in ('모델', '특강', '시험', '와이'):
                     continue
                 s = set(int(x) for x in lvt.replace('L', '').split('·'))
                 for u in used:
@@ -48,7 +48,7 @@ class TestEduSchedule(unittest.TestCase):
 
     def test_spread_within_window(self):
         dates = [d for d in self.DATA if isinstance(d, datetime.date)
-                 and any(t not in ('모델', '특강', '시험') for _, t, _ in self.DATA[d])]
+                 and any(t not in ('모델', '특강', '시험', '와이') for _, t, _ in self.DATA[d])]
         self.assertGreaterEqual(min(dates), spec.WIN_START)
         self.assertLessEqual(max(dates), spec.WIN_END)
         # 12월 첫주까지 사용

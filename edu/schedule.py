@@ -366,6 +366,11 @@ def build():
                 DATA[fd].append((f'특강 {spec.LECT.get(m, "")}', '특강', ''))
     DATA[spec.EXAM].append(('입봉시험', '시험', ''))
 
+    # 맨즈(와이 원장) 고정 일정 — window 안 날짜만 캘린더에 표기(별도 프로그램·검증 제외)
+    for d, title, is_test in getattr(spec, 'MENS_PROGRAM', []):
+        if spec.WIN_START <= d <= spec.WIN_END:
+            DATA[d].append((f'맨즈 {title}', '와이', ''))
+
     for dt in DATA:                # 표기 순서: 레벨 오름차순
         DATA[dt].sort(key=lambda x: x[2])
     DATA['_misplaced'] = misplaced  # 검증용(렌더 시 무시)
@@ -374,8 +379,9 @@ def build():
 
 
 def _regular(DATA):
+    # 살롱 정규과목만. 모델데이·특강·시험·맨즈(와이 별도 프로그램)는 제외.
     return [(d, l, t, lvt) for d, v in DATA.items() if isinstance(d, datetime.date)
-            for l, t, lvt in v if t not in ('모델', '특강', '시험')]
+            for l, t, lvt in v if t not in ('모델', '특강', '시험', '와이')]
 
 
 def validate(DATA):
@@ -404,7 +410,7 @@ def validate(DATA):
             continue
         used = []
         for l, t, lvt in DATA[d]:
-            if t in ('모델', '특강', '시험'):
+            if t in ('모델', '특강', '시험', '와이'):
                 continue
             s = set(int(x) for x in lvt.replace('L', '').split('·'))
             for u in used:
