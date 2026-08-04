@@ -16,8 +16,11 @@
 
 사용:
     python3 scripts/render_trigger.py            # 대기건 목록만 (아무것도 실행 안 함)
-    python3 scripts/render_trigger.py --dispatch # 대기건을 코덱스에게 인계
-    python3 scripts/render_trigger.py --dispatch --only 2026-08-05
+    python3 scripts/render_trigger.py --dispatch # `status: 대기` 인 잡을 코덱스에게 인계
+    python3 scripts/render_trigger.py --dispatch --only 2026-08-05   # 그 잡을 상태 무관 인계
+
+⚠️ claim 락을 먼저 박는 운영(대기→진행중 후 호출)에서는 **반드시 `--only` 로 지정**해서 부른다.
+   상태를 진행중으로 바꿔놓고 인자 없이 부르면 '대기'가 아니라서 자기가 잠근 잡을 못 찾는다.
 
 발행·예약은 어떤 경우에도 자동 금지 — 코덱스에게 주는 프롬프트에도 명시한다(감독 프리뷰 게이트).
 """
@@ -124,9 +127,20 @@ def main() -> int:
     ap.add_argument("--dry-run", action="store_true", help="실행할 명령만 보여준다")
     a = ap.parse_args()
 
-    jobs = pending_jobs()
     if a.only:
-        jobs = [j for j in jobs if j.parent.name == a.only]
+        # 명시 지정은 상태 필터를 건너뛴다.
+        # 규약상 착수 전에 status 를 '진행중'(claim 락)으로 바꾸고 부르기 때문에,
+        # 여기서 '대기'만 찾으면 자기가 잠근 잡을 못 본다(2026-08-04 실증).
+        j = SHORTS / a.only / "_RENDER_JOB.md"
+        if not j.is_file():
+            print(f"그런 렌더잡 없음: {j}")
+            return 1
+        body = j.read_text(encoding="utf-8", errors="replace")
+        if "status: 완료" in body and PENDING_MARK not in body:
+            print(f"⚠️ {a.only} 은 이미 완료 표시됨 — 그래도 지정했으므로 인계한다.")
+        jobs = [j]
+    else:
+        jobs = pending_jobs()
 
     if not jobs:
         print("대기 중인 렌더잡 없음.")
