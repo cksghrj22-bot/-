@@ -21,4 +21,6 @@ AGENTS.md 트렁크 반영 · dim 정합 spec.py 0→0.25 · Creator OS 정렬 �
 - 형 직접 지시로 Codex가 `렌더 → QC → YouTube 업로드/예약`까지 맡는다. 이번 지시는 기존 초안 전담 제한의 작업별 예외다.
 - Full Access 실측: 테스트 171개 PASS(2 skipped), YouTube 조회·업로드 OAuth·ElevenLabs·Drive·외부 네트워크 정상.
 - Meta는 `secrets/instagram.json`·`secrets/threads.json`이 없어 Instagram/Threads 발행 불가. 토큰이 들어오면 같은 파이프라인에서 처리 가능.
-- 현재 수락 잡: `content/shorts/2026-08-04/_RENDER_JOB.md`의 두피 자외선·둥근 얼굴 단발 2편. 렌더/QC 후 결과·YouTube ID를 트렁크에 되쓴다.
+- 완료: `content/shorts/2026-08-04/_RENDER_JOB.md`의 두피 자외선·둥근 얼굴 단발 2편을 컬러 렌더하고 QC PASS 후 YouTube 예약공개 처리.
+- 예약: 두피 자외선 `B8urBGnlwOI`(8/5 11:00 KST), 둥근 얼굴 단발 `3_MJ1Hec0Hw`(8/5 16:00 KST). 상세는 `knowledge/유튜브_예약현황.md`.
+- 전달 결론: Codex는 현재 렌더·QC·YouTube 예약발행까지 독립 처리 가능. Instagram/Threads만 Meta 토큰 입력 전까지 Cowork/본진 담당.

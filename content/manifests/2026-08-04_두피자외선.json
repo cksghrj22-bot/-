@@ -1,0 +1,25 @@
+{
+  "title": "두피도 피부인데, 선크림 안 바르시죠?",
+  "stem": "case",
+  "waive": ["bw"],
+  "outro": "SNS에 일기를 쓰고 있어요",
+  "voice": {"stability": 0.42, "style": 0.15, "speed": 1.05},
+  "bgm": "shorts/assets/bgm_piano_long.mp3",
+  "phrases": [
+    ["여름에 얼굴엔 선크림 꼼꼼히 바르시죠? 근데 두피는요?", "여름에 얼굴엔 선크림 꼼꼼히 바르시죠?\\N근데 두피는요?", "You protect your face from the sun. What about your scalp?", false],
+    ["두피는 정수리라서, 얼굴보다 햇빛을 더 정면으로 받는 피부예요.", "두피는 정수리라서,\\N햇빛을 더 정면으로 받는 피부예요.", "Your scalp faces sunlight more directly than your face.", false],
+    ["근데 유일하게, 아무것도 안 바르는 피부이기도 하죠.", "근데 유일하게,\\N아무것도 안 바르는 피부이기도 하죠.", "Yet it is the one area we leave unprotected.", false],
+    ["자외선을 계속 받으면 두피도 늙어요. 모발이 가늘어지고, 가르마가 조금씩 벌어지고요.", "자외선을 계속 받으면 두피도 늙어요.\\N모발이 가늘어지고, 가르마가 벌어져요.", "UV ages the scalp. Hair thins and the part slowly widens.", false],
+    ["방법은 간단해요. 그늘이나 모자, 두피용 자외선 스프레이. 가끔 가르마만 바꿔줘도 달라져요.", "그늘이나 모자, 두피용 자외선 스프레이.\\N가끔 가르마만 바꿔줘도 달라져요.", "Use shade, a hat, scalp UV spray, or simply change your part.", false],
+    ["여러분은 여름에 두피, 챙겨보신 적 있으세요?", "여러분은 여름에 두피,\\N챙겨보신 적 있으세요?", "Do you protect your scalp in summer?", false]
+  ],
+  "require_실사": true,
+  "segments": [
+    {"black": true, "bigcard": true, "untilLine": 0},
+    {"src": "1aA71jfCETbNHXkEMonO3WxgqQcAPFGxE", "ss": 8, "frame": "landscape", "untilLine": 1, "sub_margin_v": 650},
+    {"anim": "uv_scalp", "numLine": 2, "untilLine": 3, "nosub": true},
+    {"src": "12vXP4dUl62jvtj93zuWFrH_sk6kSmpQB", "ss": 5, "frame": "landscape", "untilLine": 4, "sub_margin_v": 680},
+    {"black": true, "bigcard": true, "untilLine": 5, "tail": 2.9}
+  ],
+  "_notes": "Cowork 렌더잡 2026-08-04. 실사=DJI_0186 두피진단 + DJI_0181 샴푸, 자외선 노화는 uv_scalp 설명 인서트. 컬러 유지."
+}

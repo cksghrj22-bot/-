@@ -19,7 +19,8 @@ def kyobo_family() -> str:
     설치 폰트에서 실제 패밀리명을 읽어 그대로 쓴다.
     """
     for p in ("/root/.fonts/KyoboHandwriting2019.ttf",
-              "/home/user/-/assets/fonts/KyoboHandwriting2019.ttf"):
+              "/home/user/-/assets/fonts/KyoboHandwriting2019.ttf",
+              str(Path(__file__).resolve().parent.parent / "assets/fonts/KyoboHandwriting2019.ttf")):
         if Path(p).exists():
             try:
                 out = subprocess.run(["fc-scan", "--format", "%{family}", p],
@@ -36,7 +37,7 @@ KYOBO = kyobo_family()
 # 한글 자막(하단·검정박스·70) — 정본. EN은 같은 블록 아래줄(54)로 합쳐 '멀어짐/충돌' 원천차단.
 # (한글\N{\fs54}영어 = 한 Dialogue → libass 충돌 재정렬 없음, 간격 바짝.)
 SUB = {
-    "font": KYOBO, "size": 78,
+    "font": KYOBO, "size": 78, "bold": 0,
     "primary_color": "&H00FFFFFF", "outline_color": "&H00000000",
     "box_color": "000000", "box_opacity": 100, "border_style": 4,
     "outline": 2, "alignment": 2, "margin_v": 410,   # 블록 하단 y≈1510 = 채널명 UI(하단 380) 위
@@ -46,7 +47,7 @@ EMPHASIS_INLINE = r"{\fs104}"        # 강조 1회 글자확대
 
 # 검은화면 질문 카드(중간 굵은 질문·시작 훅) — 교보 중앙 대형.
 QCARD = {
-    "font": KYOBO, "size": 92,
+    "font": KYOBO, "size": 92, "bold": 0,
     "primary_color": "&H00FFFFFF", "outline_color": "&H00000000",
     "box_color": "000000", "box_opacity": 0, "border_style": 1,
     "outline": 0, "alignment": 5, "margin_v": 40,
@@ -61,7 +62,7 @@ CHANNEL_WATERMARK = False
 # 아웃트로 "SNS에 일기를 쓰고 있어요" — 정본=정가운데 카드+검은박스(런북·verify_render "아웃트로중앙").
 # 하단 작은 반투명(46/alpha80)은 옛버전 = 틀림. 중앙·박스·또렷·페이드.
 OUTRO_CARD = {
-    "font": KYOBO, "size": 64,
+    "font": KYOBO, "size": 64, "bold": 0,
     "primary_color": "&H00FFFFFF", "outline_color": "&H00000000",
     "box_color": "000000", "box_opacity": 100, "border_style": 4,
     "outline": 2, "alignment": 5, "margin_v": 40,

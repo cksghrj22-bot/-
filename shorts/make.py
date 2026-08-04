@@ -505,6 +505,70 @@ def _pressure_map_frames(frames_dir: Path, lines: list, num_line: int, total: fl
         img.save(frames_dir / f"z{i:04d}.png")
 
 
+def _uv_scalp_frames(frames_dir: Path, lines: list, num_line: int, total: float,
+                     seg_start: float = 0.0, fps: int = 30) -> None:
+    """정수리로 직진하는 자외선과 넓어지는 가르마를 한 컷으로 설명한다."""
+    from PIL import Image, ImageDraw, ImageFont
+    frames_dir.mkdir(parents=True, exist_ok=True)
+    for p in frames_dir.glob("*.png"):
+        p.unlink()
+    W, H = 1080, 1920
+    BG=(15,22,32); YEL=(255,212,0); BLUE=(119,205,255); WHITE=(246,248,252); HAIR=(58,48,44)
+    f_title=ImageFont.truetype(NSQR,76); f_lab=ImageFont.truetype(NSQR,48); f_small=ImageFont.truetype(NSQR,38)
+    def sm(x): x=max(0.0,min(1.0,x)); return x*x*(3-2*x)
+    N=max(1,round(total*fps))
+    for i in range(N):
+        t=i/max(1,N-1); rays=sm(t/0.35); age=sm((t-0.38)/0.42)
+        img=Image.new("RGB",(W,H),BG); d=ImageDraw.Draw(img,"RGBA")
+        title="두피도 피부예요"; tw=d.textlength(title,font=f_title); d.text(((W-tw)/2,120),title,font=f_title,fill=WHITE)
+        d.ellipse([460,285,620,445],fill=(*YEL,255))
+        for x in (385,465,540,615,695):
+            y2=650+int(270*rays); d.line([(540,430),(x,y2)],fill=(*YEL,int(210*rays)),width=12)
+        d.arc([210,700,870,1390],180,360,fill=(*BLUE,255),width=8)
+        gap=30+int(95*age)
+        d.pieslice([225,720,855,1380],180,360,fill=(*HAIR,255))
+        d.polygon([(540-gap,720),(540+gap,720),(585+gap,1260),(495-gap,1260)],fill=(224,181,151,255))
+        for k in range(12):
+            x=290+k*42; d.line([(x,820),(x-25,1260)],fill=(105,86,75,180),width=max(2,7-int(4*age)))
+        lab="가르마가 벌어지고 · 모발은 가늘어져요" if age>0.25 else "정수리는 햇빛을 정면으로 받아요"
+        lw=d.textlength(lab,font=f_lab); d.rounded_rectangle([(W-lw)/2-30,1460,(W+lw)/2+30,1560],radius=20,fill=(0,0,0,205))
+        d.text(((W-lw)/2,1480),lab,font=f_lab,fill=YEL if age>0.25 else WHITE)
+        foot="자외선 → 두피 노화"; fw=d.textlength(foot,font=f_small); d.text(((W-fw)/2,1630),foot,font=f_small,fill=BLUE)
+        img.save(frames_dir/f"z{i:04d}.png")
+
+
+def _face_vertical_flow_frames(frames_dir: Path, lines: list, num_line: int, total: float,
+                               seg_start: float = 0.0, fps: int = 30) -> None:
+    """둥근 얼굴에서 세로 흐름·사이드 파트·정수리 볼륨을 순서대로 보여준다."""
+    from PIL import Image, ImageDraw, ImageFont
+    frames_dir.mkdir(parents=True, exist_ok=True)
+    for p in frames_dir.glob("*.png"):
+        p.unlink()
+    W,H=1080,1920; BG=(255,243,232); DK=(58,45,40); YEL=(246,183,45); GREEN=(70,174,112); GREY=(164,145,132)
+    f_title=ImageFont.truetype(NSQR,70); f_lab=ImageFont.truetype(NSQR,46); f_small=ImageFont.truetype(NSQR,38)
+    def sm(x): x=max(0.0,min(1.0,x)); return x*x*(3-2*x)
+    N=max(1,round(total*fps)); cx,cy,rx,ry=540,930,255,330
+    for i in range(N):
+        t=i/max(1,N-1); flow=sm(t/0.38); part=sm((t-0.30)/0.34); crown=sm((t-0.62)/0.28)
+        img=Image.new("RGB",(W,H),BG); d=ImageDraw.Draw(img,"RGBA")
+        title="둥근 얼굴 = 세로 흐름"; tw=d.textlength(title,font=f_title); d.text(((W-tw)/2,120),title,font=f_title,fill=DK)
+        d.ellipse([cx-rx,cy-ry,cx+rx,cy+ry],fill=(255,222,201,255),outline=(*GREY,255),width=7)
+        d.arc([cx-rx-60,cy-ry-100,cx+rx+60,cy+ry+80],190,350,fill=(*DK,255),width=70)
+        for x in (390,540,690):
+            y0=520; y1=1310; d.line([(x,y0),(x,y0+int((y1-y0)*flow))],fill=(*GREEN,230),width=12)
+            if flow>0.75: d.polygon([(x,y1),(x-20,y1-38),(x+20,y1-38)],fill=(*GREEN,255))
+        if part>0:
+            d.line([(470,540),(610,700)],fill=(*YEL,int(255*part)),width=18)
+            lab="사이드 파트"; d.text((655,650),lab,font=f_lab,fill=(*YEL,int(255*part)))
+        if crown>0:
+            yy=470-int(85*crown); d.arc([440,yy,640,yy+130],190,350,fill=(*GREEN,int(255*crown)),width=12)
+            d.text((360,390),"정수리 볼륨",font=f_lab,fill=(*GREEN,int(255*crown)))
+        foot="옆은 붙이고 · 위아래 시선을 길게"; fw=d.textlength(foot,font=f_small)
+        d.rounded_rectangle([(W-fw)/2-30,1500,(W+fw)/2+30,1590],radius=18,fill=(255,255,255,220))
+        d.text(((W-fw)/2,1520),foot,font=f_small,fill=DK)
+        img.save(frames_dir/f"z{i:04d}.png")
+
+
 # ── 귀여운 캐릭터: 앞머리 찰랑 내려오고 눈 반짝(앞머리=눈매 강조 설명 인서트) ────────
 def _bang_sparkle_frames(frames_dir: Path, lines: list, num_line: int, total: float,
                          seg_start: float = 0.0, fps: int = 30) -> None:
@@ -963,6 +1027,10 @@ def make(manifest_path: str | Path, out: str | Path | None = None,
             elif seg["anim"] == "pressure_map":
                 _pressure_map_frames(fdir, lines, seg.get("numLine", 2), dur,
                                      seg_start=prev_end, config=seg.get("pressure_map"))
+            elif seg["anim"] == "uv_scalp":
+                _uv_scalp_frames(fdir, lines, seg.get("numLine", 1), dur, seg_start=prev_end)
+            elif seg["anim"] == "face_vertical_flow":
+                _face_vertical_flow_frames(fdir, lines, seg.get("numLine", 2), dur, seg_start=prev_end)
             else:
                 raise ValueError(f"지원하지 않는 anim: {seg['anim']}")
             subprocess.run(["ffmpeg", "-v", "error", "-y", "-framerate", "30",

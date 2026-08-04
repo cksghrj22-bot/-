@@ -1,0 +1,26 @@
+{
+  "title": "둥근 얼굴, 단발할 때 이것만 지켜요",
+  "stem": "case",
+  "waive": ["bw"],
+  "outro": "SNS에 일기를 쓰고 있어요",
+  "voice": {"stability": 0.42, "style": 0.15, "speed": 1.05},
+  "bgm": "shorts/assets/bgm_piano_long.mp3",
+  "phrases": [
+    ["둥근 얼굴은 단발이 안 어울린다고요? 아니에요.", "둥근 얼굴은 단발이 안 어울린다고요?\\N아니에요.", "Think bobs do not suit round faces? They can.", false],
+    ["안 어울리는 게 아니라, 방향이 다른 거예요.", "안 어울리는 게 아니라,\\N방향이 다른 거예요.", "It is not a bad match. The direction is different.", false],
+    ["둥근 얼굴은 세로로 흘러야 갸름해 보여요. 세로 흐름의 레이어드요.", "둥근 얼굴은 세로로 흘러야 갸름해 보여요.\\N세로 흐름의 레이어드요.", "Vertical layers make a round face look longer.", false],
+    ["가르마는 사이드로. 옆선이 생기면서 둥근 인상이 눌려요.", "가르마는 사이드로.\\N옆선이 생기면서 둥근 인상이 눌려요.", "A side part creates a line that balances roundness.", false],
+    ["앞머리는 시스루로 이마를 열고, 볼륨은 정수리에. 옆은 붙여야 세로가 살아요.", "앞머리는 시스루로 이마를 열고, 볼륨은 정수리에.\\N옆은 붙여야 세로가 살아요.", "Open the forehead, lift the crown, and keep the sides close.", false],
+    ["피할 건 딱 두 개예요. 일자 단발이랑, 옆 볼륨.", "피할 건 딱 두 개예요.\\N일자 단발이랑, 옆 볼륨.", "Avoid two things: a blunt horizontal line and side volume.", false],
+    ["얼굴형은 못 바꿔도, 시선의 방향은 바꿀 수 있어요.", "얼굴형은 못 바꿔도,\\N시선의 방향은 바꿀 수 있어요.", "You cannot change the face shape, but you can redirect the eye.", false]
+  ],
+  "require_실사": true,
+  "segments": [
+    {"black": true, "bigcard": true, "untilLine": 0},
+    {"src": "1xU-0vbfhuxzibzF_Y0zm7kxtqA5iiyBA", "ss": 10, "frame": "portrait", "untilLine": 1, "sub_margin_v": 650},
+    {"anim": "face_vertical_flow", "numLine": 2, "untilLine": 4, "nosub": true},
+    {"src": "1xU-0vbfhuxzibzF_Y0zm7kxtqA5iiyBA", "ss": 155, "frame": "portrait", "untilLine": 5, "sub_margin_v": 650},
+    {"src": "1xU-0vbfhuxzibzF_Y0zm7kxtqA5iiyBA", "ss": 70, "frame": "portrait", "untilLine": 6, "sub_margin_v": 650, "tail": 2.9}
+  ],
+  "_notes": "Cowork 렌더잡 2026-08-04. 실사=IMG_3739 단발 완성·시술, face_vertical_flow는 세로 흐름·사이드파트·정수리 볼륨 설명 인서트. 컬러 유지."
+}

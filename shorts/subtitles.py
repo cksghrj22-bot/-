@@ -175,7 +175,7 @@ def _ass_time(seconds: float) -> str:
 def _style_line(name: str, st: dict) -> str:
     return (
         f"Style: {name},{st['font']},{st['size']},{st['primary_color']},{st['outline_color']},"
-        f"{_back_color(st)},1,{st['border_style']},{st['outline']},{st.get('shadow', 0)},"
+        f"{_back_color(st)},{int(st.get('bold', 1))},{st['border_style']},{st['outline']},{st.get('shadow', 0)},"
         f"{st['alignment']},60,60,{st['margin_v']}"
     )
 

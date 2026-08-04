@@ -13,6 +13,7 @@ from __future__ import annotations
 import re
 import subprocess
 import sys
+from pathlib import Path
 
 
 def _ff(args: list[str]) -> str:
@@ -36,7 +37,8 @@ def length_fails(dur: float, longform: bool = False) -> list[str]:
 
 
 def verify(mp4: str, ass: str, duration: float | None = None,
-           longform: bool = False) -> list[str]:
+           longform: bool = False, color: bool = False,
+           font_backend: str = "ass") -> list[str]:
     """규격 검사. 실패 사유 리스트를 돌려준다(빈 리스트 = 통과)."""
     fails: list[str] = []
     info = subprocess.run(["ffmpeg", "-hide_banner", "-i", mp4], capture_output=True, text=True).stderr
@@ -66,7 +68,7 @@ def verify(mp4: str, ass: str, duration: float | None = None,
             break
     if satv is None:
         satv = 999
-    if satv > 18:
+    if not color and satv > 18:
         fails.append(f"흑백 아님 (중앙 채도 SATAVG={satv:.1f} > 18)")
 
     # 3) BGM: 아웃트로(나레이션 뒤 순수 BGM 구간)가 '들리게' 깔려야 한다.
@@ -101,15 +103,22 @@ def verify(mp4: str, ass: str, duration: float | None = None,
             fails.append(f"{nm} 폰트 {f} (KyoboHandwriting2019 아님)")
     # 4b) 실렌더 폰트 — ass 재렌더해 libass fontselect 로그로 실제 폰트 확인.
     #     ASS 텍스트만 맞아도 픽셀은 폴백폰트일 수 있어 반드시 실렌더로 검증.
-    fs = _ff(["-f", "lavfi", "-i", "color=c=black:s=1080x1920:d=1",
-              "-vf", f"ass={ass}", "-frames:v", "1", "-f", "null", "-"])
-    picked = [p.split("/")[-1] for p in re.findall(r"fontselect:.*?->\s*(\S+)", fs)]
-    if picked and not any("Kyobo" in p for p in picked):
-        fails.append(f"실렌더 폰트 폴백! libass가 교보를 못 골랐음 → {set(picked)} (ASS 폰트명 공백 확인)")
-    cjk = [p for p in picked if any(x in p.lower()
-           for x in ("wenquanyi", "wqy", "noto", "droid", "cjk", "song"))]
-    if cjk:
-        fails.append(f"한글이 CJK 폰트로 폴백! {set(cjk)} (교보 글리프 누락/폰트명 오류)")
+    if font_backend == "ass":
+        fs = _ff(["-f", "lavfi", "-i", "color=c=black:s=1080x1920:d=1",
+                  "-vf", f"ass={ass}", "-frames:v", "1", "-f", "null", "-"])
+        picked = [p.split("/")[-1] for p in re.findall(r"fontselect:.*?->\s*(\S+)", fs)]
+        if picked and not any("Kyobo" in p for p in picked):
+            fails.append(f"실렌더 폰트 폴백! libass가 교보를 못 골랐음 → {set(picked)} (ASS 폰트명 공백 확인)")
+        cjk = [p for p in picked if any(x in p.lower()
+               for x in ("wenquanyi", "wqy", "noto", "droid", "cjk", "song"))]
+        if cjk:
+            fails.append(f"한글이 CJK 폰트로 폴백! {set(cjk)} (교보 글리프 누락/폰트명 오류)")
+    elif font_backend == "drawtext":
+        kyobo = Path(__file__).resolve().parent.parent / "assets/fonts/KyoboHandwriting2019.ttf"
+        if not kyobo.is_file():
+            fails.append("drawtext 교보 fontfile 없음")
+    else:
+        fails.append(f"알 수 없는 폰트 백엔드: {font_backend}")
 
     # 5) 자막 블랙박스: Default BorderStyle=4
     if "Default" in styles and styles["Default"].split(",")[7].strip() != "4":
@@ -138,11 +147,14 @@ def verify(mp4: str, ass: str, duration: float | None = None,
 
 def main(argv: list[str] | None = None) -> int:
     argv = argv if argv is not None else sys.argv[1:]
-    if len(argv) < 2:
-        print("사용: python3 -m shorts.verify_render <mp4> <ass>")
+    color = "--color" in argv
+    drawtext = "--drawtext" in argv
+    args = [a for a in argv if a not in ("--color", "--drawtext")]
+    if len(args) < 2:
+        print("사용: python3 -m shorts.verify_render <mp4> <ass> [--color] [--drawtext]")
         return 2
-    mp4, ass = argv[0], argv[1]
-    fails = verify(mp4, ass)
+    mp4, ass = args[0], args[1]
+    fails = verify(mp4, ass, color=color, font_backend="drawtext" if drawtext else "ass")
     name = mp4.split("/")[-1][:24]
     print(f"{'❌ FAIL' if fails else '✅ PASS'} {name}")
     for f in fails:
