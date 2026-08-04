@@ -16,3 +16,10 @@
 - 시각 QC: 한글 78~82px, 영어 58px, 한/영 안전폭, 자막-음성 타이밍, 실사 가림, 애니 전환, 질문-아웃트로 확인 완료. 교보손글씨의 빈 ASCII 공백 글리프는 전각 공백으로 교정.
 - 예약공개: `B8urBGnlwOI`(8/5 11:00 KST), `3_MJ1Hec0Hw`(8/5 16:00 KST). 둘 다 private+publishAt 안전장치 통과.
 - Meta: `secrets/instagram.json`, `secrets/threads.json` 부재로 Instagram/Threads는 미발행.
+
+---
+## ⚙️ 렌더 지정 (2026-08-04 이찬호 확정 — 되돌리지 말 것)
+- **프리셋 = 컬러 확정** (매니페스트 지정 우선. 흑백으로 되돌리지 않는다. 근거: 결정사항_대장 '프리셋=매니페스트 우선'.)
+- **02편 B롤 위치 = 드라이브 「코드방_B롤_인트레이」** (ID `1MBvVanqFgvBjk7hS2wjOaYN6oiaoBtlO`, anyone-reader). 일반 소스폴더 아님 → 인트레이 최신 클립에서 매칭.
+- BGM = 앳나운_영상 BGM 폴더 지정곡.
+- 발행·예약 자동 금지 = 감독 프리뷰 게이트 유지.
