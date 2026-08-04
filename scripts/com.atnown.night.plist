@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  com.atnown.night — 본진(맥) 밤샘 무인 렌더 launchd 에이전트
+  설치 (본진 맥에서 1회):
+    cp ~/atnown-repo/scripts/com.atnown.night.plist ~/Library/LaunchAgents/
+    launchctl load ~/Library/LaunchAgents/com.atnown.night.plist
+  해제:  launchctl unload ~/Library/LaunchAgents/com.atnown.night.plist
+  로그:  ~/Library/Logs/atnown-night.log  ·  /tmp/atnown-night.{out,err}.log
+  ※ /bin/bash -lc 로 실행 → $HOME 확장됨(맥 계정명 무관). repo 위치 다르면 night_worker.sh의 ATNOWN_REPO 조정.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.atnown.night</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>-lc</string>
+    <string>"$HOME/atnown-repo/scripts/night_worker.sh"</string>
+  </array>
+  <!-- 새벽 3시 킥 -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key><integer>3</integer>
+    <key>Minute</key><integer>0</integer>
+  </dict>
+  <!-- 이후 10분 주기(스크립트가 03~07시 밖이면 자동 no-op) -->
+  <key>StartInterval</key><integer>600</integer>
+  <key>StandardOutPath</key><string>/tmp/atnown-night.out.log</string>
+  <key>StandardErrorPath</key><string>/tmp/atnown-night.err.log</string>
+  <key>RunAtLoad</key><false/>
+</dict>
+</plist>
