@@ -16,8 +16,12 @@ import sys
 from pathlib import Path
 
 
+_FFMPEG_FULL = Path("/usr/local/opt/ffmpeg-full/bin/ffmpeg")
+FFMPEG = str(_FFMPEG_FULL) if _FFMPEG_FULL.is_file() else "ffmpeg"
+
+
 def _ff(args: list[str]) -> str:
-    r = subprocess.run(["ffmpeg", "-hide_banner", *args], capture_output=True, text=True)
+    r = subprocess.run([FFMPEG, "-hide_banner", *args], capture_output=True, text=True)
     return r.stderr + r.stdout
 
 
@@ -41,7 +45,7 @@ def verify(mp4: str, ass: str, duration: float | None = None,
            font_backend: str = "ass") -> list[str]:
     """규격 검사. 실패 사유 리스트를 돌려준다(빈 리스트 = 통과)."""
     fails: list[str] = []
-    info = subprocess.run(["ffmpeg", "-hide_banner", "-i", mp4], capture_output=True, text=True).stderr
+    info = subprocess.run([FFMPEG, "-hide_banner", "-i", mp4], capture_output=True, text=True).stderr
 
     # 1) 해상도 1080x1920
     if "1080x1920" not in info:

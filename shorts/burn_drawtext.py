@@ -73,25 +73,31 @@ def burn(base: str | Path, ass: str | Path, narration: str | Path, bgm: str | Pa
     work.mkdir(parents=True, exist_ok=True)
     filters, cur = [], "[0:v]"
     for idx, ev in enumerate(parse_events(ass)):
-        if ev["style"] == "Outro":
+        if ev["style"] == "Title":
+            ko_size, ko_y, box = 82, str(ev["pos_y"] or 80), False
+            ko_color = "0xFFD700"
+        elif ev["style"] == "Outro":
             ko_size, ko_y, box = 64, "(h-text_h)/2", True
+            ko_color = "white"
         elif ev["big"]:
             # 실사 훅도 1080px 안전폭 안에 두고 한글 QC 규격(70~82px)을 지킨다.
             ko_size, ko_y, box = 82, "720", False
+            ko_color = "white"
         else:
-            ko_size = 78
+            ko_size = 70
             ko_y = str(max(820, (ev["pos_y"] or 1280) - 180))
             box = True
+            ko_color = "white"
         ko_file = work / f"{idx:02d}_ko.txt"
         # 이 교보손글씨 파일은 ASCII space 글리프가 비어 있어 drawtext가
         # 띄어쓰기를 tofu(□)로 표시한다. 한글 폰트에 포함된 전각 공백을 쓴다.
-        ko_text = _wrap_ko(ev["ko"]) if ev["big"] else ev["ko"]
+        ko_text = ev["ko"] if ev["style"] == "Outro" else _wrap_ko(ev["ko"], width=14)
         ko_file.write_text(ko_text.replace(" ", "\u3000"), encoding="utf-8")
         nxt = f"[v{idx}k]"
         box_opts = ":box=1:boxcolor=black@0.88:boxborderw=24" if box else ""
         filters.append(
             f"{cur}drawtext=fontfile='{_esc(KYOBO)}':textfile='{_esc(ko_file)}':"
-            f"fontsize={ko_size}:fontcolor=white:line_spacing=12:x=(w-text_w)/2:y={ko_y}"
+            f"fontsize={ko_size}:fontcolor={ko_color}:line_spacing=12:x=(w-text_w)/2:y={ko_y}"
             f"{box_opts}:enable='between(t,{ev['start']:.3f},{ev['end']:.3f})'{nxt}"
         )
         cur = nxt

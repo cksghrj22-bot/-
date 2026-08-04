@@ -13,6 +13,10 @@ import re
 import shutil as _shutil
 
 
+_FFMPEG_FULL = Path("/usr/local/opt/ffmpeg-full/bin/ffmpeg")
+FFMPEG = str(_FFMPEG_FULL) if _FFMPEG_FULL.is_file() else "ffmpeg"
+
+
 # BGM을 고르게(들리게) 깔기 위한 컴프레서 체인. 피아노 루프의 조용한 구간이
 # 아웃트로에 걸려도 '안 들리는' 일이 없게 다이내믹을 눌러 소리를 끌어올린다.
 # (volume 스케일은 이 뒤에 곱해진다.)
@@ -24,7 +28,7 @@ BGM_EVEN = "dynaudnorm=f=150:g=11:p=0.9,loudnorm=I=-34:TP=-3:LRA=11"
 
 def _ffmpeg_info(video: str | Path) -> str:
     """ffprobe가 없는 환경 폴백: `ffmpeg -i` stderr에서 메타데이터를 읽는다."""
-    result = subprocess.run(["ffmpeg", "-hide_banner", "-i", str(video)], capture_output=True, text=True)
+    result = subprocess.run([FFMPEG, "-hide_banner", "-i", str(video)], capture_output=True, text=True)
     return result.stderr
 
 
@@ -93,7 +97,7 @@ def render(
         encoding="utf-8",
     )
 
-    cmd: list[str] = ["ffmpeg", "-y", "-i", str(video)]
+    cmd: list[str] = [FFMPEG, "-y", "-i", str(video)]
     if layout == "letterbox":
         # 채널 v9 구성: 원본을 가로 맞춤 → 위아래 검은 여백 → 제목은 상단 여백, 자막은 영상 위
         base = f"[0:v]scale=1080:-2,pad=1080:1920:(ow-iw)/2:(oh-ih)/2:black[vbase];[vbase]"

@@ -23,3 +23,12 @@
 - **02편 B롤 위치 = 드라이브 「코드방_B롤_인트레이」** (ID `1MBvVanqFgvBjk7hS2wjOaYN6oiaoBtlO`, anyone-reader). 일반 소스폴더 아님 → 인트레이 최신 클립에서 매칭.
 - BGM = 앳나운_영상 BGM 폴더 지정곡.
 - 발행·예약 자동 금지 = 감독 프리뷰 게이트 유지.
+
+## 감독 프리뷰 재렌더 결과 (2026-08-04 · 발행 금지 지시)
+
+- 실행: `python3 -m shorts.proof content/shorts/2026-08-04 --only 01|02 --preset style_preset_mind --grade warm_film ...`로 각 대본을 분리 렌더. 컬러 유지·dim 25% 임시 설정, 기존 실사+애니 베이스와 `bgm_piano_long.mp3` 재사용.
+- 두피 자외선: `outputs/2026-08-04_supervisor_preview_proof/01/01_두피도_피부인데_선크림_감독프리뷰.mp4` · 1080×1920 · 30fps · 31.300초 · H.264/AAC · 7,718,666 bytes.
+- 둥근 얼굴 단발: `outputs/2026-08-04_supervisor_preview_proof/02/02_둥근얼굴_단발공식_감독프리뷰.mp4` · 1080×1920 · 30fps · 31.533초 · H.264/AAC · 11,340,081 bytes.
+- 게이트: 각 ASS 기준 `python3 -m shorts.verify_render <mp4> <ass> --color --drawtext` **8항목 PASS**. 전체 테스트 171 PASS(2 skipped).
+- 이중 QC: 컨택트시트로 제목 두 줄 위치·본문 14자 안전폭·컬러·dim·실사/애니 전환·마지막 질문·2.6초 아웃트로 확인. 교보손글씨는 macOS libass 폴백을 피하려고 repo fontfile 직접 렌더.
+- 상태: **감독 프리뷰 시안 — 발행본 아님.** 이번 작업에서 Drive 업로드·YouTube/Instagram/Threads 업로드·예약·발행 전부 실행하지 않음. 기존 예약 내역에도 변경 없음.
