@@ -1,118 +1,105 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>창엽 쇼츠 — 이어받기 현황판</title>
+<title>창엽 쇼츠 현황판</title>
 <style>
-  :root{
-    --bg:#0e1116; --panel:#161b22; --panel2:#1c2430; --line:#2a3340;
-    --tx:#e6edf3; --mut:#8b98a8; --mut2:#5f6b7a;
-    --ok:#3fb950; --wait:#e3b341; --review:#58a6ff; --dead:#6e7681; --accent:#f0b429;
-    --okbg:rgba(63,185,80,.12); --waitbg:rgba(227,179,65,.14); --reviewbg:rgba(88,166,255,.14);
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
-    line-height:1.55;padding:28px 20px 60px;max-width:1000px;margin:0 auto;-webkit-font-smoothing:antialiased}
-  h1{font-size:23px;font-weight:800;letter-spacing:-.3px}
-  .sub{color:var(--mut);font-size:13.5px;margin-top:6px}
-  .badge{display:inline-block;background:rgba(240,71,71,.15);color:#ff8080;border:1px solid rgba(240,71,71,.35);
-    font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;margin-left:8px;vertical-align:middle}
-  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0 8px}
-  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 12px}
-  .kpi .n{font-size:27px;font-weight:800;letter-spacing:-.5px}
-  .kpi .l{font-size:12px;color:var(--mut);margin-top:2px}
-  .kpi.ok .n{color:var(--ok)} .kpi.wait .n{color:var(--wait)} .kpi.review .n{color:var(--review)}
-  .callout{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid #33415a;border-left:3px solid var(--accent);
-    border-radius:12px;padding:16px 18px;margin:24px 0}
-  .callout h2{font-size:15px;font-weight:800;color:var(--accent);margin-bottom:10px;display:flex;align-items:center;gap:7px}
-  .callout ul{list-style:none;display:flex;flex-direction:column;gap:9px}
-  .callout li{font-size:13.5px;padding-left:16px;position:relative;color:#dbe4ee}
-  .callout li:before{content:"›";position:absolute;left:0;color:var(--accent);font-weight:800}
-  .callout b{color:#fff}
-  .callout .pills{margin-top:3px;display:flex;flex-wrap:wrap;gap:5px}
-  .pill{font-size:11.5px;font-weight:700;background:var(--waitbg);color:var(--wait);border:1px solid rgba(227,179,65,.3);
-    padding:2px 8px;border-radius:6px}
-  h3.sec{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--mut);margin:26px 0 10px;font-weight:700}
-  table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-  th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut2);font-weight:700;
-    padding:10px 12px;border-bottom:1px solid var(--line);background:#12171e}
-  td{padding:9px 12px;border-bottom:1px solid #20272f;vertical-align:middle}
-  tr:last-child td{border-bottom:none}
-  tr:hover td{background:#12181f}
-  .num{color:var(--mut2);font-variant-numeric:tabular-nums;font-weight:700;width:34px}
-  .sec-s{color:var(--mut);font-variant-numeric:tabular-nums;width:44px;text-align:right;white-space:nowrap}
-  .chip{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;white-space:nowrap}
-  .c-ok{background:var(--okbg);color:var(--ok)}
-  .c-wait{background:var(--waitbg);color:var(--wait)}
-  .c-review{background:var(--reviewbg);color:var(--review)}
-  a.lnk{color:var(--review);text-decoration:none;font-size:12px;font-weight:600}
-  a.lnk:hover{text-decoration:underline}
-  .keep{color:var(--mut2);font-size:12px}
-  .foot{margin-top:24px;color:var(--mut);font-size:12.5px;border-top:1px solid var(--line);padding-top:16px}
-  .foot b{color:var(--tx)}
-  .foot a{color:var(--review);text-decoration:none}
-  .tempttl{color:var(--wait)}
-  @media(max-width:640px){.kpis{grid-template-columns:repeat(2,1fr)}.sec-s{display:none}th.h-s{display:none}}
-</style>
-</head>
-<body>
-  <h1>창엽 「커트의 정석」 컨셉 쇼츠 — 이어받기 현황판 <span class="badge">전편 유튜브 미발행</span></h1>
-  <div class="sub">정본: <b>knowledge/창엽_컨셉쇼츠_v2_링크.md</b> (v3 최종, 2026-07-31) · 드라이브 검수용 · 코드방(A방) 작업을 이 방으로 이어받음</div>
+:root{--bg:#0e1116;--panel:#161b22;--panel2:#1c2430;--line:#2a3340;--tx:#e6edf3;--mut:#8b98a8;--mut2:#5f6b7a;--ok:#3fb950;--review:#58a6ff;--accent:#f0b429;--okbg:rgba(63,185,80,.12);--reviewbg:rgba(88,166,255,.14)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.55;padding:28px 20px 60px;max-width:1000px;margin:0 auto;-webkit-font-smoothing:antialiased}
+h1{font-size:23px;font-weight:800;letter-spacing:-.3px}
+.sub{color:var(--mut);font-size:13.5px;margin-top:6px}
+.badge{display:inline-block;background:rgba(240,71,71,.15);color:#ff8080;border:1px solid rgba(240,71,71,.35);font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;margin-left:8px;vertical-align:middle}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0 8px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 12px}
+.kpi .n{font-size:27px;font-weight:800;letter-spacing:-.5px}
+.kpi .l{font-size:12px;color:var(--mut);margin-top:2px}
+.kpi.ok .n{color:var(--ok)} .kpi.review .n{color:var(--review)} .kpi.re .n{color:var(--accent)}
+.callout{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid #33415a;border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px;margin:24px 0}
+.callout h2{font-size:15px;font-weight:800;color:var(--accent);margin-bottom:10px}
+.callout ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.callout li{font-size:13.5px;padding-left:16px;position:relative;color:#dbe4ee}
+.callout li:before{content:"›";position:absolute;left:0;color:var(--accent);font-weight:800}
+.callout b{color:#fff}
+.done{color:var(--ok);font-weight:700}
+h3.sec{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--mut);margin:26px 0 10px;font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut2);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);background:#12171e}
+td{padding:9px 12px;border-bottom:1px solid #20272f;vertical-align:middle}
+tr:last-child td{border-bottom:none} tr:hover td{background:#12181f}
+.num{color:var(--mut2);font-variant-numeric:tabular-nums;font-weight:700;width:34px}
+.sec-s{color:var(--mut);font-variant-numeric:tabular-nums;width:52px;text-align:right;white-space:nowrap}
+.chip{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;white-space:nowrap}
+.c-ok{background:var(--okbg);color:var(--ok)} .c-review{background:var(--reviewbg);color:var(--review)}
+.re{font-size:10.5px;font-weight:800;background:rgba(240,180,41,.16);color:var(--accent);border:1px solid rgba(240,180,41,.32);padding:1px 6px;border-radius:5px;white-space:nowrap}
+a.lnk{color:var(--review);text-decoration:none;font-size:12px;font-weight:600} a.lnk:hover{text-decoration:underline}
+.keep{color:var(--mut2);font-size:12px}
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:6px}
+.lcard{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.lcard a{color:var(--review);text-decoration:none;font-weight:700;font-size:13.5px} .lcard a:hover{text-decoration:underline}
+.lcard .d{color:var(--mut);font-size:12px;margin-top:3px}
+.foot{margin-top:24px;color:var(--mut);font-size:12.5px;border-top:1px solid var(--line);padding-top:16px}
+.foot b{color:var(--tx)}
+@media(max-width:640px){.kpis{grid-template-columns:repeat(2,1fr)}}
+</style></head><body>
+<h1>창엽 「커트의 정석」 컨셉 쇼츠 — 현황판 <span class="badge">전편 유튜브 미발행</span></h1>
+<div class="sub">정본: knowledge/창엽_컨셉쇼츠_v2_링크.md (v3) · <b class="done">제목 전편 확정(2026-08-05)</b> · 드라이브 검수용</div>
 
-  <div class="kpis">
-    <div class="kpi"><div class="n">23</div><div class="l">활성 편수 (삭제 7편 제외)</div></div>
-    <div class="kpi ok"><div class="n">13</div><div class="l">형 확정 · 이상 없음</div></div>
-    <div class="kpi review"><div class="n">3</div><div class="l">형 검토 중</div></div>
-    <div class="kpi wait"><div class="n">7</div><div class="l">제목 대기</div></div>
-  </div>
+<div class="kpis">
+  <div class="kpi"><div class="n">23</div><div class="l">활성 편수</div></div>
+  <div class="kpi ok"><div class="n">20</div><div class="l">형 확정 · 이상 없음</div></div>
+  <div class="kpi review"><div class="n">3</div><div class="l">형 검토 중 (내용)</div></div>
+  <div class="kpi re"><div class="n">8</div><div class="l">🔄 본진 제목 재렌더 대기</div></div>
+</div>
 
-  <div class="callout">
-    <h2>🎯 지금 형이 이어서 결정할 것</h2>
-    <ul>
-      <li><b>제목 확정 7편</b> — 아래 편들은 현재 <span class="tempttl">임시 훅</span>으로 렌더돼 있어요. 번호로 지목해주시면 그 편만 제목 덮어씌웁니다 (화면 안 제목이라 잔상 없음).
-        <div class="pills"><span class="pill">17 곱슬대응</span><span class="pill">20 베이직이란</span><span class="pill">21 같이간다</span><span class="pill">22 솜사탕모질</span><span class="pill">24 슬라이싱틴닝</span><span class="pill">25 명암읽기</span><span class="pill">29 고객맞춤</span></div>
-      </li>
-      <li><b>06 · 09</b> — 예시로 띄운 편. 어드바이스 2개 대기 중 (06 결론연장컷 / 09 끝단축컷 반영본).</li>
-      <li><b>28 질감가위</b> — 끝 단편은 제거했고, <b>마무리 보강 여부</b>만 형 판단 대기.</li>
-      <li><b>발행</b> — 전편 아직 드라이브 검수용(⛔미발행). 확정분부터 유튜브 예약/발행 갈지 형 OK 필요.</li>
-    </ul>
-  </div>
+<div class="callout">
+  <h2>🎯 남은 결정 / 다음 액션</h2>
+  <ul>
+    <li><span class="done">✅ 제목 결정 완료</span> — 대기 0편. (밑줄 규칙 박제: knowledge/결정사항_대장.md)</li>
+    <li><b>본진 제목 재렌더 8편</b> (17 · 20 · 21 · 22 · 24 · 25 · 28 · 29) — 상단 노랑 제목만 교체, 내용·자막·길이 불변. 복붙 줄은 Cowork 채팅 참조.</li>
+    <li><b>내용 검토 3편</b> — 06·09 어드바이스 대기 / 28 마무리 보강 여부.</li>
+    <li><b>발행</b> — 전편 ⛔미발행. 확정분부터 유튜브 예약/발행 갈지 형 OK 필요.</li>
+  </ul>
+</div>
 
-  <h3 class="sec">전체 23편 · 상태표</h3>
-  <table>
-    <thead><tr><th class="num">#</th><th>제목 (노랑 2줄)</th><th class="h-s sec-s">초</th><th>상태</th><th>드라이브</th></tr></thead>
-    <tbody>
-      <tr><td class="num">00</td><td>같은 커트인데 / 분위기가 다른 이유</td><td class="sec-s">—</td><td><span class="chip c-ok">형확정</span></td><td class="keep">기존 유지</td></tr>
-      <tr><td class="num">02</td><td>밑에서부터 자르면 / 형태가 무너진다</td><td class="sec-s">—</td><td><span class="chip c-ok">형확정</span></td><td class="keep">기존 유지</td></tr>
-      <tr><td class="num">03</td><td>기장은 비율이다</td><td class="sec-s">47s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1FZiu_vgnEbI-g0B9695bIv_Wg6Bk0V3W/view" target="_blank">열기 ↗</a></td></tr>
-      <tr><td class="num">04</td><td>웨이트라인이 / 정말 중요</td><td class="sec-s">74s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1vyCXBTh-2fKVKOwbxGyVTWboC81C6EP9/view" target="_blank">열기 ↗</a></td></tr>
-      <tr><td class="num">05</td><td>단발의 흐름</td><td class="sec-s">61s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/14paN1M4_3bdnNWVDc6QMEZLEjeocigjb/view" target="_blank">열기 ↗</a></td></tr>
-      <tr><td class="num">06</td><td>고객이 원하는 / 인테리어</td><td class="sec-s">69s</td><td><span class="chip c-review">검토중</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1c-07Uubef69Jx5gdmzCphguXo47cww6Y/view" target="_blank">열기 ↗</a></td></tr>
-      <tr><td class="num">07</td><td>스케치를 / 먼저 하자</td><td class="sec-s">53s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1YawMYkQDthDW5ENR9e11ZM7IomGfuT_s/view" target="_blank">열기 ↗</a></td></tr>
-      <tr><td class="num">08</td><td>커트, / 에너지 배분</td><td class="sec-s">69s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1jJKL8qre1dzizhcgAsl9RLFlPZC8n89Q/view" target="_blank">열기 ↗</a></td></tr>
-      <tr><td class="num">09</td><td>헤드포지션이 / 중요합니다</td><td class="sec-s">44s</td><td><span class="chip c-review">검토중</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1cQOpWV62KHfZCLD6UzSmHU1toBiRujqF/view" target="_blank">열기 ↗</a></td></tr>
-      <tr><td class="num">10</td><td>가장 안정적인 / 오픈각 45도</td><td class="sec-s">48s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1vALx_FR3qexJ4N2gMHGvALh83kujn9-T/view" target="_blank">열기 ↗</a></td></tr>
-      <tr><td class="num">16</td><td>질감과 양감</td><td class="sec-s">45s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1yEmBoObMJA-E4d2QQzEKu2W7T0KPOsbf/view" target="_blank">열기 ↗</a></td></tr>
-      <tr><td class="num">17</td><td class="tempttl">(임시) 곱슬 손님이 왔다 / 틴닝은? 펌은?</td><td class="sec-s">66s</td><td><span class="chip c-wait">제목대기</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1RH659LDdS3-Y2I6x0rB93S5EyqnWypj0/view" target="_blank">열기 ↗</a></td></tr>
-      <tr><td class="num">18</td><td>스타일에 따른 / 에센스 사용법</td><td class="sec-s">52s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1fI9PP-sMMUMJmHRMjrKT_XVE6kx1sl4U/view" target="_blank">열기 ↗</a></td></tr>
-      <tr><td class="num">19</td><td>끝이냐 중간이냐</td><td class="sec-s">52s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1DHhdSPO6AqIRW_Gk76jZloVyHJWgVEz6/view" target="_blank">열기 ↗</a></td></tr>
-      <tr><td class="num">20</td><td class="tempttl">(임시) 베이직, 어디까지 / 진짜 베이직이란</td><td class="sec-s">48s</td><td><span class="chip c-wait">제목대기</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1EEIgnYXUA1Kvlb-qc-LdKrf6QR1-Lkpm/view" target="_blank">열기 ↗</a></td></tr>
-      <tr><td class="num">21</td><td class="tempttl">(임시) 베이직이 먼저일까 / 답은 같이</td><td class="sec-s">46s</td><td><span class="chip c-wait">제목대기</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1AJRa5990YfTkDAbHb1Ew-163dIasAIq_/view" target="_blank">열기 ↗</a></td></tr>
-      <tr><td class="num">22</td><td class="tempttl">(임시) 짧게 자르면 부풀까? / 모질 따라 독</td><td class="sec-s">45s</td><td><span class="chip c-wait">제목대기</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1zITi75WxGLvlmjAAwV2Ri7NFxEzs48q_/view" target="_blank">열기 ↗</a></td></tr>
-      <tr><td class="num">24</td><td class="tempttl">(임시) 언제 뭘 쓸까 / 삼각이냐 사각이냐</td><td class="sec-s">53s</td><td><span class="chip c-wait">제목대기</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1wyIkLGMFmBm5jjoYnRQsSU3eNjh4NlpR/view" target="_blank">열기 ↗</a></td></tr>
-      <tr><td class="num">25</td><td class="tempttl">(임시) 질감처리 하면 안 돼 / 명암을 읽어라</td><td class="sec-s">46s</td><td><span class="chip c-wait">제목대기</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1F323JgIJ3LMrX9rZITPInKC10rqk0hhB/view" target="_blank">열기 ↗</a></td></tr>
-      <tr><td class="num">26</td><td>삼각칩으로 만드는 / 질감</td><td class="sec-s">47s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1_xf6paIxYsz_db0ztbDbe5l19wONfdpR/view" target="_blank">열기 ↗</a></td></tr>
-      <tr><td class="num">27</td><td>양과 부드러움</td><td class="sec-s">45s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1mUJmzkzWGkIa3n1ivlJZJWgt74JqqImT/view" target="_blank">열기 ↗</a></td></tr>
-      <tr><td class="num">28</td><td>질감가위, 몇 개? / 딱 두 개면 된다</td><td class="sec-s">40s</td><td><span class="chip c-review">검토중</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1foe3hJ1V1mStWUTtR0otILO26RgJw7rW/view" target="_blank">열기 ↗</a></td></tr>
-      <tr><td class="num">29</td><td class="tempttl">(임시) 머리엔 정답이 없다 / 보고 그때 바꾼다</td><td class="sec-s">50s</td><td><span class="chip c-wait">제목대기</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1pyKuWs2tt7vJXclI9Ze8i0qG7Sy73YJZ/view" target="_blank">열기 ↗</a></td></tr>
-    </tbody>
-  </table>
+<h3 class="sec">📁 자료 링크</h3>
+<div class="links">
+  <div class="lcard"><a href="https://drive.google.com/drive/folders/1mchAPVsCAluJv3uGDvFdGM0LEg4hlEo4" target="_blank">창엽_컨셉쇼츠_4K ↗</a><div class="d">v3 컨셉 쇼츠 전편(검수용 원본)</div></div>
+  <div class="lcard"><a href="https://drive.google.com/drive/folders/1OJBe1VhRAb8svXTXUUI1VKPOEFPUKz22" target="_blank">창엽_원본컷_알파컷용 ↗</a><div class="d">자막 없는 클린 원본컷(알파컷/오퍼스클립 입력)</div></div>
+  <div class="lcard"><a href="https://drive.google.com/drive/folders/1R683Gl1CD0eo9CIlotM5O6douGKoh1BZ" target="_blank">창엽_커트의정석(부모) ↗</a><div class="d">롱폼 완성본 EP1-3 + 알파컷용 클린</div></div>
+</div>
 
-  <div class="foot">
-    <p><b>📁 드라이브 폴더</b> 「창엽_컨셉쇼츠_4K」 — <a href="https://drive.google.com/drive/folders/1mchAPVsCAluJv3uGDvFdGM0LEg4hlEo4" target="_blank">전체 열기 ↗</a></p>
-    <p style="margin-top:8px"><b>🗑 삭제 7편</b> (형 지시): 01 무게감덜기 · 11 오버디렉션 · 12 라운드레이어 · 13 컨케이브 · 14 탑섹션체크 · 15 콘벡스 · 23 도해도라인.</p>
-    <p style="margin-top:8px"><b>🔄 최신 A방 작업</b> (상황판 7/31 14:26): 창엽 30편 <b>재렌더</b>(짧은 훅제목·페이드·하이패스) 진행. v3 규격 = 제목 노랑만·상단밴드 세로중앙 + 하단 음성자막 복원 · AT NOWN 아웃트로 · 4K 다운스케일(crf16) · 싱크 원천보장.</p>
-  </div>
-</body>
-</html>
+<h3 class="sec">전체 23편 · 상태표 <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--mut2)">(제목 클릭 아님 · 열기=드라이브 원본)</span></h3>
+<table>
+<thead><tr><th class="num">#</th><th>제목 (확정)</th><th class="sec-s">초</th><th>상태</th><th>드라이브</th></tr></thead>
+<tbody>
+<tr><td class="num">00</td><td>같은 커트인데 / 분위기가 다른 이유</td><td class="sec-s">—</td><td><span class="chip c-ok">형확정</span></td><td><span class="keep">기존 유지</span></td></tr>
+<tr><td class="num">02</td><td>밑에서부터 자르면 / 형태가 무너진다</td><td class="sec-s">—</td><td><span class="chip c-ok">형확정</span></td><td><span class="keep">기존 유지</span></td></tr>
+<tr><td class="num">03</td><td>기장은 비율이다</td><td class="sec-s">47s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1FZiu_vgnEbI-g0B9695bIv_Wg6Bk0V3W/view" target="_blank">열기 ↗</a></td></tr>
+<tr><td class="num">04</td><td>웨이트라인이 / 정말 중요</td><td class="sec-s">74s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1vyCXBTh-2fKVKOwbxGyVTWboC81C6EP9/view" target="_blank">열기 ↗</a></td></tr>
+<tr><td class="num">05</td><td>단발의 흐름</td><td class="sec-s">61s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/14paN1M4_3bdnNWVDc6QMEZLEjeocigjb/view" target="_blank">열기 ↗</a></td></tr>
+<tr><td class="num">06</td><td>고객이 원하는 / 인테리어</td><td class="sec-s">69s</td><td><span class="chip c-review">검토중</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1c-07Uubef69Jx5gdmzCphguXo47cww6Y/view" target="_blank">열기 ↗</a></td></tr>
+<tr><td class="num">07</td><td>스케치를 / 먼저 하자</td><td class="sec-s">53s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1YawMYkQDthDW5ENR9e11ZM7IomGfuT_s/view" target="_blank">열기 ↗</a></td></tr>
+<tr><td class="num">08</td><td>커트, / 에너지 배분</td><td class="sec-s">69s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1jJKL8qre1dzizhcgAsl9RLFlPZC8n89Q/view" target="_blank">열기 ↗</a></td></tr>
+<tr><td class="num">09</td><td>헤드포지션이 / 중요합니다</td><td class="sec-s">44s</td><td><span class="chip c-review">검토중</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1cQOpWV62KHfZCLD6UzSmHU1toBiRujqF/view" target="_blank">열기 ↗</a></td></tr>
+<tr><td class="num">10</td><td>가장 안정적인 / 오픈각 45도</td><td class="sec-s">48s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1vALx_FR3qexJ4N2gMHGvALh83kujn9-T/view" target="_blank">열기 ↗</a></td></tr>
+<tr><td class="num">16</td><td>질감과 양감</td><td class="sec-s">45s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1yEmBoObMJA-E4d2QQzEKu2W7T0KPOsbf/view" target="_blank">열기 ↗</a></td></tr>
+<tr><td class="num">17</td><td>곱슬머리에 틴닝가위? <span class="re">🔄재렌더</span></td><td class="sec-s">66s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1RH659LDdS3-Y2I6x0rB93S5EyqnWypj0/view" target="_blank">열기 ↗</a></td></tr>
+<tr><td class="num">18</td><td>스타일에 따른 / 에센스 사용법</td><td class="sec-s">52s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1fI9PP-sMMUMJmHRMjrKT_XVE6kx1sl4U/view" target="_blank">열기 ↗</a></td></tr>
+<tr><td class="num">19</td><td>끝이냐 중간이냐</td><td class="sec-s">52s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1DHhdSPO6AqIRW_Gk76jZloVyHJWgVEz6/view" target="_blank">열기 ↗</a></td></tr>
+<tr><td class="num">20</td><td>베이직의 오해 <span class="re">🔄재렌더</span></td><td class="sec-s">48s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1EEIgnYXUA1Kvlb-qc-LdKrf6QR1-Lkpm/view" target="_blank">열기 ↗</a></td></tr>
+<tr><td class="num">21</td><td>베이직 vs 디자인 <span class="re">🔄재렌더</span></td><td class="sec-s">46s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1AJRa5990YfTkDAbHb1Ew-163dIasAIq_/view" target="_blank">열기 ↗</a></td></tr>
+<tr><td class="num">22</td><td>모질 따라 독이 된다? <span class="re">🔄재렌더</span></td><td class="sec-s">45s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1zITi75WxGLvlmjAAwV2Ri7NFxEzs48q_/view" target="_blank">열기 ↗</a></td></tr>
+<tr><td class="num">24</td><td>삼각이냐 사각이냐 <span class="re">🔄재렌더</span></td><td class="sec-s">53s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1wyIkLGMFmBm5jjoYnRQsSU3eNjh4NlpR/view" target="_blank">열기 ↗</a></td></tr>
+<tr><td class="num">25</td><td>명암을 읽어라 <span class="re">🔄재렌더</span></td><td class="sec-s">46s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1F323JgIJ3LMrX9rZITPInKC10rqk0hhB/view" target="_blank">열기 ↗</a></td></tr>
+<tr><td class="num">26</td><td>삼각칩으로 만드는 / 질감</td><td class="sec-s">47s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1_xf6paIxYsz_db0ztbDbe5l19wONfdpR/view" target="_blank">열기 ↗</a></td></tr>
+<tr><td class="num">27</td><td>양과 부드러움</td><td class="sec-s">45s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1mUJmzkzWGkIa3n1ivlJZJWgt74JqqImT/view" target="_blank">열기 ↗</a></td></tr>
+<tr><td class="num">28</td><td>딱 두 개면 된다 <span class="re">🔄재렌더</span></td><td class="sec-s">40s</td><td><span class="chip c-review">검토중</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1foe3hJ1V1mStWUTtR0otILO26RgJw7rW/view" target="_blank">열기 ↗</a></td></tr>
+<tr><td class="num">29</td><td>보고 그때 바꾼다 <span class="re">🔄재렌더</span></td><td class="sec-s">50s</td><td><span class="chip c-ok">형확정</span></td><td><a class="lnk" href="https://drive.google.com/file/d/1pyKuWs2tt7vJXclI9Ze8i0qG7Sy73YJZ/view" target="_blank">열기 ↗</a></td></tr>
+</tbody>
+</table>
+
+<div class="foot">
+  <p><b>🔄재렌더</b> 표시 = 제목 새로 확정돼 본진 재렌더 필요한 편(8편). 나머지는 현재 화면 제목 그대로.</p>
+  <p style="margin-top:8px"><b>🗑 삭제 7편</b>: 01·11·12·13·14·15·23 (형 지시).</p>
+  <p style="margin-top:8px"><b>차노쌤 제목 규칙</b>: 임시 2줄 훅에서 위(설정/질문)줄 버리고 아래(결론)줄을 제목으로. 앞으로 제목 미지정 편 기본 적용.</p>
+</div>
+</body></html>
