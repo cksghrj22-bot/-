@@ -1,0 +1,176 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>앳나운 콘텐츠 시스템 구조도</title>
+<style>
+:root{--bg:#0e1116;--panel:#161b22;--panel2:#1c2430;--line:#2a3340;--tx:#e6edf3;--mut:#8b98a8;--mut2:#5f6b7a;
+--g:#3fb950;--y:#e3b341;--r:#f0574a;--b:#58a6ff;--acc:#f0b429;
+--gb:rgba(63,185,80,.13);--yb:rgba(227,179,65,.13);--rb:rgba(240,87,74,.13)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.55;padding:26px 18px 60px;max-width:1040px;margin:0 auto;-webkit-font-smoothing:antialiased}
+h1{font-size:22px;font-weight:800;letter-spacing:-.3px}
+.sub{color:var(--mut);font-size:13px;margin-top:5px}
+.banner{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid #3a4657;border-left:3px solid var(--acc);border-radius:12px;padding:14px 16px;margin:18px 0}
+.banner b{color:#fff}.banner .em{color:var(--acc);font-weight:800}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:16px 0 6px;font-size:12.5px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+.dg{background:var(--g)}.dy{background:var(--y)}.dr{background:var(--r)}
+h2.sec{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--mut);margin:26px 0 12px;font-weight:800}
+/* diagram */
+.flow{display:flex;flex-direction:column;align-items:center;gap:0}
+.node{width:100%;max-width:560px;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--mut2);border-radius:11px;padding:12px 15px;position:relative}
+.node.g{border-left-color:var(--g)}.node.y{border-left-color:var(--y)}.node.r{border-left-color:var(--r)}
+.node .t{font-weight:800;font-size:14.5px;display:flex;align-items:center;gap:8px}
+.node .d{color:var(--mut);font-size:12px;margin-top:3px}
+.node .st{position:absolute;top:12px;right:14px;font-size:11px;font-weight:700}
+.st.g{color:var(--g)}.st.y{color:var(--y)}.st.r{color:var(--r)}
+.arrow{color:var(--mut2);font-size:20px;line-height:1;margin:7px 0}
+.arrow small{font-size:11px;color:var(--mut);display:block;text-align:center;margin-top:-2px}
+.side{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;width:100%;max-width:560px;margin:7px 0}
+.snode{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--mut2);border-radius:10px;padding:9px 10px;text-align:center}
+.snode.y{border-top-color:var(--y)}.snode.g{border-top-color:var(--g)}
+.snode .t{font-weight:700;font-size:12.5px}.snode .s{font-size:10.5px;margin-top:2px}
+.s.g{color:var(--g)}.s.y{color:var(--y)}
+/* table */
+table{width:100%;border-collapse:collapse;font-size:13px;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--mut2);font-weight:700;padding:9px 11px;border-bottom:1px solid var(--line);background:#12171e}
+td{padding:9px 11px;border-bottom:1px solid #20272f;vertical-align:top}
+tr:last-child td{border-bottom:none}
+.chip{display:inline-block;font-size:10.5px;font-weight:800;padding:2px 7px;border-radius:5px;white-space:nowrap}
+.cg{background:var(--gb);color:var(--g)}.cy{background:var(--yb);color:var(--y)}.cr{background:var(--rb);color:var(--r)}
+.fix{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:14px 16px;margin-top:8px}
+.fix h3{font-size:13.5px;color:var(--acc);margin-bottom:8px}
+.fix ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.fix li{font-size:13px;padding-left:15px;position:relative;color:#dbe4ee}
+.fix li:before{content:"→";position:absolute;left:0;color:var(--acc);font-weight:800}
+.crit{border-left:3px solid var(--r)}
+.crit h3{color:var(--r)}
+.foot{margin-top:22px;color:var(--mut2);font-size:11.5px;border-top:1px solid var(--line);padding-top:14px}
+</style></head><body>
+<h1>앳나운 콘텐츠 시스템 — 구조도 &amp; 체크리스트</h1>
+<div class="sub">2026-08-06 · Cowork(이 방)에서 이어받아 점검 · 형: 씨앗 투입 + Yes/No</div>
+
+<div class="banner">
+  <b class="em">초록 = 내가 이 방에서 실제로 확인한 것만.</b> 저쪽 방이 "세팅했다"고 한 건데 이 방에서 확인 못 하면 <b>초록으로 안 칠하고 노랑(보고됨·미확인)</b>으로 뒀어. 형이 겪은 <b>"된다더니 멈춰있음"</b>은 안 된 걸 됐다고 칠해서 생기는 거라, 이 도면은 그걸 안 해. 🟡가 많은 건 이 방이 본진을 직접 못 봐서지, 안 됐다는 뜻이 아냐 — <b>확인 경로가 없다</b>는 뜻이야.
+</div>
+
+<div class="legend">
+  <span><i class="dot dg"></i> 이 방에서 확인함</span>
+  <span><i class="dot dy"></i> 보고됨 · 이 방에서 확인 불가(본진 접근 없음)</span>
+  <span><i class="dot dr"></i> 문제 · 막힘</span>
+</div>
+
+<h2 class="sec">메인 파이프라인 (씨앗 → 발행)</h2>
+<div class="flow">
+  <div class="node g"><span class="st g">확인</span><div class="t">🎬 형 (감독)</div><div class="d">씨앗 투입 + Yes/No 판정. 코워크에만 명령.</div></div>
+  <div class="arrow">↓<small>지시·씨앗</small></div>
+
+  <div class="node g"><span class="st g">확인</span><div class="t">🧠 Cowork = 이 방 (뇌·디렉터)</div><div class="d">기획·대본·첨삭·결정 박제 → 트렁크 커밋. 지금 개츠비 대본·제목·결정 다 여기서 처리·커밋됨.</div></div>
+  <div class="arrow">↓<small>git commit ✅ / push 🔴</small></div>
+
+  <div class="node r"><span class="st r">PUSH 막힘</span><div class="t">🌿 GitHub 트렁크 (정본, cksghrj22-bot/-)</div><div class="d">읽기·pull은 됨(최신 확인). <b>단, 이 방의 커밋 9개가 push 안 됨</b> — git 프록시가 세션 소스 미등록으로 차단. → 이 방 작업이 본진으로 못 건너감.</div></div>
+  <div class="arrow">↓<small>본진이 pull (확인 불가)</small></div>
+
+  <div class="node y"><span class="st y">미확인</span><div class="t">🖥 클로드코드방 (본진 렌더·발행 엔진)</div><div class="d">렌더·유튜브 발행 담당. 이 방에서 세션·실행 상태 확인 불가. ⚠️ 방금 그 방 세션은 30분+ 멈춤(hang) 목격.</div></div>
+  <div class="side">
+    <div class="snode y"><div class="t">⚙️ render_watch</div><div class="s y">스크립트 트렁크엔 있음 · 본진 loaded? 미확인</div></div>
+    <div class="snode y"><div class="t">🤖 Codex (양산)</div><div class="s y">codex_watch 트렁크에 없음 · 미확인</div></div>
+    <div class="snode y"><div class="t">🎞 하니스(연속TTS·BGM)</div><div class="s y">수정본 트렁크 미반영 · 본진 전용</div></div>
+  </div>
+  <div class="arrow">↓<small>산출물 업로드</small></div>
+
+  <div class="node y"><span class="st y">부분확인</span><div class="t">📁 Google Drive (브릿지·산출물·B롤 인트레이)</div><div class="d">본진↔코드방 파일 다리 + 완성본 _최신_바로보기. 공개링크 다운로드는 이 방에서 됨(개츠비 프레임 떠봄). 폴더 직접 연결은 없음.</div></div>
+  <div class="arrow">↓<small>예약 발행</small></div>
+
+  <div class="node y"><span class="st y">미확인</span><div class="t">▶️ YouTube (발행, OAuth=본진)</div><div class="d">예약·공개는 본진 토큰. 이 방엔 유튜브 토큰 없음 → 예약 홀드도 형/본진이 직접 함(8/5 2건 홀드 완료).</div></div>
+</div>
+
+<h2 class="sec">사이드 시스템 (지식·목소리·명령)</h2>
+<div class="side" style="max-width:100%;grid-template-columns:repeat(3,1fr)">
+  <div class="snode r"><div class="t">🗣 ElevenLabs (TTS)</div><div class="s" style="color:var(--r)">⚠️ 보이스ID 충돌: 쓴 값 6bJj… vs AGENTS 정본 HrLa…(Creator chan). 형=current 맞다 확정 → 정본 문서 정정 필요</div></div>
+  <div class="snode y"><div class="t">📓 Obsidian (볼트)</div><div class="s y">드라이브 미러 경유. 연결지도 ✅(구). 이 방 확인 불가</div></div>
+  <div class="snode y"><div class="t">📗 Notion (허브·상태판)</div><div class="s y">MCP는 이 세션에 연결됨 · 아직 점검 안 함</div></div>
+  <div class="snode y"><div class="t">💬 Discord (명령 레인)</div><div class="s y">웹훅 나감 ✅(구) · 이 세션 수신 ❌(읽기 릴레이 필요)</div></div>
+  <div class="snode y"><div class="t">🎥 Creator OS (본진 영상봇)</div><div class="s y">디스코드 명령 실행 엔진. 본진 전용 · 이 방 확인 불가</div></div>
+  <div class="snode y"><div class="t">🖱 데스크톱 앱 브릿지</div><div class="s" style="color:var(--r)">본진 직접 통로 · 앱 슬립 시 끊김(오늘 끊김 목격)</div></div>
+</div>
+
+<h2 class="sec">🔌 본진 연결 경로 (형 질문: "디스코드로 하면 되나?")</h2>
+<table>
+<thead><tr><th>경로</th><th>방향</th><th>쓰임</th><th>상태</th></tr></thead>
+<tbody>
+<tr><td>데스크톱 앱 브릿지</td><td>양방향(직접)</td><td>본진 셸·파일 직접</td><td><span class="chip cr">🔴 앱 슬립 시 끊김</span></td></tr>
+<tr><td>Discord 웹훅 → Creator OS</td><td>나감(Cowork→본진)</td><td><b>명령·알림 쏘기</b> (더 튼튼)</td><td><span class="chip cy">🟡 나감만 · 읽기 ❌</span></td></tr>
+<tr><td>GitHub 트렁크</td><td>양방향(비동기)</td><td>코드·대본·정본</td><td><span class="chip cr">🔴 이 방 push 막힘</span></td></tr>
+<tr><td>Google Drive</td><td>양방향(파일)</td><td>영상·B롤·산출물</td><td><span class="chip cy">🟡 폴더 미연결</span></td></tr>
+</tbody>
+</table>
+<div class="fix" style="margin-top:8px">
+  <h3>답: 디스코드는 "명령 레인"으로 채택 — 단 전체 대체는 아님</h3>
+  <ul>
+    <li><b>디스코드로 되는 것:</b> Cowork→본진 명령·알림(웹훅). 데스크톱 브릿지보다 안 끊겨서 명령 통로론 더 나음.</li>
+    <li><b>디스코드로 안 되는 것:</b> 결과 회신(이 세션 디스코드 읽기 ❌ → 노션/폴더/드라이브 릴레이 필요) · 파일 전송 · npm/셸.</li>
+    <li><b>완성형:</b> 명령=디스코드 · 파일=드라이브 · 코드/정본=트렁크 · 결과 읽기=릴레이. 이 넷이 같이 있어야 "된다더니 멈춤" 안 생김.</li>
+  </ul>
+</div>
+
+<h2 class="sec">🔎 오늘 그 방이 찾은 정정 (형 지적이 다 맞았음)</h2>
+<div class="fix crit">
+  <h3>왜 "잘된다더니" 실제로 안 됐나 — 체크리스트 구멍</h3>
+  <ul>
+    <li><b>BGM 무음 확정:</b> 아웃트로 −58~−66dB = 사실상 안 들림(합성패드 vol 0.08). → 형 결정: BGM=A(합성 크게 0.25). 진짜 음원(B)은 형이 파일 주면 교체.</li>
+    <li><b>보이스ID 어긋남:</b> 쓴 값이 정본과 다름. 형이 "current 맞다" 확정 → 어색함은 <b>비트별 분리 TTS→연속 read</b>로 해결(하니스 수정, 단 트렁크 미반영).</li>
+    <li><b>체크리스트가 못 걸른 이유:</b> "스트림 있나/플래그 켜졌나"만 봄. "실제 들리나/정본 보이스인가"는 안 봄. → 보강: 아웃트로 볼륨 FAIL 검사 + 보이스ID 일치 검사.</li>
+  </ul>
+</div>
+
+<h2 class="sec">부품 · 브릿지 체크리스트</h2>
+<table>
+<thead><tr><th>대상</th><th>역할</th><th>상태</th><th>근거 / 남은 것</th></tr></thead>
+<tbody>
+<tr><td>형 → Cowork</td><td>씨앗·지시</td><td><span class="chip cg">🟢 확인</span></td><td>이 대화</td></tr>
+<tr><td>Cowork (이 방)</td><td>뇌·대본·결정</td><td><span class="chip cg">🟢 확인</span></td><td>개츠비 대본·제목·결정 커밋됨</td></tr>
+<tr><td>Cowork → 트렁크 (commit)</td><td>정본 기록</td><td><span class="chip cg">🟢 확인</span></td><td>로컬 커밋 9개 쌓임</td></tr>
+<tr><td>Cowork → 트렁크 (push)</td><td>본진에 전달</td><td><span class="chip cr">🔴 막힘</span></td><td>프록시 차단 — 세션 소스 등록 필요</td></tr>
+<tr><td>트렁크 → 본진 (pull)</td><td>본진 최신화</td><td><span class="chip cy">🟡 미확인</span></td><td>본진이 pull 하는지 못 봄</td></tr>
+<tr><td>render_watch (디스패처)</td><td>렌더잡 자동 집기</td><td><span class="chip cy">🟡 미확인</span></td><td>스크립트는 트렁크에 있음 · 본진 가동 여부 확인 불가 (수동 dispatch 금지)</td></tr>
+<tr><td>Codex 자동실행기</td><td>양산 손</td><td><span class="chip cy">🟡 미확인</span></td><td>codex_watch가 트렁크에 없음(본진 전용)</td></tr>
+<tr><td>렌더 하니스(연속TTS·BGM boost)</td><td>영상 생성</td><td><span class="chip cy">🟡 미확인</span></td><td>트렁크엔 '연속 base'만 · boost(loud_max) 미반영 = 본진 전용</td></tr>
+<tr><td>ElevenLabs / Obsidian</td><td>목소리 / 볼트</td><td><span class="chip cy">🟡 미확인</span></td><td>연결지도 ✅(구) · 이 방 확인 경로 없음</td></tr>
+<tr><td>Notion 허브</td><td>정본 상태</td><td><span class="chip cy">🟡 미점검</span></td><td>MCP는 이 세션에 붙어있음 → 원하면 지금 점검 가능</td></tr>
+<tr><td>YouTube 발행</td><td>공개·예약</td><td><span class="chip cy">🟡 미확인</span></td><td>본진 OAuth 전용</td></tr>
+</tbody>
+</table>
+
+<h2 class="sec">기존 대비 변경점 · 좋고/나쁨 · 수정안</h2>
+<div class="fix">
+  <h3>바뀐 것 (그 방이 밤샘으로 세운 것)</h3>
+  <ul>
+    <li><b>연속 TTS + BGM boost 하니스</b> — 좋음: 문장 뚝뚝 끊김(띄어쓰기 어색) 해결, 자연스러운 호흡. 나쁨/리스크: <b>수정본이 트렁크에 없음(본진 전용)</b> → 백업 안 됨, 본진 리셋되면 소실.</li>
+    <li><b>렌더엔진 ffmpeg + Remotion 병용</b> — 매니페스트가 메시지 중요도로 렌더러 선택(결정 박제 완료). 도형 애니 완성도 문제(8/5)는 Remotion 라인으로 해결 방향.</li>
+    <li><b>Codex 자동실행기</b> — 형→Cowork→_codex_inbox→Codex 실행 구조. 리스크: 스크립트 트렁크에 없어 검증·백업 불가.</li>
+  </ul>
+</div>
+<div class="fix">
+  <h3>이렇게 수정하겠다</h3>
+  <ul>
+    <li>본진의 <b>하니스 수정본 + codex_watch</b>를 <b>트렁크에 push</b> → 백업되고, 이 방이 실물로 검증 가능 → 도면이 초록으로 바뀜.</li>
+    <li>이 방 커밋 9개가 막힌 근본 = <b>세션 소스 미등록</b> → 등록하면 양방향 동기화 열림.</li>
+  </ul>
+</div>
+
+<h2 class="sec">🔴 핵심 병목 (형이 겪은 "된다더니 멈춤"의 진짜 원인)</h2>
+<div class="fix crit">
+  <h3>이 방 ↔ 본진 동기화가 반쪽이다</h3>
+  <ul>
+    <li>이 방은 커밋해도 <b>push 못 함</b>(프록시) → 내 작업이 본진으로 안 감.</li>
+    <li>본진 최신(하니스·codex·렌더결과)은 <b>트렁크로 안 올라옴</b> → 이 방이 못 봄.</li>
+    <li>그래서 두 방이 서로의 진짜 상태를 못 보고, "됐다"고 말하는데 실제로는 저쪽에서 멈춰 있음.</li>
+    <li><b>진짜 해결 2가지: ① 세션 소스에 리포 등록(이 방 push 열림) ② 본진이 하니스·codex·렌더결과를 트렁크에 push(이 방이 봄).</b> 이거 되면 이 구조도가 실시간으로 초록이 되고, 다시는 "된다더니 멈춤"이 안 생겨.</li>
+  </ul>
+</div>
+
+<div class="foot">
+  근거: 이 방 git fetch/log(트렁크 tip 8a64342), scripts·shorts 파일 목록, 연결지도.md(정본, 구 ✅), 세션 내 목격(저쪽 방 hang). 초록 외 항목은 이 방에서 확인 경로가 없어 미확인으로 둠 — 확인되는 대로 초록 전환.
+</div>
+</body></html>
