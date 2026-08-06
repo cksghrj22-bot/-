@@ -1,0 +1,86 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>앳나운 콘텐츠 조직도</title>
+<style>
+:root{--bg:#0e1116;--panel:#161b22;--panel2:#1c2430;--line:#2a3340;--tx:#e6edf3;--mut:#8b98a8;--mut2:#5f6b7a;
+--cow:#3fb950;--cod:#58a6ff;--os:#bc8cff;--home:#e3b341;--dir:#f0b429;--r:#f0574a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.5;padding:26px 18px 60px;max-width:1000px;margin:0 auto}
+h1{font-size:22px;font-weight:800;letter-spacing:-.3px}
+.sub{color:var(--mut);font-size:13px;margin-top:5px}
+h2.sec{font-size:12.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--mut);margin:26px 0 12px;font-weight:800}
+.tree{display:flex;flex-direction:column;align-items:center}
+.dirnode{background:linear-gradient(180deg,#2a2410,#161b22);border:1px solid var(--dir);border-radius:12px;padding:12px 18px;text-align:center;max-width:420px}
+.dirnode .t{font-weight:800;font-size:15px;color:var(--dir)}
+.dirnode .d{font-size:12px;color:var(--mut);margin-top:2px}
+.vbar{width:2px;height:18px;background:var(--line)}
+.cownode{background:var(--panel);border:1px solid var(--cow);border-radius:12px;padding:14px 16px;max-width:560px;width:100%}
+.cownode .t{font-weight:800;font-size:15px;color:var(--cow);display:flex;align-items:center;gap:8px}
+.cownode .badge{font-size:10px;font-weight:800;background:rgba(63,185,80,.16);color:var(--cow);border:1px solid rgba(63,185,80,.35);padding:2px 7px;border-radius:6px}
+.cownode .d{font-size:12.5px;color:#dbe4ee;margin-top:5px}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:720px;margin-top:6px}
+.unit{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--mut2);border-radius:11px;padding:11px 12px}
+.unit.cod{border-top-color:var(--cod)}.unit.home{border-top-color:var(--home)}.unit.os{border-top-color:var(--os)}
+.unit .t{font-weight:800;font-size:13px}
+.unit .role{font-size:11.5px;color:var(--mut);margin-top:2px}
+.unit .chk{font-size:11px;color:#cdd6e0;margin-top:6px;line-height:1.45}
+.unit.home .warn{color:var(--r);font-size:10.5px;font-weight:700;margin-top:4px}
+table{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--mut2);font-weight:700;padding:9px 11px;border-bottom:1px solid var(--line);background:#12171e}
+td{padding:9px 11px;border-bottom:1px solid #20272f;vertical-align:top}
+tr:last-child td{border-bottom:none}
+td b{color:#fff}
+.crit{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid #4a2b2b;border-left:3px solid var(--r);border-radius:12px;padding:14px 16px}
+.crit h3{color:var(--r);font-size:14px;margin-bottom:8px}
+.crit ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.crit li{font-size:12.5px;padding-left:15px;position:relative;color:#dbe4ee}
+.crit li:before{content:"→";position:absolute;left:0;color:var(--r);font-weight:800}
+.crit b{color:#fff}
+.foot{margin-top:20px;color:var(--mut2);font-size:11.5px;border-top:1px solid var(--line);padding-top:12px}
+@media(max-width:620px){.row{grid-template-columns:1fr}}
+</style></head><body>
+<h1>앳나운 콘텐츠 — 조직도 · 업무범위 · 인계</h1>
+<div class="sub">2026-08-06 · 형=씨앗+yes/no · 정본: pipeline/조직_체크리스트_비상.md</div>
+
+<h2 class="sec">조직 트리</h2>
+<div class="tree">
+  <div class="dirnode"><div class="t">🎬 감독 (차노/형)</div><div class="d">씨앗 투입 · yes/no · 창의 갈림만. 클립찾기·설정·렌더는 전부 위임.</div></div>
+  <div class="vbar"></div>
+  <div class="cownode"><div class="t">🧠 Cowork <span class="badge">현재 주력 · 렌더까지 가동</span></div>
+    <div class="d">뇌·디렉터. 기획·대본·첨삭·결정 박제 · <b>자산 드라이브 자가탐색</b> · ffmpeg 렌더 · 트렁크 커밋 · 형 창구.<br>체크: pull→자산검색→규격8 PASS·BGM −45dB↑·보이스 6bJj→드라이브 업로드→커밋·하트비트.</div>
+  </div>
+  <div class="vbar"></div>
+  <div class="row">
+    <div class="unit cod"><div class="t">🤖 Codex</div><div class="role">코드 손 (복잡·벌크)</div><div class="chk">`_codex_inbox` 브리프 수령 → 실행 → `_cowork_sync` 회신 · 첫 실행 로그 검증</div></div>
+    <div class="unit home"><div class="t">🖥 코드방(본진)</div><div class="role">밤샘 렌더·유튜브 발행</div><div class="chk">render_watch 나이틀리 대량 렌더 · 발행</div><div class="warn">⚠️ 현재 불안정(hang) → 백업</div></div>
+    <div class="unit os"><div class="t">🎥 Creator OS</div><div class="role">본진 디스코드 영상봇</div><div class="chk">디스코드 명령 실행 · 켄번스 프리미엄 · 발행은 승인 후</div></div>
+  </div>
+</div>
+
+<h2 class="sec">브릿지 핸드오프 체크리스트 (정보 넘어갈 때 "완벽" 기준)</h2>
+<table>
+<thead><tr><th>브릿지</th><th>넘길 때 반드시</th><th>받는 쪽 검증</th></tr></thead>
+<tbody>
+<tr><td>Cowork → 트렁크</td><td>커밋 메시지 명확 · <b>secrets 미포함</b></td><td>push 성공(or 막힘 기록)</td></tr>
+<tr><td>Cowork → Codex</td><td>목표·입력·기대출력·검증법·경로</td><td>첫 실행 로그로 명령 확인</td></tr>
+<tr><td>Cowork → Creator OS</td><td>명령 1줄 + 드라이브 링크 + 발행여부</td><td>실행 결과 회신</td></tr>
+<tr><td>트렁크 → 본진</td><td>최신 tip 기준</td><td>충돌 시 최신 살리고 재적용</td></tr>
+<tr><td>산출물 → 드라이브</td><td><b>발행본/시안 표기</b> · _최신_바로보기</td><td>링크 열림 확인</td></tr>
+<tr><td>결과 → Cowork</td><td><b>실제 파일·로그(주장 아님)</b> · 오디오/폰트 실측</td><td>Cowork 더블체크</td></tr>
+</tbody>
+</table>
+
+<h2 class="sec">🔴 비상 인계 (33시간 갭 → 20분)</h2>
+<div class="crit">
+  <h3>방이 멈춰도 다른 방이 즉시 이어받는 법</h3>
+  <ul>
+    <li><b>하트비트</b>: 모든 방이 스텝마다 <b>pipeline/_ROOM_HEARTBEAT.md</b>에 {방·시각·현재작업·안전상태·다음스텝} 갱신+push.</li>
+    <li><b>인계 규칙</b>: 대기 방이 pull → 하트비트 <b>20분 이상 stale이면 "다음 스텝"부터</b> 이어받음.</li>
+    <li><b>Cowork 예외</b>: push 막힘 → 하트비트를 <b>노션 명령버스에 미러</b>(push 없이 읽힘). 근본해결=세션 소스 등록.</li>
+    <li><b>산출물 안전</b>: 완성 영상은 <b>즉시 드라이브 업로드</b>(세션 초기화돼도 남음).</li>
+    <li><b>새 방 3줄 런북</b>: ①pull+하트비트·상황판 읽기 ②노션에서 secrets 복원 ③"다음 스텝"부터 실행.</li>
+  </ul>
+</div>
+
+<div class="foot">현재 하트비트: Cowork 가동 중(개츠비 실사 렌더 PASS·전달). 본진=33h 갭(백업). 정본 문서 pipeline/조직_체크리스트_비상.md·_ROOM_HEARTBEAT.md.</div>
+</body></html>
