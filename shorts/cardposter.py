@@ -1404,12 +1404,36 @@ def square_detail_spec() -> DetailSpec:
     )
 
 
+def sootchigi_detail_spec() -> DetailSpec:
+    # 숱쳐도 무거운 머리 — 숱치기=공간 이론(knowledge/블로그_숱치기는_공간.md·밤작업10 #3·#8 출처)
+    return DetailSpec(
+        series="숱치기는 공간이다",
+        foot="@차노쌤 · 앳나운은 숱을 치지 않고 공간을 디자인해요",
+        cover=None,
+        cards=[
+            DetailCard("숱치기 = 양 덜어내기", "숱은\n양이 아니에요", "배치의 문제예요", "scissors",
+                       "양만 줄이면 개수는 적어졌는데\n여전히 무겁고 눌려요.\n숱은 양이 아니라\n어디를 남기고 비울지 '배치'예요."),
+            DetailCard("볼륨 = 숱 많이", "볼륨은\n공간에서 나와요", "사이가 떠야 흔들려요", "hd_space",
+                       "머리가 안 흔들리는 건\n숱이 많아서가 아니라 공간이 없어서예요.\n사이사이 살짝 뜨는 공간이 생겨야\n그 자리에서 머리가 움직여요."),
+            DetailCard("가위는 아무 데나", "가위는\n설계예요", "각도가 공간을 만들어요", "angle",
+                       "아무 데나 넣으면 겉은 그대로\n속만 비어 안에서 주저앉아요.\n어디에 어떤 각도로 넣느냐가\n공간을 만들어요."),
+            DetailCard("숱 치면 = 가벼움", "가벼움은\n흔들림이에요", "공간이 찰랑을 만들어요", "wave",
+                       "공간이 생기면 공기가 들어가고\n공기가 들어가면 머리가 움직여요.\n움직이는 머리가\n살아 보이고 찰랑거려요."),
+            DetailCard("치면 또 무거워짐", "설계하면\n오래가요", "쉽게 안 무너져요", "hd_layers",
+                       "양만 줄이면 금방 또 무거워져요.\n공간을 설계해서 자르면\n스타일이 쉽게 안 무너지고\n오래 자연스러워요."),
+            DetailCard("'숱 쳐주세요'", "말은\n결과로 하세요", "움직이는 머리로", "hd_space",
+                       "'숱 쳐주세요' 대신\n'가볍고 자연스럽게 움직이는\n머리로 만들고 싶어요'라고 말해요.\n앳나운은 숱을 치지 않고 공간을 디자인해요."),
+        ],
+    )
+
+
 SPECS = {"demo": demo_spec, "danbal": danbal_spec, "longface": longface_spec,
          "square": square_spec}
 ZINE_SPECS = {"mix": mix_spec, "mix2": mix2_spec}
 MAP_SPECS = {"coolchic": coolchic_designmap}
 DETAIL_SPECS = {"mixdetail": mix_detail_spec, "longfacedetail": longface_detail_spec,
-                "mix2detail": mix2_detail_spec, "squaredetail": square_detail_spec}
+                "mix2detail": mix2_detail_spec, "squaredetail": square_detail_spec,
+                "sootchigidetail": sootchigi_detail_spec}
 
 if __name__ == "__main__":
     out = sys.argv[1] if len(sys.argv) > 1 else "/tmp/cardposter.png"
