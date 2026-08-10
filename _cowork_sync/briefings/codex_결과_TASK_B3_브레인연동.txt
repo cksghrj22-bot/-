@@ -1,0 +1,71 @@
+# TASK B3 — 브레인 상시 연동 결과
+작성일시: 2026-08-08 01:15:41 +0900
+
+## 볼트 경로
+/Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트
+
+## 작업 파일
+- 스크립트: /Users/chanho/atnown-content-pipeline/scripts/brain_sync.sh
+- LaunchAgent: /Users/chanho/Library/LaunchAgents/com.atnown.brainsync.plist
+
+## 복사된 파일 목록 / 검증 ls -la
+ls: /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트/차노_배치규칙_정본.md: No such file or directory
+-rw-------@ 1 chanho  staff  64040 Aug  8 01:14 /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트/차노_결정사항_대장.md
+-rw-------@ 1 chanho  staff   3374 Aug  8 01:14 /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트/차노_단축어.md
+-rw-------@ 1 chanho  staff   3573 Aug  8 01:14 /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트/차노_브레인_생각의흐름.md
+-rw-------@ 1 chanho  staff  14188 Aug  8 01:14 /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트/차노_왜사전.md
+
+## 소스 파일 상태
+FOUND pipeline/왜_사전.md
+FOUND pipeline/브레인_생각의흐름.md
+MISSING pipeline/배치_규칙_정본.md
+FOUND pipeline/단축어.md
+FOUND knowledge/결정사항_대장.md
+
+## launchctl 등록 결과
+bootstrap gui/501 /Users/chanho/Library/LaunchAgents/com.atnown.brainsync.plist => BOOTSTRAP_RC=0
+kickstart -k gui/501/com.atnown.brainsync => KICKSTART_RC=0
+-	0	com.atnown.brainsync
+
+## 최근 동기화 로그
+[2026-08-08 01:14:22 +0900] START brain sync
+From https://github.com/cksghrj22-bot/-
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[2026-08-08 01:14:23 +0900] VAULT /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트
+[2026-08-08 01:14:23 +0900] OK pipeline/왜_사전.md -> /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트/차노_왜사전.md
+[2026-08-08 01:14:23 +0900] OK pipeline/브레인_생각의흐름.md -> /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트/차노_브레인_생각의흐름.md
+[2026-08-08 01:14:23 +0900] 없음 pipeline/배치_규칙_정본.md -> 차노_배치규칙_정본.md
+[2026-08-08 01:14:23 +0900] OK pipeline/단축어.md -> /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트/차노_단축어.md
+[2026-08-08 01:14:23 +0900] OK knowledge/결정사항_대장.md -> /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트/차노_결정사항_대장.md
+[2026-08-08 01:14:23 +0900] END brain sync
+[2026-08-08 01:14:43 +0900] START brain sync
+From https://github.com/cksghrj22-bot/-
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[2026-08-08 01:14:43 +0900] VAULT /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트
+[2026-08-08 01:14:43 +0900] FAIL copy pipeline/왜_사전.md -> /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트/차노_왜사전.md
+[2026-08-08 01:14:43 +0900] FAIL copy pipeline/브레인_생각의흐름.md -> /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트/차노_브레인_생각의흐름.md
+[2026-08-08 01:14:43 +0900] 없음 pipeline/배치_규칙_정본.md -> 차노_배치규칙_정본.md
+[2026-08-08 01:14:43 +0900] FAIL copy pipeline/단축어.md -> /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트/차노_단축어.md
+[2026-08-08 01:14:43 +0900] FAIL copy knowledge/결정사항_대장.md -> /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트/차노_결정사항_대장.md
+[2026-08-08 01:14:43 +0900] END brain sync
+[2026-08-08 01:15:14 +0900] START brain sync
+From https://github.com/cksghrj22-bot/-
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[2026-08-08 01:15:14 +0900] VAULT /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트
+[2026-08-08 01:15:14 +0900] FAIL copy pipeline/왜_사전.md -> /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트/차노_왜사전.md
+[2026-08-08 01:15:14 +0900] FAIL copy pipeline/브레인_생각의흐름.md -> /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트/차노_브레인_생각의흐름.md
+[2026-08-08 01:15:14 +0900] 없음 pipeline/배치_규칙_정본.md -> 차노_배치규칙_정본.md
+[2026-08-08 01:15:14 +0900] FAIL copy pipeline/단축어.md -> /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트/차노_단축어.md
+[2026-08-08 01:15:14 +0900] FAIL copy knowledge/결정사항_대장.md -> /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트/차노_결정사항_대장.md
+[2026-08-08 01:15:14 +0900] END brain sync
+
+## 실패 항목과 에러 원문
+- 누락: pipeline/배치_규칙_정본.md (트렁크에 없음, 요구대로 건너뜀)
+- LaunchAgent 실행 중 iCloud 볼트 덮어쓰기 실패:
+cp: /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트/차노_왜사전.md: Operation not permitted
+cp: /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트/차노_브레인_생각의흐름.md: Operation not permitted
+cp: /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트/차노_단축어.md: Operation not permitted
+cp: /Users/chanho/Library/Mobile Documents/iCloud~md~obsidian/Documents/앳나운_옵시디언_볼트/차노_결정사항_대장.md: Operation not permitted
