@@ -1,6 +1,6 @@
 # 디스코드 #assistant 대화 (자동 동기화)
 
-_마지막 갱신: 2026-08-11 16:01:48 KST · 최근 100개 · 소스: Creator OS capture_events (SSOT)_
+_마지막 갱신: 2026-08-11 16:07:18 KST · 최근 100개 · 소스: Creator OS capture_events (SSOT)_
 
 ---
 
@@ -781,4 +781,28 @@ atnown-repo 도있는데 그건 거의 안물어보던데
 (참고로 정합 깨진 atnown-repo 는 나중에 따로 정리하는 걸 권해요 — 지금 브리지엔 영향 없어요.)
 
 *- Assistant thought for 71.4s. (Opus)*
+
+**[Assistant] (2026-08-11 16:03)**
+좋아요, **양쪽 · 5분 · atnown-trunk → GitHub** 확정. 지금 바로 만들게요.
+
+기존 자산(`discord_listen.py` 토큰 로딩 + REST 방식)을 재사용해서 브리지 스크립트 + 5분 워처를 붙이고, 실제로 첫 파일을 push 하는 것까지 테스트할게요.완성했어요. 실제로 push 까지 확인했어요. 🎉
+
+**만든 것**
+
+- `~/atnown-trunk/scripts/discord_to_cowork.py` — 대화 내보내기 + commit + push 스크립트
+- `~/atnown-trunk/_cowork_sync/discord_assistant_live.md` — 대화 산출물 (이 브리지 대화 포함, 차노쌤 + Assistant 양쪽, 시간순)
+- `~/Library/LaunchAgents/com.atnown.discord-cowork-sync.plist` — **5분 워처** (등록 완료, 즉시 1회 실행됨)
+
+**테스트 결과** — 파일 생성 O · 커밋 O · **GitHub push 성공 O** · 워처 등록 O. GitHub origin/main 과 완전 동기화(ahead 0) 상태예요.
+
+**클라우드 방이 읽을 경로** — `github.com/cksghrj22-bot/-` 안의 `_cowork_sync/discord_assistant_live.md` 예요. 이제 코워크 방이 `git pull` 하면 이 대화를 그대로 읽어요.
+
+**설계 하나 바꾼 점 (정직하게)** — 원래 계획은 bot 토큰으로 디스코드를 직접 읽는 거였는데, 그 토큰이 **이 맥엔 없더라고요**(클라우드 방에만 있음). 대신 본진 Creator OS 가 이미 이 채널을 실시간으로 쌓아두는 **로컬 DB(`capture_events`)** 를 소스로 썼어요 — 봇 토큰 없이 양쪽 발화를 다 뽑고, 기존 패턴과도 맞아서 오히려 더 깔끔해요.
+
+**정리**
+
+- 지금부터 이 #assistant 대화는 **5분마다 자동으로 GitHub 에 올라가요.** 방이 pull 만 하면 끝이에요.
+- 지금은 **한 방향**(방이 읽기)이에요. 방이 답을 되돌려 이 채널에 자동으로 올리는 **양방향**까지 원하시면, 기존 `discord_notify.py`(webhook 발송)를 엮어서 확장할게요 — 필요하면 말씀만 주세요.
+
+*- Assistant thought for 264.4s. (Opus)*
 
