@@ -464,3 +464,11 @@
 ===== bridge end =====
 ===== 2026-08-12 11:35:14 bridge start =====
 ===== bridge end =====
+===== 2026-08-12 11:40:15 bridge start =====
+[bridge] forward leg 실패(rc=1)
+===== bridge end =====
+===== 2026-08-12 11:45:16 bridge start =====
+===== bridge end =====
+===== 2026-08-12 11:50:16 bridge start =====
+[bridge] forward leg 실패(rc=1)
+===== bridge end =====
