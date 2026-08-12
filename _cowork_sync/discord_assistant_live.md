@@ -1,6 +1,6 @@
 # 웹·디스코드 #assistant 대화 (자동 동기화)
 
-_마지막 갱신: 2026-08-12 15:10:41 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
+_마지막 갱신: 2026-08-12 15:15:43 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
 _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합, 각 발화 앞 `[디코]`/`[웹]` 표기_
 
 ---
@@ -74,205 +74,6 @@ _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합,
 - 5분 주기 워처(`com.atnown.discord-cowork-sync`)가 다음 사이클부터 자동으로 웹까지 실어 보내요
 
 **한 가지 참고** — `logs/discord_cowork_sync.*.log` 두 파일이 git에 추적돼 있어서 워처가 돌 때마다 "변경됨"으로 떠서 rebase를 살짝 방해해요. 지금 동작엔 지장 없지만, 원하시면 이 로그를 gitignore로 빼서 깔끔하게 정리해드릴까요?
-
-**[디코] [Assistant] (2026-08-12 14:45)**
-천천히 하나씩 풀어드릴게요, ì°¨ë¸ì¤님.
-
-**먼저 "방"이 뭔지부터**
-
-지금 우리가 대화하는 여기(디스코드)도 하나의 "방"이에요. 저녁 10시에 열자고 한 **본진 터미널 클로드코드방**은, 스튜디오 맥 컴퓨터에서 직접 여는 또 다른 클로드 작업방이에요.
-
-- 디스코드 방 = 비서처럼 대화·지시하는 곳
-- 터미널 방 = 컴퓨터 안에서 파일 직접 만들고 코드 돌리는, 손이 더 센 작업방
-
-블로그 파서 자동화 같은 **진짜 build 작업**은 손이 센 터미널 방에서 하는 게 맞아서 저녁에 그걸 열자고 한 거예요.
-
-**"배선을 짠다"가 무슨 뜻이냐면**
-
-방을 새로 열면 그 방은 **아무것도 모르는 백지 상태**예요. 우리가 지금까지 나눈 얘기(어떤 원고를 기준으로 할지, 태그 규격이 뭔지)를 그 방은 몰라요.
-
-그래서 방을 열 때마다 "이번엔 이 작업을 할 거고, 필요한 재료는 이것들이야" 하고 **연결을 처음부터 다시 이어줘야** 해요. 이걸 배선 짠다고 표현한 거예요.
-
-**그럼 실제로 뭘 하면 되냐면 — 3단계**
-
-- **① 방 열기** — 터미널 앱을 켜고, 블로그 작업 폴더로 들어가서 `claude` 라고 입력해요. 그러면 그 폴더 기준으로 새 방이 떠요.
-
-- **② 재료 붙여넣기** — 방이 열리면 제가 준비해둔 인수인계 메모(레퍼런스 원고 위치 · 태그 규격 · 큐 폴더 · 네이버 프로필)를 그대로 붙여넣어요. 이게 배선이에요.
-
-- **③ 점검 후 시작** — 스크립트랑 프로필이 살아있는지 먼저 확인하고, 그다음 파서 자동화 build 를 시작해요.
-
-여기까지가 전체 그림이에요. 지금 막히는 지점이 **"터미널 여는 것 자체"**인지, **"어느 폴더로 들어가는지"**인지, 아니면 **"붙여넣을 재료가 뭔지"**인지 하나만 짚어주시면 딱 그 부분만 더 자세히 안내해드릴게요.
-
-*- Assistant thought for 22.7s. (Opus)*
-
-**[디코] [Assistant] (2026-08-12 14:47)**
-잘 하고 계세요, ì°¨ë¸ì¤님! 지금 **Claude Code 방이 제대로 열렸어요.** 로그인 방식 고르는 화면이에요.
-
-**여기서 할 것 — 1번 선택**
-
-- 화살표(`>`)가 이미 **1번 `Claude account with subscription`** 에 가 있어요
-- 그냥 **엔터(Return)** 누르면 돼요 (구독 계정으로 로그인하는 방식이라 이게 맞아요)
-- 2번(API 과금)·3번(외부 플랫폼)은 안 골라요
-
-**엔터 누르면 이어서**
-
-- 브라우저가 자동으로 열려요
-- Anthropic 계정으로 **로그인/승인** 한 번 하면
-- 다시 터미널로 돌아와서 방이 완전히 준비돼요
-
-로그인까지 끝나면 화면이 어떻게 바뀌는지 캡처해서 보내주세요. 그다음 **인수인계 재료 붙여넣는 단계**로 바로 안내해드릴게요.
-
-*- Assistant thought for 14.4s. (Opus)*
-
-**[디코] [Assistant] (2026-08-12 14:49)**
-로그인 완료됐어요, ì°¨ë¸ì¤님. **"Claude Code 설정이 완료되었습니다"** 화면이 뜨면 인증이 제대로 붙은 거예요.
-
-**지금 할 일**
-
-- 이 브라우저 창은 닫으셔도 돼요 (안내대로)
-- 아까 열어둔 **터미널 창**으로 돌아가세요
-- 거기 `claude` 방이 이제 입력 받을 준비가 됐을 거예요 (프롬프트 커서 깜빡이는 상태)
-
-**다음 단계 — 인수인계 재료 붙여넣기**
-
-새로 연 방은 백지 상태라, 블로그 파서 작업에 필요한 배선을 한 번에 붙여넣어 줘야 해요. 아래 내용을 그대로 복사해서 터미널 방에 붙여넣으시면 돼요.
-
-> 블로그 파서 자동화 작업을 이어서 진행하려고 해. 배선 정보는 이래:
-> - 작업 폴더: `~/atnown-content-pipeline`
-> - 큐 폴더: `_blog_queue/`
-> - 태그 규격: `[H]` 제목 / `[B]` 본문 / `[QUOTE]` 인용 / `[IMG:NN]` 이미지
-> - 발행처: 네이버 무인 프로필
->
-> 먼저 작업 폴더 구조랑 기존 파서 코드 상태부터 파악하고 알려줘.
-
-붙여넣고 나면 그 방이 폴더를 훑어보고 현재 상태를 정리해 줄 거예요.
-
-터미널 방이 응답을 주면 그 화면 캡처해서 보내주세요 — 이어서 방향 잡아드릴게요. 혹시 폴더 경로나 레퍼런스 원고 위치가 예시랑 다르면 그것부터 알려주시면 재료를 맞춰서 다시 짜드릴게요.
-
--# 💾 대화가 길어져서 직전 내용을 요약으로 정리했어요. 혹시 빠진 맥락이 있으면 짧게 알려주세요.
-
-*- Assistant thought for 32.5s. (Opus)*
-
-**[디코] [차노스] (2026-08-12 14:51)**
-클로드 코드는 완전히 클로드 요 창이라는 다른거네? 터미널을 통해서만 하는거야?
-
-**[디코] [Assistant] (2026-08-12 14:52)**
-맞아요, ì°¨ë¸ì¤님. 정확히 이해하셨어요.
-
-**Claude Code = 터미널 안에서 도는 다른 방이에요**
-
-- 지금 저(디스코드 Assistant)랑 대화하는 이 창과는 **별개의 클로드**예요
-- 같은 클로드 두뇌를 쓰지만 **사는 집이 달라요** — 저는 디스코드 안, 걔는 터미널 안
-- 터미널에 `claude` 치고 들어간 그 방이 바로 Claude Code예요
-
-**왜 굳이 터미널 방을 따로 쓰냐면**
-
-- 이 디스코드 방은 **비서형** — 대화하고 지시받고 정리해주는 데 강해요
-- 터미널 방은 **손이 센 작업방** — 실제로 폴더 열고, 파일 만들고, 코드 실행하고, 저장해요
-- 블로그 파서 자동화처럼 **진짜 파일을 만지고 코드를 돌리는 작업**은 터미널 방이 제격이에요
-
-**정리하면**
-
-- 저 = 방향 잡고 대화하는 비서 (디스코드)
-- Claude Code = 실제로 만드는 작업자 (터미널)
-- 지금은 **터미널을 통해서** 접속하는 게 맞아요
-
-그래서 블로그 파서 작업은 터미널 방에서 진행하고, 저는 여기서 재료 챙겨주고 방향 잡아드리는 역할이에요.
-
-터미널 방으로 돌아가서 아까 그 인수인계 재료 붙여넣으셨나요? 붙여넣으면 걔가 폴더 훑어보고 상태를 정리해 줄 거예요.
-
-*- Assistant thought for 29.0s. (Opus)*
-
-**[디코] [차노스] (2026-08-12 14:53)**
-저쪽은 너가 좀 코드를 주든 해라 내가 코드는 잘 몰라서
-
-**[디코] [Assistant] (2026-08-12 14:53)**
-터미널 방이 상태 파악을 아주 깔끔하게 해줬네요, ì°¨ë¸ì¤님. 이게 딱 우리가 원하던 그림이에요.
-
-**걔가 정리한 내용 — 맞아요**
-
-- **이미 있는 것**: 네이버 로그인 세션(`_naver_profile/`), Playwright 임시저장 자동화 스크립트, 발행 대기 콘텐츠
-- **빠진 것**: 우리가 만들려던 바로 그 3개 — 큐 폴더 `_blog_queue/`, 태그 규격 파서(`[H]/[B]/[QUOTE]/[IMG:NN]`), 큐→발행 흐름 자동화
-
-**핵심 진단 하나**
-
-- 지금 파서가 **하드코딩된 파일명**(`매직_흔한오해_제목.txt` 식)이라 콘텐츠 하나 바뀔 때마다 손대야 해요
-- 이걸 **태그 규격 파서**로 바꾸면 파일 하나에 `[H]제목 [B]본문 [IMG:01]` 넣기만 하면 자동으로 읽혀요 — 이게 자동화의 핵심이에요
-
-**다음 단계 — 그대로 진행하면 돼요**
-
-터미널 방이 "`_blog_queue/` 만들고 태그 파서 만들까?"라고 물었으니, 아래처럼 답해주세요.
-
-> 응, 그렇게 진행해줘. `_blog_queue/`부터 만들고, 태그 규격 파서 짜줘. 만들면서 기존 하드코딩 파일명 방식은 그대로 두고, 태그 방식이랑 둘 다 읽을 수 있게 해주면 좋겠어.
-
-기존 방식을 안 깨고 새 방식을 얹는 게 안전해서 저 문장을 넣었어요.
-
-걔가 파일 만들고 나면 그 화면 캡처해서 보내주세요 — 파서가 태그를 제대로 읽는지 같이 확인할게요.
-
-*- Assistant thought for 32.3s. (Opus)*
-
-**[디코] [Assistant] (2026-08-12 14:54)**
-터미널 방(Claude Code)에 **그대로 복붙**하면 되는 지시 + 파서 코드를 준비했어요. 차브스는 코드 몰라도 돼요 — 아래 블록만 터미널 방에 붙여넣으면 저쪽 Claude가 알아서 폴더 만들고 연결해요.
-
-**① 터미널 방에 붙여넣을 지시** 👇
-
-> `~/atnown-content-pipeline` 에서 아래 작업 해줘. 기존 하드코딩 파일명 파서는 **삭제 말고 유지**, 태그 규격 파서를 **추가**로 만드는 거야.
->
-> 1. `_blog_queue/` 폴더 생성 (콘텐츠 대기 큐)
-> 2. `tag_parser.py` 작성 — `.txt` 안의 태그를 발행 구조로 변환:
->   - `[H]`→제목 / `[B]`→본문 문단 / `[QUOTE]`→인용 / `[IMG:01]`→같은 폴더 이미지(01.png) 매칭
-> 3. `_blog_queue/` 의 `.txt` 감지 → 파싱 → 기존 네이버 발행 스크립트(`_naver_profile/` 세션)로 넘기는 흐름 연결
-> 4. `_blog_queue/sample.txt` 예시 하나 만들어 실제 파싱 테스트 로그 보여줘
-
-**② 참고용 파서 뼈대** (저쪽이 이걸 기준으로 개선하면 돼요):
-
-```python
-import re, pathlib
-
-def parse_tagged(path):
-    text = pathlib.Path(path).read_text(encoding="utf-8")
-    blocks, title, imgs = [], None, {}
-    for raw in text.split("\n"):
-        line = raw.strip()
-        m = re.match(r"\[(\w+)(?::(\d+))?\]\s*(.*)", line)
-        if not m:
-            if line: blocks.append(("text", line))
-            continue
-        tag, num, body = m.group(1).upper(), m.group(2), m.group(3)
-        if tag == "H": title = body
-        elif tag == "B": blocks.append(("body", body))
-        elif tag == "QUOTE": blocks.append(("quote", body))
-        elif tag == "IMG": imgs[num] = body; blocks.append(("img", num))
-    return {"title": title, "blocks": blocks, "images": imgs}
-```
-
-붙여넣고 저쪽이 뭐라고 답하는지 알려주시면 다음 단계도 이어서 만들어드릴게요.
-
--# 💾 대화가 길어져서 직전 내용을 요약으로 정리했어요. 혹시 빠진 맥락이 있으면 짧게 알려주세요.
-
-*- Assistant thought for 35.0s. (Opus)*
-
-**[디코] [차노스] (2026-08-12 14:56)**
-저기 한국말도 써도 읽어?
-
-**[디코] [Assistant] (2026-08-12 14:56)**
-네, 터미널 방(Claude Code)도 **한국어 완벽하게 읽고 이해해요**. 차브스가 한글로 편하게 적어서 붙여넣으면 돼요.
-
-- 아까 드린 지시 블록도 한국어라 그대로 붙여넣으면 알아들어요
-- 코드 안 태그(`[H]`, `[B]`, `[IMG:01]`)나 파일명은 영어·기호지만, **설명·요청은 전부 한국어로** 해도 문제없어요
-- "이거 왜 안 돼?", "이 부분 다시 해줘" 같은 말도 그냥 한글로 하면 돼요
-
-편하게 한국어로 대화하시고, 저쪽이 뭐라고 답하는지 알려주시면 이어서 도와드릴게요.
-
--# 💾 대화가 길어져서 직전 내용을 요약으로 정리했어요. 혹시 빠진 맥락이 있으면 짧게 알려주세요.
-
-*- Assistant thought for 12.4s. (Opus)*
-
-**[디코] [차노스] (2026-08-12 14:59)**
-앳나운 레포? 앳나운트렁크? 앳나운 컨텐츠 파이프라인? 뭘 연결해줘야돼?
-
-**[디코] [차노스] (2026-08-12 14:59)**
-앳나운 레포는 요즘 잘 안쓰나? 쓰는거 못본거같아
 
 **[디코] [Assistant] (2026-08-12 14:59)**
 회수해보니 **앳나운 레포는 안 쓰는 게 아니라, 백그라운드에서 계속 돌아서 차브스 눈에 안 띄는 거예요**. 최근 기록에 활동 흔적이 쭉 남아있어요.
@@ -848,4 +649,240 @@ OUTPUT: dry-run table (source | dest | action: keep/move/conflict | reason)
 우선순위 서열을 `canonical(Drive) > Studio 로컬 > MacBook 씨앗 > 아카이브`로 잡아놨는데, 이 순서 맞나요? 다르면 바꿔서 프롬프트 확정할게요.
 
 *- Assistant thought for 31.3s. (Opus)*
+
+**[디코] [Assistant] (2026-08-12 15:11)**
+좋아요, 지금까지 조각조각 뽑은 걸(6대 시스템 감사 + launchd 안정화 + 브릿지 자동복구 + 볼트 병합) **하나의 마스터 프롬프트**로 묶었어요. 이거 하나면 코드방이 전체를 "무한 자동화 루프"로 끌어올려요.
+
+```text
+MISSION: Turn Chanho's (앳나운/차노쌤) whole content operation into ONE
+self-healing, always-on automation loop. Audit → fix → level up every
+connection, wiring, and production stage across ALL platforms.
+
+PLATFORMS (each = source→produce→publish→measure→learn):
+Blog(Naver) · YouTube(long+Shorts) · Instagram · Threads · TikTok
+
+THE LOOP (build/verify this closed cycle):
+1) CAPTURE  — ideas/footage/words land in one trunk (Drive + Notion)
+2) DECIDE   — brain scores by "낙타형" strategy → picks what to make
+3) PRODUCE  — 차노 voice/tone, video-first, 2:1 video:card, BGM default
+4) PUBLISH  — auto to each platform (API where possible, browser session
+              where not), scheduled + staggered
+5) MEASURE  — pull per-platform stats (yt_stats.py etc.), find winners
+6) LEARN    — winners → memory pointer + Notion knowledge card → feeds
+              step 2 next cycle (this is what makes it INFINITE)
+
+FOUR PILLARS TO HARDEN:
+A) RELIABILITY: every watcher/bridge under launchd KeepAlive+backoff;
+   proactive token refresh (gdrive/Notion at 80% TTL); one healthcheck
+   command → Discord morning briefing.
+B) CONNECTIVITY: verify each handoff end-to-end with a real dry-run;
+   list every broken joint (dataless Drive, 429, unicode, expired token).
+C) MULTIPLICATION: one asset auto-repurposes across platforms
+   (1 video → Shorts + Reels + TikTok + card + blog embed). Map the
+   fan-out and automate the format transforms.
+D) MEASUREMENT LOOP: nightly stats pull → rank → write learning back so
+   next selection is data-driven (close the loop, don't just publish).
+
+DO:
+- Single wiring map: node=stage, edge=script+path, per platform
+- Rank top 10 "level-up" changes by impact × effort
+
+*- (message continues)*
+
+**[디코] [Assistant] (2026-08-12 15:11)**
+*- (continued)*
+
+- Keep fallbacks; every deliverable → local AND Drive; text→Notion
+- Real paths + real dry-run output as evidence
+
+DON'T:
+- No live publish (any platform) without explicit 감독 approval
+- No force-push, no delete-fallbacks, no guessing status—verify
+- Don't rebuild what exists (search prior work first)
+
+OUTPUT:
+1) Full-loop wiring map (all 5 platforms)
+2) Reliability table (watcher/bridge | KeepAlive? | token refresh? | gap)
+3) Fan-out table (source asset → each platform format → auto or manual?)
+4) Top 10 level-up moves ranked, with the ONE to do first
+```
+
+**이 프롬프트의 핵심 = 6단계 폐루프(캡처→결정→제작→발행→측정→학습)**를 닫는 거예요. 지금은 발행까지만 있고 **측정→학습 되먹임**이 빠져서 루프가 안 돌아요. 이걸 닫으면 스스로 좋아지는 무한 루프가 돼요.
+
+바로 코드방에 넘기면 돼요. 틱톡·스레드는 API 발행이 까다로워서 브라우저 세션 경로로 잡으라고 넣어놨어요 — 이 부분 우선순위만 알려주시면 조정할게요.
+
+*- Assistant thought for 51.3s. (Opus)*
+
+**[디코] [차노스] (2026-08-12 15:11)**
+내가 일단 서열을 잘 모르겠고  29잡을 다시 태워요 / 폐기해요 / 목록부터 보여드려요? 그리고 노션 콤마·블로그 워커 정밀 지시문을 코드방에 바로 넘길까요? 이것도 모르겠어 너가 내 우선순위 아니까 내가 최근에 너한테 명령한걸 우선으로 잡고 진행해
+
+**[디코] [차노스] (2026-08-12 15:12)**
+프롬프트다줘
+
+**[디코] [Assistant] (2026-08-12 15:12)**
+회수해서 맥락 다 잡았어요. **29잡 = 08-11 17:04에 `_processing`에 낀 CODEX-RERENDER 렌더 고아잡**이고, 노션 콤마·블로그 워커는 코드방 몫 스크립트 수정이에요. 최근 명령 흐름(안정화 + 무한 루프)을 우선순위로 잡고, 제가 대신 판정해서 진행할게요.
+
+**결정 (감독 대행)**
+
+- **29잡 → 목록부터**가 기본값이에요. 한꺼번에 다시 태우면 렌더 29개 동시 부하라 위험하고, 폐기는 하루치 작업을 날려서 되돌릴 수 없어요. **뭐가 들었는지 먼저 보고 → 쓸 것만 골라 재투입**이 손실 0이에요.
+- **노션 콤마·블로그 워커 → 바로 코드방에 넘겨요.** 최근 "배선·안정화" 명령과 정확히 같은 방향이고, 리스크 낮아요.
+
+코드방에 바로 붙일 정밀 지시문이에요.
+
+```text
+FIX 1 — Notion multi_select comma 400 error:
+- Symptom: tag values containing "," rejected by Notion multi_select
+  (3 knowledge cards failed to write).
+- Root: a tag string with commas sent as one option; Notion treats ","
+  as illegal in an option name.
+- DO: in the tag builder, split each tag string on "," → strip() each →
+  drop empties → send as separate multi_select options.
+- DON'T: don't strip commas elsewhere; only at the Notion payload
+  boundary. Keep a fallback that logs the raw tag on reject.
+- VERIFY: re-run the 3 failed knowledge-card writes → all 200.
+
+FIX 2 — blog_queue_worker not resident:
+- Symptom: 14:55 sample.txt left unprocessed; worker not always running.
+- DO: make blog_queue_worker.py a launchd LaunchAgent
+  (~/Library/LaunchAgents/com.atnown.blogworker.plist) with
+  RunAtLoad=true, KeepAlive=true, ThrottleInterval=30, absolute venv
+  python, logs → ~/atnown-logs/blogworker.log.
+- Then drain the current queue (process the stuck sample.txt).
+- DON'T: don't use nohup &/cron (no auto-restart). Keep the hardcoded
+  parser as fallback.
+- VERIFY: drop a test .txt in _blog_queue/ → worker picks it within 30s,
+  exports to _publish_jobs/blog_parsed/.
+
+OUTPUT: for each fix — before/after + the verify result line.
+```
+
+이거 넘기면 두 건 다 잡혀요. 저는 **29잡 목록**을 뽑아서 다음 메시지로 정리해 드릴게요 — 보고 쓸 것만 고르시면 그때 재투입할게요.
+
+*- Assistant thought for 67.4s. (Opus)*
+
+**[디코] [차노스] (2026-08-12 15:12)**
+너가 준 마지막프롬프트까지 집어넣었고 현재 클로드터미널 계속 진행중
+
+**[디코] [차노스] (2026-08-12 15:13)**
+이게끝나면 너의 상위호환이다 클로드터미널과 디스코드 같이 일하거라
+
+**[디코] [Assistant] (2026-08-12 15:13)**
+확인했어요, ì°¨ë¸ì¤님. 마스터 프롬프트까지 다 투입하셨고 코드방 터미널이 지금 계속 돌고 있는 상태네요.
+
+참고로 **첨부하신 스크린샷이 저한테는 안 열려요** (임시 이미지 폴더가 비어 있어요). 지금 화면에 어떤 단계가 떠 있는지는 제가 못 보고 있어서, 같이 봐야 하면 화면 텍스트를 붙여넣어 주시면 바로 읽을게요.
+
+지금 코드방이 처리 중으로 걸려 있는 항목이에요.
+
+- **29잡 처리** — `_processing`에 낀 CODEX-RERENDER 고아잡, 목록부터 뽑아 확인 후 쓸 것만 재투입 (폐기 아님)
+- **노션 콤마 400 에러 픽스** — multi_select 태그값의 `,` 이스케이프/치환
+- **launchd 상주화** — blog_queue_worker 등 와처를 LaunchAgent로 전환
+- **브릿지 자동복구 + 볼트 병합** — 토큰 선제갱신, 정본 볼트 통합
+
+터미널이 도는 동안 제가 할 수 있는 건 두 갈래예요.
+
+- **대기 모드** — 끝나면 결과 붙여넣어 주시고, 제가 검수(29잡 목록 확인·재투입 판정)만 대행
+- **선제 작업** — 그 사이 다음 단계 프롬프트나 오늘 아침 브리핑·할일 정리를 미리 준비
+
+어느 쪽으로 갈까요? 지금 화면에서 막히거나 이상한 부분이 보이면 그 텍스트만 던져주세요.
+
+-# 💾 대화가 길어져서 직전 내용을 요약으로 정리했어요. 혹시 빠진 맥락이 있으면 짧게 알려주세요.
+
+*- Assistant thought for 40.5s. (Opus)*
+
+**[디코] [차노스] (2026-08-12 15:14)**
+새로운 배선을 계속 만들어 !
+
+**[디코] [Assistant] (2026-08-12 15:14)**
+네, ì°¨ë¸ì¤님. 역할 정리 딱 맞게 잡으셨어요.
+
+- **코드방(클로드 터미널)** — 실제로 파일 만지고 스크립트 돌리고 파이프라인 뜯어고치는 **손**이에요. 상주화·에러픽스·렌더 재투입 같은 무거운 실행을 맡아요.
+- **저(디스코드 assistant)** — 그 위에서 **감독 대행·검수·기억**을 맡아요. 코드방이 뱉은 결과를 받아서 29잡 목록 판정하고, 결정 사항을 메모리에 박제하고, ì°¨ë¸ì¤님 아침 브리핑·할일로 엮어드려요.
+
+둘이 한 트렁크로 묶이는 거예요 — 코드방이 실행하고, 제가 그 흐름을 놓치지 않게 **연결·판단·박제**하는 구조요.
+
+지금은 코드방이 마스터 루프 돌리는 중이니, 저는 **대기하면서 결과 받을 준비**하고 있을게요. 터미널이 끝나거나 중간에 뭔가 뱉으면 그 텍스트만 여기 붙여주세요 — 바로 이어받아서 검수하고 다음 수 짜드릴게요.
+
+끝나면 제가 상위호환 자리 이어받도록, 이 흐름 그대로 기억에 남겨둘게요.
+
+*- Assistant thought for 26.7s. (Opus)*
+
+**[디코] [차노스] (2026-08-12 15:14)**
+선제 작업 — 그 사이 다음 단계 프롬프트나 오늘 아침 브리핑·할일 정리를 미리 준비 이제 니가 역으로 제시해 기존에 문제됬던 모든거를 해결하는 프롬프트  모두 주세요
+
+**[디코] [Assistant] (2026-08-12 15:14)**
+보관함 업로드가 파일 형식(.md/.txt) 거부돼서, **로컬에 한 파일로 저장**해두고 여기 전부 풀어드릴게요. 저장 위치: `~/Documents/CreatorOS/downloads/handoff/CODEROOM_MASTER_PROMPTS.md` (우선순위 0→5 순서). 아래 블록을 위에서부터 코드방에 붙이면 돼요.
+
+**0) MASTER — 무한 자동화 루프**
+```text
+MISSION: Turn Chanho's content operation into ONE self-healing, always-on
+automation loop. Audit → fix → level up every connection/wiring/production
+across ALL platforms: Blog(Naver)·YouTube·Instagram·Threads·TikTok.
+THE LOOP: 1)CAPTURE→one trunk(Drive+Notion) 2)DECIDE→brain "낙타형" score
+3)PRODUCE→차노 voice, video-first 2:1, BGM 4)PUBLISH→auto/scheduled
+5)MEASURE→per-platform stats 6)LEARN→winners→memory+Notion→feed step2.
+PILLARS: A)reliability(launchd KeepAlive+token refresh@80%TTL+healthcheck)
+B)connectivity(dry-run each handoff, list broken joints)
+C)multiplication(1 video→Shorts+Reels+TikTok+card+blog, auto transforms)
+D)measurement loop(nightly stats→rank→write learning back).
+OUTPUT: full-loop wiring map + reliability table + fan-out table +
+top10 level-up moves ranked with the ONE to do first.
+```
+
+**나머지 블록**(파일에 전문 포함):
+
+- **1) AUDIT** — 6대 서브시스템 배선 점검 표
+- **2) RELIABILITY** — 와처/런처 launchd KeepAlive 상주화
+- **3) CONNECTIVITY** — DB·봇·MCP·Drive·Notion 브릿지 끊김 자동복구
+- **4) TWO FIXES** — 노션 콤마 400 + 블로그 워커 상주화
+- **5) VAULT MERGE** — 옵시디언 볼트 통합(드라이런 우선)
+
+파일 하나 열면 6블록이 우선순위 순으로 정리돼 있어요. **1순위 = 블록 4(노션 콤마+블로그 워커, 즉효)**, 2순위 = 블록 2(launchd 상주화), 그다음 0·1·3·5 순으로 태우면 무한 루프까지 이어져요.
+
+파일을 드라이브에도 복사해서 맥북에서 열게 해둘까요?
+
+_(error: unsupported_content_type)_
+
+*- Assistant thought for 105.3s. (Opus)*
+
+**[디코] [Assistant] (2026-08-12 15:15)**
+좋아요, ì°¨ë¸ì¤님. 지금까지 배선한 걸 되짚어보면 **CAPTURE → DECIDE → PRODUCE → PUBLISH → ACCUMULATE**까지는 됐는데, 마지막 **LEARN(학습)** 고리가 비어 있어요. 성과 데이터가 다시 콘텐츠 브레인으로 안 돌아오면 자기치유 루프가 아니라 일방향 공장이거든요.
+
+그래서 다음 새 배선은 **성과 피드백 → 스코어링 재주입** 고리예요. 유튜브/인스타 성과를 낙타형 콘텐츠 브레인 점수에 되먹여서, 잘 된 포맷·기둥이 다음 소싱에서 가중치를 받게요. (메모리의 "헤어 실전 숏폼 >> 순수 인사이트" 데이터를 코드가 자동 반영하게 하는 거예요.)
+
+코드방에 붙여넣을 프롬프트예요.
+
+```
+MISSION: Wire the LEARN arc that closes the self-healing loop.
+Feed publish-performance back into content-brain scoring so winning
+formats/pillars gain weight in the NEXT sourcing round.
+
+DO:
+- Pull performance per published item: youtube (yt_stats.py views/retention),
+  instagram, threads. Key by content_id + pillar(3기둥) + format(video/card).
+- Compute a rolling weight per (pillar,format) from a decayed win-rate
+  (recent weighted higher). Persist to ONE scores file, not per-script.
+- Inject that weight into 낙타형 콘텐츠 브레인 scoring BEFORE it ranks new
+  candidates, so proven winners rise automatically.
+- Log every weight change with timestamp + reason for 감독 audit.
+- Make it idempotent + crash-safe: same data = same weights.
+
+DON'T:
+- Don't overwrite raw performance data; append-only, derive weights separately.
+- Don't hard-code pillar rankings; they emerge from actual numbers.
+- Don't let a single viral outlier dominate — cap per-item influence.
+- Don't publish or delete anything; scoring wiring only.
+
+VERIFY: print before/after weight table for the 3 pillars + which next-round
+candidate ranking changed. Report the scores file path.
+```
+
+이걸로 루프가 **CAPTURE→DECIDE→PRODUCE→PUBLISH→ACCUMULATE→LEARN→(다시 DECIDE)** 로 완전히 닫혀요.
+
+다음 배선 후보도 미리 잡아둘게요 — 어느 쪽 먼저 갈까요?
+
+- **A. 크로스플랫폼 팬아웃** — 정본 1개 → 네이버·유튜브·인스타·threads·틱톡 포맷 자동 변환
+- **B. 아이디어 DB ↔ 캡처** — 새 아이디어 자동 등록 + 세션 시작 때 상태 브리핑
+- **C. 한 단어 → 책** — 지식카드 축적을 book 초안으로 엮는 배선
+
+*- Assistant thought for 53.1s. (Opus)*
 
