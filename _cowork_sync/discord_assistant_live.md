@@ -1,6 +1,6 @@
 # 웹·디스코드 #assistant 대화 (자동 동기화)
 
-_마지막 갱신: 2026-08-12 16:07:07 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
+_마지막 갱신: 2026-08-12 16:12:09 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
 _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합, 각 발화 앞 `[디코]`/`[웹]` 표기_
 
 ---
@@ -74,89 +74,6 @@ _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합,
 - 5분 주기 워처(`com.atnown.discord-cowork-sync`)가 다음 사이클부터 자동으로 웹까지 실어 보내요
 
 **한 가지 참고** — `logs/discord_cowork_sync.*.log` 두 파일이 git에 추적돼 있어서 워처가 돌 때마다 "변경됨"으로 떠서 rebase를 살짝 방해해요. 지금 동작엔 지장 없지만, 원하시면 이 로그를 gitignore로 빼서 깔끔하게 정리해드릴까요?
-
-**[디코] [Creator-OS] (2026-08-12 15:54)**
-📊 **[코드방·PRODUCE]** INFO
-대기: 6개, 진행중: 18개
-
-**[디코] [Creator-OS] (2026-08-12 15:55)**
-🟢 **[코드방·CAPTURE]** START
-새 콘텐츠 소싱 시작
-
-**[디코] [Creator-OS] (2026-08-12 15:55)**
-✅ **[코드방·CAPTURE]** DONE
-소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
-
-**[디코] [Creator-OS] (2026-08-12 15:55)**
-🟢 **[코드방·KNOWLEDGE]** START
-지식 동기화 시작
-
-**[디코] [Creator-OS] (2026-08-12 15:55)**
-✅ **[코드방·KNOWLEDGE]** DONE
-Notion: True, Obsidian: True
-
-**[디코] [Creator-OS] (2026-08-12 15:55)**
-📊 **[코드방·PRODUCE]** INFO
-대기: 6개, 진행중: 17개
-
-**[디코] [Creator-OS] (2026-08-12 15:56)**
-🟢 **[코드방·CAPTURE]** START
-새 콘텐츠 소싱 시작
-
-**[디코] [Creator-OS] (2026-08-12 15:56)**
-✅ **[코드방·CAPTURE]** DONE
-소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
-
-**[디코] [Creator-OS] (2026-08-12 15:56)**
-🟢 **[코드방·KNOWLEDGE]** START
-지식 동기화 시작
-
-**[디코] [Creator-OS] (2026-08-12 15:56)**
-✅ **[코드방·KNOWLEDGE]** DONE
-Notion: True, Obsidian: True
-
-**[디코] [Creator-OS] (2026-08-12 15:56)**
-📊 **[코드방·PRODUCE]** INFO
-대기: 6개, 진행중: 17개
-
-**[디코] [Creator-OS] (2026-08-12 15:57)**
-🟢 **[코드방·CAPTURE]** START
-새 콘텐츠 소싱 시작
-
-**[디코] [Creator-OS] (2026-08-12 15:57)**
-✅ **[코드방·CAPTURE]** DONE
-소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
-
-**[디코] [Creator-OS] (2026-08-12 15:57)**
-🟢 **[코드방·KNOWLEDGE]** START
-지식 동기화 시작
-
-**[디코] [Creator-OS] (2026-08-12 15:57)**
-✅ **[코드방·KNOWLEDGE]** DONE
-Notion: True, Obsidian: True
-
-**[디코] [Creator-OS] (2026-08-12 15:57)**
-📊 **[코드방·PRODUCE]** INFO
-대기: 6개, 진행중: 17개
-
-**[디코] [차노스] (2026-08-12 15:58)**
-응 헷갈리지 않게 해서 실행하되 태그를 어떻게 표시할것인가. 일하기 바쁜데 언제 태그표시하고있어
-
-**[디코] [Creator-OS] (2026-08-12 15:58)**
-🟢 **[코드방·CAPTURE]** START
-새 콘텐츠 소싱 시작
-
-**[디코] [Creator-OS] (2026-08-12 15:58)**
-✅ **[코드방·CAPTURE]** DONE
-소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
-
-**[디코] [Creator-OS] (2026-08-12 15:58)**
-🟢 **[코드방·KNOWLEDGE]** START
-지식 동기화 시작
-
-**[디코] [Creator-OS] (2026-08-12 15:59)**
-✅ **[코드방·KNOWLEDGE]** DONE
-Notion: True, Obsidian: True
 
 **[디코] [Creator-OS] (2026-08-12 15:59)**
 📊 **[코드방·PRODUCE]** INFO
@@ -600,4 +517,87 @@ Notion: True, Obsidian: True
 **[디코] [Creator-OS] (2026-08-12 16:06)**
 📊 **[코드방·PRODUCE]** INFO
 대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 16:07)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 16:07)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 16:07)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 16:07)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 16:07)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 16:08)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 16:08)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 16:08)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 16:09)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 16:09)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 16:10)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 16:10)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 16:10)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 16:10)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 16:10)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 16:11)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 16:11)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 16:11)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 16:11)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 16:11)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 17개
+
+**[디코] [차노스] (2026-08-12 16:11)**
+내인스타 뒤져서 최근에 올려진 작업물 확인해봐 whte cyan black 자막바
 
