@@ -70,6 +70,97 @@ def score(txt, name=""):
     add("⑨ 길이 240~320자",
         240 <= n <= 320,
         "본문 %d자 · 예상 %.1f초 (÷7.4+4.2)" % (n, n / 7.4 + 4.2))
+    # ⑪ 폐기 문구 되살림 금지 (2026-08-12) — 수정원장.md 표에서 읽는다.
+    #    형이 고쳐준 말을 부정형·조각으로 되살리는 사고를 렌더 전에 막는다.
+    LEDGER = os.path.expanduser("~/atnown-trunk/prompts/수정원장.md")
+    banned = []
+    try:
+        for ln in open(LEDGER, encoding="utf-8"):
+            if ln.count("|") >= 4 and "폐기된 말" not in ln and "---" not in ln:
+                cell = [c.strip() for c in ln.strip().strip("|").split("|")]
+                if len(cell) >= 3 and cell[2]:
+                    banned.append(cell[2])
+    except FileNotFoundError:
+        banned = []
+    flat = re.sub(r"[^가-힣a-zA-Z0-9]", "", txt)
+    hit = [b for b in banned
+           if re.sub(r"[^가-힣a-zA-Z0-9]", "", b) and
+              re.sub(r"[^가-힣a-zA-Z0-9]", "", b)[:12] in flat]
+    add("⑪ 폐기 문구 없음", not hit,
+        ("되살아났다: %s — 수정원장.md 확인" % ", ".join(hit)) if hit
+        else "수정원장 %d건 대조 통과" % len(banned))
+    # ── 형이 지적한 내 고질 3종 (2026-08-12) ─────────────────────────
+    #   "부사를 잘못 써서 내용이 헷갈려지고 / 너무 줄이다가 급전개되고 /
+    #    할루시네이션으로 말도 안 되는 내용을 확정하듯 얘기해서 별로야"
+    def stems(line):
+        return {w[:2] for w in re.findall(r"[가-힣]+", line) if len(w) >= 2}
+
+    # ⑫ 접속부사가 논리와 맞는가
+    #    통념 줄(다들·보통·대부분·~라고 생각합니다) 다음에는 대조가 와야 한다.
+    #    인과(그래서·따라서·그러니까)를 쓰면 "다들 이런데 나는 아니다"가 무너진다.
+    통념표지 = ["다들", "보통", "대부분", "라고 생각합니다", "인 줄 압니다", "흔히"]
+    인과 = ["그래서", "따라서", "그러니까", "그러므로"]
+    대조 = ["근데", "그런데", "하지만", "그러나", "반대로"]
+    부사오용 = []
+    for i in range(1, len(L)):
+        prev, cur = L[i - 1], L[i]
+        if any(t in prev for t in 통념표지) and any(cur.startswith(c) for c in 인과):
+            부사오용.append("%d번 「%s」 — 앞이 통념이라 대조(%s)가 맞다"
+                            % (i + 1, cur[:6], "·".join(대조[:3])))
+        if any(cur.startswith(c) for c in 인과) and i >= 1 and not (
+                any(t in prev for t in ["때문", "거든요", "니까", "습니다"])):
+            pass
+    add("⑫ 접속부사 논리", not 부사오용, " / ".join(부사오용) or "인과·대조 자리 맞음")
+
+    # ⑬ 급전개 없음 — 줄과 줄 사이 말이 하나도 안 겹치면 '점프'.
+    #    다만 아래는 정상 연결이라 점프로 세지 않는다:
+    #      훅 2줄 / 마무리 2줄 / 접속사·지시어로 이어받은 줄 / 이질결합 줄
+    이음말 = ["근데", "그런데", "하지만", "그러나", "반대로", "그래서", "따라서",
+              "그러니까", "그 후에", "그다음", "그러고", "추가로", "게다가", "또",
+              "이건", "그건", "이게", "그게", "이는", "그는", "이런", "그런", "이렇게"]
+    점프 = []
+    for i in range(1, len(L)):
+        if stems(L[i - 1]) & stems(L[i]):
+            continue
+        if i <= 1 or i >= len(L) - 2:                      # 훅·마무리는 원래 턴이 있다
+            continue
+        if any(L[i].startswith(c) for c in 이음말):         # 말로 이어받았다
+            continue
+        if any(o in L[i] or o in L[i - 1] for o in OUTSIDE):  # 이질결합은 의도된 점프
+            continue
+        if L[i].rstrip(".!?").endswith(("니까요", "거든요", "때문입니다", "때문이거든요",
+                                        "이니까요", "라서요", "으니까요")):
+            continue                                        # 앞줄의 근거를 대는 줄 — 정상 연결
+        점프.append("%d→%d번" % (i, i + 1))
+    # 너무 줄임 — 15자 넘는 문장끼리 4배 이상 벌어지면 호흡이 끊긴다
+    #   (10자 안팎 짧은 문장은 형 문체다. 「안 좋아하세요.」 같은 것 — 세지 않는다)
+    급감 = []
+    for i in range(1, len(L)):
+        a, b = len(L[i - 1]), len(L[i])
+        if min(a, b) >= 15 and (max(a, b) / min(a, b)) > 4.0:
+            급감.append("%d→%d번 (%d자→%d자)" % (i, i + 1, a, b))
+    add("⑬ 급전개 없음", not (점프 or 급감),
+        ("말이 안 이어짐: %s" % ", ".join(점프) if 점프 else "")
+        + (" / 길이 급감: %s" % ", ".join(급감) if 급감 else "")
+        or "점프 0 · 길이 급감 0")
+
+    # ⑭ 지어낸 수치 없음 — 대본의 모든 숫자는 수치_근거.md 에 출처가 있어야 한다
+    SRC = os.path.expanduser("~/atnown-trunk/prompts/수치_근거.md")
+    허용수 = set()
+    try:
+        for ln in open(SRC, encoding="utf-8"):
+            if ln.count("|") >= 3 and "수치" not in ln and "---" not in ln:
+                c = [x.strip() for x in ln.strip().strip("|").split("|")]
+                if c and re.fullmatch(r"[0-9.]+", c[0]):
+                    허용수.add(c[0])
+    except FileNotFoundError:
+        pass
+    쓴수 = set(re.findall(r"\d+(?:\.\d+)?", txt))
+    무근거 = sorted(쓴수 - 허용수)
+    add("⑭ 지어낸 수치 없음", not 무근거,
+        ("출처 없음: %s — 수치_근거.md 에 형 확인 후 적고 쓸 것" % ", ".join(무근거))
+        if 무근거 else "숫자 %d개 전부 출처 있음" % len(쓴수))
+
     used = [b for b in BANK if b.split()[0] in txt]
     add("⑩ 재정의 은행 사용",
         True, "쓴 것: %s" % (", ".join(used) if used else "없음 — 새로 만들었다면 ★ 표시해 형 확인"))
