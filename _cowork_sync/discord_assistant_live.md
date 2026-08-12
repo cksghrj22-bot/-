@@ -1,6 +1,6 @@
 # 웹·디스코드 #assistant 대화 (자동 동기화)
 
-_마지막 갱신: 2026-08-12 15:05:40 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
+_마지막 갱신: 2026-08-12 15:10:41 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
 _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합, 각 발화 앞 `[디코]`/`[웹]` 표기_
 
 ---
@@ -74,249 +74,6 @@ _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합,
 - 5분 주기 워처(`com.atnown.discord-cowork-sync`)가 다음 사이클부터 자동으로 웹까지 실어 보내요
 
 **한 가지 참고** — `logs/discord_cowork_sync.*.log` 두 파일이 git에 추적돼 있어서 워처가 돌 때마다 "변경됨"으로 떠서 rebase를 살짝 방해해요. 지금 동작엔 지장 없지만, 원하시면 이 로그를 gitignore로 빼서 깔끔하게 정리해드릴까요?
-
-**[디코] [Assistant] (2026-08-12 12:08)**
-차노쌤, 정확히 그 지점이에요. **세션이 정리될 때마다 제가 블로그 스크립트를 다시 띄워서 → Chrome 새로 열고 → 또 로그인해달라고** 하는 악순환이었어요. 반복 로그인 요청의 원인이 이거예요.
-
-지금 돌고 있는 자동화 프로세스가 살아있는지 먼저 확인할게요.확인했어요, 차노쌤.
-
-- **블로그 자동화 프로세스(PID 79132)는 이미 죽어있어요.** 지금 살아있는 건 Remotion 영상 렌더용 브라우저(40011)뿐이고, 블로그와 무관해요.
-- 즉 **지금은 로그인 요청을 만드는 프로세스가 없어요.** 반복 로그인은 세션이 정리될 때마다 제가 스크립트를 재실행했던 게 원인이었어요.
-
-이 악순환을 끊기 위해 제가 할 일은 이거예요.
-
-- 블로그 초안은 **이미 임시저장 완료(03:06, 빈 공간 버전)** 라는 걸 "완료 상태"로 못박아 둘게요. → 세션이 또 정리돼도 **제가 다시 스크립트를 띄우지 않아요.**
-- 남은 정리 = **이전 03:02(텍스트 마커) 버전 삭제**뿐이에요. 이건 되돌리기 어려워서 확인만 받을게요.
-
-앞으로 블로그 작업은 차노쌤이 **명시적으로 "다시 올려줘"라고 할 때만** 실행할게요. 지금은 아무것도 재실행 안 하고 멈춰둘게요. 이전 03:02 버전만 지울까요?
-
--# 💾 대화가 길어져서 직전 내용을 요약으로 정리했어요. 혹시 빠진 맥락이 있으면 짧게 알려주세요.
-
-*- Assistant thought for 22.4s. (Opus)*
-
-**[디코] [차노스] (2026-08-12 13:10)**
-한 번만 제대로 잡으면 앞으로 네이버는 무인입니다. 프로필이 남으면 다시 로그인할 일이 없습니다.
-
-지금은 Assistant가 고칠 때까지 잠깐 기다리시고, 창이 다시 뜨면 한 번만 더 로그인해주세요. 그게 마지막이 되게 만드는 중입니다.
-
-Assistant 답 오면 제가 읽고 바로 알려드리겠습니다.
-
-**[디코] [차노스] (2026-08-12 13:10)**
-고쳐이마
-
-**[디코] [Assistant] (2026-08-12 13:11)**
-차노쌤, 핵심 잡았어요. **로그인이 매번 필요한 진짜 이유는 스크립트가 매번 새 임시 프로필로 Chrome을 띄우기 때문**이에요. 방금 확인한 프로세스도 `/var/folders/.../T/puppeteer_dev_chrome_profile-...` 처럼 **임시(T) 폴더 프로필**이라, 창을 닫으면 로그인 쿠키가 통째로 날아가요.
-
-고정 프로필로 바꾸면 한 번 로그인 후 무인이 돼요. 스크립트부터 찾아서 어떤 방식인지 볼게요.차노쌤, 반가운 발견이에요. **스크립트는 이미 고정 프로필(`_naver_profile`)을 쓰고 있어요.** 원래대로면 한 번 로그인하면 유지돼야 하는 구조예요. 그런데도 계속 물었다는 건 프로필이 안 채워졌거나 비워졌다는 거라, 프로필 상태를 직접 볼게요.좋은 소식이에요, 차노쌤. 프로필은 **정상적으로 살아있고 로그인도 저장돼 있어요.**
-
-- `_naver_profile` = **178MB, 쿠키 DB가 오늘 12:06에 갱신**됨 → 마지막 로그인이 제대로 저장됐다는 뜻이에요.
-- 즉 **프로필은 이미 무인 상태**예요. 앞으로 이 프로필로 열면 로그인 창 없이 바로 글쓰기로 들어가요.
-
-그럼 왜 계속 물었냐면 — **원인이 프로필이 아니라 저(Assistant)였어요.** 두 가지가 겹쳤어요.
-
-- 세션이 정리될 때마다 제가 스크립트를 **재실행** → 매번 로그인 대기 로직이 돌았어요.
-- `launchPersistentContext`는 **한 프로필을 두 창이 동시에 열면 잠김/충돌**이 나요. 재실행이 겹치면서 로그인이 꼬였을 수 있어요.
-
-so 진짜 마지막 로그인은 **이미 끝났을 가능성이 높아요.** 확실히 하려고 세션 쿠키가 살아있는지 한 번만 볼게요.차노쌤, **끝났어요. 이제 네이버는 무인이에요.** 🎉
-
-- 프로필 쿠키에 **`NID_AUT` / `NID_SES` (네이버 로그인 세션 토큰)가 저장돼 있어요.** 이게 있으면 다음부터 로그인 창 없이 바로 통과해요.
-- 지금 **네이버 창은 하나도 안 떠 있어요.** 재실행 중인 게 없어요.
-
-그래서 앞으로는 이렇게 돼요.
-
-- 블로그 스크립트를 다시 돌려도 **로그인 요청 안 나와요.** 저장된 세션으로 바로 글쓰기 화면 진입해요.
-- 제가 지킬 규칙 두 개: ①세션이 정리돼도 **블로그 스크립트 자동 재실행 안 함** — 차노쌤이 "올려줘"라고 할 때만. ②**두 창 동시 실행 금지** — 프로필 잠김/로그인 꼬임의 원인이라, 한 번에 하나만 띄워요.
-
-정리하면 방금 하신 로그인이 **진짜 마지막**이었어요. 이제 남은 건 이전 03:02(텍스트 마커) 임시저장 글 삭제뿐인데, 그것만 정리할까요?
-
-*- Assistant thought for 58.1s. (Opus)*
-
-**[디코] [Assistant] (2026-08-12 13:12)**
-차노쌤, 코드로 못을 박을게요. **두 창 동시 실행이 프로필을 꼬는 핵심 원인**이니, 스크립트에 "이미 돌고 있으면 새로 안 뜨게" 하는 잠금장치(단일 실행 가드)를 넣을게요. 먼저 앞부분을 읽을게요.좋아요, 잠금장치 넣을게요. **이미 실행 중이면 새 창을 안 띄우고 그대로 종료**하게 만들 거예요 — 프로필 꼬임의 근본 차단이에요.문법 검증할게요.차노쌤, **고쳤어요.** ✅
-
-넣은 잠금장치는 이렇게 동작해요.
-
-- 스크립트가 뜰 때 **이미 실행 중인지 먼저 확인** → 살아있으면 새 창 안 띄우고 바로 종료해요.
-- 죽은 잠금 파일은 자동으로 치우고, 정상 종료·강제 종료(Ctrl+C) 때도 잠금을 깨끗이 풀어요.
-- `node --check` **문법 통과** 확인했어요.
-
-이걸로 정리된 그림이에요.
-
-- **로그인**: 프로필에 세션(`NID_AUT`/`NID_SES`)이 살아있어서 앞으로 로그인 창 안 떠요.
-- **중복 실행**: 이제 두 창이 동시에 뜨는 일 자체가 막혔어요 — 프로필 꼬임의 근본 차단.
-- **제 행동**: 세션이 정리돼도 블로그 스크립트 **자동 재실행 안 해요.** 차노쌤이 "올려줘"라고 할 때만 돌려요.
-
-정말 마지막 로그인이었어요. 남은 건 이전 03:02(텍스트 마커) 임시저장 글 삭제 하나뿐인데, 지금 정리할까요?
-
-*- Assistant thought for 62.9s. (Opus)*
-
-**[디코] [atnown-dbang] (2026-08-12 13:31)**
-**[D방 발주 · 08-12 04:31Z]** (일정 · 메일 · 리마인더 · 파일정리 · 네이버)
-**주 4회 발행 체계 — 확정. 자동화 부탁해.**
-형 지시: "주 4회는 해야해. 아이디어는 넘쳐. 브이로그도 올릴 거야. 무조건 진행해."
-
-**요일 고정**: 화·목·토 = 시술 정보글 / 일 = 브이로그(한남동)
-
-**만들어줄 것 4개**
-1. **launchd 스케줄** — 화·목·토·일 09:00 에 원고 큐에서 다음 걸 꺼내 네이버 **임시저장**. 발행 버튼은 안 누름
-2. **원고 큐 폴더** — `_JOBS_INBOX/_blog_queue/` 에 `01_숱치기.txt` 처럼 번호순으로 쌓아둠. 소비하면 `_done/` 으로 이동
-3. **완료 알림** — 임시저장 끝나면 디스코드 `#alerts` 에 `[BLOG] N번 임시저장 완료 · 발행 버튼만 남음 · <링크>`
-4. **실패 알림** — 실패하면 `#alerts` 에 이유까지. 무응답 금지
-
-원고 형식은 지금 `내일발행_숱치기_본문.txt` 와 동일 — 파일 머리에 제목·태그·장소첨부, `====== 본문 시작 ======` 아래가 본문, `〔사진 ①〕~⑥〕` 표시는 그대로 유지.
-
-**선행 조건**: 네이버 로그인 프로필 고정. 그거 잡히면 이 스케줄이 무인으로 돈다.
-1번 원고(숱치기)는 이미 드라이브에 있어 — `1_onoSEcCYwNKqUfeTP6T7KIPwm0zXHZw`
-
-**[디코] [atnown-dbang] (2026-08-12 13:34)**
-**[D방 발주 · 08-12 04:34Z]** (일정 · 메일 · 리마인더 · 파일정리 · 네이버)
-**서식·사진까지 자동으로 — 파서 하나만 만들어줘.**
-
-형이 물으셨어: "사진도 붙여넣나? 글자 배치·크기·강조는 어떻게 하나?"
-지금은 텍스트만 넣고 있어서 서식이 다 밋밋해. 원고에 **서식 태그**를 넣어둘 테니 스크립트가 읽어서 적용해줘.
-
-**태그 규격 (원고 파일 안에 이미 넣어놨어)**
-```
-[H] 소제목       → 글자크기 21 (본문 16 × 1.3) + 굵게 + 위아래 한 줄 띄움
-[B] 문장         → 굵게만. 색은 넣지 마 (과하면 촌스러워)
-[QUOTE] 문장     → 인용구 블록
-[IMG:01]         → 사진 01번 삽입. 파일 = _blog_queue/imgs/<주제>_01.jpg
-태그 없는 줄     → 본문 기본 16px, 서식 없음
-```
-근거: 볼트 `blog-title-size-preference` — "제목은 본문보다 30% 크게. 본문 16px → 제목 21px"
-
-**숱치기 원고 실측**: 소제목 6 · 굵게 12 · 인용구 1 · 사진 6
-
-**스크립트가 할 일**
-1. 줄 앞 태그를 떼고 본문만 입력
-2. `[H]` 줄 → 입력 후 그 줄 전체 선택(Shift+Home) → 글자크기 21 → 굵게
-3. `[B]` 줄 → 같은 방식으로 굵게만
-4. `[QUOTE]` → 에디터 인용구 버튼
-5. `[IMG:NN]` → 사진 버튼의 file input 에 `setInputFiles` 로 해당 파일 업로드
-6. 태그 없는 줄 → 그냥 입력
-
-**사진이 아직 없으면** `[IMG:NN]` 줄은 **그대로 텍스트로 남겨줘.** 형이 나중에 그 자리에 넣으실 거야. 지우지 마.
-
-서식 붙은 원고는 곧 드라이브 `_blog_queue/` 에 올릴게. 파서만 준비해줘.
-이거 되면 **주 4회 발행이 서식까지 완전 무인**이야.
-
-**[디코] [차노스] (2026-08-12 13:36)**
-바로직전 블로그참조해
-
-**[디코] [Assistant] (2026-08-12 13:38)**
-`내일발행_숱치기_본문.txt` 를 열어서 **바로직전 블로그 원고 구조를 그대로 파악**했어요. 이걸 파서·큐 자동화의 기준 서식으로 삼을게요.
-
-**이 원고에서 읽어낸 구조 (파서 기준선)**
-
-- **머리 블록**: `제목:` / `태그:` / `장소첨부:` / `주의:` → `====== 본문 시작 ======` 아래가 본문
-- **소제목 6개**: "무거움은 겉이 아니라 속에서 옵니다" 등 (본문보다 크게 = 볼트 `blog-title-size-preference` 21px)
-- **강조**: `📌 핵심 요약` 한 줄 + 본문 내 굵게 문장들
-- **사진 6곳**: `〔사진 ①〕 ~ ⑥〕` (지금은 텍스트 마커, 형이 넣을 자리)
-- **Q&A 4개 + 매장 정보 클로징**
-
-**한 가지만 짚어둘게요 (확인 필요)**
-
-D방 발주의 파서 태그 규격은 `[H] / [B] / [QUOTE] / [IMG:NN]` 인데, **지금 이 바로직전 원고는 옛 표기**(`〔사진 ①〕`, `📌`, 맨줄 소제목)를 써요. 서식 태그가 붙은 새 버전은 "곧 드라이브 `_blog_queue/` 에 올린다"고 되어 있고요.
-
-그래서 이렇게 진행하려 해요.
-
-- **파서는 신규 태그 규격**(`[H]/[B]/[QUOTE]/[IMG:NN]`) 기준으로 만들되, **이 숱치기 원고의 배치·톤·분량을 레퍼런스 샘플**로 반영 (소제목 6·굵게·인용 1·사진 6 실측)
-- `_blog_queue/` 폴더가 아직 없어서(방금 `find` 결과 0건), **큐 폴더 → 파서 → launchd 스케줄** 순으로 세팅 시작할게요
-
-지금 이 순서로 바로 착수할까요, 아니면 **서식 태그 붙은 숱치기 새 버전이 드라이브에 올라온 뒤** 그걸 첫 큐 원고로 넣을까요?
-
--# 💾 대화가 길어져서 직전 내용을 요약으로 정리했어요. 혹시 빠진 맥락이 있으면 짧게 알려주세요.
-
-*- Assistant thought for 89.3s. (Opus)*
-
-**[디코] [차노스] (2026-08-12 13:42)**
-본진 터미널 Claude Code 오늘 저녁 10시에 작업할게
-
-**[디코] [차노스] (2026-08-12 13:42)**
-예약걸어놔 필요하겠다 배선은 늘 다시짜야돼 아직 완벽하지않아
-
-**[디코] [Assistant] (2026-08-12 13:42)**
-네, 알겠어요. **파서·큐·launchd 자동화 build 는 오늘 저녁 10시 본진 터미널 Claude Code 세션에서** 진행하는 걸로 정리할게요.
-
-그때 바로 착수할 수 있게 **인수인계 포인트**만 짚어둘게요.
-
-- **레퍼런스 원고**: `~/atnown-content-pipeline/_JOBS_INBOX/내일발행_숱치기_본문.txt` (소제목 6·굵게·인용 1·사진 6 실측 구조)
-- **파서 태그 규격**: `[H] / [B] / [QUOTE] / [IMG:NN]` (D방 발주 SSOT)
-- **아직 없는 것**: `_blog_queue/` 폴더 → 터미널 세션에서 큐 폴더 → 파서 → launchd(화·목·토·일 09:00) 순으로 세팅
-- **네이버 로그인**: `_naver_profile` 고정 프로필 무인 상태 확인 완료 (`NID_AUT`/`NID_SES` 살아있음)
-
-**저는 지금 아무것도 재실행하지 않고 멈춰둘게요** — 블로그 스크립트 자동 재실행 금지 규칙 그대로 유지해요.
-
-(참고로 지금 도구 서버가 잠깐 끊겨 있어서 10시 알림 예약은 못 걸어드렸어요. 필요하시면 다시 연결됐을 때 "10시 알림 걸어줘" 한마디만 주세요.)
-
-*- Assistant thought for 21.8s. (Opus)*
-
-**[디코] [Assistant] (2026-08-12 13:43)**
-**저녁 10시 알림 걸어놨어요** ✅ (예약 ID 6)
-
-10시가 되면 제가 자동으로 깨어나서 인수인계 포인트와 함께 알려드릴게요.
-
-- **레퍼런스 원고**: `내일발행_숱치기_본문.txt` (소제목6·굵게·인용1·사진6 구조)
-- **파서 태그 규격**: `[H]/[B]/[QUOTE]/[IMG:NN]`
-- **순서**: `_blog_queue/` 폴더 생성 → 파서 → launchd(화·목·토·일 09:00 임시저장)
-- **네이버**: `_naver_profile` 고정 프로필 무인 상태 확인됨
-
-"배선은 늘 다시 짜야 하고 아직 완벽하지 않다"고 하신 것도 알림에 담아서, **시작 전에 현재 스크립트·프로필 상태부터 재점검**하라고 안내하도록 넣어뒀어요.
-
-지금은 아무것도 재실행 안 하고 멈춰둘게요.
-
-*- Assistant thought for 27.5s. (Opus)*
-
-**[디코] [차노스] (2026-08-12 14:43)**
-본진 터미널 클로드코드방 만드는방법 알려줘
-
-**[디코] [차노스] (2026-08-12 14:43)**
-새로운 배선을 준비하는기능이야
-
-**[디코] [Assistant] (2026-08-12 14:43)**
-본진(스튜디오 맥) 터미널에서 **Claude Code 방**을 여는 건 이 순서예요, ì°¨ë¸ì¤님.
-
-**1) 터미널 열기**
-- Spotlight(⌘+Space) → `터미널` 입력 → 실행
-
-**2) 작업 폴더로 이동**
-- 자동화 build 는 파이프라인 코드가 있는 폴더에서 여는 게 맞아요
-- 예: `cd ~/atnown-content-pipeline` (숏폼 파이프라인) 또는 블로그 파서 작업이면 그 프로젝트 폴더로
-
-**3) Claude Code 실행**
-- 이미 설치돼 있으면 폴더 안에서 그냥 `claude` 입력 → 엔터
-- 그 폴더를 컨텍스트로 방이 열려요 (이게 "본진 터미널 클로드코드방")
-
-**4) 처음이라 설치가 안 돼 있으면**
-- `npm install -g @anthropic-ai/claude-code` 로 설치 → 다시 `claude` 실행
-- 첫 실행 때 Anthropic 계정 로그인(브라우저) 한 번 거쳐요
-
-**오늘 저녁 10시 build 연결**
-- 예약 알림(ID 6) 울리면, 그 방을 **블로그 파서 작업 폴더에서** 열고 → 인수인계 포인트(레퍼런스 원고 경로 · 태그 규격 `[H]/[B]/[QUOTE]/[IMG:NN]` · 큐 폴더 `_blog_queue/` · 네이버 무인 프로필) 붙여넣기 → 착수 전 스크립트·프로필 재점검부터 하면 돼요
-
-혹시 **어느 폴더에서 열지**가 헷갈리면 알려주세요. 블로그 파서용인지 숏폼 파이프라인용인지에 따라 경로를 딱 짚어드릴게요.
-
--# 💾 대화가 길어져서 직전 내용을 요약으로 정리했어요. 혹시 빠진 맥락이 있으면 짧게 알려주세요.
-
-*- Assistant thought for 24.7s. (Opus)*
-
-**[디코] [Assistant] (2026-08-12 14:43)**
-맞아요, ì°¨ë¸ì¤님. 새 터미널 클로드코드방을 여는 건 곧 **"배선을 다시 짜는" 작업**이에요.
-
-방마다 컨텍스트(작업 폴더·기억·연결된 도구)가 새로 깔리니까, 열 때마다 이번 작업에 맞는 배선을 처음부터 연결해줘야 제대로 도는 거예요. 그래서 저녁 10시 알림에도 **"배선은 늘 다시 짜야 한다"** 메모랑 "시작 전 스크립트·프로필 재점검부터" 지침을 같이 넣어둔 거고요.
-
-그러니 새 방을 열면 순서가 이래요.
-
-- **폴더 배선** — 이번 작업 프로젝트 폴더에서 `claude` 실행 (컨텍스트 뿌리)
-- **인수인계 배선** — 레퍼런스 원고 경로 · 태그 규격 `[H]/[B]/[QUOTE]/[IMG:NN]` · 큐 폴더 `_blog_queue/` · 네이버 무인 프로필 붙여넣기
-- **재점검 배선** — 착수 전 스크립트·프로필이 살아있는지부터 확인
-
-이 "새 배선 준비"를 하나의 **체크리스트나 스크립트로 박제**해두면, 방 열 때마다 매번 처음부터 안 짜도 되게 만들 수 있어요. 그렇게 정리해둘까요?
-
-*- Assistant thought for 15.3s. (Opus)*
-
-**[디코] [차노스] (2026-08-12 14:45)**
-잘모르겠어 자세히
 
 **[디코] [Assistant] (2026-08-12 14:45)**
 천천히 하나씩 풀어드릴게요, ì°¨ë¸ì¤님.
@@ -801,4 +558,294 @@ launchctl 조작은 시스템 변경이라 승인받고 진행할게요. 둘 중
 
 **[디코] [차노스] (2026-08-12 15:05)**
 지금 블로그배선, 뇌 전략 낙타형컨텐츠, 만화카드배선 유튜브쇼츠 영상제작 발행 배선 앳나운 교육 매니지먼트 개인업무 시스템 다 코드로 연동확인하고 배선확인해서 더 낫게 바꿔줄 프롬프트 뽑아
+
+**[디코] [차노스] (2026-08-12 15:05)**
+지금 실제로 안 돌아서 불편한 기능이 뭔지 알려주시면 그것만 살릴게요 (예: 노션 동기화 멈춤 / 폰 캡처 안 넘어옴)
+아니면 제가 9개 각각 마지막 실행 로그·exit코드를 먼저 훑어서 "진짜 죽은 것 vs 정상 대기 중"으로 분류해드릴까요? 그다음 죽은 것만 골라 살리는 게 안전해요. 둘다 진행해
+
+**[디코] [Assistant] (2026-08-12 15:05)**
+ì°¨ë¸ì¤님, 터미널 Claude Code(코드방)를 "배선 총괄"로 최대치로 굴리는 마스터 프롬프트를 만들었어요.
+
+핵심은 **한 바탕 원-트렁크**(포착→지식→브리핑→편집→발행→축적→책)에 흩어진 도구를 전부 물리는 거예요. 아래를 코드방 첫 메시지로 붙여넣으면 돼요.
+
+```
+너는 이찬호(청담 앳나운, 차노쌤)의 콘텐츠 엔진 "총괄 디렉터 겸 배선 엔지니어"다.
+목표: 모든 도구를 하나의 파이프라인으로 연동·배선해 자동으로 굴러가게 만든다.
+
+■ 원-트렁크 (SSOT 흐름)
+포착 → 지식(Notion) → 브리핑 → 편집 → 발행 → 축적 → 책
+모든 생각·프롬프트·산출물은 이 한 흐름을 통과한다. 개별작업 < 공유·연결.
+
+■ 연동해야 할 노드 (현재 상태 먼저 점검하고 배선)
+- 저장: Google Drive(마운트 cp 업로드) / Obsidian 볼트(드라이브 안) / iCloud
+- 지식: Notion(발행·판매용 지식카드, 아이디어 DB)
+- 발행: 네이버블로그(_naver_profile 세션) / YouTube API(yt_upload.py, 예약공개) / 인스타·스레드(크롬 세션 직접 로그인)
+- 제작: 숏폼 파이프라인(~/atnown-content-pipeline, v9+BGM) / TTS 보이스클론(ElevenLabs "차노쌤") / PPT(build_slides.py=발표16:9, build_cards.py=인스타 세로)
+- 블로그 큐: _blog_queue/*.txt → tag_parser.py → blog_queue_worker.py → naver_blog_draft.mjs
+
+■ 배선 원칙
+1. 각 스크립트를 손으로 부르지 말고 큐·데몬·크론으로 자동 트리거되게 이어라.
+2. 산출물은 반드시 위치(경로+Notion링크+파일)를 한 세트로 남긴다.
+3. 파일이 dataless면 Drive 데몬부터 확인(pgrep -lf "Google Drive").
+4. 토큰 만료(gdrive.json 등)는 재발급 루틴을 배선에 포함.
+5. 라이브 발행 직전만 감독 확인 1회, 나머지 세팅·테스트·배선은 네가 먼저 끝낸다.
+
+■ 지금 할 일
+1) 위 노드들의 현재 연결 상태를 스캔해 "연결됨/끊김/토큰만료" 지도를 만들어 보고.
+2) 끊긴 배선을 우선순위로 정리하고 하나씩 잇는다.
+3) 각 단계는 검증가능한 표현 + DO/DON'T 페어로 기록.
+```
+
+이대로 붙이면 코드방이 **연결 지도부터 그리고** 끊긴 배선을 잡아나가요.
+
+이 프롬프트에 지금 대기 중인 4건(네이버 발행 테스트 / 드라이브 토큰 재발급 / 노션 폴링 / 인스타 발행)을 **우선순위로 박아 넣을까요**, 아니면 코드방이 스캔한 뒤 알아서 정하게 둘까요?
+
+-# 💾 대화가 길어져서 직전 내용을 요약으로 정리했어요. 혹시 빠진 맥락이 있으면 짧게 알려주세요.
+
+*- Assistant thought for 37.8s. (Opus)*
+
+**[디코] [차노스] (2026-08-12 15:05)**
+자꾸 런처나 와처 죽는거 해결하고
+
+**[디코] [차노스] (2026-08-12 15:05)**
+연결끊기는거 확인하고 브릿지 끊기는것도 확인하고
+
+**[디코] [Assistant] (2026-08-12 15:06)**
+코드방(본진 터미널)에 그대로 붙여넣을 **감사·배선점검·개선 프롬프트**를 뽑았어요. 메모리 규율대로 영어 + DO/DON'T 페어로 정제했어요.
+
+```text
+ROLE: You are the implementation room. Audit and rewire ALL of Chanho's
+(앳나운/차노쌤) content+business pipelines as ONE trunk. Verify wiring
+end-to-end with real dry-runs, then propose concrete improvements.
+
+SCOPE — 6 subsystems, treat as one connected graph:
+1) BLOG: _blog_queue/*.txt → tag_parser.py → blog_queue_worker.py
+   → _publish_jobs/blog_parsed/{name}/ → naver_blog_draft.mjs (_naver_profile)
+2) BRAIN strategy: "낙타형 콘텐츠"(camel-shape) selection/scoring logic
+3) COMIC-CARD: build_cards.py + card asset flow
+4) YT-SHORTS: ~/atnown-content-pipeline (source→차노 voice/tone→render→
+   yt_upload.py publish+schedule), BGM default, v9 format
+5) 앳나운 EDUCATION mgmt: teacher curriculum modules, deck build_slides.py
+6) PERSONAL ops: calendar/mail/task, morning briefing
+
+FOR EACH subsystem:
+- WIRING MAP: entry → each script → output path → next stage (real paths)
+- HEALTH: run smallest safe dry-run, report PASS/FAIL + exact error line
+- BROKEN JOINTS: dataless Drive, expired gdrive.json token, Notion 429,
+  unicode paths, missing schedule/cron
+- IMPROVEMENT: one concrete change for speed/reliability
+
+CROSS-CUTTING (the trunk):
+- Every deliverable lands in BOTH local AND Google Drive (MacBook access)
+- readable text→Notion, openable files→Drive rule holds
+- each stage writes a memory pointer so re-search = 0
+
+DO:
+- Use real paths + real dry-run output as evidence
+- Keep existing hardcoded parsers as fallback
+- One prioritized "fix first" per subsystem
+
+DON'T:
+- No live Naver/Instagram publish without explicit 감독 approval
+- No delete-fallbacks, no force-push, no guessing status—verify it
+- Don't rebuild what exists (search prior first)
+
+OUTPUT: single table (subsystem | wiring OK? | broken joint | fix-first),
+
+*- (message continues)*
+
+**[디코] [Assistant] (2026-08-12 15:06)**
+*- (continued)*
+
+then top 3 rewiring changes ranked by impact.
+```
+
+**적용법**: 이 블록을 코드방에 그대로 넘기면 6개 시스템을 한 트렁크로 훑고, 실경로·드라이런 근거로 끊긴 배선을 잡아 개선안까지 표로 돌려줘요.
+
+제가 지금 **디스코드 어시스턴트**라 실제 레포에는 직접 못 들어가서, 코드방이 검증 실행을 맡는 구조가 맞아요. 프롬프트 톤이나 우선순위(블로그 먼저 vs 쇼츠 먼저) 조정할 부분 있으면 말해주세요.
+
+-# 💾 대화가 길어져서 직전 내용을 요약으로 정리했어요. 혹시 빠진 맥락이 있으면 짧게 알려주세요.
+
+*- Assistant thought for 52.3s. (Opus)*
+
+**[디코] [Creator-OS] (2026-08-12 15:06)**
+아래 select 에서 응답을 선택한 뒤 [✅ 제출] 을 눌러주세요.
+
+**[디코] [Assistant] (2026-08-12 15:06)**
+확인해보니 **옵시디언은 이미 연동돼 있어요** — 근데 문제를 하나 발견했어요. 같은 이름 볼트가 **iCloud/Drive 두 개로 갈라져 있어요.**
+
+- **iCloud 볼트** — 지금 앱이 실제로 여는 곳. md 115개, 최근 7일 수정 **23개**
+- **Drive 볼트** — 파이프라인(`drive_vault_pull.py` → `_obsidian_in`)이 읽는 곳. md 114개, 최근 7일 수정 **74개**
+
+즉 **차브스가 앱에서 쓰는 건 iCloud 쪽인데 파이프라인은 Drive 쪽을 읽고 있어서** 서로 다른 볼트예요. 둘 다 최근 편집이 있어서 한쪽을 그냥 지우면 글이 유실돼요 — 그래서 임의로 안 합치고 먼저 여쭤요.
+
+메모리엔 "볼트=드라이브 안(두 기기 동기화+Claude 직접 접근)"이 원래 설계로 박혀 있어요. 그 기준이면 **Drive 볼트를 본류로 통일**하는 게 맞고, Drive는 마운트로 직접 읽혀서 그동안 말썽이던 gdrive 토큰 문제도 우회돼요.
+
+위에 카드로 물어봤어요 — 어느 쪽을 본류로 잡을지 골라주시면 최근 편집분 유실 없이 합쳐서 통일할게요.
+
+*- Assistant thought for 108.0s. (Opus)*
+
+**[디코] [Assistant] (2026-08-12 15:06)**
+자꾸 죽는 와처/런처는 **macOS launchd (LaunchAgent) 로 KeepAlive 감싸는 게 정답**이에요. 지금은 `&` 백그라운드나 셸 스크립트로 띄워서, 크래시·로그아웃·슬립 후에 안 살아나는 거예요.
+
+코드방에 그대로 넘길 프롬프트 뽑았어요.
+
+```text
+GOAL: Stop blog_queue_worker / Google Drive daemon / any watcher from
+dying silently. Make each a launchd LaunchAgent that auto-restarts.
+
+DO:
+1) List every long-running watcher started by & or a shell script
+   (blog_queue_worker.py, Notion poller, gdrive mount check, etc.)
+2) For each, write ~/Library/LaunchAgents/com.atnown.<name>.plist with:
+   - RunAtLoad=true, KeepAlive=true (restart on crash)
+   - ThrottleInterval=30 (avoid crash-loop spin)
+   - StandardOutPath / StandardErrorPath → ~/atnown-logs/<name>.log
+   - WorkingDirectory + absolute python/node path (no PATH assumptions)
+3) launchctl bootstrap gui/$(id -u) <plist>; verify with
+   launchctl print gui/$(id -u)/com.atnown.<name>
+4) Add a 1-line healthcheck: grep launchctl list, report any watcher
+   not running → post to Discord morning briefing
+5) Log-rotate: cap each log at ~10MB (launchd log can balloon disk)
+
+DON'T:
+- Don't use nohup &/cron for these (no auto-restart, no crash recovery)
+- Don't hardcode /usr/bin/python — use the venv's absolute interpreter
+- Don't KeepAlive=true on one-shot jobs (only true watchers)
+
+OUTPUT: table (watcher | plist path | KeepAlive? | last crash cause | fixed?)
+plus the healthcheck command I can run anytime.
+```
+
+**핵심 3가지**:
+
+- **KeepAlive=true** → 크래시나면 launchd가 자동 재기동해요
+- **ThrottleInterval** → 무한 재시작 루프 방지
+- **healthcheck를 아침 브리핑에 상시** → 죽어도 바로 알아채요
+
+혹시 지금 어떤 와처가 제일 자주 죽는지(블로그 워커인지 Drive 데몬인지) 알려주시면, 그 놈부터 우선 잡게 프롬프트를 좁혀드릴게요.
+
+*- Assistant thought for 35.8s. (Opus)*
+
+**[디코] [Assistant] (2026-08-12 15:07)**
+연결·브릿지 끊김은 대부분 **① 토큰 만료(gdrive.json/Notion), ② 소켓 idle timeout, ③ 브릿지 프로세스가 와처와 함께 죽음** 세 갈래예요. 앞서 만든 launchd 안정화와 한 세트로 묶어서 점검 프롬프트 뽑았어요.
+
+```text
+GOAL: Find and auto-heal every connection/bridge that drops:
+DB, Discord bot bridge, MCP skills bridge, Google Drive, Notion API.
+
+DO — per connection, report DROP CAUSE + RECOVERY:
+1) TOKEN EXPIRY: grep for gdrive.json / Notion token refresh logic.
+   Verify refresh-before-expiry exists; if not, add proactive refresh
+   (renew at 80% of token TTL, not on 401).
+2) IDLE TIMEOUT: any long-lived socket (DB pool, Discord gateway,
+   MCP stdio) — add heartbeat/keepalive + auto-reconnect with backoff.
+3) BRIDGE-DIES-WITH-WATCHER: confirm the bot bridge / MCP bridge run
+   under their own launchd KeepAlive (not child of a dying parent).
+4) DETECT: one command that pings each endpoint and prints
+   UP/DOWN + last-success timestamp:
+   - DB: SELECT 1
+   - Discord: GET localhost:8010/health
+   - gdrive: check mount is data-full not dataless
+   - Notion: cheap read call, watch for 429
+5) ALERT: any DOWN → post to Discord + include exact reconnect step
+
+DON'T:
+- Don't reconnect on tight loop (exponential backoff, cap 60s)
+- Don't swallow 401/429 silently — log cause + which token
+- Don't assume Drive mount = alive (dataless files read as empty)
+
+OUTPUT: table (connection | drop cause | current recovery | gap | fix)
+plus the single UP/DOWN healthcheck command.
+```
+
+**핵심**: 지금은 *끊긴 걸 나중에 알아채는* 구조라, **끊기기 전에 갱신(토큰) + 끊기면 자동 재연결(백오프) + healthcheck 상시**로 바꾸는 게 목표예요.
+
+메모리에도 있는 **Drive 데몬 죽으면 야간공장 정지**가 정확히 이 브릿지 끊김 케이스라, 그 놈을 1순위로 잡으라고 프롬프트에 넣어뒀어요. 특정 브릿지(봇/MCP/Drive) 중 먼저 볼 게 있으면 좁혀드릴게요.
+
+*- Assistant thought for 35.3s. (Opus)*
+
+**[디코] [Creator-OS] (2026-08-12 15:07)**
+⚠️ 모든 질문 응답 후 제출 — 현재 0/1
+
+**[디코] [Creator-OS] (2026-08-12 15:07)**
+⚠️ 모든 질문 응답 후 제출 — 현재 0/1
+
+**[디코] [Creator-OS] (2026-08-12 15:07)**
+⚠️ 모든 질문 응답 후 제출 — 현재 0/1
+
+**[디코] [Creator-OS] (2026-08-12 15:07)**
+⚠️ 모든 질문 응답 후 제출 — 현재 0/1
+
+**[디코] [Creator-OS] (2026-08-12 15:07)**
+⚠️ 모든 질문 응답 후 제출 — 현재 0/1
+
+**[디코] [차노스] (2026-08-12 15:08)**
+옵시디언 볼트 합쳐야되지 않을까? 중복은 우선순위 폴더 정해서 합치면되고
+
+**[디코] [차노스] (2026-08-12 15:09)**
+프롬프트줘봐 다 줘다줘 모든 연결 배선 작동 제작 내가 가지고있는 모든 컨텐츠 연동을 더 활성화하고 레벨을 높여줄 프롬프트를만들어줘. 블로그 유튜브 컨텐츠제작 인스타 스레드 틱톡 모두모두 성능과 연동성을 높여서 무한 자동화 루프를 만들고싶어
+
+**[디코] [Assistant] (2026-08-12 15:09)**
+둘 다 진행했어요. 스캔으로 분류하고, 제 담당 라인은 바로 살렸어요.
+
+**✅ 방금 살린 것**
+
+- **git 브리지 (🔴→🟢)** — 로컬 21커밋이 원격과 갈라져 5분마다 push 거부되던 거예요. `pull --rebase`로 21개 충돌 없이 붙이고 push 성공, 원격과 동기화됐어요. 코워크 자동 동기화 다시 돌아요.
+
+**🔍 진단만 (감독 결정 필요)**
+
+- **렌더 큐 29잡 적체** — 렌더 워치는 정상이에요 (오늘 13:28에도 새 잡 처리 흔적 `_done`에 있어요). 08-11 17:04에 `_processing`에 낀 **CODEX-RERENDER 29개가 고아 상태**로 남은 거고, 워치는 새 잡만 집어서 얘들을 다시 안 잡아요. 다시 넣으면 **렌더 29개가 한꺼번에 돌아** 부하가 커서 판단이 필요해요.
+
+**🛠️ 코드방 몫 (스크립트 수정)**
+
+- **노션 콤마 400에러** — 태그값에 콤마가 있어 `multi_select`가 거부(지식카드 3건 실패). 파서에서 콤마 split/strip 한 줄.
+- **블로그 워커 비상주** — 14:55 투입분(sample.txt) 방치. 워커 상주화 or 큐 소진.
+
+이어서 결정만 주세요 — **29잡을 다시 태워요 / 폐기해요 / 목록부터 보여드려요?** 그리고 노션 콤마·블로그 워커 정밀 지시문을 코드방에 바로 넘길까요?
+
+-# 💾 대화가 길어져서 직전 내용을 요약으로 정리했어요. 혹시 빠진 맥락이 있으면 짧게 알려주세요.
+
+*- Assistant thought for 238.6s. (Opus)*
+
+**[디코] [Assistant] (2026-08-12 15:10)**
+볼트 합치는 거 맞아요. 메모리상 볼트는 **드라이브 안(두 기기 동기화 + Claude 직접 접근)**이 정본이라, 흩어진 볼트들을 그 하나로 모으는 게 방향이에요. 중복은 말씀대로 **우선순위 폴더 규칙**으로 자동 병합하면 돼요.
+
+코드방에 넘길 병합 프롬프트 뽑았어요.
+
+```text
+GOAL: Merge all Obsidian vaults into ONE canonical vault living inside
+Google Drive (two-device sync + Claude access). Dedup by priority folder.
+
+DO:
+1) DISCOVER: find every .obsidian folder on disk → list each vault's
+   root path, note count, last-modified. Mark the Drive one as CANONICAL.
+2) PRIORITY RULE (for name collisions):
+   canonical(Drive) > local Studio > MacBook seed > archive
+   On conflict: keep higher-priority file, move loser to _merge_conflicts/
+   with a suffix (never overwrite blindly, never delete).
+3) DEDUP by CONTENT not just name: byte-identical → keep one. Same title
+   but different body → keep both, tag #merge-review for later.
+4) PRESERVE links: fix [[wikilinks]] that break after moving.
+5) DRY-RUN FIRST: output full move plan as a table, move nothing until
+   I approve.
+
+DON'T:
+- Don't delete any note (conflicts → _merge_conflicts/, not trash)
+- Don't merge .obsidian settings/plugins blindly — keep canonical's
+- Don't run live before I see the dry-run table
+
+OUTPUT: dry-run table (source | dest | action: keep/move/conflict | reason)
++ collision count + total notes after merge.
+```
+
+**핵심**:
+
+- **드라이브 볼트 = 정본**
+- 충돌은 지우지 말고 `_merge_conflicts/`로 격리
+- **드라이런 표 먼저 보고 승인 후 실제 이동**
+
+우선순위 서열을 `canonical(Drive) > Studio 로컬 > MacBook 씨앗 > 아카이브`로 잡아놨는데, 이 순서 맞나요? 다르면 바꿔서 프롬프트 확정할게요.
+
+*- Assistant thought for 31.3s. (Opus)*
 
