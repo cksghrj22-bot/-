@@ -1,6 +1,6 @@
 # 웹·디스코드 #assistant 대화 (자동 동기화)
 
-_마지막 갱신: 2026-08-12 21:59:00 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
+_마지막 갱신: 2026-08-12 22:04:02 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
 _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합, 각 발화 앞 `[디코]`/`[웹]` 표기_
 
 ---
@@ -175,101 +175,6 @@ _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합,
 - 제가 밀어넣은 건 그 직전까지의 대화·5방 배선 전부예요
 
 5방에서 pull 했는데도 **여전히 새 대화가 안 뜨면**, 그건 깃 문제가 아니라 그 방 워처(`renderwatch2`)가 파일을 다시 안 읽는 경우예요 — 말씀해 주시면 워처 재시작으로 바로 잡을게요.
-
-**[디코] [Assistant] (2026-08-12 21:38)**
-좋은 질문이에요. 솔직하게 나눠서 답할게요.
-
-**자동으로 다 적용되진 않아요**
-
-- 방금 제게 하신 지시("덜 묻고 알아서 밀어라 + 품질 본진급")는 **이 대화의 제(assistant) 맥락**에만 들어왔어요.
-- 다른 4방(writer·designer·brain·developer)은 각자 별도 프로세스라, 제가 **공유 지식에 박아두지 않으면 못 봐요.**
-
-**단, 이미 5방 공통으로 깔려 있는 것도 있어요**
-
-- 차노쌤 영구 메모리에 **'확인 대기 제로 / 되묻기 최소화 / 착수 전 다 찾고 감독은 판정만 / 완료 전 검증'** 원칙이 이미 박혀 있어요. 이건 5방 모두 읽는 공통 바탕이에요.
-- 즉 오늘 하신 지시는 **새 원칙이 아니라, 안 지켜지던 기존 원칙을 다시 못박은 것**에 가까워요.
-
-**그래서 방금 5방 공통으로 저장했어요** (`directive_autonomy_and_quality_all_agents`)
-
-- 이제 어느 방(writer·designer·brain·developer)에서 부르셔도 같은 태도 — **덜 묻고 알아서 밀고, 완료 전 검증** — 로 움직여요.
-- 만약 다른 방에서 또 예전처럼 되묻으면 그 방에서 바로 지적해주세요. 제가 원인 짚을게요.
-
-*- Assistant thought for 41.5s. (Opus)*
-
-**[디코] [Creator-OS] (2026-08-12 21:38)**
-🟢 **[코드방·CAPTURE]** START
-새 콘텐츠 소싱 시작
-
-**[디코] [Creator-OS] (2026-08-12 21:38)**
-✅ **[코드방·CAPTURE]** DONE
-소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
-
-**[디코] [Creator-OS] (2026-08-12 21:38)**
-🟢 **[코드방·KNOWLEDGE]** START
-지식 동기화 시작
-
-**[디코] [Creator-OS] (2026-08-12 21:38)**
-✅ **[코드방·KNOWLEDGE]** DONE
-Notion: True, Obsidian: True
-
-**[디코] [Creator-OS] (2026-08-12 21:38)**
-📊 **[코드방·PRODUCE]** INFO
-대기: 6개, 진행중: 17개
-
-**[디코] [Creator-OS] (2026-08-12 21:39)**
-🟢 **[코드방·CAPTURE]** START
-새 콘텐츠 소싱 시작
-
-**[디코] [Creator-OS] (2026-08-12 21:39)**
-✅ **[코드방·CAPTURE]** DONE
-소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
-
-**[디코] [Creator-OS] (2026-08-12 21:39)**
-🟢 **[코드방·KNOWLEDGE]** START
-지식 동기화 시작
-
-**[디코] [Creator-OS] (2026-08-12 21:40)**
-✅ **[코드방·KNOWLEDGE]** DONE
-Notion: True, Obsidian: True
-
-**[디코] [Creator-OS] (2026-08-12 21:40)**
-📊 **[코드방·PRODUCE]** INFO
-대기: 6개, 진행중: 17개
-
-**[디코] [Creator-OS] (2026-08-12 21:41)**
-🟢 **[코드방·CAPTURE]** START
-새 콘텐츠 소싱 시작
-
-**[디코] [Creator-OS] (2026-08-12 21:41)**
-✅ **[코드방·CAPTURE]** DONE
-소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
-
-**[디코] [Creator-OS] (2026-08-12 21:41)**
-🟢 **[코드방·KNOWLEDGE]** START
-지식 동기화 시작
-
-**[디코] [Creator-OS] (2026-08-12 21:41)**
-✅ **[코드방·KNOWLEDGE]** DONE
-Notion: True, Obsidian: True
-
-**[디코] [Creator-OS] (2026-08-12 21:41)**
-📊 **[코드방·PRODUCE]** INFO
-대기: 6개, 진행중: 17개
-
-**[디코] [Creator-OS] (2026-08-12 21:42)**
-🟢 **[코드방·CAPTURE]** START
-새 콘텐츠 소싱 시작
-
-**[디코] [차노스] (2026-08-12 21:42)**
-클로드 코워크 급으로 튜닝해라
-
-**[디코] [Creator-OS] (2026-08-12 21:42)**
-✅ **[코드방·CAPTURE]** DONE
-소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
-
-**[디코] [Creator-OS] (2026-08-12 21:42)**
-🟢 **[코드방·KNOWLEDGE]** START
-지식 동기화 시작
 
 **[디코] [Creator-OS] (2026-08-12 21:42)**
 ✅ **[코드방·KNOWLEDGE]** DONE
@@ -609,6 +514,111 @@ Notion: True, Obsidian: True
 Notion: True, Obsidian: True
 
 **[디코] [Creator-OS] (2026-08-12 21:58)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 22:00)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 22:00)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 22:00)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 22:00)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Assistant] (2026-08-12 22:00)**
+⏰ **저녁 10시예요, 차노쌤.** 예약해둔 대로 알려드려요.
+
+지금은 **본진 터미널 Claude Code 세션에서 네이버 블로그 발행 자동화를 build 할 시간**이에요. 아래 인수인계 포인트 그대로 넘겨서 시작하세요.
+
+**① 레퍼런스 원고**
+- `~/atnown-content-pipeline/_JOBS_INBOX/내일발행_숱치기_본문.txt`
+- 구조: 소제목 6 · 굵게 · 인용 1 · 사진 6
+
+**② 파서 태그 규격**
+- `[H]` / `[B]` / `[QUOTE]` / `[IMG:NN]`
+
+**③ 아직 없는 것 → 만들 순서**
+- `_blog_queue/` 폴더 없음 → 큐 폴더 생성 → 파서 → launchd
+- launchd: **화·목·토·일 09:00 임시저장** (발행 버튼은 안 누름)
+
+**④ 네이버 프로필**
+- `_naver_profile` 고정 프로필 **무인 상태 확인됨**
+
+⚠️ **시작 전 재점검부터** — "배선은 늘 다시 짜야 하고 아직 완벽하지 않다"고 하셨으니, build 들어가기 전에 **현재 스크립트·프로필 상태부터 다시 확인**하고 가세요.
+
+이 자동화 build 자체는 무거운 로컬 작업이라 **본진 터미널 소관**이에요. 진행하다 막히는 지점 있으면 여기로 정리해서 던져주시면 이어서 도울게요.
+
+*- Assistant thought for 15.7s. (Opus)*
+
+**[디코] [Creator-OS] (2026-08-12 22:00)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 22:01)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 22:01)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 22:01)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 22:01)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 22:01)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 22:02)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 22:02)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 22:02)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 22:02)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 22:02)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 22:03)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 22:03)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 22:03)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 22:03)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 22:04)**
 📊 **[코드방·PRODUCE]** INFO
 대기: 6개, 진행중: 17개
 
