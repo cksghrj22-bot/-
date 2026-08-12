@@ -1,6 +1,6 @@
 # 웹·디스코드 #assistant 대화 (자동 동기화)
 
-_마지막 갱신: 2026-08-12 10:29:56 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
+_마지막 갱신: 2026-08-12 10:34:58 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
 _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합, 각 발화 앞 `[디코]`/`[웹]` 표기_
 
 ---
@@ -74,59 +74,6 @@ _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합,
 - 5분 주기 워처(`com.atnown.discord-cowork-sync`)가 다음 사이클부터 자동으로 웹까지 실어 보내요
 
 **한 가지 참고** — `logs/discord_cowork_sync.*.log` 두 파일이 git에 추적돼 있어서 워처가 돌 때마다 "변경됨"으로 떠서 rebase를 살짝 방해해요. 지금 동작엔 지장 없지만, 원하시면 이 로그를 gitignore로 빼서 깔끔하게 정리해드릴까요?
-
-**[디코] [Assistant] (2026-08-11 17:05)**
-맥락 확인했어요. Captain Hook이 올린 **TASK_009 잡업무 6건** 안에 블로그 발주 건이 있는 걸로 보이고, 차노쌤은 "너랑 코워크 블로그방이 하면 돼"라고 하셨네요. 실제 발주 내용과 코워크 블로그방 연결 방식을 확인할게요.코워크 방 구조와 발주 흐름을 파악할게요.D방이 블로그방이네요 (블로그 작성·디스코드→네이버블로그). 상태에 "**7번 블로그 초고 인수 대기**"가 있어요. 발주할 실제 블로그 주제/스펙을 확인할게요.B방이 쓴 **블로그 초고(청담 미용실 추천, 914자)**를 D방으로 넘겨서 네이버 발행하는 흐름이네요. 초고 파일과 D방 발주(수신) 통로를 찾을게요.D방이 블로그방이고, B방이 넘긴 **청담 미용실 추천 초고(914자)**가 인수 대기 상태네요. 발주하려면 초고 실물이 있어야 하니 찾아볼게요.핵심 발견했어요 — `_cowork_sync/인수인계/D방_블로그_2026-08-11.md` (인수인계 통로) + 네이버 블로그 발행 스크립트가 있네요. 발주 내용과 발행 메커니즘을 확인할게요.완전히 파악했어요. 발주 대상과 통로가 명확해요. **임시저장까지만 자동, 네이버 발행은 형 건별 승인**이 규칙이라 그 선을 지켜서 발주만 D방 통로에 넣을게요.
-
-발주 오더를 D방 인수인계 통로에 작성하고 방 로그에 남길게요.발주 노트 작성 완료. 이제 D방이 볼 수 있게 방 로그에 발주 줄을 남길게요.발주는 로컬 공유 바탕에 들어갔고 D방이 다음 사이클에 읽어요. "모든 걸 한 바탕에 공유" 원칙대로 이 발주 2파일만 골라 git 백업까지 해둘게요.원격에 다른 방 작업이 올라와 있어요. 리베이스로 내 발주 커밋을 위에 얹어 정리할게요.git 원격 히스토리가 크게 갈라져 있어서(초기화 커밋 충돌) 리베이스가 엉키네요. **강제 푸시는 위험하니 안 해요.** 리베이스를 안전하게 되돌리고 로컬 발주 파일만 온전히 지킬게요 — D방은 로컬을 읽으니 발주 자체는 이미 살아있어요.로컬 발주는 온전해요(커밋 4510a0a). 리베이스 전에 stash해둔 다른 방 작업분을 원상복구할게요.발주 완료했어요, 차노쌤. **블로그는 너랑 D방이 하면 된다**는 지시대로, 본진이 오더를 넣고 D방이 집행하는 구조로 걸어놨어요.
-
-**발주 넣은 것 (2건)**
-- **① 청담 미용실 추천** (914자 초고, B방이 15:44에 D방으로 넘김·인수 대기) → D방이 초고 실물화 + 차노 블로그 규격 반영 + 네이버(chanlolo2) **임시저장까지**
-- **② 매직 흔한오해** (이미 임시저장 완료분) → 사진 6장을 도입/오해1/오해3 세 곳에 배치 후 **발행 대기**로
-
-**어디에 넣었나**
-- 오더 노트: `_cowork_sync/인수인계/발주_블로그_본진→D방_2026-08-11.md`
-- 방 로그(`_ROOMS_LOG.md`)에 본진 발주 줄 기록 → D방이 다음 사이클에 읽고 집행해요
-- 로컬 커밋 완료(4510a0a). 다른 방 WIP도 원상복구했어요
-
-**지킨 선(중요)**
-- 규칙대로 **임시저장까지만 자동 / 네이버 발행은 형 건별 승인**이라, 발주엔 발행을 안 넣었어요.
-
-**짚어둘 두 가지**
-- git 원격 백업은 원격 히스토리가 크게 갈라져 있어(초기화 커밋 충돌) **강제 푸시는 안 했어요**. 로컬 발주는 안전하고 D방은 로컬을 읽으니 집행엔 지장 없어요. 원격 정리는 따로 손봐야 해요.
-- **매직 흔한오해**는 이미 임시저장이 끝나 있어서, 사진 배치만 되면 바로 **형 발행 승인 한 번**이면 올라가요. D방이 배치 끝내면 제가 발행 승인 카드로 올릴게요.
-
-째깍 준비되는 대로 발행 게이트에서 다시 부를게요.
-
-*- Assistant thought for 325.4s. (Opus)*
-
-**[디코] [Captain Hook] (2026-08-11 17:06)**
-**REPORT_D방_20260811_종합보고** — 본문은 첨부 .md 참조. 결과는 드라이브 `_JOBS_INBOX`로.
-
-**[디코] [Assistant] (2026-08-11 17:08)**
-코워크 방 구조랑 발주 상태를 확인했어요. **블로그 건은 이미 저(본진)+D방(블로그방) 라인으로 발주가 걸려 있어요.**
-
-**지금까지 세팅된 것**
-
-- 발주 노트를 공유 바탕에 작성 완료 → `_cowork_sync/인수인계/발주_블로그_본진→D방_2026-08-11.md`
-- 방 로그(`_ROOMS_LOG.md`)에도 발주 줄 기록 완료 (B방 → D방 인수 대기 흐름 확인됨)
-
-**D방이 이어서 할 일 (다음 사이클)**
-
-- **발주 1 — 청담 미용실 추천**: B방 914자 초고를 실물 파일로 뽑아 차노 블로그 규격(제목=본문 1.3배·강조·문단 간격) 반영 → 네이버(chanlolo2) **임시저장까지만**
-- **발주 2 — 매직 흔한오해**: 이미 임시저장된 글에 사진 6장 배치(도입/오해1/오해3) → 배치 끝나면 발행 대기
-
-**형 승인이 필요한 지점 (자동 안 함)**
-
-- 두 건 다 **임시저장·배치까지만 자동**이고, **네이버 실제 발행은 형 건별 승인**이에요. 준비 끝나면 발행 승인 카드로 올릴게요.
-
-한 가지 정직하게 짚을게요. 발주 내용은 로컬 공유 바탕에 다 올라가서 D방이 읽을 수 있는데, **트렁크(git 원격) 백업 push 는 다른 방 커밋과 히스토리가 갈라져서 지금 막혀 있어요.** 라이브 인수인계는 공유 폴더 기반이라 발주 전달 자체엔 지장 없지만, 원격 백업까지 맞추려면 force-push 가 필요해서 형 승인 없이는 안 건드렸어요.
-
-**원격 트렁크 백업도 지금 강제로 맞출까요?** (막히면 로컬 공유 바탕으로만 두고 진행해도 돼요)
-
--# 💾 대화가 길어져서 직전 내용을 요약으로 정리했어요. 혹시 빠진 맥락이 있으면 짧게 알려주세요.
-
-*- Assistant thought for 174.7s. (Opus)*
 
 **[디코] [Creator-OS] (2026-08-11 17:09)**
 *쇼츠 4개 렌더 (0717 보이스시안 · 흑백오버레이+교보손글씨자막+1:1)*
@@ -713,4 +660,38 @@ Creator OS 필름룩/릴스초안 파악 완료: 브리핑 `_cowork_sync/briefin
 
 **[디코] [Captain Hook] (2026-08-12 10:29)**
 나노바나나 키 유효·모델명 수정 완료. Gemini 생성은 429라 대체 image_gen으로 매듭카드 2장 저장: _out/매듭카드_ai/컷A.png, 컷B.png · 발행 없음
+
+**[디코] [차노스] (2026-08-12 10:34)**
+B=~/atnown-content-pipeline; L=~/Library/LaunchAgents; U=$(id -u)
+W=$(ls $B/scripts/render_watch.sh $B/scripts/renderwatch.sh 2>/dev/null | head -1)
+[ -z "$W" ] && W=$(find $B -maxdepth 3 -name "*watch*.sh" ! -name "watchdog*" | head -1)
+LB=com.atnown.renderwatch; [ -f $L/com.atnown.renderwatch2.plist ] && LB=com.atnown.renderwatch2
+echo "워처=$W / 라벨=$LB"
+mkdir -p $L
+cat > $L/$LB.plist <<P
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>Label</key><string>$LB</string>
+<key>ProgramArguments</key><array>
+<string>/usr/bin/caffeinate</string><string>-dimsu</string>
+<string>/bin/bash</string><string>$W</string></array>
+<key>RunAtLoad</key><true/><key>KeepAlive</key><true/>
+<key>ThrottleInterval</key><integer>30</integer>
+<key>StandardOutPath</key><string>/tmp/renderwatch.out.log</string>
+<key>StandardErrorPath</key><string>/tmp/renderwatch.err.log</string>
+<key>EnvironmentVariables</key><dict><key>PATH</key>
+<string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string></dict>
+</dict></plist>
+P
+launchctl bootout gui/$U/$LB 2>/dev/null
+launchctl bootstrap gui/$U $L/$LB.plist && launchctl enable gui/$U/$LB
+launchctl kickstart -k gui/$U/$LB
+rm -f $B/_PAUSE_PULLS.stop
+mv $B/_processing/*.json $B/_jobs/ 2>/dev/null
+sleep 3; launchctl print gui/$U/$LB | grep -E "state|pid" | head -3
+echo "대기열: $(ls $B/_jobs/*.json 2>/dev/null | wc -l)"
+
+**[디코] [차노스] (2026-08-12 10:34)**
+나노바나나 키 유효야?
 
