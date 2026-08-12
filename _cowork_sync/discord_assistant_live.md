@@ -1,6 +1,6 @@
 # 웹·디스코드 #assistant 대화 (자동 동기화)
 
-_마지막 갱신: 2026-08-12 16:57:21 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
+_마지막 갱신: 2026-08-12 17:02:22 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
 _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합, 각 발화 앞 `[디코]`/`[웹]` 표기_
 
 ---
@@ -74,106 +74,6 @@ _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합,
 - 5분 주기 워처(`com.atnown.discord-cowork-sync`)가 다음 사이클부터 자동으로 웹까지 실어 보내요
 
 **한 가지 참고** — `logs/discord_cowork_sync.*.log` 두 파일이 git에 추적돼 있어서 워처가 돌 때마다 "변경됨"으로 떠서 rebase를 살짝 방해해요. 지금 동작엔 지장 없지만, 원하시면 이 로그를 gitignore로 빼서 깔끔하게 정리해드릴까요?
-
-**[디코] [Creator-OS] (2026-08-12 16:35)**
-🟢 **[코드방·CAPTURE]** START
-새 콘텐츠 소싱 시작
-
-**[디코] [Creator-OS] (2026-08-12 16:35)**
-✅ **[코드방·CAPTURE]** DONE
-소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
-
-**[디코] [Creator-OS] (2026-08-12 16:35)**
-🟢 **[코드방·KNOWLEDGE]** START
-지식 동기화 시작
-
-**[디코] [Creator-OS] (2026-08-12 16:35)**
-✅ **[코드방·KNOWLEDGE]** DONE
-Notion: True, Obsidian: True
-
-**[디코] [Creator-OS] (2026-08-12 16:35)**
-📊 **[코드방·PRODUCE]** INFO
-대기: 6개, 진행중: 17개
-
-**[디코] [Creator-OS] (2026-08-12 16:36)**
-🟢 **[코드방·CAPTURE]** START
-새 콘텐츠 소싱 시작
-
-**[디코] [Creator-OS] (2026-08-12 16:36)**
-✅ **[코드방·CAPTURE]** DONE
-소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
-
-**[디코] [Creator-OS] (2026-08-12 16:36)**
-🟢 **[코드방·KNOWLEDGE]** START
-지식 동기화 시작
-
-**[디코] [Creator-OS] (2026-08-12 16:37)**
-✅ **[코드방·KNOWLEDGE]** DONE
-Notion: True, Obsidian: True
-
-**[디코] [Creator-OS] (2026-08-12 16:37)**
-📊 **[코드방·PRODUCE]** INFO
-대기: 6개, 진행중: 17개
-
-**[디코] [Creator-OS] (2026-08-12 16:38)**
-🟢 **[코드방·CAPTURE]** START
-새 콘텐츠 소싱 시작
-
-**[디코] [Creator-OS] (2026-08-12 16:38)**
-✅ **[코드방·CAPTURE]** DONE
-소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
-
-**[디코] [Creator-OS] (2026-08-12 16:38)**
-🟢 **[코드방·KNOWLEDGE]** START
-지식 동기화 시작
-
-**[디코] [Creator-OS] (2026-08-12 16:38)**
-✅ **[코드방·KNOWLEDGE]** DONE
-Notion: True, Obsidian: True
-
-**[디코] [Creator-OS] (2026-08-12 16:38)**
-📊 **[코드방·PRODUCE]** INFO
-대기: 6개, 진행중: 17개
-
-**[디코] [Assistant] (2026-08-12 16:38)**
-정본 단일화 끝났어요. 이제 **만화방·영상방이 별개**로 확실히 박혔고, 정본도 하나(`_ROOMS.md`)로 못 박았어요.
-
-**✅ 정리된 것**
-
-- `_ROOMS.md` — 정본 선언 배너 추가 (단일출처)
-- `_ROOMS_5방.md` — 충돌 전면 교정: 영상=B·만화방 없음이던 걸 → **영상=방2, 만화=방4 별개**로 수정. "만화랑 영상은 나눠야지"를 경고문·라우팅표에 명시
-- `_cowork_sync/_ROOMS.md` — 5방 요약표 넣어 정합화
-- **차노기획실**은 방이 아니라 **'총괄 레이어(지휘층)'**로 살려뒀어요 — 방들 위에서 지휘하는 자리로요
-
-**📍 최종 5방**
-
-- 방1 블로그작업 (구 D)
-- 방2 영상작업 (구 A)
-- 방3 인스타-낙타카드 (구 D 승계, 코드 미확정)
-- 방4 만화방 (신규, 방2와 별개)
-- 방5 샵-교육디렉팅 (신규)
-
-뒷단 B(발행)·C(자료실)·E(B롤)은 5방 공통이에요.
-
-**형이 정해줄 것 두 개**
-
-- **방3 방코드** — 지금 `N`(낙타, 이미지 트랙)으로 제안만 병기해뒀어요. **`N`으로 확정할까요?** 확정하면 3개 파일 + `_STATE_NOW.md`에 한 번에 기입할게요.
-- 드라이브 정본 `_codex_inbox/_ROOMS_공유.md`가 아직 옛 3방 체계예요 — 이건 이번 스코프 밖이라, **드라이브 것도 5방으로 맞출까요?** (맞춰야 본진·맥북에서도 같은 방이 보여요.)
-
--# 💾 대화가 길어져서 직전 내용을 요약으로 정리했어요. 혹시 빠진 맥락이 있으면 짧게 알려주세요.
-
-*- Assistant thought for 171.4s. (Opus)*
-
-**[디코] [차노스] (2026-08-12 16:39)**
-응확정하고 그렇게해
-
-**[디코] [Creator-OS] (2026-08-12 16:39)**
-🟢 **[코드방·CAPTURE]** START
-새 콘텐츠 소싱 시작
-
-**[디코] [Creator-OS] (2026-08-12 16:39)**
-✅ **[코드방·CAPTURE]** DONE
-소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
 
 **[디코] [Creator-OS] (2026-08-12 16:39)**
 🟢 **[코드방·KNOWLEDGE]** START
@@ -569,6 +469,89 @@ Notion: True, Obsidian: True
 Notion: True, Obsidian: True
 
 **[디코] [Creator-OS] (2026-08-12 16:56)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 16:57)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 16:57)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 16:57)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 16:57)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 16:57)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 16:58)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 16:59)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 16:59)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 16:59)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 16:59)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 17:00)**
+🔌 연동 점검 핑
+
+**[디코] [Creator-OS] (2026-08-12 17:00)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 17:00)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 17:00)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 17:00)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 17:00)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 17:01)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 17:01)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 17:01)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 17:01)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 17:01)**
 📊 **[코드방·PRODUCE]** INFO
 대기: 6개, 진행중: 17개
 
