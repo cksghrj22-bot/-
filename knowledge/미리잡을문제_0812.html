@@ -1,0 +1,74 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>미리 잡을 문제</title><style>
+:root{--bg:#0d0d0f;--panel:#141519;--line:#23252b;--tx:#eef0f3;--mut:#8b98a8;--dim:#5f6a78;
+--cy:#7ee7f0;--ok:#5ad48a;--wait:#f0c96b;--stop:#f07b7b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);padding:20px 14px 60px;line-height:1.65;
+font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR",sans-serif}
+.wrap{max-width:880px;margin:0 auto}
+.rule{width:64px;height:4px;background:var(--cy);border-radius:2px}
+h1{font-size:25px;margin:14px 0 4px;letter-spacing:-.4px}
+.sub{color:var(--mut);font-size:13px;margin-bottom:22px}
+.box{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--cy);
+border-radius:10px;padding:13px 16px;margin:12px 0}
+.box b{font-size:14.5px} .box p{margin:6px 0 0;color:var(--mut);font-size:13px}
+section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:11px}
+.hd{display:flex;align-items:center;gap:9px;margin-bottom:5px;flex-wrap:wrap}
+.no{background:var(--cy);color:#0d0d0f;font-size:11.5px;font-weight:700;border-radius:5px;padding:2px 7px}
+h3{font-size:16px;margin:0;flex:1;letter-spacing:-.3px}
+.lev{font-size:10.5px;border:1px solid;border-radius:5px;padding:2px 7px}
+.src{color:var(--dim);font-size:11.5px;margin-bottom:9px}
+p.w{margin:0 0 7px;font-size:13.4px;color:var(--mut)}
+p.w b{color:var(--tx);font-size:12px;letter-spacing:.5px;margin-right:6px}
+p.f{margin:0;font-size:13.4px;color:var(--tx);background:#1a1c21;border-radius:8px;padding:9px 11px}
+p.f b{color:var(--ok);font-size:12px;letter-spacing:.5px;margin-right:6px}
+footer{margin-top:30px;color:var(--dim);font-size:11.5px;border-top:1px solid var(--line);padding-top:13px}
+</style></head><body><div class="wrap">
+<div class="rule"></div><h1>미리 잡을 문제 여섯</h1>
+<div class="sub">2026-08-12 · 옵시디언의 형 사고 문법으로 지금 작업을 채점한 결과</div>
+
+<div class="box"><b>형 꼭짓점에서 다시 시작했다</b>
+<p>「보는 사람의 시야를 넓히는 것, 이게 내 영상의 목적이야.」<br>
+시야를 넓힌다 = 같은 것을 다르게 보게 만든다 → 그래서 구조는 언제나 <b>「A가 아니라 B다」</b>.<br>
+이 기준으로 지금 만들고 있는 것들을 채점했다. 아직 안 터진 게 넷, 이미 터진 게 둘이다.</p></div>
+
+<section><div class="hd"><span class="no">1</span><h3>새 대본 셋이 형 사고 문법 6단계 중 둘을 빼먹었다</h3>
+<span class="lev" style="color:var(--stop);border-color:var(--stop)">터짐</span></div>
+<div class="src">근거 — 차노_사고_문법.md · 생각의 순서</div>
+<p class="w"><b>무엇이</b> 형 문법은 공감 훅 → 통념 → 재정의 → **이질결합** → 철학화 → **판정형 되묻기** 여섯 단계다. C01·C02·C03을 대보니 앞 셋은 있는데 **이질결합(미용 밖 사물 비유)이 하나도 없고, 끝을 전부 단정으로 닫았다.**</p>
+<p class="w"><b>왜 문제인가</b> 형 재정의 은행에는 카멜커피·비행기 각도 1도·옷장·삼각김밥·아이스아메리카노 얼음이 있다. 그게 「시야를 넓힌다」의 장치인데 내 대본엔 미용 안에서만 돈다. 그리고 되묻기가 없으니 시청자가 자기 답을 낼 자리가 없다.</p>
+<p class="f"><b>어떻게</b> C01 끝 「시간도 돈도 머릿결도 삽니다」 뒤에 되묻기 한 줄을 붙인다 — 「당신의 머리는, 지금 몇 퍼센트에서 시작하고 있나요?」<br>C02에 이질결합을 넣는다 — 볼륨을 죽여서 살리는 건 사진 보정에서 밝은 데를 낮춰야 어두운 데가 사는 것과 같다.<br><b>댓글 중앙값이 2인 게 이것 때문이다.</b></p></section><section><div class="hd"><span class="no">2</span><h3>내가 「되물어라」를 새 제안인 것처럼 냈다</h3>
+<span class="lev" style="color:var(--dim);border-color:var(--dim)">이미 함</span></div>
+<div class="src">근거 — 차노_사고_문법.md · 6번 판정형 되묻기</div>
+<p class="w"><b>무엇이</b> 바이럴 역제안에서 「되물으며 끝내자」를 내 제안으로 올렸다. 그건 **형이 이미 문법으로 박아둔 것**이다.</p>
+<p class="w"><b>왜 문제인가</b> `찾아.py`를 안 쳤다. 규약 0번을 내가 어겼다. 같은 걸 두 번 만든 셈이고, 형에겐 「얘가 내 문서를 안 읽는다」는 신호다.</p>
+<p class="f"><b>어떻게</b> 대본 쓰기 전에 `찾아.py 사고문법`을 친다. 재정의는 **은행에서 꺼내 쓰고**, 없을 때만 새로 만든다. 새로 만든 건 ★로 표시해 형 확인을 받는다.</p></section><section><div class="hd"><span class="no">3</span><h3>검정 카드가 「기준점 없는 화면」이 되고 있다</h3>
+<span class="lev" style="color:var(--wait);border-color:var(--wait)">터지는 중</span></div>
+<div class="src">근거 — 차노_생각의흐름_기준점.md · 1번</div>
+<p class="w"><b>무엇이</b> 형 규칙 둘이 지금 부딪힌다. ①「어정쩡하게 붙이느니 차라리 검정」 ②「변화를 보여줄 땐 기준(얼굴·두상)을 같은 화면에 둔다」. 시니어편에서 「얇아지고 가라앉는다」를 검정으로 처리했다. 어정쩡한 컷은 피했지만 **기준점도 같이 사라졌다.**</p>
+<p class="w"><b>왜 문제인가</b> 형이 준 해법은 셋째 길이다 — 「추상으로 안 되면 **실물 위에 얹어라**」. 실사 위에 개념 오버레이. 검정은 도망이고 오버레이가 정답이다.</p>
+<p class="f"><b>어떻게</b> 검정 카드를 쓰기 전에 **실사 위 오버레이가 가능한지 먼저 본다.** 정수리 실사 위에 화살표·선으로 「가라앉는 방향」을 얹으면 기준점과 개념이 둘 다 산다. 검정은 그것도 안 될 때만.<br>수치 체크리스트에 <b>검정 카드 쓰기 전 오버레이 검토 의무</b>를 넣는다.</p></section><section><div class="hd"><span class="no">4</span><h3>세 편 다 「주인공」이 첫 3초에 없다</h3>
+<span class="lev" style="color:var(--stop);border-color:var(--stop)">터짐</span></div>
+<div class="src">근거 — 차노_생각의흐름_기준점.md · 2번 키워드는 2층이다</div>
+<p class="w"><b>무엇이</b> 형 규칙 — **1층은 이 편의 주인공(누구 이야기인가), 클립으로 보여준다. 2층은 단락 핵심어, 자막으로.** 시니어편은 사모님이 나와서 1층이 섰다. **C01·C02·C03은 주인공이 없다.** 「전체펌 말고 부분펌」은 누구 얘긴지 첫 3초에 안 보인다.</p>
+<p class="w"><b>왜 문제인가</b> 유튜브 실측과도 정확히 겹친다. 잘된 편은 전부 대상이 좁았다 — 남자·여자·둥근 얼굴·여름. 형 문서와 알고리즘이 같은 말을 하고 있다.</p>
+<p class="f"><b>어떻게</b> 세 편에 주인공을 박는다. C01은 「펌 자주 하는 분」, C02는 「정수리 납작한 분」, C03은 「사진 가져오시는 분」. **첫 컷에 그 사람이 보여야 한다.** 지금 필요한 촬영 목록에 이 기준을 더한다.</p></section><section><div class="hd"><span class="no">5</span><h3>노션 「형 원문」 체크를 기계가 오판한다</h3>
+<span class="lev" style="color:var(--wait);border-color:var(--wait)">곧 터짐</span></div>
+<div class="src">근거 — 콘텐츠_출처_진위_대장.md</div>
+<p class="w"><b>무엇이</b> 자동 동기화 스크립트가 본문 앞부분에 「이찬호」라는 글자가 있으면 형 원문으로 체크한다. **규약 문서에도 「이찬호 지시」가 들어 있어서 전부 형 원문으로 찍힌다.**</p>
+<p class="w"><b>왜 문제인가</b> 형이 2026-07-16에 못 박은 게 이거다 — 「Claude 창작을 이찬호 생각으로 착각 금지」. 1년 뒤에 이 대장을 보고 콘텐츠를 만들면 **내 창작을 형 말로 알고 쓴다.** 제일 위험한 오염이다.</p>
+<p class="f"><b>어떻게</b> 판정을 세 갈래로 바꾼다 — 「형 구술」(따옴표 안 원문이 있을 때만) · 「형 지시」(규약) · 「내 정리」. 애매하면 **비워두고 형 확인 대기**로 둔다. 체크박스 하나로 뭉개지 않는다.</p></section><section><div class="hd"><span class="no">6</span><h3>하루 3개 목표가 형 자신의 실측과 부딪힌다</h3>
+<span class="lev" style="color:var(--wait);border-color:var(--wait)">곧 터짐</span></div>
+<div class="src">근거 — 유튜브 150편 실측 · 예약 리듬 규약</div>
+<p class="w"><b>무엇이</b> 예약 규약은 하루 3개(11시·16시·20시)다. 그런데 실측은 **이번 주 11편에 조회 중앙값 1,363 · 지난주 16편에 947**이었다. 적게 내고 잘 만든 주가 이겼다.</p>
+<p class="w"><b>왜 문제인가</b> 지금 클립이 없어서 어차피 3개를 못 낸다. 무리하면 아까처럼 **완성본을 B롤로 쓰는 사고**가 또 난다. 개수를 맞추려다 규격을 깨는 게 제일 나쁜 순서다.</p>
+<p class="f"><b>어떻게</b> **개수를 목표로 두지 않는다.** 슬롯은 3개로 열어두되 채울 게 없으면 비운다. 대신 <b>「낼 수 있는 편 수」를 소재가 정한다</b>는 걸 주간 피드백에 숫자로 올린다 — 이번 주 소재로 만들 수 있는 편이 몇 개인지.</p></section>
+
+<div class="box"><b>한 줄로 줄이면</b>
+<p>형 문서에 답이 다 있는데 <b>내가 안 읽고 만들었다.</b>
+되묻기도, 이질결합도, 기준점도, 주인공 2층 구조도 전부 이미 박제돼 있었다.<br>
+그래서 제일 먼저 고칠 건 대본이 아니라 <b>내 순서</b>다 — 만들기 전에 `찾아.py`부터.</p></div>
+
+<footer>근거는 전부 형 옵시디언 문서다 — 차노_사고_문법 · 차노_생각의흐름_기준점 · 차노_흐름차이_본질 · 콘텐츠_출처_진위_대장<br>
+고칠 것에 동의하면 그대로 반영하고, 아니면 어느 줄이 틀렸는지 말해달라.</footer>
+</div></body></html>
