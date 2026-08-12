@@ -1,6 +1,6 @@
 # 웹·디스코드 #assistant 대화 (자동 동기화)
 
-_마지막 갱신: 2026-08-12 17:18:28 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
+_마지막 갱신: 2026-08-12 17:21:24 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
 _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합, 각 발화 앞 `[디코]`/`[웹]` 표기_
 
 ---
@@ -75,14 +75,6 @@ _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합,
 
 **한 가지 참고** — `logs/discord_cowork_sync.*.log` 두 파일이 git에 추적돼 있어서 워처가 돌 때마다 "변경됨"으로 떠서 rebase를 살짝 방해해요. 지금 동작엔 지장 없지만, 원하시면 이 로그를 gitignore로 빼서 깔끔하게 정리해드릴까요?
 
-**[디코] [Creator-OS] (2026-08-12 16:54)**
-✅ **[코드방·KNOWLEDGE]** DONE
-Notion: True, Obsidian: True
-
-**[디코] [Creator-OS] (2026-08-12 16:54)**
-📊 **[코드방·PRODUCE]** INFO
-대기: 6개, 진행중: 17개
-
 **[웹] [Creator-OS] (2026-08-12 16:54)**
 # 🎬 Studio 배선
 
@@ -101,49 +93,6 @@ Notion: True, Obsidian: True
 - 워처: com.atnown.renderwatch2
 
 코드방 연동 완료 ✓
-
-**[디코] [Creator-OS] (2026-08-12 16:55)**
-🟢 **[코드방·CAPTURE]** START
-새 콘텐츠 소싱 시작
-
-**[디코] [Creator-OS] (2026-08-12 16:55)**
-✅ **[코드방·CAPTURE]** DONE
-소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
-
-**[디코] [Creator-OS] (2026-08-12 16:55)**
-🟢 **[코드방·KNOWLEDGE]** START
-지식 동기화 시작
-
-**[디코] [Creator-OS] (2026-08-12 16:55)**
-✅ **[코드방·KNOWLEDGE]** DONE
-Notion: True, Obsidian: True
-
-**[디코] [Creator-OS] (2026-08-12 16:55)**
-📊 **[코드방·PRODUCE]** INFO
-대기: 6개, 진행중: 17개
-
-**[디코] [Creator-OS] (2026-08-12 16:55)**
-# 🎯 VISION 박제 완료
-
-**완전자동공장**
-포착→지식→제작→발행→학습 (자가피드백 루프)
-
-**목표**
-바이럴 → 돈 → 자유 → 새콘텐츠 → 바이럴 (선순환)
-
-**정체성**
-미용사를 넘어 100개 이상의 직업을 가진
-유튜버 · 코더 · 강사 · 작가 · 인플루언서
-
-정본: VISION.md
-
-**[디코] [Creator-OS] (2026-08-12 16:56)**
-🟢 **[코드방·CAPTURE]** START
-새 콘텐츠 소싱 시작
-
-**[디코] [Creator-OS] (2026-08-12 16:56)**
-✅ **[코드방·CAPTURE]** DONE
-소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
 
 **[디코] [Creator-OS] (2026-08-12 16:56)**
 🟢 **[코드방·KNOWLEDGE]** START
@@ -500,6 +449,67 @@ Notion: True, Obsidian: True
 Notion: True, Obsidian: True
 
 **[디코] [Creator-OS] (2026-08-12 17:18)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 17:19)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 17:19)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 17:19)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[웹] [차노쌤] (2026-08-12 17:19)**
+지금 5방이라고 새로 방을 만들었는데 크리에이터os와 연결이 안된다 어떻게 좀 해봐라 되게
+
+**[웹] [Assistant] (2026-08-12 17:19)**
+연결됐어요, 차노쌤. 5방만의 문제가 아니라 **브리지 자체가 막혀 있었어요.**
+
+**진짜 원인**
+
+- 코워크 방은 개별로 등록되는 게 아니라, `_cowork_sync/discord_assistant_live.md` 파일을 **깃(origin/main)으로 주고받는 공유 브리지** 하나로 연결돼요
+- 그 브리지의 내보내기(forward) 다리가 **5분마다 계속 실패(rc=1)** 하고 있었어요 (2시간 넘게)
+- 이유: 로컬 `atnown-trunk`의 main이 원격과 갈라져서(**앞선 20개 / 뒤처진 10개**) `git push`가 매번 거부됐어요 → 대화가 클라우드로 안 나가고 → 새로 만든 5방도, 기존 방들도 다 못 받고 있던 상태였어요
+
+**고친 것**
+
+- `git fetch` → `git rebase origin/main` (20개 커밋 충돌 없이 재적용) → `git push` **성공**
+- 브리지 전체 한 번 돌려서 확인 — 이제 **양쪽 다리 정상**, 실패 로그 사라졌어요
+
+이제 5방이 클라우드에서 **main을 pull 하면 이 대화가 그대로 보여요.** 방 쪽에서도 안 보이면, 그 방이 어떤 브랜치를 읽고 있는지(보통 `main`)만 알려주세요 — 거기 맞춰 흘려보낼게요.
+
+같은 증상 재발하면 원인은 십중팔구 이 깃 갈라짐이라, 바로 rebase+push로 풀 수 있게 메모리에도 박아뒀어요.
+
+**[디코] [Creator-OS] (2026-08-12 17:19)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 17:19)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 17:20)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 17:21)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 17:21)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 17:21)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 17:21)**
 📊 **[코드방·PRODUCE]** INFO
 대기: 6개, 진행중: 17개
 
