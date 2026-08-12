@@ -1,6 +1,6 @@
 # 웹·디스코드 #assistant 대화 (자동 동기화)
 
-_마지막 갱신: 2026-08-12 15:29:23 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
+_마지막 갱신: 2026-08-12 15:31:50 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
 _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합, 각 발화 앞 `[디코]`/`[웹]` 표기_
 
 ---
@@ -74,283 +74,6 @@ _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합,
 - 5분 주기 워처(`com.atnown.discord-cowork-sync`)가 다음 사이클부터 자동으로 웹까지 실어 보내요
 
 **한 가지 참고** — `logs/discord_cowork_sync.*.log` 두 파일이 git에 추적돼 있어서 워처가 돌 때마다 "변경됨"으로 떠서 rebase를 살짝 방해해요. 지금 동작엔 지장 없지만, 원하시면 이 로그를 gitignore로 빼서 깔끔하게 정리해드릴까요?
-
-**[디코] [Assistant] (2026-08-12 15:06)**
-자꾸 죽는 와처/런처는 **macOS launchd (LaunchAgent) 로 KeepAlive 감싸는 게 정답**이에요. 지금은 `&` 백그라운드나 셸 스크립트로 띄워서, 크래시·로그아웃·슬립 후에 안 살아나는 거예요.
-
-코드방에 그대로 넘길 프롬프트 뽑았어요.
-
-```text
-GOAL: Stop blog_queue_worker / Google Drive daemon / any watcher from
-dying silently. Make each a launchd LaunchAgent that auto-restarts.
-
-DO:
-1) List every long-running watcher started by & or a shell script
-   (blog_queue_worker.py, Notion poller, gdrive mount check, etc.)
-2) For each, write ~/Library/LaunchAgents/com.atnown.<name>.plist with:
-   - RunAtLoad=true, KeepAlive=true (restart on crash)
-   - ThrottleInterval=30 (avoid crash-loop spin)
-   - StandardOutPath / StandardErrorPath → ~/atnown-logs/<name>.log
-   - WorkingDirectory + absolute python/node path (no PATH assumptions)
-3) launchctl bootstrap gui/$(id -u) <plist>; verify with
-   launchctl print gui/$(id -u)/com.atnown.<name>
-4) Add a 1-line healthcheck: grep launchctl list, report any watcher
-   not running → post to Discord morning briefing
-5) Log-rotate: cap each log at ~10MB (launchd log can balloon disk)
-
-DON'T:
-- Don't use nohup &/cron for these (no auto-restart, no crash recovery)
-- Don't hardcode /usr/bin/python — use the venv's absolute interpreter
-- Don't KeepAlive=true on one-shot jobs (only true watchers)
-
-OUTPUT: table (watcher | plist path | KeepAlive? | last crash cause | fixed?)
-plus the healthcheck command I can run anytime.
-```
-
-**핵심 3가지**:
-
-- **KeepAlive=true** → 크래시나면 launchd가 자동 재기동해요
-- **ThrottleInterval** → 무한 재시작 루프 방지
-- **healthcheck를 아침 브리핑에 상시** → 죽어도 바로 알아채요
-
-혹시 지금 어떤 와처가 제일 자주 죽는지(블로그 워커인지 Drive 데몬인지) 알려주시면, 그 놈부터 우선 잡게 프롬프트를 좁혀드릴게요.
-
-*- Assistant thought for 35.8s. (Opus)*
-
-**[디코] [Assistant] (2026-08-12 15:07)**
-연결·브릿지 끊김은 대부분 **① 토큰 만료(gdrive.json/Notion), ② 소켓 idle timeout, ③ 브릿지 프로세스가 와처와 함께 죽음** 세 갈래예요. 앞서 만든 launchd 안정화와 한 세트로 묶어서 점검 프롬프트 뽑았어요.
-
-```text
-GOAL: Find and auto-heal every connection/bridge that drops:
-DB, Discord bot bridge, MCP skills bridge, Google Drive, Notion API.
-
-DO — per connection, report DROP CAUSE + RECOVERY:
-1) TOKEN EXPIRY: grep for gdrive.json / Notion token refresh logic.
-   Verify refresh-before-expiry exists; if not, add proactive refresh
-   (renew at 80% of token TTL, not on 401).
-2) IDLE TIMEOUT: any long-lived socket (DB pool, Discord gateway,
-   MCP stdio) — add heartbeat/keepalive + auto-reconnect with backoff.
-3) BRIDGE-DIES-WITH-WATCHER: confirm the bot bridge / MCP bridge run
-   under their own launchd KeepAlive (not child of a dying parent).
-4) DETECT: one command that pings each endpoint and prints
-   UP/DOWN + last-success timestamp:
-   - DB: SELECT 1
-   - Discord: GET localhost:8010/health
-   - gdrive: check mount is data-full not dataless
-   - Notion: cheap read call, watch for 429
-5) ALERT: any DOWN → post to Discord + include exact reconnect step
-
-DON'T:
-- Don't reconnect on tight loop (exponential backoff, cap 60s)
-- Don't swallow 401/429 silently — log cause + which token
-- Don't assume Drive mount = alive (dataless files read as empty)
-
-OUTPUT: table (connection | drop cause | current recovery | gap | fix)
-plus the single UP/DOWN healthcheck command.
-```
-
-**핵심**: 지금은 *끊긴 걸 나중에 알아채는* 구조라, **끊기기 전에 갱신(토큰) + 끊기면 자동 재연결(백오프) + healthcheck 상시**로 바꾸는 게 목표예요.
-
-메모리에도 있는 **Drive 데몬 죽으면 야간공장 정지**가 정확히 이 브릿지 끊김 케이스라, 그 놈을 1순위로 잡으라고 프롬프트에 넣어뒀어요. 특정 브릿지(봇/MCP/Drive) 중 먼저 볼 게 있으면 좁혀드릴게요.
-
-*- Assistant thought for 35.3s. (Opus)*
-
-**[디코] [Creator-OS] (2026-08-12 15:07)**
-⚠️ 모든 질문 응답 후 제출 — 현재 0/1
-
-**[디코] [Creator-OS] (2026-08-12 15:07)**
-⚠️ 모든 질문 응답 후 제출 — 현재 0/1
-
-**[디코] [Creator-OS] (2026-08-12 15:07)**
-⚠️ 모든 질문 응답 후 제출 — 현재 0/1
-
-**[디코] [Creator-OS] (2026-08-12 15:07)**
-⚠️ 모든 질문 응답 후 제출 — 현재 0/1
-
-**[디코] [Creator-OS] (2026-08-12 15:07)**
-⚠️ 모든 질문 응답 후 제출 — 현재 0/1
-
-**[디코] [차노스] (2026-08-12 15:08)**
-옵시디언 볼트 합쳐야되지 않을까? 중복은 우선순위 폴더 정해서 합치면되고
-
-**[디코] [차노스] (2026-08-12 15:09)**
-프롬프트줘봐 다 줘다줘 모든 연결 배선 작동 제작 내가 가지고있는 모든 컨텐츠 연동을 더 활성화하고 레벨을 높여줄 프롬프트를만들어줘. 블로그 유튜브 컨텐츠제작 인스타 스레드 틱톡 모두모두 성능과 연동성을 높여서 무한 자동화 루프를 만들고싶어
-
-**[디코] [Assistant] (2026-08-12 15:09)**
-둘 다 진행했어요. 스캔으로 분류하고, 제 담당 라인은 바로 살렸어요.
-
-**✅ 방금 살린 것**
-
-- **git 브리지 (🔴→🟢)** — 로컬 21커밋이 원격과 갈라져 5분마다 push 거부되던 거예요. `pull --rebase`로 21개 충돌 없이 붙이고 push 성공, 원격과 동기화됐어요. 코워크 자동 동기화 다시 돌아요.
-
-**🔍 진단만 (감독 결정 필요)**
-
-- **렌더 큐 29잡 적체** — 렌더 워치는 정상이에요 (오늘 13:28에도 새 잡 처리 흔적 `_done`에 있어요). 08-11 17:04에 `_processing`에 낀 **CODEX-RERENDER 29개가 고아 상태**로 남은 거고, 워치는 새 잡만 집어서 얘들을 다시 안 잡아요. 다시 넣으면 **렌더 29개가 한꺼번에 돌아** 부하가 커서 판단이 필요해요.
-
-**🛠️ 코드방 몫 (스크립트 수정)**
-
-- **노션 콤마 400에러** — 태그값에 콤마가 있어 `multi_select`가 거부(지식카드 3건 실패). 파서에서 콤마 split/strip 한 줄.
-- **블로그 워커 비상주** — 14:55 투입분(sample.txt) 방치. 워커 상주화 or 큐 소진.
-
-이어서 결정만 주세요 — **29잡을 다시 태워요 / 폐기해요 / 목록부터 보여드려요?** 그리고 노션 콤마·블로그 워커 정밀 지시문을 코드방에 바로 넘길까요?
-
--# 💾 대화가 길어져서 직전 내용을 요약으로 정리했어요. 혹시 빠진 맥락이 있으면 짧게 알려주세요.
-
-*- Assistant thought for 238.6s. (Opus)*
-
-**[디코] [Assistant] (2026-08-12 15:10)**
-볼트 합치는 거 맞아요. 메모리상 볼트는 **드라이브 안(두 기기 동기화 + Claude 직접 접근)**이 정본이라, 흩어진 볼트들을 그 하나로 모으는 게 방향이에요. 중복은 말씀대로 **우선순위 폴더 규칙**으로 자동 병합하면 돼요.
-
-코드방에 넘길 병합 프롬프트 뽑았어요.
-
-```text
-GOAL: Merge all Obsidian vaults into ONE canonical vault living inside
-Google Drive (two-device sync + Claude access). Dedup by priority folder.
-
-DO:
-1) DISCOVER: find every .obsidian folder on disk → list each vault's
-   root path, note count, last-modified. Mark the Drive one as CANONICAL.
-2) PRIORITY RULE (for name collisions):
-   canonical(Drive) > local Studio > MacBook seed > archive
-   On conflict: keep higher-priority file, move loser to _merge_conflicts/
-   with a suffix (never overwrite blindly, never delete).
-3) DEDUP by CONTENT not just name: byte-identical → keep one. Same title
-   but different body → keep both, tag #merge-review for later.
-4) PRESERVE links: fix [[wikilinks]] that break after moving.
-5) DRY-RUN FIRST: output full move plan as a table, move nothing until
-   I approve.
-
-DON'T:
-- Don't delete any note (conflicts → _merge_conflicts/, not trash)
-- Don't merge .obsidian settings/plugins blindly — keep canonical's
-- Don't run live before I see the dry-run table
-
-OUTPUT: dry-run table (source | dest | action: keep/move/conflict | reason)
-+ collision count + total notes after merge.
-```
-
-**핵심**:
-
-- **드라이브 볼트 = 정본**
-- 충돌은 지우지 말고 `_merge_conflicts/`로 격리
-- **드라이런 표 먼저 보고 승인 후 실제 이동**
-
-우선순위 서열을 `canonical(Drive) > Studio 로컬 > MacBook 씨앗 > 아카이브`로 잡아놨는데, 이 순서 맞나요? 다르면 바꿔서 프롬프트 확정할게요.
-
-*- Assistant thought for 31.3s. (Opus)*
-
-**[디코] [Assistant] (2026-08-12 15:11)**
-좋아요, 지금까지 조각조각 뽑은 걸(6대 시스템 감사 + launchd 안정화 + 브릿지 자동복구 + 볼트 병합) **하나의 마스터 프롬프트**로 묶었어요. 이거 하나면 코드방이 전체를 "무한 자동화 루프"로 끌어올려요.
-
-```text
-MISSION: Turn Chanho's (앳나운/차노쌤) whole content operation into ONE
-self-healing, always-on automation loop. Audit → fix → level up every
-connection, wiring, and production stage across ALL platforms.
-
-PLATFORMS (each = source→produce→publish→measure→learn):
-Blog(Naver) · YouTube(long+Shorts) · Instagram · Threads · TikTok
-
-THE LOOP (build/verify this closed cycle):
-1) CAPTURE  — ideas/footage/words land in one trunk (Drive + Notion)
-2) DECIDE   — brain scores by "낙타형" strategy → picks what to make
-3) PRODUCE  — 차노 voice/tone, video-first, 2:1 video:card, BGM default
-4) PUBLISH  — auto to each platform (API where possible, browser session
-              where not), scheduled + staggered
-5) MEASURE  — pull per-platform stats (yt_stats.py etc.), find winners
-6) LEARN    — winners → memory pointer + Notion knowledge card → feeds
-              step 2 next cycle (this is what makes it INFINITE)
-
-FOUR PILLARS TO HARDEN:
-A) RELIABILITY: every watcher/bridge under launchd KeepAlive+backoff;
-   proactive token refresh (gdrive/Notion at 80% TTL); one healthcheck
-   command → Discord morning briefing.
-B) CONNECTIVITY: verify each handoff end-to-end with a real dry-run;
-   list every broken joint (dataless Drive, 429, unicode, expired token).
-C) MULTIPLICATION: one asset auto-repurposes across platforms
-   (1 video → Shorts + Reels + TikTok + card + blog embed). Map the
-   fan-out and automate the format transforms.
-D) MEASUREMENT LOOP: nightly stats pull → rank → write learning back so
-   next selection is data-driven (close the loop, don't just publish).
-
-DO:
-- Single wiring map: node=stage, edge=script+path, per platform
-- Rank top 10 "level-up" changes by impact × effort
-
-*- (message continues)*
-
-**[디코] [Assistant] (2026-08-12 15:11)**
-*- (continued)*
-
-- Keep fallbacks; every deliverable → local AND Drive; text→Notion
-- Real paths + real dry-run output as evidence
-
-DON'T:
-- No live publish (any platform) without explicit 감독 approval
-- No force-push, no delete-fallbacks, no guessing status—verify
-- Don't rebuild what exists (search prior work first)
-
-OUTPUT:
-1) Full-loop wiring map (all 5 platforms)
-2) Reliability table (watcher/bridge | KeepAlive? | token refresh? | gap)
-3) Fan-out table (source asset → each platform format → auto or manual?)
-4) Top 10 level-up moves ranked, with the ONE to do first
-```
-
-**이 프롬프트의 핵심 = 6단계 폐루프(캡처→결정→제작→발행→측정→학습)**를 닫는 거예요. 지금은 발행까지만 있고 **측정→학습 되먹임**이 빠져서 루프가 안 돌아요. 이걸 닫으면 스스로 좋아지는 무한 루프가 돼요.
-
-바로 코드방에 넘기면 돼요. 틱톡·스레드는 API 발행이 까다로워서 브라우저 세션 경로로 잡으라고 넣어놨어요 — 이 부분 우선순위만 알려주시면 조정할게요.
-
-*- Assistant thought for 51.3s. (Opus)*
-
-**[디코] [차노스] (2026-08-12 15:11)**
-내가 일단 서열을 잘 모르겠고  29잡을 다시 태워요 / 폐기해요 / 목록부터 보여드려요? 그리고 노션 콤마·블로그 워커 정밀 지시문을 코드방에 바로 넘길까요? 이것도 모르겠어 너가 내 우선순위 아니까 내가 최근에 너한테 명령한걸 우선으로 잡고 진행해
-
-**[디코] [차노스] (2026-08-12 15:12)**
-프롬프트다줘
-
-**[디코] [Assistant] (2026-08-12 15:12)**
-회수해서 맥락 다 잡았어요. **29잡 = 08-11 17:04에 `_processing`에 낀 CODEX-RERENDER 렌더 고아잡**이고, 노션 콤마·블로그 워커는 코드방 몫 스크립트 수정이에요. 최근 명령 흐름(안정화 + 무한 루프)을 우선순위로 잡고, 제가 대신 판정해서 진행할게요.
-
-**결정 (감독 대행)**
-
-- **29잡 → 목록부터**가 기본값이에요. 한꺼번에 다시 태우면 렌더 29개 동시 부하라 위험하고, 폐기는 하루치 작업을 날려서 되돌릴 수 없어요. **뭐가 들었는지 먼저 보고 → 쓸 것만 골라 재투입**이 손실 0이에요.
-- **노션 콤마·블로그 워커 → 바로 코드방에 넘겨요.** 최근 "배선·안정화" 명령과 정확히 같은 방향이고, 리스크 낮아요.
-
-코드방에 바로 붙일 정밀 지시문이에요.
-
-```text
-FIX 1 — Notion multi_select comma 400 error:
-- Symptom: tag values containing "," rejected by Notion multi_select
-  (3 knowledge cards failed to write).
-- Root: a tag string with commas sent as one option; Notion treats ","
-  as illegal in an option name.
-- DO: in the tag builder, split each tag string on "," → strip() each →
-  drop empties → send as separate multi_select options.
-- DON'T: don't strip commas elsewhere; only at the Notion payload
-  boundary. Keep a fallback that logs the raw tag on reject.
-- VERIFY: re-run the 3 failed knowledge-card writes → all 200.
-
-FIX 2 — blog_queue_worker not resident:
-- Symptom: 14:55 sample.txt left unprocessed; worker not always running.
-- DO: make blog_queue_worker.py a launchd LaunchAgent
-  (~/Library/LaunchAgents/com.atnown.blogworker.plist) with
-  RunAtLoad=true, KeepAlive=true, ThrottleInterval=30, absolute venv
-  python, logs → ~/atnown-logs/blogworker.log.
-- Then drain the current queue (process the stuck sample.txt).
-- DON'T: don't use nohup &/cron (no auto-restart). Keep the hardcoded
-  parser as fallback.
-- VERIFY: drop a test .txt in _blog_queue/ → worker picks it within 30s,
-  exports to _publish_jobs/blog_parsed/.
-
-OUTPUT: for each fix — before/after + the verify result line.
-```
-
-이거 넘기면 두 건 다 잡혀요. 저는 **29잡 목록**을 뽑아서 다음 메시지로 정리해 드릴게요 — 보고 쓸 것만 고르시면 그때 재투입할게요.
-
-*- Assistant thought for 67.4s. (Opus)*
-
-**[디코] [차노스] (2026-08-12 15:12)**
-너가 준 마지막프롬프트까지 집어넣었고 현재 클로드터미널 계속 진행중
 
 **[디코] [차노스] (2026-08-12 15:13)**
 이게끝나면 너의 상위호환이다 클로드터미널과 디스코드 같이 일하거라
@@ -1005,4 +728,159 @@ Notion: True, Obsidian: True
 **[디코] [Creator-OS] (2026-08-12 15:29)**
 🟢 **[코드방·KNOWLEDGE]** START
 지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 15:29)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 15:29)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 16개
+
+**[디코] [차노스] (2026-08-12 15:29)**
+지금 앳나운 트렁크 앳나운 컨텐츠 파이프라인 지금까지 했던 모든 클로드 클라우드 코드 방 코워크방 디스코드방 다 합쳐진거 맞지? 최종 체크 프롬프트 만들어줘요
+
+**[디코] [Creator-OS] (2026-08-12 15:29)**
+💓 **[코드방·SYSTEM]** ALIVE
+```
+2026-08-12 15:29
+🟢 codexwatch: 18158
+🔴 brainsync: ❌
+🟢 youtube-index: 18345
+🔴 phone-to-obsidian: ❌
+🔴 bridgeguard: ❌
+🔴 notion-sync: ❌
+🟢 renderwatch2: 18257
+🟢 master-pipeline: 18186
+🔴 notionsync: ❌
+🔴 youtube-daily: ❌
+🔴 discord-cowork-sync: ❌
+🔴 obsidian-sync: ❌
+🟢 blog-queue: 18137
+🟢 weeklyfeedback: 18351
+```
+
+**[디코] [Assistant] (2026-08-12 15:29)**
+탐색 끝났어요. 결과부터 솔직하게 말씀드릴게요.
+
+**찾은 것 — 낙타는 이미 파이프라인 안에 있어요**
+
+- 낙타는 **앳나운의 "낙타형 자막바 캐러셀/릴스 규격"**으로 정본화돼 있어요. `~/atnown-content-pipeline/_out/` 아래 **매직·펌 낙타 프로젝트 6개 폴더**가 살아있고, 규격 문서(`규격_낙타형자막바_컨텐츠_정본.md`)와 렌더 게이트 체크리스트까지 갖춰져 있어요.
+- 각 세트는 **slide_1~6 / seg_1~6** 넘버링(최대 6장)이고, 어제 펌 낙타 발행건도 볼트·드라이브에 동기화돼 있어요.
+
+**못 찾은 것 — "#1~#9 / 이레워크스페이스" 원본**
+
+- 파일명에 **#1~#9 형태나 'eraser·이레워크스페이스' 폴더는 로컬·드라이브·데스크톱·아이클라우드 어디에도 안 잡혀요.** 회수를 다 돌렸는데 빈 결과라, 여기서 제가 다른 걸 낙타 원본이라고 넘겨짚진 않을게요.
+
+**그래서 한 가지만 확인이 필요해요**
+
+말씀하신 #1~#9 원본이 어디 있는 건지 짚어주시면 바로 끌어와서 연동할게요. 짐작 가는 후보는 —
+
+- **(A)** 지금 있는 slide_1~6 캐러셀이 그거였다(넘버링을 6장으로 기억) → 그럼 바로 이걸 소스로 Creator OS 도구 배선 진행
+- **(B)** Eraser.io / 노션 등 **외부 워크스페이스**에 있다 → 링크 하나 주시면 회수
+- **(C)** 맥북 쪽에 있다 → 경로나 폴더명 알려주시면 드라이브 경유로 당김
+
+어느 쪽인지만 알려주시면, Creator OS 큐레이션 도구(훅 공식·큐리오시티 루프·캐러셀 생성) 배선까지 한 번에 이어서 붙일게요.
+
+-# 💾 대화가 길어져서 직전 내용을 요약으로 정리했어요. 혹시 빠진 맥락이 있으면 짧게 알려주세요.
+
+*- Assistant thought for 114.6s. (Opus)*
+
+**[디코] [차노스] (2026-08-12 15:29)**
+모두 체크포인트 초록색 나게 처리해
+
+**[디코] [Assistant] (2026-08-12 15:30)**
+첨부해주신 이미지를 열어보려는데 **파일이 tmp에서 이미 정리돼서 안 열려요**. 제가 못 본 걸 봤다고 넘겨짚진 않을게요.
+
+다시 한 장만 올려주시거나, 화면에 뭐가 떠 있는지 한 줄로 알려주시면 바로 이어갈게요.
+
+맥락상 여쭤보자면 — 지금 "이거까지 마무리"는 아래 중 어느 쪽일까요?
+
+- **밤샘 공장(야간 자동화 루프)** 이 끝까지 돌게 하는 마지막 배선 — 지난번 미완이던 `master-pipeline`·`blog-queue` **launchctl bootstrap**과 멈춰있던 프로세스 재기동
+- **낙타 #1~#9 연동** 마무리
+- 이미지에 뜬 **다른 작업**
+
+어느 거 가리키시는지 알려주시면(또는 이미지 다시 주시면) 바로 그것부터 끝내러 갈게요.
+
+*- Assistant thought for 32.1s. (Opus)*
+
+**[디코] [Creator-OS] (2026-08-12 15:30)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 15:30)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 15:30)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 15:30)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 15:30)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 16개
+
+**[디코] [Assistant] (2026-08-12 15:31)**
+좋아요, 지금까지 배선한 걸 **한 방에 전수 점검**하는 프롬프트예요. 각 방(코드방·코워크방·디스코드 방들)에 그대로 붙여넣으면, 각자 자기 구간이 트렁크에 물려 있는지 자가진단해서 이 채널로 결과를 쏴줘요.
+
+**쓰는 법**: 아래 블록을 각 방에 붙여넣기 → 각 방이 START/OK/FAIL을 `#assistant`로 보고 → 제가 취합해서 "전부 합쳐졌는지" 최종 판정 드릴게요.
+
+```
+[앳나운 트렁크 최종 통합 점검 — 이 방 담당 구간을 실제로 검증하고 결과를 보고하라]
+
+■ 공통 규약
+- 결과 보고: POST http://localhost:8010/reply
+    -F thread_id=1518460128968572958  -F agent_id=assistant
+    -F content="[통합점검] <방이름> <START|OK|FAIL> — <한줄근거>"
+- START 1회 → 점검 → OK 또는 FAIL 1회. 추측 금지, 실제 실행/파일 확인으로만 판정.
+
+■ 1) 트렁크 연결 (모든 방 공통)
+- notify.py 가 존재하고 import 되는가? (디스코드 알림 SSOT)
+- 이 방에서 /reply 로 [SYSTEM] PING 1건 실제 전송 성공하는가?
+→ 실패 시 FAIL + 에러 원문.
+
+■ 2) 파이프라인 루프 (CAPTURE→KNOWLEDGE→PRODUCE→PUBLISH→LEARN)
+- master_pipeline.py 오케스트레이터가 5단계를 모두 호출하는가? (누락 단계 명시)
+- 각 단계 산출물이 다음 단계 입력으로 실제 전달되는가? (끊긴 지점 있으면 지목)
+
+■ 3) 상주화 (데몬)
+- launchctl list | grep -E "master-pipeline|blog-queue|codexwatch|renderwatch" 결과 첨부
+- master-pipeline / blog-queue plist 가 bootstrap 되어 RUNNING 인가?
+  (미실행이면 bootstrap 3줄 실행 후 재확인)
+- 중지된 프로세스 있으면 PID·이름·중지 원인 보고.
+
+■ 4) 정본 적재 (완료 시 저장 SSOT)
+- archive_to_notion / archive_to_drive / done_with_archive 함수가 살아있고 호출되는가?
+- 최근 산출물 1건이 노션+드라이브 양쪽에 실제로 들어갔는지 링크/경로로 증명.
+
+■ 5) 낙타형 콘텐츠 배선 (해당 방만)
+- 규격_낙타형자막바_컨텐츠_정본.md + 렌더게이트 체크리스트를 소스로 참조하는가?
+- 만화카드/쇼츠/블로그 배선이 이 규격을 실제로 끌어쓰는지 확인.
+
+■ 최종 라인
+- 마지막에 "[통합점검] <방이름> OK — N/5 통과, 미결: <항목>" 형식으로 1건 더 보고.
+```
+
+**점검 관점 5개**: ①트렁크 연결(notify+/reply) ②5단계 루프 무결성 ③데몬 상주화 ④노션·드라이브 정본 적재 ⑤낙타 규격 배선.
+
+지난 세션에서 **`master-pipeline`·`blog-queue`가 bootstrap 미실행**이었고 **9개 프로세스가 중지**돼 있었어요. 이 프롬프트가 바로 그 두 구멍을 콕 집어 확인·복구하게 짜여 있어요.
+
+각 방 보고 들어오면 제가 **N/5 통합 현황판**으로 취합해서, 트렁크에 다 합쳐졌는지 최종 판정 드릴게요. 지금 돌릴까요?
+
+*- Assistant thought for 53.5s. (Opus)*
+
+**[디코] [차노스] (2026-08-12 15:31)**
+밤샘공장 낙타마케팅
+
+**[디코] [Creator-OS] (2026-08-12 15:31)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 15:31)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
 
