@@ -472,3 +472,47 @@
 ===== 2026-08-12 11:50:16 bridge start =====
 [bridge] forward leg 실패(rc=1)
 ===== bridge end =====
+===== 2026-08-12 11:55:18 bridge start =====
+===== bridge end =====
+===== 2026-08-12 12:00:18 bridge start =====
+[bridge] forward leg 실패(rc=1)
+===== bridge end =====
+===== 2026-08-12 12:05:20 bridge start =====
+[bridge] forward leg 실패(rc=1)
+===== bridge end =====
+===== 2026-08-12 12:10:21 bridge start =====
+[bridge] forward leg 실패(rc=1)
+===== bridge end =====
+===== 2026-08-12 12:15:22 bridge start =====
+===== bridge end =====
+===== 2026-08-12 12:20:23 bridge start =====
+===== bridge end =====
+===== 2026-08-12 12:25:23 bridge start =====
+===== bridge end =====
+===== 2026-08-12 12:30:23 bridge start =====
+===== bridge end =====
+===== 2026-08-12 12:35:23 bridge start =====
+===== bridge end =====
+===== 2026-08-12 12:40:24 bridge start =====
+===== bridge end =====
+===== 2026-08-12 12:45:24 bridge start =====
+===== bridge end =====
+===== 2026-08-12 12:50:24 bridge start =====
+===== bridge end =====
+===== 2026-08-12 12:55:24 bridge start =====
+===== bridge end =====
+===== 2026-08-12 13:00:25 bridge start =====
+===== bridge end =====
+===== 2026-08-12 13:05:25 bridge start =====
+===== bridge end =====
+===== 2026-08-12 13:10:25 bridge start =====
+===== bridge end =====
+===== 2026-08-12 13:15:25 bridge start =====
+[bridge] forward leg 실패(rc=1)
+===== bridge end =====
+===== 2026-08-12 13:20:27 bridge start =====
+===== bridge end =====
+===== 2026-08-12 13:25:27 bridge start =====
+===== bridge end =====
+===== 2026-08-12 13:30:27 bridge start =====
+===== bridge end =====
