@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AT NOWN · 시즈 성장 타워</title>
+<style>
+:root{--cream:#F7F5F1;--ink:#1c1a17;--gold:#A8895E;--gray:#6a655c;--line:#E4DFD6;
+--edu:#3F6F5F;--task:#B5793A;--prac:#4E7CA8;--grow:#8A5A7A;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#efece6;color:var(--ink);font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.5;padding:20px 12px 70px;-webkit-text-size-adjust:100%}
+.wrap{max-width:1100px;margin:0 auto}
+.cover{background:var(--ink);color:var(--cream);border-radius:16px;padding:24px 24px;margin-bottom:14px}
+.cover .t{font-size:11px;letter-spacing:.24em;color:var(--gold);font-weight:800}
+.cover h1{font-size:24px;font-weight:900;margin:7px 0 5px}
+.cover p{font-size:13px;color:#d7d1c6}
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:12px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 10px;text-align:center}
+.kpi .n{font-size:22px;font-weight:900;color:var(--ink)}
+.kpi .t{font-size:11px;color:var(--gray);margin-top:3px;font-weight:700}
+/* legend + toolbar */
+.legend{background:var(--cream);border:1px solid var(--line);border-radius:10px;padding:11px 14px;margin-bottom:10px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.lg{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:800}
+.lg i{width:15px;height:15px;border-radius:4px;display:inline-block}
+.bar{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+button{background:var(--ink);color:var(--cream);border:0;border-radius:9px;padding:8px 13px;font-size:12.5px;font-weight:800;cursor:pointer;font-family:inherit}
+button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+button:hover{opacity:.9}
+/* towers */
+.field{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 12px 12px;overflow-x:auto}
+.towers{display:flex;gap:14px;align-items:flex-end;min-height:260px}
+.tower{flex:0 0 128px;display:flex;flex-direction:column;align-items:center}
+.stack{display:flex;flex-direction:column-reverse;gap:4px;width:118px;min-height:40px;justify-content:flex-start}
+.block{border-radius:6px;padding:6px 8px;color:#fff;font-size:10.5px;font-weight:800;line-height:1.25;box-shadow:0 1px 0 rgba(0,0,0,.15);position:relative;animation:pop .25s ease}
+@keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.block .mo{font-size:8.5px;font-weight:700;opacity:.8;display:block}
+.block .rate{position:absolute;top:4px;right:5px;font-size:9px}
+.b-edu{background:var(--edu)}.b-task{background:var(--task)}.b-prac{background:var(--prac)}.b-grow{background:var(--grow)}
+.ground{width:124px;height:8px;background:var(--ink);border-radius:3px;margin-top:3px}
+.base{width:124px;background:var(--cream);border:1px solid var(--line);border-radius:9px;padding:8px;margin-top:7px;text-align:center}
+.base .nm{font-size:14px;font-weight:900}
+.base .lv{display:inline-block;font-size:10px;font-weight:800;color:#fff;background:var(--gray);border-radius:10px;padding:1px 8px;margin-top:2px}
+.base .cnt{font-size:11px;color:var(--gray);font-weight:700;margin-top:4px}
+.base .note{font-size:10px;color:#7a746b;margin-top:5px;line-height:1.4;text-align:left;border-top:1px dashed var(--line);padding-top:4px}
+.base .note b{color:var(--ink)}
+/* form */
+.form{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:14px}
+.form h3{font-size:14px;font-weight:900;margin-bottom:10px}
+.frow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+select,input[type=text]{border:1px solid var(--line);border-radius:8px;padding:8px 9px;font-size:13px;font-family:inherit;background:#fff;color:var(--ink)}
+input[type=text]{flex:1;min-width:150px}
+label.fl{font-size:12px;font-weight:800;color:var(--gray)}
+.io{margin-top:12px;background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:12px;display:none}
+.io textarea{width:100%;height:64px;border:1px solid var(--line);border-radius:8px;font-size:11px;font-family:ui-monospace,monospace;padding:8px;margin-top:6px}
+.note-b{font-size:12px;color:var(--gray);margin-top:10px;background:var(--cream);border:1px solid var(--line);border-radius:10px;padding:11px 14px;line-height:1.6}
+@media(max-width:640px){.kpis{grid-template-columns:repeat(2,1fr)}}
+</style></head><body><div class="wrap">
+
+<div class="cover"><div class="t">AT NOWN · GROWTH TOWER</div>
+<h1>시즈 성장 타워 🧱</h1>
+<p>교육받은 것 · 과제 · 개인 연습 · 성장 판단이 블록으로 쌓인다 — 내 탑이 자라는 걸 눈으로 본다.</p></div>
+
+<div class="kpis">
+  <div class="kpi"><div class="n" id="k_n">0</div><div class="t">시즈</div></div>
+  <div class="kpi"><div class="n" id="k_total">0</div><div class="t">전체 블록</div></div>
+  <div class="kpi"><div class="n" id="k_month">0</div><div class="t">이번 달 블록</div></div>
+  <div class="kpi"><div class="n" id="k_top">—</div><div class="t">최고 타워</div></div>
+</div>
+
+<div class="legend">
+  <span class="lg"><i class="b-edu" style="background:var(--edu)"></i>교육(수업)</span>
+  <span class="lg"><i class="b-task" style="background:var(--task)"></i>과제 수행</span>
+  <span class="lg"><i class="b-prac" style="background:var(--prac)"></i>개인 연습</span>
+  <span class="lg"><i class="b-grow" style="background:var(--grow)"></i>성장 평가(선생님)</span>
+  <span class="lg" style="color:var(--gray)">평가 ★★ 잘함 · ★ 보통 · ○ 부족</span>
+</div>
+
+<div class="bar">
+  <label class="fl">월</label>
+  <select id="monthFilter" onchange="render()"><option value="all">전체 누적</option></select>
+  <button class="ghost" onclick="toggleIO('save')">💾 저장</button>
+  <button class="ghost" onclick="toggleIO('load')">📥 불러오기</button>
+</div>
+
+<div class="field"><div class="towers" id="towers"></div></div>
+
+<!-- 교육자 보고 입력 -->
+<div class="form">
+<h3>교육자 보고 → 블록 쌓기</h3>
+<div class="frow">
+  <select id="f_stu"></select>
+  <select id="f_type">
+    <option value="edu">교육(수업 받음)</option>
+    <option value="task">과제 수행</option>
+    <option value="prac">개인 연습</option>
+    <option value="grow">성장 평가</option>
+  </select>
+  <input type="text" id="f_label" placeholder="내용 (예: 원랭스 / 볼륨매직 과제 / 연습 4회 / 이번달 성장)">
+  <select id="f_rate">
+    <option value="">평가 없음</option>
+    <option value="2">★★ 잘함</option>
+    <option value="1">★ 보통</option>
+    <option value="0">○ 부족</option>
+  </select>
+  <select id="f_month"></select>
+  <button onclick="addBlock()">＋ 블록 추가</button>
+</div>
+<div class="frow" style="margin-top:9px">
+  <label class="fl">이번 달 코멘트(태도·준비·진도·부족한 점)</label>
+  <input type="text" id="f_note" placeholder="예: 태도 좋음 · 준비 철저 · 진도 3과목 · 마무리 디테일 부족">
+  <button class="ghost" onclick="saveNote()">코멘트 저장</button>
+</div>
+</div>
+
+<div class="io" id="io">
+  <div id="io_label" style="font-size:12px;color:var(--gray)"></div>
+  <textarea id="io_txt"></textarea>
+  <div style="margin-top:6px;display:flex;gap:7px">
+    <button id="io_act" onclick="ioAction()">복사</button>
+    <button class="ghost" onclick="document.getElementById('io').style.display='none'">닫기</button>
+  </div>
+</div>
+
+<div class="note-b">
+🧱 <b>어떻게 보나</b> — 각 시즈의 탑은 교육·과제·연습·성장 블록이 아래에서 위로 쌓인다. 탑이 높을수록 그 달에 많이 채운 것. <b>한 달에 한 번</b> 같이 보면, 내 탑이 얼마나 자랐는지·옆 동기와 어디가 다른지 눈으로 안다.<br>
+※ 교육자는 그날 수업 후 <b>블록 추가</b> + <b>코멘트</b>만 남기면 된다. 저장은 💾로 코드 복사 → 다음에 불러오기.
+</div>
+
+<script>
+var TYPES={edu:'교육',task:'과제',prac:'연습',grow:'성장'};
+var CLS={edu:'b-edu',task:'b-task',prac:'b-prac',grow:'b-grow'};
+var RATE={'2':'★★','1':'★','0':'○'};
+var MONTHS=['8월','9월','10월','11월','12월'];
+
+var DATA=[
+ {n:'지민',lv:'시즈2',b:'본점',note:'',blocks:[]},
+ {n:'형우',lv:'시즈3',b:'플레이스',note:'태도 좋음 · 뿌리·씨컬 보완 필요',blocks:[
+   {t:'edu',l:'원랭스',r:'2',m:'8월'},{t:'task',l:'스퀘어 과제',r:'1',m:'8월'},{t:'prac',l:'연습 4회',r:'2',m:'8월'}]},
+ {n:'주민',lv:'시즈4',b:'플레이스',note:'전반 우수 · 태도 만점',blocks:[
+   {t:'edu',l:'기본아이롱',r:'2',m:'8월'},{t:'edu',l:'남자와인딩',r:'2',m:'8월'},{t:'task',l:'과제 제출',r:'2',m:'8월'},{t:'prac',l:'연습 4회',r:'2',m:'8월'},{t:'grow',l:'8월 성장 우수',r:'2',m:'8월'}]},
+ {n:'재아',lv:'시즈4',b:'본점',note:'태도·지각 관리 필요 · 실기 보완',blocks:[
+   {t:'edu',l:'플럼펌',r:'0',m:'8월'},{t:'prac',l:'연습 2회',r:'0',m:'8월'}]},
+ {n:'태원',lv:'시즈5',b:'본점',note:'기본기 강화 필요',blocks:[
+   {t:'edu',l:'볼륨매직',r:'2',m:'8월'},{t:'task',l:'포니테일 과제',r:'0',m:'8월'}]},
+ {n:'범진',lv:'시즈5',b:'본점',note:'',blocks:[]},
+ {n:'유안',lv:'시즈5',b:'본점',note:'',blocks:[]},
+ {n:'가영',lv:'시즈5',b:'플레이스',note:'형태 양호 · 깔끔도 보완',blocks:[
+   {t:'edu',l:'볼륨매직',r:'1',m:'8월'}]},
+ {n:'어진',lv:'시즈4',b:'메종한남',note:'재입사 · 관찰 시작',blocks:[]}
+];
+
+function curMonth(){return document.getElementById('monthFilter').value;}
+function blocksOf(s){var m=curMonth();return m==='all'?s.blocks:s.blocks.filter(function(x){return x.m===m;});}
+
+function render(){
+  var tw=document.getElementById('towers');tw.innerHTML='';
+  DATA.forEach(function(s,i){
+    var bl=blocksOf(s);
+    var col=document.createElement('div');col.className='tower';
+    var stack='<div class="stack">';
+    bl.forEach(function(x){
+      stack+='<div class="block '+CLS[x.t]+'">'+(x.r?'<span class="rate">'+RATE[x.r]+'</span>':'')+
+        '<span class="mo">'+x.m+' · '+TYPES[x.t]+'</span>'+esc(x.l)+'</div>';
+    });
+    stack+='</div>';
+    col.innerHTML=stack+'<div class="ground"></div>'+
+      '<div class="base"><div class="nm">'+esc(s.n)+'</div><span class="lv">'+esc(s.lv)+'</span>'+
+      '<div class="cnt">블록 '+bl.length+'개</div>'+
+      (s.note?'<div class="note"><b>코멘트</b> '+esc(s.note)+'</div>':'')+'</div>';
+    tw.appendChild(col);
+  });
+  updKPI();
+}
+function esc(s){return (s==null?'':(''+s)).replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+function updKPI(){
+  var m=curMonth();
+  document.getElementById('k_n').textContent=DATA.length;
+  var tot=0,mon=0,top='—',topN=-1;
+  DATA.forEach(function(s){
+    tot+=s.blocks.length;
+    var mc=s.blocks.filter(function(x){return x.m===(m==='all'?x.m:m);}).length;
+    var shown=blocksOf(s).length;
+    mon+=s.blocks.filter(function(x){return x.m===currentMonthName();}).length;
+    if(shown>topN){topN=shown;top=s.n;}
+  });
+  document.getElementById('k_total').textContent=tot;
+  document.getElementById('k_month').textContent=mon;
+  document.getElementById('k_top').textContent=topN>0?top+' ('+topN+')':'—';
+}
+function currentMonthName(){var m=curMonth();return m==='all'?'8월':m;}
+
+function fillSelects(){
+  var stu=document.getElementById('f_stu');stu.innerHTML='';
+  DATA.forEach(function(s,i){stu.innerHTML+='<option value="'+i+'">'+esc(s.n)+' ('+esc(s.lv)+')</option>';});
+  var mf=document.getElementById('monthFilter');
+  var fm=document.getElementById('f_month');
+  MONTHS.forEach(function(m){mf.innerHTML+='<option value="'+m+'">'+m+'</option>';fm.innerHTML+='<option value="'+m+'">'+m+'</option>';});
+  fm.value='8월';
+}
+function addBlock(){
+  var i=+document.getElementById('f_stu').value;
+  var t=document.getElementById('f_type').value;
+  var l=document.getElementById('f_label').value.trim()||TYPES[document.getElementById('f_type').value];
+  var r=document.getElementById('f_rate').value;
+  var m=document.getElementById('f_month').value;
+  DATA[i].blocks.push({t:t,l:l,r:r,m:m});
+  document.getElementById('f_label').value='';
+  if(curMonth()!=='all'&&curMonth()!==m)document.getElementById('monthFilter').value=m;
+  render();
+}
+function saveNote(){
+  var i=+document.getElementById('f_stu').value;
+  DATA[i].note=document.getElementById('f_note').value.trim();
+  document.getElementById('f_note').value='';
+  render();
+}
+var ioMode='save';
+function toggleIO(m){ioMode=m;var io=document.getElementById('io');io.style.display='block';
+  document.getElementById('io_label').textContent=m==='save'?'아래 코드 전체 복사해 메모에 저장 → 다음에 [불러오기]로 붙여넣기.':'저장한 코드를 붙여넣고 [적용].';
+  document.getElementById('io_act').textContent=m==='save'?'복사':'적용';
+  var t=document.getElementById('io_txt');
+  if(m==='save'){t.value=JSON.stringify(DATA);t.select();}else{t.value='';t.focus();}}
+function ioAction(){var t=document.getElementById('io_txt');
+  if(ioMode==='save'){t.select();document.execCommand('copy');document.getElementById('io_act').textContent='복사됨 ✓';}
+  else{try{var d=JSON.parse(t.value.trim());if(Array.isArray(d)){DATA=d;fillSelects2();render();document.getElementById('io').style.display='none';}else alert('형식 안 맞음');}catch(e){alert('읽을 수 없음');}}}
+function fillSelects2(){var stu=document.getElementById('f_stu');stu.innerHTML='';DATA.forEach(function(s,i){stu.innerHTML+='<option value="'+i+'">'+esc(s.n)+' ('+esc(s.lv)+')</option>';});}
+
+fillSelects();render();
+</script>
+</div></body></html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AT NOWN · 선생님 진화</title>
+<style>
+:root{--cream:#F7F5F1;--ink:#1c1a17;--gold:#A8895E;--gray:#6a655c;--line:#E4DFD6;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#efece6;color:var(--ink);font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.45;padding:20px 12px 70px;-webkit-text-size-adjust:100%}
+.wrap{max-width:1080px;margin:0 auto}
+.cover{background:var(--ink);color:var(--cream);border-radius:16px;padding:24px;margin-bottom:14px}
+.cover .t{font-size:11px;letter-spacing:.24em;color:var(--gold);font-weight:800}
+.cover h1{font-size:24px;font-weight:900;margin:7px 0 5px}
+.cover p{font-size:13px;color:#d7d1c6}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 14px;text-align:center;position:relative;overflow:hidden}
+.stageband{font-size:10px;font-weight:800;letter-spacing:.1em;color:#fff;border-radius:20px;padding:3px 11px;display:inline-block}
+.ava{height:140px;display:flex;align-items:center;justify-content:center;margin:6px 0}
+.nm{font-size:17px;font-weight:900}
+.role{font-size:11px;color:var(--gray);font-weight:700;margin-bottom:6px}
+.badges{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;margin:8px 0 6px;min-height:22px}
+.bd{font-size:15px;animation:pop .3s ease}
+@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.prog{height:8px;background:var(--cream);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:6px 0 3px}
+.prog > i{display:block;height:100%;background:var(--gold);transition:width .4s ease}
+.ptxt{font-size:10.5px;color:var(--gray);font-weight:700}
+.cnt{font-size:11px;color:var(--gray);font-weight:800;margin-top:3px}
+button{background:var(--ink);color:var(--cream);border:0;border-radius:9px;padding:8px 12px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:9px}
+button:hover{opacity:.9}
+button.mini{padding:5px 9px;font-size:11px;background:#fff;color:var(--ink);border:1px solid var(--line)}
+.evoflash{position:absolute;inset:0;background:radial-gradient(circle,rgba(201,162,75,.35),transparent 70%);opacity:0;pointer-events:none}
+.evoflash.on{animation:flash 1.1s ease}
+@keyframes flash{0%{opacity:0}30%{opacity:1}100%{opacity:0}}
+.bar{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+.bar button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.legend{background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:12px 15px;margin-bottom:12px;font-size:12px;line-height:1.9}
+.legend b{color:var(--ink)}
+.io{margin-top:12px;background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:12px;display:none}
+.io textarea{width:100%;height:60px;border:1px solid var(--line);border-radius:8px;font-size:11px;font-family:ui-monospace,monospace;padding:8px;margin-top:6px}
+.note-b{font-size:12px;color:var(--gray);margin-top:12px;background:var(--cream);border:1px solid var(--line);border-radius:10px;padding:11px 14px;line-height:1.6}
+</style></head><body><div class="wrap">
+
+<div class="cover"><div class="t">AT NOWN · TEACHER EVOLUTION</div>
+<h1>선생님 진화 🧬</h1>
+<p>교육 보고 1건 = 뱃지 1개. 뱃지 3개마다 포켓몬처럼 진화합니다.</p></div>
+
+<div class="legend">
+<b>진화 5단계</b> — 🌱 새싹 교육자(0) → 🌿 성장 교육자(3) → 🌳 숙련 교육자(6) → ⭐ 마스터 교육자(9) → 👑 전설의 교육자(12)<br>
+보고를 넣을 때마다 뱃지가 쌓이고, <b>3개 채울 때마다 모습이 진화</b>합니다.
+</div>
+
+<div class="bar">
+  <button class="ghost" onclick="toggleIO('save')">💾 저장</button>
+  <button class="ghost" onclick="toggleIO('load')">📥 불러오기</button>
+  <button class="ghost" onclick="if(confirm('전체 뱃지를 0으로 초기화할까요?')){DATA.forEach(function(t){t.badges=0;});render();}">↺ 초기화</button>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="io" id="io">
+  <div id="io_label" style="font-size:12px;color:var(--gray)"></div>
+  <textarea id="io_txt"></textarea>
+  <div style="margin-top:6px;display:flex;gap:7px">
+    <button id="io_act" onclick="ioAction()">복사</button>
+    <button class="ghost" onclick="document.getElementById('io').style.display='none'">닫기</button>
+  </div>
+</div>
+
+<div class="note-b">
+🧬 <b>연결</b> — 실제로는 <b>스프레드시트 폼에 교육 보고를 제출할 때마다</b> 그 선생님 뱃지가 +1 됩니다(여기 "＋보고"가 그 자리). 학생은 성장 타워로 쌓이고, 선생님은 여기서 진화 — <b>입력 한 번에 양쪽이 자란다.</b><br>
+※ 저장은 💾로 코드 복사 → 다음에 불러오기.
+</div>
+
+<script>
+var STAGES=[
+ {min:0,  name:'새싹 교육자',   color:'#7BA05B', emoji:'🌱'},
+ {min:3,  name:'성장 교육자',   color:'#3F6F5F', emoji:'🌿'},
+ {min:6,  name:'숙련 교육자',   color:'#4E7CA8', emoji:'🌳'},
+ {min:9,  name:'마스터 교육자', color:'#B5793A', emoji:'⭐'},
+ {min:12, name:'전설의 교육자', color:'#A8895E', emoji:'👑'}
+];
+var DATA=[
+ {n:'창엽',r:'커트 기초',badges:0},{n:'이호',r:'커트 디자인',badges:0},
+ {n:'신후',r:'열펌·룩북',badges:0},{n:'성희',r:'콜드펌',badges:0},
+ {n:'보미',r:'업스타일·브레이드',badges:0},{n:'차노',r:'디자인 미감',badges:0},
+ {n:'와이',r:'맨즈 STAGE',badges:0}
+];
+
+function stageIndex(b){var s=0;for(var i=0;i<STAGES.length;i++){if(b>=STAGES[i].min)s=i;}return s;}
+
+// 단계별 진화 아바타 (SVG) — 단계가 오를수록 커지고 도구·오라·왕관 추가
+function avatar(stage,color){
+  var scale=[0.72,0.84,0.96,1.06,1.16][stage];
+  var aura = stage>=3 ? '<circle cx="60" cy="66" r="52" fill="none" stroke="'+color+'" stroke-width="'+(stage>=4?3:2)+'" opacity="'+(stage>=4?0.55:0.3)+'"/>' : '';
+  var spark = stage>=4 ? '<text x="16" y="30" font-size="15">✨</text><text x="92" y="34" font-size="14">✨</text><text x="20" y="104" font-size="13">✨</text>' : '';
+  var crown = stage>=4 ? '<text x="42" y="20" font-size="22">👑</text>' : (stage>=3 ? '<text x="48" y="20" font-size="18">⭐</text>' : '');
+  var scissors = stage>=1 ? '<text x="'+(stage>=2?86:84)+'" y="82" font-size="'+(14+stage)+'">✂️</text>' : '';
+  var cape = stage>=2 ? '<path d="M40 66 Q60 '+(120)+' 80 66 L80 104 Q60 116 40 104 Z" fill="'+color+'" opacity="0.25"/>' : '';
+  var comb = stage>=2 ? '<text x="18" y="84" font-size="13">🪮</text>' : '';
+  return '<svg viewBox="0 0 120 130" width="130" height="140" style="overflow:visible">'+
+    aura+spark+
+    '<g transform="translate(60,72) scale('+scale+') translate(-60,-72)">'+
+    cape+
+    '<ellipse cx="60" cy="118" rx="26" ry="6" fill="#000" opacity="0.06"/>'+
+    // body
+    '<rect x="44" y="70" width="32" height="40" rx="13" fill="'+color+'"/>'+
+    // head
+    '<circle cx="60" cy="50" r="20" fill="#F2E2CE" stroke="'+color+'" stroke-width="2"/>'+
+    // hair
+    '<path d="M40 48 Q42 28 60 28 Q78 28 80 48 Q72 40 60 40 Q48 40 40 48 Z" fill="'+color+'"/>'+
+    // eyes + smile
+    '<circle cx="53" cy="50" r="2.3" fill="#2b2620"/><circle cx="67" cy="50" r="2.3" fill="#2b2620"/>'+
+    '<path d="M53 58 Q60 63 67 58" fill="none" stroke="#2b2620" stroke-width="2" stroke-linecap="round"/>'+
+    scissors+comb+
+    '</g>'+crown+
+    '</svg>';
+}
+
+function render(){
+  var g=document.getElementById('grid');g.innerHTML='';
+  DATA.forEach(function(t,i){
+    var si=stageIndex(t.badges),st=STAGES[si];
+    var nextMin=si<STAGES.length-1?STAGES[si+1].min:null;
+    var into=t.badges-st.min, span=nextMin!=null?(nextMin-st.min):3;
+    var pct=nextMin!=null?Math.min(100,Math.round(into/span*100)):100;
+    var toNext=nextMin!=null?(nextMin-t.badges):0;
+    var badgeRow='';for(var k=0;k<t.badges;k++)badgeRow+='<span class="bd">🏅</span>';
+    var card=document.createElement('div');card.className='card';
+    card.innerHTML=
+      '<div class="evoflash" id="flash'+i+'"></div>'+
+      '<span class="stageband" style="background:'+st.color+'">'+st.emoji+' '+st.name+'</span>'+
+      '<div class="ava">'+avatar(si,st.color)+'</div>'+
+      '<div class="nm">'+esc(t.n)+' 선생님</div><div class="role">'+esc(t.r)+'</div>'+
+      '<div class="badges">'+(badgeRow||'<span style="color:#c7c1b6;font-size:11px">아직 뱃지 없음</span>')+'</div>'+
+      '<div class="prog"><i style="width:'+pct+'%"></i></div>'+
+      '<div class="ptxt">'+(nextMin!=null?('다음 진화까지 '+toNext+'개'):'최종 진화 완료 👑')+'</div>'+
+      '<div class="cnt">누적 보고 '+t.badges+'건</div>'+
+      '<button onclick="report('+i+')">＋ 보고 (뱃지)</button> '+
+      '<button class="mini" onclick="undo('+i+')">−</button>';
+    g.appendChild(card);
+  });
+}
+function esc(s){return (s==null?'':(''+s)).replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+function report(i){
+  var before=stageIndex(DATA[i].badges);
+  DATA[i].badges++;
+  var after=stageIndex(DATA[i].badges);
+  render();
+  if(after>before){var f=document.getElementById('flash'+i);if(f){f.classList.add('on');setTimeout(function(){f.classList.remove('on');},1200);}}
+}
+function undo(i){if(DATA[i].badges>0){DATA[i].badges--;render();}}
+var ioMode='save';
+function toggleIO(m){ioMode=m;var io=document.getElementById('io');io.style.display='block';
+  document.getElementById('io_label').textContent=m==='save'?'아래 코드 복사해 저장 → 다음에 [불러오기].':'저장한 코드 붙여넣고 [적용].';
+  document.getElementById('io_act').textContent=m==='save'?'복사':'적용';
+  var t=document.getElementById('io_txt');
+  if(m==='save'){t.value=JSON.stringify(DATA);t.select();}else{t.value='';t.focus();}}
+function ioAction(){var t=document.getElementById('io_txt');
+  if(ioMode==='save'){t.select();document.execCommand('copy');document.getElementById('io_act').textContent='복사됨 ✓';}
+  else{try{var d=JSON.parse(t.value.trim());if(Array.isArray(d)){DATA=d;render();document.getElementById('io').style.display='none';}else alert('형식 안 맞음');}catch(e){alert('읽을 수 없음');}}}
+render();
+</script>
+</div></body></html>
