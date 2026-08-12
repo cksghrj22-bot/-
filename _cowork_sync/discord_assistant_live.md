@@ -1,6 +1,6 @@
 # 웹·디스코드 #assistant 대화 (자동 동기화)
 
-_마지막 갱신: 2026-08-12 22:24:05 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
+_마지막 갱신: 2026-08-12 22:29:07 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
 _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합, 각 발화 앞 `[디코]`/`[웹]` 표기_
 
 ---
@@ -175,91 +175,6 @@ _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합,
 - 제가 밀어넣은 건 그 직전까지의 대화·5방 배선 전부예요
 
 5방에서 pull 했는데도 **여전히 새 대화가 안 뜨면**, 그건 깃 문제가 아니라 그 방 워처(`renderwatch2`)가 파일을 다시 안 읽는 경우예요 — 말씀해 주시면 워처 재시작으로 바로 잡을게요.
-
-**[디코] [Creator-OS] (2026-08-12 22:00)**
-✅ **[코드방·CAPTURE]** DONE
-소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
-
-**[디코] [Creator-OS] (2026-08-12 22:00)**
-🟢 **[코드방·KNOWLEDGE]** START
-지식 동기화 시작
-
-**[디코] [Creator-OS] (2026-08-12 22:00)**
-✅ **[코드방·KNOWLEDGE]** DONE
-Notion: True, Obsidian: True
-
-**[디코] [Assistant] (2026-08-12 22:00)**
-⏰ **저녁 10시예요, 차노쌤.** 예약해둔 대로 알려드려요.
-
-지금은 **본진 터미널 Claude Code 세션에서 네이버 블로그 발행 자동화를 build 할 시간**이에요. 아래 인수인계 포인트 그대로 넘겨서 시작하세요.
-
-**① 레퍼런스 원고**
-- `~/atnown-content-pipeline/_JOBS_INBOX/내일발행_숱치기_본문.txt`
-- 구조: 소제목 6 · 굵게 · 인용 1 · 사진 6
-
-**② 파서 태그 규격**
-- `[H]` / `[B]` / `[QUOTE]` / `[IMG:NN]`
-
-**③ 아직 없는 것 → 만들 순서**
-- `_blog_queue/` 폴더 없음 → 큐 폴더 생성 → 파서 → launchd
-- launchd: **화·목·토·일 09:00 임시저장** (발행 버튼은 안 누름)
-
-**④ 네이버 프로필**
-- `_naver_profile` 고정 프로필 **무인 상태 확인됨**
-
-⚠️ **시작 전 재점검부터** — "배선은 늘 다시 짜야 하고 아직 완벽하지 않다"고 하셨으니, build 들어가기 전에 **현재 스크립트·프로필 상태부터 다시 확인**하고 가세요.
-
-이 자동화 build 자체는 무거운 로컬 작업이라 **본진 터미널 소관**이에요. 진행하다 막히는 지점 있으면 여기로 정리해서 던져주시면 이어서 도울게요.
-
-*- Assistant thought for 15.7s. (Opus)*
-
-**[디코] [Creator-OS] (2026-08-12 22:00)**
-📊 **[코드방·PRODUCE]** INFO
-대기: 6개, 진행중: 17개
-
-**[디코] [Creator-OS] (2026-08-12 22:01)**
-🟢 **[코드방·CAPTURE]** START
-새 콘텐츠 소싱 시작
-
-**[디코] [Creator-OS] (2026-08-12 22:01)**
-✅ **[코드방·CAPTURE]** DONE
-소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
-
-**[디코] [Creator-OS] (2026-08-12 22:01)**
-🟢 **[코드방·KNOWLEDGE]** START
-지식 동기화 시작
-
-**[디코] [Creator-OS] (2026-08-12 22:01)**
-✅ **[코드방·KNOWLEDGE]** DONE
-Notion: True, Obsidian: True
-
-**[디코] [Creator-OS] (2026-08-12 22:01)**
-📊 **[코드방·PRODUCE]** INFO
-대기: 6개, 진행중: 17개
-
-**[디코] [Creator-OS] (2026-08-12 22:02)**
-🟢 **[코드방·CAPTURE]** START
-새 콘텐츠 소싱 시작
-
-**[디코] [Creator-OS] (2026-08-12 22:02)**
-✅ **[코드방·CAPTURE]** DONE
-소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
-
-**[디코] [Creator-OS] (2026-08-12 22:02)**
-🟢 **[코드방·KNOWLEDGE]** START
-지식 동기화 시작
-
-**[디코] [Creator-OS] (2026-08-12 22:02)**
-✅ **[코드방·KNOWLEDGE]** DONE
-Notion: True, Obsidian: True
-
-**[디코] [Creator-OS] (2026-08-12 22:02)**
-📊 **[코드방·PRODUCE]** INFO
-대기: 6개, 진행중: 17개
-
-**[디코] [Creator-OS] (2026-08-12 22:03)**
-🟢 **[코드방·CAPTURE]** START
-새 콘텐츠 소싱 시작
 
 **[디코] [Creator-OS] (2026-08-12 22:03)**
 ✅ **[코드방·CAPTURE]** DONE
@@ -596,4 +511,68 @@ Notion: True, Obsidian: True
 **[디코] [Creator-OS] (2026-08-12 22:24)**
 📊 **[코드방·PRODUCE]** INFO
 대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 22:25)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 22:25)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 22:25)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 22:25)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 22:25)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 22:26)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 22:26)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 22:26)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 22:26)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 22:26)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 22:27)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 22:27)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 22:27)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 22:27)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 22:27)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 22:28)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
 
