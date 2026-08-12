@@ -1,6 +1,6 @@
 # 웹·디스코드 #assistant 대화 (자동 동기화)
 
-_마지막 갱신: 2026-08-12 15:15:43 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
+_마지막 갱신: 2026-08-12 15:20:46 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
 _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합, 각 발화 앞 `[디코]`/`[웹]` 표기_
 
 ---
@@ -74,150 +74,6 @@ _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합,
 - 5분 주기 워처(`com.atnown.discord-cowork-sync`)가 다음 사이클부터 자동으로 웹까지 실어 보내요
 
 **한 가지 참고** — `logs/discord_cowork_sync.*.log` 두 파일이 git에 추적돼 있어서 워처가 돌 때마다 "변경됨"으로 떠서 rebase를 살짝 방해해요. 지금 동작엔 지장 없지만, 원하시면 이 로그를 gitignore로 빼서 깔끔하게 정리해드릴까요?
-
-**[디코] [Assistant] (2026-08-12 14:59)**
-회수해보니 **앳나운 레포는 안 쓰는 게 아니라, 백그라운드에서 계속 돌아서 차브스 눈에 안 띄는 거예요**. 최근 기록에 활동 흔적이 쭉 남아있어요.
-
-- `atnown-content-pipeline` + `atnown-trunk` 두 레포로 **자동 동기화** 중이에요 (8/11 언급)
-- `render_watch.sh` / `com.atnown.codexwatch.plist` 같은 **launchd 데몬**이 상주하며 렌더·감시를 자동 실행해요
-- 스레드 자동 발행(`threads_scheduler`), `render_and_drop.sh` 흐름도 이 레포 안에 있어요
-
-즉 **화면에 안 보이는 이유 = 슬래시나 채팅으로 부르는 게 아니라 맥에서 데몬으로 조용히 돌기 때문**이에요. 지금 하는 블로그 파서 작업도 결국 이 레포(`~/atnown-content-pipeline`) 위에 얹는 거고요.
-
-진짜 돌고 있는지 확인하고 싶으면 터미널 방에 이거 붙여넣어보세요 👇
-
-> `launchctl list | grep atnown` 하고, `ls -la ~/atnown-content-pipeline/_logs/` 도 보여줘. 요즘 로그 찍히는지 확인하려고.
-
-결과 보여주시면 실제로 살아있는지 같이 짚어드릴게요.
-
-*- Assistant thought for 34.9s. (Opus)*
-
-**[디코] [차노스] (2026-08-12 15:00)**
-다음은 뭐하면돼?
-
-**[디코] [Assistant] (2026-08-12 15:00)**
-이미지가 지금 안 열려서(임시 파일이 사라졌어요) 화면은 못 봤는데, 이름 정리부터 해드릴게요.
-
-**세 개가 다른 게 아니라, 실제 레포는 2개예요** 👇
-
-- **`atnown-content-pipeline`** — 콘텐츠 제작·발행 엔진 (파서·렌더·스레드 발행 코드가 여기 있어요). "앳나운 컨텐츠 파이프라인" = 이거예요
-- **`atnown-trunk`** — "앳나운트렁크". content-pipeline과 **자동 동기화**되는 짝 레포예요 (8/11에 "자동동기화고 atnown-content-pipeline, atnown-trunk야"라고 직접 말씀하셨어요)
-
-즉 **"앳나운 레포"는 이 둘을 통칭**하는 말이고, 새로 뭘 만들 필요 없어요.
-
-**연결할 건 하나 — 지금 하는 블로그 파서 작업을 `atnown-content-pipeline` 안에 얹는 것**이에요. trunk는 알아서 동기화되니 안 건드려도 돼요.
-
-다만 화면에 뭐가 떠서 "연결"을 물으시는지 제가 못 봤어요. 둘 중 뭐예요?
-
-- **GitHub 레포 연결(clone/remote)** 이면 → 어느 화면인지
-- **터미널 방에 레포 물려주는** 거면 → 이미 `~/atnown-content-pipeline` 로 물려있어요
-
-이미지 다시 올려주시거나 화면 글자 몇 개만 알려주시면 정확히 짚어드릴게요.
-
-_(error: tool_error)_
-
-*- Assistant thought for 30.7s. (Opus)*
-
-**[디코] [Assistant] (2026-08-12 15:00)**
-지금 흐름에서 **차브스가 할 일은 딱 하나 — 터미널 방(Claude Code)에 승인 메시지 붙여넣기**예요. 그럼 저쪽이 실제 파일·코드를 만들어요.
-
-**바로 이거 복붙하세요** 👇
-
-> `~/atnown-content-pipeline` 에서 진행해줘. 기존 하드코딩 파일명 파서는 **유지**하고, 태그 규격 파서를 추가하는 거야.
-> 1. `_blog_queue/` 폴더 생성
-> 2. `tag_parser.py` 작성 — `[H]`제목 / `[B]`본문 / `[QUOTE]`인용 / `[IMG:01]`이미지 매칭
-> 3. `_blog_queue/` 의 `.txt` 감지 → 파싱 → 기존 네이버 발행 스크립트로 넘기는 흐름 연결
-> 4. `_blog_queue/sample.txt` 예시 만들어 파싱 테스트 로그 보여줘
-
-**그 다음 순서는 이렇게 흘러가요:**
-
-- 저쪽이 폴더·파서 만들면 → 결과(테스트 로그)를 여기 저한테 보여주기
-- 제가 파싱 제대로 됐는지 확인 → 안 되면 고칠 코드 다시 드림
-- 잘 되면 → **글 하나를 태그 규격(.txt)으로 써서 `_blog_queue/`에 넣고 실제 네이버 발행 테스트**
-
-혹시 블로그 파서 말고 **다른 걸 먼저 하고 싶으시면** 말씀해주세요 — 오늘 우선순위를 그쪽으로 바꿔드릴게요.
-
-*- Assistant thought for 25.4s. (Opus)*
-
-**[디코] [차노스] (2026-08-12 15:00)**
-내가 만들고싶은 파이프라인 여기서 다 만들수있을거 같은데 내가 이제까지 부탁하거나 했는데 너 능력으로 안됫던 모든 연동 제작 다 코드로 만들어봐 여기다 넣어서 다 해겨랳버리게
-
-**[디코] [차노스] (2026-08-12 15:00)**
-해결해버리게
-
-**[디코] [차노스] (2026-08-12 15:01)**
-블로그먼저 완성하고 다른거 하자
-
-**[디코] [차노스] (2026-08-12 15:01)**
-여기까지하면 이제 블로그는 자동화 완료인가?
-
-**[디코] [차노스] (2026-08-12 15:01)**
-로그는 찍히고 있다. 비활성 서비스들 살릴까?
-
-✻ Churned for 15s
-
-❯
-  ~/atnown-content-pipeline 에서 진행해줘. 기존 하드코딩 파일명 파서는 유지하고, 태그 규격 파서를 추가하는 거야.
-  _blog_queue/ 폴더 생성
-  tag_parser.py 작성 — [H]제목 / [B]본문 / [QUOTE]인용 / [IMG:01]이미지 매칭
-  _blog_queue/ 의 .txt 감지 → 파싱 → 기존 네이버 발행 스크립트로 넘기는 흐름 연결
-  _blog_queue/sample.txt 예시 만들어 파싱 테스트 로그 보여줘
-
-이미 완료된 작업이다. 현재 상태 확인해보겠다.
-
-  Listed 2 directories, ran 1 shell command
-
-모두 있다. 파싱 테스트 다시 돌려서 로그 보여준다.
-
-  Ran 2 shell commands
-
-✅ 이미 완료됨
-
-구조:
-~/atnown-content-pipeline/
-├── _blog_queue/           ← 큐 폴더
-│   ├── sample.txt         ← 테스트 샘플
-│   └── 01.png             ← 테스트 이미지
-├── scripts/
-│   ├── tag_parser.py      ← 태그 파서
-│   ├── blog_queue_worker.py  ← 큐 워커
-│   └── naver_blog_draft.mjs  ← 기존 유지 + 파서 출력 자동 감지
-└── _publish_jobs/
-    ├── blog/              ← 기존 하드코딩 (유지)
-    └── blog_parsed/       ← 파서 출력
-
-파싱 결과: 제목 1개, 본문 4개, 인용 2개, 이미지 1개 정상 추출.
-
-✻ Worked for 20s
-
-**[디코] [차노스] (2026-08-12 15:01)**
-이미완료래
-
-**[디코] [Assistant] (2026-08-12 15:02)**
-좋아요, 회수해서 **"이제까지 부탁했는데 막혔던 연동"을 다 긁어왔어요.** 기억으로 지어낸 거 아니고 실제 대화 기록 기반이에요.
-
-**막혔던 연동 목록 (실제 기록 기반)** 👇
-
-- **① 인스타/스레드 자동발행** — 메타 OAuth 토큰 경로는 *영구 포기* 상태예요 (2026-07-10, 2FA SMS·팝업 제약). 단 "살아있는 크롬 세션 직접 발행"은 계속 시도 의향 있으셨어요 (7-15 결정 기록)
-- **② 구글 드라이브 연동** — `gdrive.json` 토큰이 자꾸 만료/부재로 깨졌어요 (7-14, 8-4, 8-5 반복)
-- **③ GitHub 접근** — `gh` CLI 미설치라 레포에서 직접 못 당겨왔어요 (7-14)
-- **④ 노션 작업 큐 폴링** — 노션 DB 대기행 감지 → 렌더+드라이브 업로드 자동화 (8-5 요청)
-- **⑤ 유튜브 API** — 이건 *지금은 됨* (`youtube_reauth.py`+`yt_upload.py`로 업로드·예약공개 작동, 8-7)
-
-**핵심 진단:** ①②③이 안 됐던 근본 원인은 코드가 없어서가 아니라 **인증(토큰·2FA·크롬 세션)** 문제예요. 그래서 여기(맥스튜디오)의 **살아있는 크롬 세션 + 터미널 방**이면 뚫릴 가능성이 커요.
-
-이제 **터미널 방한테 통째로 짓게 하면 돼요.** 아래 복붙하세요 👇
-
-> `~/atnown-content-pipeline` 에 아래 연동을 코드로 다 만들어줘. 인증 막힌 건 "라이브 크롬 세션 직접 발행" 방식으로:
-> 1. **크롬 세션 기반 인스타·스레드 자동발행** (Playwright, `_naver_profile`처럼 로그인 세션 재사용)
-> 2. **구글 드라이브 업로드/다운로드** 모듈 안정화 (토큰 만료 시 재인증 1회 포함)
-> 3. **GitHub 접근** — `gh` 없이 되는 git clone/pull 스크립트
-> 4. **노션 작업 큐 폴링** 데몬 (대기행 → 렌더+드라이브 → 완료/실패 기록)
-> 각각 어디까지 되는지 테스트 로그로 보여주고, **인증 막히는 지점은 형 클릭 1회로 뚫는 스크립트**로 만들어줘.
-
-붙여넣고 저쪽 답 오면 보여주세요 — 어디가 진짜 막히는지 같이 뚫어드릴게요. **먼저 하고 싶은 거 하나 있으면**(예: 인스타 자동발행부터) 말해주시면 그것만 집중할게요.
-
-*- Assistant thought for 69.0s. (Opus)*
 
 **[디코] [Assistant] (2026-08-12 15:02)**
 좋아요, 그럼 방금 드린 그 복붙 블록을 **터미널 방(Claude Code)에 그대로 붙여넣으면** 저쪽이 4개 연동을 실제로 짓기 시작해요. 그게 "해결" 착수 버튼이에요.
@@ -885,4 +741,218 @@ candidate ranking changed. Report the scores file path.
 - **C. 한 단어 → 책** — 지식카드 축적을 book 초안으로 엮는 배선
 
 *- Assistant thought for 53.1s. (Opus)*
+
+**[디코] [차노스] (2026-08-12 15:15)**
+다해다해
+
+**[디코] [Assistant] (2026-08-12 15:15)**
+코드방에 그대로 붙여넣을 **배선 프롬프트 6종**을 역으로 제시할게요, ì°¨ë¸ì¤님. 기존에 터졌던 문제를 전부 잡는 방향이고, 전부 영어 + DO/DON'T 페어예요.
+
+**① 29잡 고아 렌더잡 안전 회수**
+```
+GOAL: Recover the 29 orphan CODEX-RERENDER jobs stuck in _processing/ (dropped 2026-08-11 17:04).
+DO:
+- First LIST every job dir under _processing/ with its manifest (source, target, mtime). Print the list, DO NOT act yet.
+- Classify each: (a) output already exists elsewhere -> DONE, (b) source valid + no output -> REQUEUE, (c) source missing/corrupt -> DEAD.
+- Re-inject ONLY the REQUEUE set, max 3 concurrent renders, 30s stagger.
+- Write a recovery report to _logs/orphan_recovery_<date>.md.
+DON'T:
+- DON'T bulk re-run all 29 at once (render overload).
+- DON'T delete any job before the report is written.
+- DON'T touch jobs classified DONE.
+```
+
+**② 노션 multi_select 콤마 400 픽스**
+```
+GOAL: Fix Notion multi_select 400 errors when a tag value contains a comma.
+DO:
+- Add a sanitize step before every Notion write: replace ',' inside a tag token with '·' (or split into separate tags).
+- Apply centrally in the Notion client wrapper (SSOT), not per call-site.
+- Backfill-retry the 3 knowledge cards that failed to write.
+DON'T:
+- DON'T strip the comma silently without logging the original value.
+- DON'T patch only one call site.
+```
+
+**③ launchd 상주화 (와처 자동재시작)**
+```
+GOAL: Wrap dying watchers (blog_queue_worker.py, Google Drive daemon, MCP bridge) in launchd LaunchAgents.
+DO:
+- Generate ~/Library/LaunchAgents/com.atnown.<name>.plist with RunAtLoad=true, KeepAlive=true, ThrottleInterval=30.
+- Redirect StandardOut/Error to _logs/<name>.log.
+- launchctl bootstrap + verify RUNNING; print the status table.
+DON'T:
+- DON'T leave any watcher on nohup/manual start.
+- DON'T set KeepAlive without ThrottleInterval (crash-loop risk).
+```
+
+**④ 브릿지/토큰 자동복구**
+```
+
+*- (message continues)*
+
+**[디코] [Assistant] (2026-08-12 15:15)**
+*- (continued)*
+
+GOAL: Self-heal broken connections (DB, Discord bot, MCP bridge, Google Drive, Notion).
+DO:
+- Refresh gdrive.json / Notion tokens preemptively at 80% of TTL (not on 401).
+- Add socket idle-timeout + reconnect with exponential backoff.
+- Bridge<->watcher co-death check: if bridge dies, restart its watcher too.
+- Health-probe every 60s; log recoveries to _logs/bridge_health.md.
+DON'T:
+- DON'T wait for a 401/500 to refresh.
+- DON'T reconnect in a tight loop without backoff.
+```
+
+**⑤ 옵시디언 볼트 정본 병합**
+```
+GOAL: Merge scattered Obsidian vaults into ONE canonical vault inside Google Drive.
+DO:
+- Dedup by content hash. Priority: canonical(Drive) > local Studio > MacBook seed > archive.
+- Keep a merge manifest (kept/dropped/renamed) in _logs/vault_merge.md.
+- Verify Drive daemon alive (pgrep -lf "MacOS/Google Drive") before writing.
+DON'T:
+- DON'T delete any source vault until the manifest is confirmed.
+- DON'T overwrite a higher-priority file with a lower one.
+```
+
+**⑥ 마스터 자기치유 루프 (전 플랫폼)**
+```
+GOAL: Turn blog(Naver)/YouTube/Instagram/Threads/TikTok into one self-healing loop.
+DO:
+- Wire CAPTURE -> DECIDE(brain score) -> BUILD -> PUBLISH -> ARCHIVE(Notion/Drive) -> LEARN.
+- On any stage failure, auto-retry once, then park to _dead/ with a reason and ping #assistant.
+- Emit a daily heartbeat (jobs done / parked / tokens refreshed).
+DON'T:
+- DON'T let one platform failure block the others.
+- DON'T park a job without a human-readable reason.
+```
+
+이 6개가 지금까지 터졌던 문제 전부를 덮어요 — 렌더 고아잡, 노션 콤마, 와처 죽음, 브릿지 끊김, 볼트 분산, 전체 루프 자가치유까지요.
+
+붙여넣는 순서는 **①→②→③→④→⑤→⑥** 추천해요. ①②는 지금 터진 불 끄기, ③④는 재발 방지, ⑤⑥은 구조 완성이에요.
+
+이 6개 결정, 메모리에 박제해둘까요? 원하시면 바로 저장하고 다음 브리핑에도 물려둘게요.
+
+*- Assistant thought for 66.3s. (Opus)*
+
+**[디코] [차노스] (2026-08-12 15:16)**
+혹시 형이 말한 "클로드 터미널"이 지금 쓰는 코덱스가 아니라 형이 맥에서 새로 띄운 Claude Code CLI면, 그쪽 인박스 경로만 한 줄 알려줘 — 거기로도 바로 연결할게. 아니면 지금 이 통로가 그거야, 이대로 상시 가동이야.
+
+**[디코] [Assistant] (2026-08-12 15:16)**
+다 해뒀어요, ì°¨ë¸ì¤님. 제가 지금 할 수 있는 몫은 전부 실행했어요.
+
+**박제 완료 ✅**
+- 6종 배선 프롬프트 전체 → **전 에이전트 공유 지식**에 저장 (다른 에이전트도 회수 가능)
+- 진행 상태·역할분담 → **assistant 메모리**에 `last_decision`으로 저장 → 다음 브리핑에 자동으로 물려요
+
+**여기서부터는 코드방 몫이에요.** 실제 파일 수정·렌더 재투입·launchd 등록은 클로드 터미널이 손으로 처리하는 거라, 제가 대신 실행할 순 없어요 (디스코드 assistant는 발사형 실행이 아니라 검수·판정·기억 담당이에요).
+
+**제가 대기 중인 것 (코드방 끝나면 바로 이어받을 것)**
+- **29잡 목록** — 뜨면 DONE/REQUEUE/DEAD 판정 대행
+- **노션 backfill 3건** — 재작성 성공 여부 확인
+- **launchd 상주화 결과** — 와처 RUNNING 상태표 검수
+
+코드방이 ①번(29잡 목록) 출력하면 그 텍스트만 여기 붙여주세요 — 바로 분류해서 "이건 재투입, 이건 폐기" 판정해드릴게요.
+
+혹시 지금 코드방이 멈췄거나 에러 뱉었으면, 그 화면 텍스트 던져주시면 원인부터 같이 잡을게요.
+
+*- Assistant thought for 50.4s. (Opus)*
+
+**[디코] [차노스] (2026-08-12 15:17)**
+응 6개 결정 박제
+
+**[디코] [Assistant] (2026-08-12 15:17)**
+좋은 질문이에요, ì°¨ë¸ì¤님. 여기 제 구조를 정확히 말씀드릴게요 — 추측 없이 사실만요.
+
+**저(디스코드 assistant)는 별도 파일 인박스가 없어요.** 저는 Creator-OS 봇 안에서 도는 Claude CLI 서브프로세스고, 제 인박스는 **이 디스코드 #assistant 채널 자체**예요 (내부적으로 `logical_channel_id=assistant`, 봇 DB에 적재). 즉 외부 CLI가 파일 하나 써서 저를 부르는 경로는 없어요 — **연결은 이 디스코드 통로가 유일**해요.
+
+그래서 답을 나눠드리면요.
+
+- **지금 이 통로가 그거예요.** 코드방(코덱스든, 형이 새로 띄운 Claude Code CLI든)이 저와 주고받으려면 결과 텍스트를 여기 #assistant에 붙여넣는 방식이 정식 경로예요. 이대로 상시 가동 맞아요.
+- **코드방→저 자동연결을 원하시면**, 코드방이 `POST http://localhost:8010/reply` (또는 `/push`)로 이 채널에 직접 메시지를 쏘게 만들면 돼요. 그러면 사람이 복붙 안 해도 코드방 산출물이 저한테 바로 도착해요.
+
+정리하면 — **제 쪽 "인박스 경로"는 파일이 아니라 이 디스코드 채널 + localhost:8010 API**예요. 코드방이 그 API로 쏘도록 배선하면 완전 자동으로 묶여요.
+
+원하시면 그 **코드방→#assistant 자동전송 배선 프롬프트**도 하나 만들어드릴까요? 그거 하나면 복붙 없이 상시 연결돼요.
+
+*- Assistant thought for 34.6s. (Opus)*
+
+**[디코] [Assistant] (2026-08-12 15:17)**
+이미 박제돼 있어요, ì°¨ë¸ì¤님 — 아까 저장해뒀거든요. 다시 확인해드릴게요.
+
+**저장 완료된 것 ✅**
+- **6종 배선 프롬프트 전체** → 전 에이전트 공유 지식 (`rewiring_prompts_6_master_20260812`) — 다른 에이전트도 회수 가능
+- **진행 상태·역할분담** → assistant 메모리 (`last_decision`) — 다음 아침 브리핑에 자동으로 물려요
+
+그래서 6개 결정(①29잡 회수 ②노션 콤마 ③launchd 상주화 ④브릿지 자동복구 ⑤볼트 병합 ⑥마스터 루프)은 **영구 보존 상태**예요. 세션이 끊기거나 컴팩션돼도 이 6개는 안 날아가요.
+
+한 가지 제안 이어가자면 — 아까 말씀드린 **코드방→#assistant 자동전송 배선**요. 그거 하나 더 넣으면 코드방 산출물이 복붙 없이 저한테 바로 꽂혀요. 만들어드릴까요? 원하시면 ⑦번으로 바로 뽑을게요.
+
+*- Assistant thought for 23.7s. (Opus)*
+
+**[디코] [차노스] (2026-08-12 15:19)**
+원하시면 그 코드방→<#1518460128968572958> 자동전송 배선 프롬프트도 하나 만들어드릴까요? 그거 하나면 복붙 없이 상시 연결돼요. 만들어줘 클로드 코워크 클로드터미널 디스코드 크리에이터os 옵시디언 노션 구글드라이브 유튜브 인스타 스레드 네이버 다연결하는 프롬프트를 줘 완전한지식파이프라인과 밤샘공장자동화 로 인한 무한루프로 돈으로부터자유로워지는 컨텐츠 무한제작 시작이다.
+
+**[디코] [차노스] (2026-08-12 15:20)**
+아까 말씀드린 코드방→<#1518460128968572958> 자동전송 배선요. 그거 하나 더 넣으면 코드방 산출물이 복붙 없이 저한테 바로 꽂혀요. 만들어드릴까요? 원하시면 ⑦번으로 바로 뽑을게요.만들어줘
+
+**[디코] [Assistant] (2026-08-12 15:20)**
+ì°¨ë¸ì¤님, 코드방(Claude Code CLI)에 그대로 붙여넣을 **마스터 배선 프롬프트**를 만들었어요. 복붙 한 번이면 ①코드방→디스코드 자동전송 상시 연결 + ②전 채널 완전 지식 파이프라인 + ③밤샘 공장 무한루프까지 한 번에 배선돼요.
+
+```
+[MASTER WIRING — ONE TRUNK, INFINITE FACTORY]
+
+역할: 너는 이찬호(차노쌤/앳나운)의 콘텐츠 공장 배선 엔지니어다.
+아래를 SSOT·SRP·SOP 원칙으로 상주 파이프라인으로 구현하라.
+파일은 ~/atnown-content-pipeline/ 하위, 로그는 각 단계 stdout+파일.
+
+■ 0. 코드방→디스코드 상시 연결 (최우선)
+- 모든 단계의 시작/성공/실패를 POST http://localhost:8010/reply
+  (thread_id=1518460128968572958, agent_id=assistant, content=상태텍스트)로 자동 전송.
+- 공통 함수 notify(stage, status, detail) 하나로 통일(SRP). 복붙 없이 상시 알림.
+
+■ 1. CAPTURE (포착)
+- 유튜브 소싱: 차노 생각과 정렬된 것만(3기둥=영감인사이트/책인용실천/헤어현장).
+- 인스타·스레드·네이버·드라이브 신규 유입 감지 → 원본 시드 저장.
+
+■ 2. KNOWLEDGE (지식화)
+- 읽는 텍스트→Notion(콘텐츠허브/아이디어DB), 여는 파일→Google Drive(맥북 공유).
+- 옵시디언 볼트(드라이브 안)에 날것 글 동기화. 태그 multi_select 콤마(,)는 치환/이스케이프.
+
+■ 3. PRODUCE (제작)
+- 하루 숏폼 2개: 내 어투·차노쌤 목소리(ElevenLabs multilingual_v2, style낮춤·속도1.06)·영상 치환.
+- video:cardnews = 2:1. 만족-verdict 프롬프트만 Notion에 정본 박제.
+
+■ 4. PUBLISH (발행)
+- 유튜브 API 자동 업로드+예약공개(yt_upload.py, 채널 차노쌤). 해시태그 3개 필수.
+- 인스타 직접로그인 발행, 스토리는 폰 드라이브 공유, 스레드·네이버 배선.
+
+■ 5. LEARN (학습·자기치유 루프) ★핵심
+- yt_stats.py로 성과 회수 → 콘텐츠 브레인 스코어링에 되먹임.
+- 잘 된 포맷·기둥(헤어 실전 숏폼 >> 순수 인사이트)이 다음 소싱에서 가중치 상승.
+
+■ 6. 밤샘 공장 (무한루프 상주화)
+- 각 와처(blog_queue_worker 등) launchd 상주 등록(재부팅·크래시 자동 재기동).
+- Drive 데몬 죽으면 open -g -a "Google Drive" 후 90초 대기 후 재개.
+- 브릿지 토큰 선제갱신 + 정본 볼트 통합. 실패는 notify()로 즉시 디스코드 보고.
+
+완료 시 각 단계 RUNNING 상태표를 디스코드로 전송하라.
+```
+
+이거 하나로 **코드방이 결과를 알아서 <#1518460128968572958>로 쏴줘서** 이제 복붙 없이 상시 연결돼요.
+
+돌리기 전에 하나만 확인할게요 — 지금 코드방에서 **어제 배선 루프(29잡 회수·노션 콤마픽스·launchd 상주화·브릿지 볼트병합) 결과가 나왔나요?** 나왔으면 그 텍스트 붙여주시면 DONE/REQUEUE/DEAD 판정부터 이어서 검수할게요. 아직이면 위 마스터 프롬프트를 바로 코드방에 넣으시면 돼요.
+
+-# 💾 대화가 길어져서 직전 내용을 요약으로 정리했어요. 혹시 빠진 맥락이 있으면 짧게 알려주세요.
+
+*- Assistant thought for 40.2s. (Opus)*
+
+**[디코] [차노스] (2026-08-12 15:20)**
+일레븐랩스 피시오디오까지 모두연동하고 지금 코워크방에 업무 분산해놨거든? 차노기획실이 전략세우기 및 낙타컨텐츠 만화카드 담당이다.
+B방이 유튜브 쇼츠 및 영상발행 구성 방이다. 유튜브 API탐색으로 좋은 레퍼런스만들기. 좋은 메니패스트로 영상만들기 및 마케터로서 피드백이 중요하다.
+D방이 블로그 작성 및 잡업무를 맞자. 디스코드 연동하여 네이버블로그에 들어가는 것이 중요하다.
+차노 교육디렉터실이 샵 디렉터 교육총괄디렉터 샵업무 담당이다.
+ 박제해해  얘내들도 다 통합으로 너와연결되고 디스코드랑 연결되고 모두모두 연결되도록 해줘
 
