@@ -1,6 +1,6 @@
 # 웹·디스코드 #assistant 대화 (자동 동기화)
 
-_마지막 갱신: 2026-08-12 17:42:37 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
+_마지막 갱신: 2026-08-12 17:47:40 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
 _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합, 각 발화 앞 `[디코]`/`[웹]` 표기_
 
 ---
@@ -94,46 +94,6 @@ _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합,
 
 코드방 연동 완료 ✓
 
-**[디코] [Creator-OS] (2026-08-12 17:16)**
-✅ **[코드방·KNOWLEDGE]** DONE
-Notion: True, Obsidian: True
-
-**[디코] [Creator-OS] (2026-08-12 17:16)**
-📊 **[코드방·PRODUCE]** INFO
-대기: 6개, 진행중: 17개
-
-**[디코] [Creator-OS] (2026-08-12 17:17)**
-🟢 **[코드방·CAPTURE]** START
-새 콘텐츠 소싱 시작
-
-**[디코] [Creator-OS] (2026-08-12 17:17)**
-✅ **[코드방·CAPTURE]** DONE
-소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
-
-**[디코] [Creator-OS] (2026-08-12 17:17)**
-🟢 **[코드방·KNOWLEDGE]** START
-지식 동기화 시작
-
-**[디코] [Creator-OS] (2026-08-12 17:18)**
-✅ **[코드방·KNOWLEDGE]** DONE
-Notion: True, Obsidian: True
-
-**[디코] [Creator-OS] (2026-08-12 17:18)**
-📊 **[코드방·PRODUCE]** INFO
-대기: 6개, 진행중: 17개
-
-**[디코] [Creator-OS] (2026-08-12 17:19)**
-🟢 **[코드방·CAPTURE]** START
-새 콘텐츠 소싱 시작
-
-**[디코] [Creator-OS] (2026-08-12 17:19)**
-✅ **[코드방·CAPTURE]** DONE
-소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
-
-**[디코] [Creator-OS] (2026-08-12 17:19)**
-🟢 **[코드방·KNOWLEDGE]** START
-지식 동기화 시작
-
 **[웹] [차노쌤] (2026-08-12 17:19)**
 지금 5방이라고 새로 방을 만들었는데 크리에이터os와 연결이 안된다 어떻게 좀 해봐라 되게
 
@@ -154,34 +114,6 @@ Notion: True, Obsidian: True
 이제 5방이 클라우드에서 **main을 pull 하면 이 대화가 그대로 보여요.** 방 쪽에서도 안 보이면, 그 방이 어떤 브랜치를 읽고 있는지(보통 `main`)만 알려주세요 — 거기 맞춰 흘려보낼게요.
 
 같은 증상 재발하면 원인은 십중팔구 이 깃 갈라짐이라, 바로 rebase+push로 풀 수 있게 메모리에도 박아뒀어요.
-
-**[디코] [Creator-OS] (2026-08-12 17:19)**
-✅ **[코드방·KNOWLEDGE]** DONE
-Notion: True, Obsidian: True
-
-**[디코] [Creator-OS] (2026-08-12 17:19)**
-📊 **[코드방·PRODUCE]** INFO
-대기: 6개, 진행중: 17개
-
-**[디코] [Creator-OS] (2026-08-12 17:20)**
-🟢 **[코드방·CAPTURE]** START
-새 콘텐츠 소싱 시작
-
-**[디코] [Creator-OS] (2026-08-12 17:21)**
-✅ **[코드방·CAPTURE]** DONE
-소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
-
-**[디코] [Creator-OS] (2026-08-12 17:21)**
-🟢 **[코드방·KNOWLEDGE]** START
-지식 동기화 시작
-
-**[디코] [Creator-OS] (2026-08-12 17:21)**
-✅ **[코드방·KNOWLEDGE]** DONE
-Notion: True, Obsidian: True
-
-**[디코] [Creator-OS] (2026-08-12 17:21)**
-📊 **[코드방·PRODUCE]** INFO
-대기: 6개, 진행중: 17개
 
 **[웹] [Assistant] (2026-08-12 17:21)**
 풀 완료했어요, 차노쌤. **5방(영상방)도 이제 최신이에요.**
@@ -221,10 +153,6 @@ Notion: True, Obsidian: True
 
 지금 5방에서 pull해서 이 문장이 보이면 연결 완료예요.
 
-**[디코] [Creator-OS] (2026-08-12 17:22)**
-🟢 **[코드방·CAPTURE]** START
-새 콘텐츠 소싱 시작
-
 **[웹] [차노쌤] (2026-08-12 17:22)**
 너와연결되어야해
 
@@ -247,14 +175,6 @@ Notion: True, Obsidian: True
 - 제가 밀어넣은 건 그 직전까지의 대화·5방 배선 전부예요
 
 5방에서 pull 했는데도 **여전히 새 대화가 안 뜨면**, 그건 깃 문제가 아니라 그 방 워처(`renderwatch2`)가 파일을 다시 안 읽는 경우예요 — 말씀해 주시면 워처 재시작으로 바로 잡을게요.
-
-**[디코] [Creator-OS] (2026-08-12 17:22)**
-✅ **[코드방·CAPTURE]** DONE
-소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
-
-**[디코] [Creator-OS] (2026-08-12 17:22)**
-🟢 **[코드방·KNOWLEDGE]** START
-지식 동기화 시작
 
 **[디코] [Creator-OS] (2026-08-12 17:22)**
 ✅ **[코드방·KNOWLEDGE]** DONE
@@ -594,6 +514,86 @@ Notion: True, Obsidian: True
 Notion: True, Obsidian: True
 
 **[디코] [Creator-OS] (2026-08-12 17:41)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 17:42)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 17:43)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 17:43)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 17:43)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 17:43)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 17:44)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 17:44)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 17:44)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 17:44)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 17:44)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 17:45)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 17:45)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 17:45)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 17:45)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 17:45)**
+📊 **[코드방·PRODUCE]** INFO
+대기: 6개, 진행중: 17개
+
+**[디코] [Creator-OS] (2026-08-12 17:46)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 17:46)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 17:46)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
+
+**[디코] [Creator-OS] (2026-08-12 17:47)**
+✅ **[코드방·KNOWLEDGE]** DONE
+Notion: True, Obsidian: True
+
+**[디코] [Creator-OS] (2026-08-12 17:47)**
 📊 **[코드방·PRODUCE]** INFO
 대기: 6개, 진행중: 17개
 
