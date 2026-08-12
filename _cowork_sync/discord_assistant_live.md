@@ -1,6 +1,6 @@
 # 웹·디스코드 #assistant 대화 (자동 동기화)
 
-_마지막 갱신: 2026-08-12 15:29:12 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
+_마지막 갱신: 2026-08-12 15:29:23 KST · 표면당 최근 100개 · 소스: Creator OS capture_events (SSOT)_
 _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합, 각 발화 앞 `[디코]`/`[웹]` 표기_
 
 ---
@@ -74,81 +74,6 @@ _표면: 디스코드 #assistant + 웹 스튜디오 채팅 — 시간순 병합,
 - 5분 주기 워처(`com.atnown.discord-cowork-sync`)가 다음 사이클부터 자동으로 웹까지 실어 보내요
 
 **한 가지 참고** — `logs/discord_cowork_sync.*.log` 두 파일이 git에 추적돼 있어서 워처가 돌 때마다 "변경됨"으로 떠서 rebase를 살짝 방해해요. 지금 동작엔 지장 없지만, 원하시면 이 로그를 gitignore로 빼서 깔끔하게 정리해드릴까요?
-
-**[디코] [Assistant] (2026-08-12 15:06)**
-코드방(본진 터미널)에 그대로 붙여넣을 **감사·배선점검·개선 프롬프트**를 뽑았어요. 메모리 규율대로 영어 + DO/DON'T 페어로 정제했어요.
-
-```text
-ROLE: You are the implementation room. Audit and rewire ALL of Chanho's
-(앳나운/차노쌤) content+business pipelines as ONE trunk. Verify wiring
-end-to-end with real dry-runs, then propose concrete improvements.
-
-SCOPE — 6 subsystems, treat as one connected graph:
-1) BLOG: _blog_queue/*.txt → tag_parser.py → blog_queue_worker.py
-   → _publish_jobs/blog_parsed/{name}/ → naver_blog_draft.mjs (_naver_profile)
-2) BRAIN strategy: "낙타형 콘텐츠"(camel-shape) selection/scoring logic
-3) COMIC-CARD: build_cards.py + card asset flow
-4) YT-SHORTS: ~/atnown-content-pipeline (source→차노 voice/tone→render→
-   yt_upload.py publish+schedule), BGM default, v9 format
-5) 앳나운 EDUCATION mgmt: teacher curriculum modules, deck build_slides.py
-6) PERSONAL ops: calendar/mail/task, morning briefing
-
-FOR EACH subsystem:
-- WIRING MAP: entry → each script → output path → next stage (real paths)
-- HEALTH: run smallest safe dry-run, report PASS/FAIL + exact error line
-- BROKEN JOINTS: dataless Drive, expired gdrive.json token, Notion 429,
-  unicode paths, missing schedule/cron
-- IMPROVEMENT: one concrete change for speed/reliability
-
-CROSS-CUTTING (the trunk):
-- Every deliverable lands in BOTH local AND Google Drive (MacBook access)
-- readable text→Notion, openable files→Drive rule holds
-- each stage writes a memory pointer so re-search = 0
-
-DO:
-- Use real paths + real dry-run output as evidence
-- Keep existing hardcoded parsers as fallback
-- One prioritized "fix first" per subsystem
-
-DON'T:
-- No live Naver/Instagram publish without explicit 감독 approval
-- No delete-fallbacks, no force-push, no guessing status—verify it
-- Don't rebuild what exists (search prior first)
-
-OUTPUT: single table (subsystem | wiring OK? | broken joint | fix-first),
-
-*- (message continues)*
-
-**[디코] [Assistant] (2026-08-12 15:06)**
-*- (continued)*
-
-then top 3 rewiring changes ranked by impact.
-```
-
-**적용법**: 이 블록을 코드방에 그대로 넘기면 6개 시스템을 한 트렁크로 훑고, 실경로·드라이런 근거로 끊긴 배선을 잡아 개선안까지 표로 돌려줘요.
-
-제가 지금 **디스코드 어시스턴트**라 실제 레포에는 직접 못 들어가서, 코드방이 검증 실행을 맡는 구조가 맞아요. 프롬프트 톤이나 우선순위(블로그 먼저 vs 쇼츠 먼저) 조정할 부분 있으면 말해주세요.
-
--# 💾 대화가 길어져서 직전 내용을 요약으로 정리했어요. 혹시 빠진 맥락이 있으면 짧게 알려주세요.
-
-*- Assistant thought for 52.3s. (Opus)*
-
-**[디코] [Creator-OS] (2026-08-12 15:06)**
-아래 select 에서 응답을 선택한 뒤 [✅ 제출] 을 눌러주세요.
-
-**[디코] [Assistant] (2026-08-12 15:06)**
-확인해보니 **옵시디언은 이미 연동돼 있어요** — 근데 문제를 하나 발견했어요. 같은 이름 볼트가 **iCloud/Drive 두 개로 갈라져 있어요.**
-
-- **iCloud 볼트** — 지금 앱이 실제로 여는 곳. md 115개, 최근 7일 수정 **23개**
-- **Drive 볼트** — 파이프라인(`drive_vault_pull.py` → `_obsidian_in`)이 읽는 곳. md 114개, 최근 7일 수정 **74개**
-
-즉 **차브스가 앱에서 쓰는 건 iCloud 쪽인데 파이프라인은 Drive 쪽을 읽고 있어서** 서로 다른 볼트예요. 둘 다 최근 편집이 있어서 한쪽을 그냥 지우면 글이 유실돼요 — 그래서 임의로 안 합치고 먼저 여쭤요.
-
-메모리엔 "볼트=드라이브 안(두 기기 동기화+Claude 직접 접근)"이 원래 설계로 박혀 있어요. 그 기준이면 **Drive 볼트를 본류로 통일**하는 게 맞고, Drive는 마운트로 직접 읽혀서 그동안 말썽이던 gdrive 토큰 문제도 우회돼요.
-
-위에 카드로 물어봤어요 — 어느 쪽을 본류로 잡을지 골라주시면 최근 편집분 유실 없이 합쳐서 통일할게요.
-
-*- Assistant thought for 108.0s. (Opus)*
 
 **[디코] [Assistant] (2026-08-12 15:06)**
 자꾸 죽는 와처/런처는 **macOS launchd (LaunchAgent) 로 KeepAlive 감싸는 게 정답**이에요. 지금은 `&` 백그라운드나 셸 스크립트로 띄워서, 크래시·로그아웃·슬립 후에 안 살아나는 거예요.
@@ -1044,4 +969,40 @@ Notion: True, Obsidian: True
 
 **[디코] [차노스] (2026-08-12 15:28)**
 이거까지 마무리가 돼야 밤샘이지?
+
+**[디코] [Creator-OS] (2026-08-12 15:29)**
+🟢 **[코드방·SYSTEM]** START
+마스터 파이프라인 시작
+
+**[디코] [Creator-OS] (2026-08-12 15:29)**
+💓 **[코드방·SYSTEM]** ALIVE
+```
+2026-08-12 15:29
+🟢 codexwatch: 18158
+🔴 brainsync: ❌
+🔴 youtube-index: ❌
+🔴 phone-to-obsidian: ❌
+🔴 bridgeguard: ❌
+🟢 notion-sync: 18192
+🟢 renderwatch2: 18257
+🟢 master-pipeline: 18186
+🔴 notionsync: ❌
+🔴 youtube-daily: ❌
+🟢 discord-cowork-sync: 18166
+🔴 obsidian-sync: ❌
+🟢 blog-queue: 18137
+🔴 weeklyfeedback: ❌
+```
+
+**[디코] [Creator-OS] (2026-08-12 15:29)**
+🟢 **[코드방·CAPTURE]** START
+새 콘텐츠 소싱 시작
+
+**[디코] [Creator-OS] (2026-08-12 15:29)**
+✅ **[코드방·CAPTURE]** DONE
+소싱 완료: {'youtube': 0, 'drive': 1, 'intray': 1}
+
+**[디코] [Creator-OS] (2026-08-12 15:29)**
+🟢 **[코드방·KNOWLEDGE]** START
+지식 동기화 시작
 
