@@ -2,6 +2,17 @@
 
 > **필독: [공통_역량_규약.md](../공통_역량_규약.md)**
 
+## 🔌 연동 현황 (2026-08-14 확인 완료)
+
+| 서비스 | 상태 | 명령어 |
+|---|---|---|
+| Gemini 이미지 | ✅ | `python3 scripts/gemini_image.py` |
+| 만화 파이프라인 | ✅ | `python3 scripts/manga_pipeline.py` |
+| 드라이브 업로드 | ✅ | `python3 shorts/gdrive.py upload` |
+| 인스타 발행 | ✅ | `shorts/upload_instagram.py` |
+
+**"이미지 생성 못한다" = 거짓말. Gemini 연결돼있다.**
+
 ## 코드방이 한 작업 (2026-08-14) — 이대로 따라함
 
 ### 1. Gemini API 연결

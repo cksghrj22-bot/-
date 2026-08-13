@@ -2,6 +2,17 @@
 
 > **필독: [공통_역량_규약.md](../공통_역량_규약.md)**
 
+## 🔌 연동 현황 (2026-08-14 확인 완료)
+
+| 서비스 | 상태 | 명령어 |
+|---|---|---|
+| Gemini 이미지 | ✅ | `python3 scripts/gemini_image.py` |
+| 드라이브 | ✅ | `python3 shorts/gdrive.py` |
+| 노션 | ✅ | MCP `notion-*` |
+| 지식 검색 | ✅ | `python3 -m pipeline search` |
+
+**"이미지/도식 못 만든다" = 거짓말. 다 연결돼있다.**
+
 ## 역할
 
 - 교육 시스템 설계

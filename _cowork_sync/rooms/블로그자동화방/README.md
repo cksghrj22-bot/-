@@ -2,6 +2,17 @@
 
 > **필독: [공통_역량_규약.md](../공통_역량_규약.md)**
 
+## 🔌 연동 현황 (2026-08-14 확인 완료)
+
+| 서비스 | 상태 | 명령어 |
+|---|---|---|
+| Gemini 이미지 | ✅ | `python3 scripts/gemini_image.py "프롬프트" output.png` |
+| 노션 발행 | ✅ | MCP `notion-create-pages` |
+| 드라이브 | ✅ | `python3 shorts/gdrive.py` |
+| 지식 검색 | ✅ | `python3 -m pipeline search "키워드"` |
+
+**"이미지 못 만든다" = 거짓말. Gemini 연결돼있다.**
+
 ## 관련 프롬프트
 
 - `prompts/04_매거진_블로그.md`

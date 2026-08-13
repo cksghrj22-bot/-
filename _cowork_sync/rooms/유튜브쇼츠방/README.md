@@ -2,6 +2,18 @@
 
 > **필독: [공통_역량_규약.md](../공통_역량_규약.md)**
 
+## 🔌 연동 현황 (2026-08-14 확인 완료)
+
+| 서비스 | 상태 | 명령어 |
+|---|---|---|
+| 유튜브 업로드 | ✅ | `python3 shorts/upload_youtube.py` |
+| 인스타 릴스 | ✅ | `shorts/upload_instagram.py` |
+| 스레드 | ✅ | `shorts/threads.py` |
+| 드라이브 | ✅ | `shorts/gdrive.py` |
+| TTS | ✅ | `scripts/tts_fish.py` |
+
+**"발행 못한다" = 거짓말. 위 명령어 실행하면 된다.**
+
 ## 핵심 규약
 
 1. **수치_체크리스트_정본.md 안 돌리면 렌더 금지**
