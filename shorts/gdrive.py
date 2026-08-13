@@ -171,6 +171,20 @@ def list_folder(folder_id: str, secrets_path: str | Path = DEFAULT_SECRETS,
     return out
 
 
+def download_file(file_id: str, dest: str | Path, secrets_path: str | Path = DEFAULT_SECRETS) -> Path:
+    """드라이브 파일을 로컬에 다운로드한다. drive.readonly 스코프 필요."""
+    p = Path(dest)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    token = access_token(load_secrets(secrets_path))
+    url = f"{FILES_URL}/{file_id}?alt=media&supportsAllDrives=true"
+    req = urllib.request.Request(url, headers={"Authorization": f"Bearer {token}"})
+    with urllib.request.urlopen(req, timeout=1800) as r:
+        with open(p, "wb") as f:
+            while chunk := r.read(8 * 1024 * 1024):  # 8MB chunks
+                f.write(chunk)
+    return p
+
+
 def upload_file(path: str | Path, folder_id: str | None = None,
                 secrets_path: str | Path = DEFAULT_SECRETS, name: str | None = None,
                 overwrite: bool = False) -> dict:
@@ -259,7 +273,20 @@ def main(argv: list[str] | None = None) -> int:
     p_ls.add_argument("folder_id")
     p_ls.add_argument("--video-only", action="store_true")
     p_ls.add_argument("--secrets", default=DEFAULT_SECRETS)
+    p_dl = sub.add_parser("download", help="파일 다운로드 (drive.readonly 스코프 필요)")
+    p_dl.add_argument("file_id")
+    p_dl.add_argument("dest", help="저장할 로컬 경로")
+    p_dl.add_argument("--secrets", default=DEFAULT_SECRETS)
     args = ap.parse_args(argv)
+
+    if args.cmd == "download":
+        try:
+            p = download_file(args.file_id, args.dest, args.secrets)
+            print(f"✅ 다운로드 완료: {p} ({p.stat().st_size // 1048576}MB)")
+            return 0
+        except urllib.error.HTTPError as e:
+            print(f"❌ 다운로드 실패({e.code})", file=sys.stderr)
+            return 1
 
     if args.cmd == "list":
         try:
