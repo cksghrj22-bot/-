@@ -9,31 +9,37 @@
 | 네이버 블로그 원고 작성 | 영상 |
 | 임시저장 자동화 | 인스타 |
 | 블로그 발행 | 만화 |
-| **자기 분야 내 전략/회의** | — |
 
-## 상위 지휘
+## 자주 쓰는 명령어
 
-전략기획및개인업무 → 명령·판정
-이 방 → 실행·발행
+```bash
+# 블로그 원고 생성
+python3 scripts/naver_draft.py <주제>
 
-## 관련 경로
+# 임시저장
+python3 scripts/naver_save.py <원고.md>
 
-- `_blog_queue/`
-- `scripts/naver_*`
-- `_publish_jobs/blog*`
+# 발행
+python3 scripts/naver_publish.py <원고.md>
+```
 
----
+## 산출물 경로
 
-## 수정 가능 파일 (이것만 건드린다)
+| 용도 | 경로 |
+|---|---|
+| 원고 대기 | `_blog_queue/` |
+| 발행 잡 | `_publish_jobs/blog*` |
+| 블로그 콘텐츠 | `content/블로그/` |
+
+## 수정 가능 파일
 
 | 파일 | 용도 |
 |---|---|
-| `_state/rooms/이_방_이름.json` | 내 상태 |
-| `_cowork_sync/rooms/이_방/` | 내 방 폴더 |
+| `_state/rooms/블로그자동화방.json` | 내 상태 |
+| `scripts/naver_*.py` | 블로그 스크립트 |
+| `_blog_queue/` | 원고 대기열 |
 
-## 금지 (충돌 원인)
+## 금지
 
-- `_STATE_NOW.md` 직접 수정 (자동 생성됨)
-- `_ROOMS.md` 방 현황 테이블 직접 수정
-- 다른 방의 `_state/rooms/*.json` 수정
-- `git reset --hard` 사용
+- 영상/인스타/만화 (→ 각 방)
+- `git reset --hard`
