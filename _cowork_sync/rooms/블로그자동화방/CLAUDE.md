@@ -13,6 +13,9 @@
 ## 자주 쓰는 명령어
 
 ```bash
+# 블로그 게이트
+python3 scripts/blog_gate.py <원고.md>
+
 # 블로그 원고 생성
 python3 scripts/naver_draft.py <주제>
 

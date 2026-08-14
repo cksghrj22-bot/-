@@ -16,7 +16,7 @@
 
 ```bash
 # 만화 커버 게이트
-python3 scripts/cards/comic_cover_gate.py <폴더>
+python3 scripts/cards/comic_gate.py <폴더>
 
 # Gemini 이미지 생성
 python3 scripts/gemini_image.py <프롬프트>
