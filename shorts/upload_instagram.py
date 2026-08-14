@@ -84,7 +84,7 @@ def upload_carousel(image_urls: list[str], caption: str, creds: dict) -> str:
     return published["id"]
 
 
-def upload_reel(video_path: str | Path, caption: str, creds: dict, timeout_sec: int = 600) -> str:
+def upload_reel(video_path: str | Path, caption: str, creds: dict, timeout_sec: int = 600, room: str = "본진") -> str:
     """릴스를 업로드·게시하고 미디어 ID를 반환한다."""
     video_path = Path(video_path)
     token = creds["access_token"]
@@ -96,11 +96,12 @@ def upload_reel(video_path: str | Path, caption: str, creds: dict, timeout_sec: 
         {"media_type": "REELS", "upload_type": "resumable", "caption": caption, "access_token": token},
     )
     container_id = container["id"]
+    upload_uri = container.get("uri", f"{RUPLOAD}/{container_id}")  # 응답 URI 사용
 
     # 2) 영상 바이너리 전송
     data = video_path.read_bytes()
     request = urllib.request.Request(
-        f"{RUPLOAD}/{container_id}",
+        upload_uri,  # 응답에서 받은 URI 사용 (버전 자동 맞춤)
         data=data,
         method="POST",
         headers={
@@ -132,4 +133,14 @@ def upload_reel(video_path: str | Path, caption: str, creds: dict, timeout_sec: 
         f"{GRAPH}/{user}/media_publish",
         {"creation_id": container_id, "access_token": token},
     )
-    return published["id"]
+    media_id = published["id"]
+
+    # 5) 자동 로그 기록
+    try:
+        from scripts.publish_logger import log_publish
+        title = video_path.stem
+        log_publish("instagram", room, title, media_id, caption)
+    except Exception:
+        pass  # 로그 실패해도 발행은 성공
+
+    return media_id
