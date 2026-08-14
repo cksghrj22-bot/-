@@ -162,7 +162,18 @@
 두 코드방이 병렬로 도는데 이찬호가 직접 pull 하지 않는다. **각 방(Claude)이 알아서 맞춘다:**
 - **응답(작업) 시작 전:** `git pull --rebase origin main`
 - **커밋할 때마다:** `git pull --rebase origin main && git push origin HEAD:main` (거부되면 다시 pull 후 push, 성공까지)
-- 충돌 = 최신(다른 방) 살리고 내 변경 재적용 → `python3 -m shorts.spec`·테스트 통과 후 push.
+- **충돌 해결 (정확한 절차):**
+  ```bash
+  git stash -u                    # 1. 내 변경 보관 (untracked 포함)
+  git pull --rebase origin main   # 2. 최신 가져오기
+  git stash pop                   # 3. 내 변경 다시 적용
+  # 4. 충돌 나면 수동 해결 후 git add + git rebase --continue
+  ```
+- **🚫 절대 금지 (2026-08-14 사고 박제):**
+  - `git reset --hard` — 커밋 안 된 작업 전량 소실
+  - `git reset origin/main` — 위와 동일, 절대 쓰지 않는다
+  - `git checkout .` / `git restore .` — 수정 중인 파일 전량 소실
+  - 이 명령들은 "내 변경 재적용"의 **정반대**다. 쓰면 사고.
 - 큰 작업은 `knowledge/방_공유_작업로그.md` 맨 위에 한 줄 남긴다.
 - 상세/붙여넣기용: `prompts/방_자동동기화_붙여넣기.md`.
 
