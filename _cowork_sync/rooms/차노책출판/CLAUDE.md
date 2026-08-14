@@ -71,3 +71,7 @@ cat _obsidian_in/차노_왜사전_*.md
 
 ## 해놓은 일 (최근)
 - (착수 전)
+
+## 🔒 공유 자원 (읽기만)
+- secrets/, scripts/, CLAUDE.md, knowledge/ 규격 — **수정 금지**
+- 설정 바꿔야 하면 → 전략실에 요청

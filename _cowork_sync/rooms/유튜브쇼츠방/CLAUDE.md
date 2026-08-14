@@ -85,3 +85,7 @@ python3 shorts/tts.py <대본>
 - S1_senior_v5.mp4 게이트 통과 (2026-08-14)
 - AI일기 ep1 렌더
 - 게이트 자동 로그 기능 추가 (`_ROOMS_LOG.md`)
+
+## 🔒 공유 자원 (읽기만)
+- secrets/, scripts/, CLAUDE.md, knowledge/ 규격 — **수정 금지**
+- 설정 바꿔야 하면 → 전략실에 요청

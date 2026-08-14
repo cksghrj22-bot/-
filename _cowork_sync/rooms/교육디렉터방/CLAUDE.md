@@ -69,3 +69,7 @@ python3 scripts/build_slides.py <주제>
 ## 해놓은 일 (최근)
 - 성장타워 HTML 렌더
 - 교육시스템 정본 박제
+
+## 🔒 공유 자원 (읽기만)
+- secrets/, scripts/, CLAUDE.md, knowledge/ 규격 — **수정 금지**
+- 설정 바꿔야 하면 → 전략실에 요청
