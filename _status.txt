@@ -1,0 +1,19 @@
+{
+  "notion_sync": "ok",
+  "last_notion_sync": "2026-08-14 17:34:43",
+  "meta_publish": {
+    "ok": true,
+    "dry_run": true,
+    "approved_rows": 0,
+    "processed": 0,
+    "skipped": 0,
+    "failed": 0,
+    "results": []
+  },
+  "last_meta_publish": "2026-08-14 17:34:43",
+  "notion_data_source": "data_source",
+  "notion_data_source_error": "",
+  "notion_data_source_detail": "",
+  "notion_created": 0,
+  "publish_jobs": 0
+}

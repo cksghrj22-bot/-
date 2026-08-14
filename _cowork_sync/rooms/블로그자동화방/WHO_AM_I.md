@@ -21,3 +21,19 @@
 - `_blog_queue/`
 - `scripts/naver_*`
 - `_publish_jobs/blog*`
+
+---
+
+## 수정 가능 파일 (이것만 건드린다)
+
+| 파일 | 용도 |
+|---|---|
+| `_state/rooms/이_방_이름.json` | 내 상태 |
+| `_cowork_sync/rooms/이_방/` | 내 방 폴더 |
+
+## 금지 (충돌 원인)
+
+- `_STATE_NOW.md` 직접 수정 (자동 생성됨)
+- `_ROOMS.md` 방 현황 테이블 직접 수정
+- 다른 방의 `_state/rooms/*.json` 수정
+- `git reset --hard` 사용

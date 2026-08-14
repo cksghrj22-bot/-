@@ -1,0 +1,61 @@
+{
+  "computed_at": "2026-08-14T17:43:11.980072",
+  "record_count": 6,
+  "pillars": {
+    "헤어_기술": 0.75,
+    "마인드_철학": 0.725,
+    "비즈니스_교육": 0.6
+  },
+  "formats": {
+    "video": 0.75,
+    "card": 0.6,
+    "text": 0.55
+  },
+  "combinations": {
+    "헤어_기술:video": {
+      "samples": 2,
+      "score": 0.5,
+      "status": "insufficient"
+    },
+    "헤어_기술:card": {
+      "samples": 0,
+      "score": 0.5,
+      "status": "insufficient"
+    },
+    "헤어_기술:text": {
+      "samples": 0,
+      "score": 0.5,
+      "status": "insufficient"
+    },
+    "마인드_철학:video": {
+      "samples": 1,
+      "score": 0.5,
+      "status": "insufficient"
+    },
+    "마인드_철학:card": {
+      "samples": 1,
+      "score": 0.5,
+      "status": "insufficient"
+    },
+    "마인드_철학:text": {
+      "samples": 0,
+      "score": 0.5,
+      "status": "insufficient"
+    },
+    "비즈니스_교육:video": {
+      "samples": 1,
+      "score": 0.5,
+      "status": "insufficient"
+    },
+    "비즈니스_교육:card": {
+      "samples": 0,
+      "score": 0.5,
+      "status": "insufficient"
+    },
+    "비즈니스_교육:text": {
+      "samples": 1,
+      "score": 0.5,
+      "status": "insufficient"
+    }
+  }
+}

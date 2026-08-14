@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AT NOWN · 성장 도감</title>
+<style>
+:root{
+ --cream:#F7F5F1;--ink:#1c1a17;--gold:#A8895E;--gray:#6a655c;--line:#E4DFD6;--surf:#fcfcfb;
+ --t1:#0A8A5F;--t2:#2F6FB5;--t3:#C4661F;--t4:#9B4A86;--t5:#B08A17;
+ --good:#0A8A5F;--bad:#B3453A;--track:#E9E4DB;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#efece6;color:var(--ink);font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.55;padding:20px 12px 70px;-webkit-text-size-adjust:100%}
+.wrap{max-width:1180px;margin:0 auto}
+.cover{background:var(--ink);color:var(--cream);border-radius:16px;padding:24px 26px;margin-bottom:13px}
+.cover .t{font-size:11px;letter-spacing:.24em;color:var(--gold);font-weight:800}
+.cover h1{font-size:26px;font-weight:900;margin:7px 0 6px}
+.cover p{font-size:13.5px;color:#d7d1c6}
+.cover .stamp{font-size:11px;color:#9a948a;margin-top:9px;font-weight:700}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:12px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 10px;text-align:center}
+.kpi .n{font-size:24px;font-weight:900}.kpi .t{font-size:11px;color:var(--gray);margin-top:2px;font-weight:700}
+.kpi.alert .n{color:var(--bad)}
+
+.bar{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px;align-items:center}
+button{background:var(--ink);color:var(--cream);border:0;border-radius:9px;padding:8px 13px;font-size:12.5px;font-weight:800;cursor:pointer;font-family:inherit}
+button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+button.on{background:var(--gold);color:#fff}
+label.fl{font-size:12px;font-weight:800;color:var(--gray)}
+select{border:1px solid var(--line);border-radius:8px;padding:8px 9px;font-size:13px;font-family:inherit;background:#fff}
+
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:13px}
+.panel h2{font-size:14px;font-weight:900;margin-bottom:4px;display:flex;align-items:baseline;gap:8px}
+.panel h2 small{margin-left:auto;font-size:10.5px;letter-spacing:.12em;color:var(--gold);font-weight:800}
+.panel .lead{font-size:12.5px;color:var(--gray);margin-bottom:13px}
+
+/* 도감 카드 */
+.dex{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:14px 15px;cursor:pointer;transition:box-shadow .15s}
+.card:hover{box-shadow:0 3px 14px rgba(0,0,0,.09)}
+.card .hd{display:flex;gap:12px;align-items:flex-start}
+.mon{flex:0 0 96px;height:96px;border-radius:12px;background:var(--cream);border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
+.mon svg{width:88px;height:88px;display:block}
+.who{flex:1;min-width:0}
+.who .nm{font-size:19px;font-weight:900;line-height:1.15}
+.who .sub{font-size:11.5px;color:var(--gray);font-weight:800;margin-top:1px}
+.who .type{display:inline-block;font-size:10.5px;font-weight:900;color:#fff;border-radius:10px;padding:2px 9px;margin-top:5px}
+.evo{display:flex;align-items:center;gap:5px;margin-top:7px}
+.evo i{width:9px;height:9px;border-radius:50%;background:var(--track);display:inline-block}
+.evo i.on{background:var(--ink)}
+.evo span{font-size:10.5px;color:var(--gray);font-weight:800;margin-left:3px}
+
+/* 경험치 */
+.xp{margin-top:12px}
+.xp .lab{display:flex;font-size:11px;font-weight:800;color:var(--gray);margin-bottom:4px}
+.xp .lab b{color:var(--ink);font-size:12px}
+.xp .lab .r{margin-left:auto}
+.xptrack{position:relative;height:14px;background:var(--track);border-radius:7px;overflow:hidden}
+.xpfill{height:100%;border-radius:7px 0 0 7px;background:var(--ink)}
+.xpfill.pass{background:var(--good)}
+.xpline{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--bad)}
+.xpnote{font-size:10.5px;color:var(--gray);font-weight:700;margin-top:4px}
+.xpnote b{color:var(--bad)}
+
+/* 스탯 */
+.stats{margin-top:12px;display:grid;gap:6px}
+.row{display:grid;grid-template-columns:48px 1fr 52px;align-items:center;gap:8px}
+.row .k{font-size:11.5px;font-weight:900}
+.row .tr{position:relative;height:11px;background:var(--track);border-radius:6px;overflow:hidden}
+.row .fi{height:100%;border-radius:6px 0 0 6px}
+.row .cap{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(45deg,#f0ece4,#f0ece4 4px,#e6e1d7 4px,#e6e1d7 8px)}
+.row .v{font-size:10.5px;font-weight:800;color:var(--gray);text-align:right}
+.row.hi .k:after{content:" ▲";color:var(--good);font-size:10px}
+.row.lo .k:after{content:" ▼";color:var(--bad);font-size:10px}
+.row .v.none{color:#b9b3a8;font-style:italic}
+
+.oneline{margin-top:11px;border-top:1px dashed var(--line);padding-top:9px;font-size:12.5px;line-height:1.6}
+.oneline b.g{color:var(--good)}.oneline b.b{color:var(--bad)}
+
+/* 상세 */
+.detail{background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin-top:11px;display:none}
+.detail.open{display:block}
+.detail h4{font-size:12.5px;font-weight:900;margin-bottom:8px}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+th{text-align:left;font-size:10px;color:var(--gray);font-weight:800;border-bottom:1px solid var(--line);padding:5px 6px}
+td{border-bottom:1px solid var(--line);padding:6px;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+.g{display:inline-block;font-size:10px;font-weight:900;color:#fff;border-radius:8px;padding:1px 7px;min-width:22px;text-align:center}
+.gA{background:#0A8A5F}.gB{background:#2F6FB5}.gC{background:#C4661F}.gD{background:#B3453A}.gX{background:#b9b3a8}
+.chip{display:inline-block;font-size:10px;font-weight:800;border-radius:8px;padding:1px 7px;border:1px solid var(--line);background:#fff}
+.chip.warn{border-color:#e0b9b4;background:#fdf3f2;color:var(--bad);font-weight:900}
+.chip.ok{border-color:#b9dfcd;background:#f1faf6;color:var(--good);font-weight:900}
+.trend{font-weight:900;font-size:13px}
+.trend.up{color:var(--good)}.trend.flat{color:var(--gray)}.trend.down{color:var(--bad)}
+
+/* 진화 트리 */
+.tree{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:11px}
+.stage{background:var(--cream);border:1px solid var(--line);border-radius:13px;padding:14px}
+.stage h4{font-size:13px;font-weight:900}
+.stage .cap{font-size:10.5px;color:var(--gray);font-weight:700;margin-bottom:10px}
+.stage .mem{display:flex;flex-wrap:wrap;gap:9px}
+.mini{width:74px;text-align:center}
+.mini svg{width:56px;height:56px}
+.mini .mn{font-size:11px;font-weight:900;margin-top:-3px}
+.mini .ml{font-size:9.5px;color:var(--gray);font-weight:700}
+
+.note-b{font-size:12.5px;color:var(--gray);background:var(--cream);border:1px solid var(--line);border-radius:11px;padding:13px 17px;line-height:1.75;margin-top:12px}
+.note-b b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:11.5px;font-weight:800;color:var(--gray);margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:14px;height:11px;border-radius:3px;display:inline-block}
+@media(max-width:720px){.kpis{grid-template-columns:repeat(2,1fr)}.tree{grid-template-columns:1fr}}
+</style>
+</head>
+<body><div class="wrap">
+
+<div class="cover">
+  <div class="t">AT NOWN · GROWTH DEX</div>
+  <h1>성장 도감 — 레벨마다 모습이 바뀐다</h1>
+  <p>시험 점수 하나로 사람을 정하지 않는다.<br><b>얼마나 해냈나 · 얼마나 연습했나 · 평소에 어땠나</b> — 이 셋을 같이 보고, 레벨마다 다른 무게를 준다.<br>그래서 <b>잘하는 게 뭔지 눈에 보이고</b>, 그걸 살려서 키운다.</p>
+  <div class="stamp">교육디렉터방(방5) · 2026-08-14 · 앳나운 오리지널 캐릭터(외부 IP 미사용) · 빗금 = 아직 안 받은 항목</div>
+</div>
+
+<div class="kpis">
+  <div class="kpi"><div class="n" id="k_n">0</div><div class="t">도감 등록</div></div>
+  <div class="kpi"><div class="n" id="k_evo">0</div><div class="t">다음 진화 대기</div></div>
+  <div class="kpi"><div class="n" id="k_fill">0%</div><div class="t">항목 채움</div></div>
+  <div class="kpi alert"><div class="n" id="k_late">0</div><div class="t">지각 누계</div></div>
+</div>
+
+<div class="bar">
+  <label class="fl">보기</label>
+  <button class="ghost on" id="v_dex" onclick="setView('dex')">도감</button>
+  <button class="ghost" id="v_tree" onclick="setView('tree')">진화 트리</button>
+  <label class="fl" style="margin-left:8px">데이터</label>
+  <button class="ghost on" id="m_real" onclick="setMode(0)">지금 실제</button>
+  <button class="ghost" id="m_demo" onclick="setMode(1)">다 채웠을 때</button>
+</div>
+
+<div class="panel" id="p_dex">
+  <h2>도감 <small>DEX</small></h2>
+  <div class="lead">카드를 누르면 <b>그 사람이 배운 과목 하나하나</b>가 열린다 — 어떻게 해냈고, 그날 어땠고, 과제는 냈고, 나아지고 있나.</div>
+  <div class="dex" id="dex"></div>
+  <div class="legend">
+    <span><i style="background:var(--ink)"></i>채운 만큼</span>
+    <span><i style="background:repeating-linear-gradient(45deg,#f0ece4,#f0ece4 4px,#e6e1d7 4px,#e6e1d7 8px)"></i>아직 안 받은 항목</span>
+    <span><i style="background:var(--track)"></i>이 레벨에서 안 보는 항목</span>
+    <span>▲ 제일 잘하는 것 · ▼ 제일 빈 것</span>
+  </div>
+</div>
+
+<div class="panel" id="p_tree" style="display:none">
+  <h2>진화 트리 <small>EVOLUTION</small></h2>
+  <div class="lead">레벨이 오르면 모습이 바뀐다. <b>합격하면 진화한다</b> — 시험 하나가 아니라 위 다섯 칸을 합쳐서.<br><b>레벨 하나 = 단계 하나다.</b> 시즈1~5가 각각 다른 모습이고, 스타일리스트가 6단계다. 올라갈 때마다 하나씩 붙는다 — 껍질을 깨고 → 서고 → 뿔 나고 → 목도리 두르고 → 갈기 생기고 → 망토 입고 가위를 든다.</div>
+  <div class="tree" id="tree"></div>
+</div>
+
+<div class="note-b" id="rule"></div>
+
+<div class="note-b">
+🎨 <b>캐릭터 그림에 대해</b> — 포켓몬 그림을 그대로 쓰면 남의 회사 저작물이라 인스타에 못 올린다. 그래서 <b>「작고 둥근 몸 · 큰 눈 · 단계별 진화」라는 형식만</b> 가져오고, 캐릭터는 앳나운 것으로 새로 그렸다. 지금 보이는 건 이름에서 자동으로 생성되는 임시 도트 캐릭터다 — 같은 사람은 항상 같은 모습이 나온다.<br>
+👉 <b>제대로 된 그림은 방4(만화카드방) 라인으로</b> — 이미 「나노바나나 화풍 정본」이 있다. 형이 「캐릭터 그려」 하면 12명 × 6단계 = 72컷 (또는 단계별 6종 = 6컷 공용) 발주서를 그 규격으로 뽑는다. 지금 도감은 그림만 갈아끼우면 그대로 돌아간다.
+</div>
+
+<script>
+/* ===== 데이터 ===== */
+var AX=[
+ {k:'skill',n:'기술',d:'배운 걸 손으로 해내는 힘 (실기·발표)'},
+ {k:'prac', n:'연습',d:'혼자 얼마나 반복했나 (연습·과제)'},
+ {k:'sns',  n:'알리기',d:'내 걸 밖에 내놓나 (SNS·시그니처)'},
+ {k:'team', n:'팀',  d:'같이 하는 몫 (팀교육)'},
+ {k:'base', n:'기본',d:'평소 행실 (출근·지각·태도)'}
+];
+/* 레벨별 배점 = 정본 채점표(2026-07-22)를 5칸으로 묶은 것 */
+var W={
+ low :{skill:55,prac:25,sns:10,team:10,base:0,  pass:75,label:'시즈 1~3'},
+ high:{skill:40,prac:20,sns:30,team:0, base:10, pass:80,label:'시즈 4~5'}
+};
+var TYPE={skill:{n:'기술형',c:'#0A8A5F'},prac:{n:'연습형',c:'#2F6FB5'},sns:{n:'알리기형',c:'#C4661F'},team:{n:'팀형',c:'#9B4A86'},base:{n:'기본형',c:'#B08A17'}};
+var TIER=[{n:'알',c:'1단계'},{n:'깨어남',c:'2단계'},{n:'첫걸음',c:'3단계'},{n:'자람',c:'4단계'},{n:'다 자람',c:'5단계'},{n:'홀로서기',c:'6단계'}];
+
+/* got = 지금 실제로 받은 점수 · null = 아직 안 받음(빗금) */
+var D=[
+ {n:'범서',lv:1,br:'메종한남',late:0,got:{skill:null,prac:null,sns:null,team:null},
+  subj:[{s:'베이직',w:'8/12',t:'창엽',g:'',b:'정상',a:'—',tr:0},
+        {s:'오피니언 제출',w:'8/13',t:'본인',g:'',b:'정상',a:'제출',tr:1}],
+  memo:'신규 · 이론→가발작업 연결을 스스로 요청'},
+ {n:'지민',lv:2,br:'본점',late:0,got:{skill:null,prac:null,sns:null,team:null},
+  subj:[{s:'베이직',w:'8/12',t:'창엽',g:'',b:'정상',a:'—',tr:0}],memo:''},
+ {n:'형우',lv:3,br:'플레이스',late:0,got:{skill:38,prac:16,sns:null,team:null},
+  subj:[{s:'원랭스',w:'8월',t:'—',g:'A',b:'정상',a:'—',tr:1},
+        {s:'스퀘어 과제',w:'8월',t:'—',g:'B',b:'정상',a:'제출',tr:1},
+        {s:'개인 연습 4회',w:'8월',t:'—',g:'A',b:'정상',a:'—',tr:1}],
+  memo:'태도 좋음 · 뿌리·씨컬 보완'},
+ {n:'주민',lv:4,br:'플레이스',late:0,got:{skill:34,prac:18,sns:null,base:10},
+  subj:[{s:'기본아이롱',w:'8월',t:'—',g:'A',b:'정상',a:'—',tr:1},
+        {s:'남자와인딩',w:'8월',t:'—',g:'A',b:'정상',a:'—',tr:1},
+        {s:'업스타일',w:'8/12',t:'보미',g:'',b:'정상',a:'—',tr:1},
+        {s:'과제 제출',w:'8월',t:'—',g:'A',b:'정상',a:'제출',tr:1},
+        {s:'개인 연습 4회',w:'8월',t:'—',g:'A',b:'정상',a:'—',tr:1}],
+  memo:'전반 우수 · 태도 만점'},
+ {n:'재아',lv:4,br:'본점',late:1,got:{skill:14,prac:5,sns:null,base:9},
+  subj:[{s:'플럼펌',w:'8월',t:'—',g:'D',b:'정상',a:'미제출',tr:-1},
+        {s:'업스타일',w:'8/12',t:'보미',g:'',b:'지각',a:'—',tr:-1},
+        {s:'개인 연습 2회',w:'8월',t:'—',g:'D',b:'정상',a:'—',tr:-1}],
+  memo:'관리개입 · 9/14 등산 필참(회복 트랙)'},
+ {n:'어진',lv:4,br:'메종한남',late:0,got:{skill:null,prac:null,sns:null,base:10},
+  subj:[{s:'업스타일',w:'8/12',t:'보미',g:'',b:'정상',a:'—',tr:0}],
+  memo:'재입사 · 직급시험 · 관찰 4주'},
+ {n:'태원',lv:5,br:'본점',late:0,got:{skill:26,prac:6,sns:null,base:10},
+  subj:[{s:'볼륨매직',w:'8월',t:'—',g:'A',b:'정상',a:'—',tr:1},
+        {s:'포니테일 과제',w:'8월',t:'—',g:'D',b:'정상',a:'미제출',tr:-1},
+        {s:'쉬즈컷',w:'8/12',t:'이호',g:'',b:'정상',a:'—',tr:0}],
+  memo:'기본기 강화 필요'},
+ {n:'범진',lv:5,br:'본점',late:0,got:{skill:null,prac:null,sns:null,base:10},
+  subj:[{s:'쉬즈컷',w:'8/12',t:'이호',g:'',b:'정상',a:'—',tr:0}],memo:''},
+ {n:'유안',lv:5,br:'본점',late:0,got:{skill:null,prac:null,sns:null,base:10},
+  subj:[{s:'쉬즈컷',w:'8/12',t:'이호',g:'',b:'정상',a:'—',tr:0}],memo:''},
+ {n:'가영',lv:5,br:'플레이스',late:0,got:{skill:28,prac:null,sns:null,base:10},
+  subj:[{s:'볼륨매직',w:'8월',t:'—',g:'B',b:'정상',a:'—',tr:1},
+        {s:'쉬즈컷',w:'8/12',t:'이호',g:'',b:'정상',a:'—',tr:0}],
+  memo:'형태 양호 · 깔끔도 보완'},
+ {n:'희선',lv:6,br:'본점',late:0,got:{skill:36,prac:null,sns:null,base:10},
+  subj:[{s:'트렌드시안 커트',w:'8/13',t:'성희',g:'A',b:'정상',a:'예정',tr:1}],
+  memo:'스타일리스트 · 따라오는 수준 상'},
+ {n:'정민',lv:6,br:'플레이스',late:1,got:{skill:null,prac:null,sns:null,base:9},
+  subj:[{s:'트렌드시안 커트',w:'8/13',t:'성희',g:'',b:'지각',a:'예정',tr:-1}],
+  memo:'지각 관리 대상 · 9/14 등산 필참'}
+];
+/* 다 채웠을 때 예시 — 형이 "이렇게 보이는구나" 확인용. 실제 점수 아님 */
+var DEMO={범서:{skill:41,prac:19,sns:7,team:8},지민:{skill:44,prac:20,sns:8,team:9},
+ 형우:{skill:38,prac:16,sns:6,team:7},주민:{skill:34,prac:18,sns:24,base:10},
+ 재아:{skill:14,prac:5,sns:9,base:9},어진:{skill:29,prac:13,sns:18,base:10},
+ 태원:{skill:26,prac:6,sns:21,base:10},범진:{skill:31,prac:15,sns:12,base:10},
+ 유안:{skill:33,prac:16,sns:26,base:10},가영:{skill:28,prac:12,sns:27,base:10},
+ 희선:{skill:36,prac:17,sns:28,base:10},정민:{skill:25,prac:11,sns:14,base:9}};
+
+var MODE=0,VIEW='dex',OPEN=null;
+
+/* ===== 캐릭터 (앳나운 오리지널 · 이름으로 결정) ===== */
+function hash(s){var h=7;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
+function shade(hex,f){var n=parseInt(hex.slice(1),16),r=n>>16,g=(n>>8)&255,b=n&255;
+ r=Math.round(r+(255-r)*f);g=Math.round(g+(255-g)*f);b=Math.round(b+(255-b)*f);
+ return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);}
+function creature(name,tier,col){
+ var h=hash(name),eye=h%3,horn=(h>>3)%3,pat=(h>>6)%3,tail=(h>>9)%2,form=(h>>12)%3;
+ var lt=shade(col,.45),pale=shade(col,.74),dk=col,deep=col;
+ var S='<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">';
+ var s='',sc=[0.72,0.82,0.90,0.96,1.02,1.08][tier];
+
+ /* ============ 1단계 · 그냥 알 ============ */
+ if(tier===0){
+  s+='<ellipse cx="60" cy="110" rx="24" ry="4.5" fill="rgba(0,0,0,.11)"/>';
+  s+='<path d="M60 32 C40 32 30 60 30 78 C30 97 44 108 60 108 C76 108 90 97 90 78 C90 60 80 32 60 32 Z" fill="'+pale+'"/>';
+  s+='<path d="M60 32 C48 32 40 48 36 66 C44 60 52 58 60 58 Z" fill="#ffffff" opacity=".45"/>';
+  if(pat===0){ /* 점무늬 */
+   [[48,70,5],[70,64,4],[60,86,5.5],[42,88,3.6],[76,84,4.2]].forEach(function(d){
+    s+='<circle cx="'+d[0]+'" cy="'+d[1]+'" r="'+d[2]+'" fill="'+lt+'" opacity=".9"/>';});
+  } else if(pat===1){ /* 띠무늬 */
+   s+='<path d="M33 72 q27 9 54 0" stroke="'+lt+'" stroke-width="7" fill="none" stroke-linecap="round"/>';
+   s+='<path d="M36 88 q24 8 48 0" stroke="'+lt+'" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8"/>';
+  } else { /* 지그재그 */
+   s+='<path d="M33 76 l9 -7 l9 7 l9 -7 l9 7 l9 -7 l9 7" stroke="'+lt+'" stroke-width="5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>';
+  }
+  /* 살짝 금 */
+  s+='<path d="M'+(52+form*3)+' 46 l5 6 l-4 5 l6 6" stroke="'+dk+'" stroke-width="1.8" fill="none" opacity=".5" stroke-linecap="round"/>';
+  return S+'<g transform="translate(60,70) scale('+sc+') translate(-60,-70)">'+s+'</g></svg>';
+ }
+
+ /* ============ 공통 치수 ============ */
+ var G={
+  1:{by:82,brx:25+form,bry:23,hy:0, hr:0},
+  2:{by:84,brx:26+form,bry:23,hy:0, hr:0},
+  3:{by:86,brx:26+form,bry:21,hy:52,hr:22},
+  4:{by:88,brx:28+form,bry:20,hy:46,hr:24},
+  5:{by:84,brx:22+form,bry:19,hy:38,hr:24}
+ }[tier];
+ var by=G.by,brx=G.brx,bry=G.bry,hy=G.hy,hr=G.hr,split=(tier>=3);
+ s+='<ellipse cx="60" cy="110" rx="'+(tier===5?22:brx+2)+'" ry="4.5" fill="rgba(0,0,0,.11)"/>';
+
+ /* 6단계 후광 + 망토 (뒤) */
+ if(tier===5){
+  s+='<circle cx="60" cy="'+hy+'" r="'+(hr+13)+'" fill="none" stroke="#E3C56A" stroke-width="2.4" opacity=".75"/>';
+  s+='<path d="M42 '+(hy+16)+' Q22 74 26 104 L60 96 L94 104 Q98 74 78 '+(hy+16)+' Z" fill="'+lt+'"/>';
+  s+='<path d="M50 '+(hy+18)+' Q40 74 42 98 L60 94 L78 98 Q80 74 70 '+(hy+18)+' Z" fill="'+pale+'" opacity=".5"/>';
+ }
+ /* 5단계 갈기 */
+ if(tier===4){
+  for(var i=0;i<11;i++){var a=i*32.7*Math.PI/180,rr=hr+9;
+   s+='<circle cx="'+(60+rr*Math.cos(a)).toFixed(1)+'" cy="'+(hy+rr*Math.sin(a)).toFixed(1)+'" r="5.6" fill="'+lt+'"/>';}
+ }
+ /* 꼬리 (4·5단계) */
+ if(tail&&tier>=3&&tier<=4){s+='<path d="M'+(60+brx-2)+' '+(by+5)+' q22 4 26 -15 q-5 17 -24 21 Z" fill="'+lt+'"/>';}
+ /* 6단계 두 다리 */
+ if(tier===5){
+  s+='<rect x="49" y="'+(by+bry-2)+'" width="8" height="16" rx="4" fill="'+deep+'"/>';
+  s+='<rect x="63" y="'+(by+bry-2)+'" width="8" height="16" rx="4" fill="'+deep+'"/>';
+  s+='<ellipse cx="52" cy="'+(by+bry+15)+'" rx="9" ry="4.5" fill="'+deep+'"/>';
+  s+='<ellipse cx="68" cy="'+(by+bry+15)+'" rx="9" ry="4.5" fill="'+deep+'"/>';
+ }
+ /* 몸 */
+ s+='<ellipse cx="60" cy="'+by+'" rx="'+brx+'" ry="'+bry+'" fill="'+dk+'"/>';
+ s+='<ellipse cx="60" cy="'+(by+4)+'" rx="'+(brx-8)+'" ry="'+(bry-7)+'" fill="'+pale+'"/>';
+ /* 발 (2~5단계) */
+ if(tier<5){
+  s+='<ellipse cx="'+(60-brx*0.45)+'" cy="'+(by+bry-1)+'" rx="9" ry="5.5" fill="'+deep+'"/>';
+  s+='<ellipse cx="'+(60+brx*0.45)+'" cy="'+(by+bry-1)+'" rx="9" ry="5.5" fill="'+deep+'"/>';
+ }
+ /* 팔 (3단계부터) */
+ if(tier>=2){
+  s+='<ellipse cx="'+(60-brx-3)+'" cy="'+(by-3)+'" rx="7" ry="5" fill="'+deep+'" transform="rotate(-20 '+(60-brx-3)+' '+(by-3)+')"/>';
+  s+='<ellipse cx="'+(60+brx+3)+'" cy="'+(by-3)+'" rx="7" ry="5" fill="'+deep+'" transform="rotate(20 '+(60+brx+3)+' '+(by-3)+')"/>';
+ }
+ /* 6단계 가위 */
+ if(tier===5){
+  var gx=60+brx+9,gy=by-10;
+  s+='<g transform="translate('+gx+','+gy+') rotate(-24)">'+
+     '<path d="M0 0 L0 -19" stroke="#8d8677" stroke-width="2.4" stroke-linecap="round"/>'+
+     '<path d="M4 0 L4 -19" stroke="#8d8677" stroke-width="2.4" stroke-linecap="round"/>'+
+     '<circle cx="-1" cy="4" r="3.6" fill="none" stroke="#8d8677" stroke-width="2.2"/>'+
+     '<circle cx="6" cy="4" r="3.6" fill="none" stroke="#8d8677" stroke-width="2.2"/></g>';
+ }
+ /* 머리 */
+ var cy2,cr;
+ if(!split){cy2=by-4;cr=brx;}
+ else{s+='<circle cx="60" cy="'+hy+'" r="'+hr+'" fill="'+dk+'"/>';cy2=hy;cr=hr;}
+
+ /* 2단계 · 깨진 알껍질을 아직 쓰고 있다 */
+ if(tier===1){
+  s+='<path d="M'+(60-brx-3)+' '+(by+2)+' q3 -13 8 -19 l5 8 l7 -11 l6 10 l7 -9 l6 10 l6 -7 q6 9 7 18 Z" fill="#F3EEE4" stroke="#DED7C8" stroke-width="1.4" stroke-linejoin="round"/>';
+ }
+ /* 뿔·귀·잎 */
+ if(tier===1){ /* 잎 1장 */
+  s+='<path d="M60 '+(cy2-cr-6)+' q0 -12 3 -15 q9 4 3 14 Z" fill="'+lt+'"/>';
+ } else if(tier===2){ /* 잎 2장 */
+  s+='<path d="M60 '+(cy2-cr+1)+' q0 -12 3 -16 q9 4 3 15 Z" fill="'+lt+'"/>';
+  s+='<path d="M60 '+(cy2-cr+1)+' q0 -9 -6 -12 q-6 6 2 12 Z" fill="'+lt+'"/>';
+ } else if(horn===0){
+  var hh=(tier>=4?24:16);
+  s+='<path d="M'+(60-cr*0.6)+' '+(cy2-cr*0.72)+' l-7 -'+hh+' l16 '+(hh*0.5)+' Z" fill="'+lt+'"/>';
+  s+='<path d="M'+(60+cr*0.6)+' '+(cy2-cr*0.72)+' l7 -'+hh+' l-16 '+(hh*0.5)+' Z" fill="'+lt+'"/>';
+ } else if(horn===1){
+  var er=(tier>=4?15:11);
+  s+='<ellipse cx="'+(60-cr*0.85)+'" cy="'+(cy2-cr*0.62)+'" rx="7" ry="'+er+'" fill="'+lt+'" transform="rotate(-25 '+(60-cr*0.85)+' '+(cy2-cr*0.62)+')"/>';
+  s+='<ellipse cx="'+(60+cr*0.85)+'" cy="'+(cy2-cr*0.62)+'" rx="7" ry="'+er+'" fill="'+lt+'" transform="rotate(25 '+(60+cr*0.85)+' '+(cy2-cr*0.62)+')"/>';
+ } else {
+  s+='<path d="M'+(60-15)+' '+(cy2-cr+3)+' q15 -17 30 0 q-15 -6 -30 0 Z" fill="'+lt+'"/>';
+  s+='<circle cx="60" cy="'+(cy2-cr-5)+'" r="5" fill="'+lt+'"/>';
+ }
+ /* 4단계부터 빨간 목도리 */
+ if(tier>=3&&tier<=4){
+  s+='<path d="M'+(60-cr*0.9)+' '+(cy2+cr-1)+' q'+(cr*0.9)+' 10 '+(cr*1.8)+' 0 l0 7 q-'+(cr*0.9)+' 10 -'+(cr*1.8)+' 0 Z" fill="#B3453A"/>';
+ }
+ /* 6단계 금관 */
+ if(tier===5){
+  s+='<path d="M'+(60-15)+' '+(cy2-cr+2)+' q15 -9 30 0" fill="none" stroke="#E3C56A" stroke-width="3.2" stroke-linecap="round"/>';
+  s+='<circle cx="60" cy="'+(cy2-cr-4)+'" r="3.6" fill="#E3C56A"/>';
+ }
+ /* 무늬 */
+ if(pat===1&&tier>=2){s+='<circle cx="'+(60-cr*0.55)+'" cy="'+(cy2+cr*0.45)+'" r="4.5" fill="'+lt+'" opacity=".85"/><circle cx="'+(60+cr*0.55)+'" cy="'+(cy2+cr*0.45)+'" r="4.5" fill="'+lt+'" opacity=".85"/>';}
+ if(pat===2&&tier>=2){s+='<path d="M'+(60-cr*0.8)+' '+(cy2-cr*0.2)+' h'+(cr*1.6)+'" stroke="'+lt+'" stroke-width="3.5" stroke-linecap="round" opacity=".8"/>';}
+ /* 눈 */
+ var ex=cr*0.42,ey=cy2+(split?1:0);
+ if(eye===0){s+='<circle cx="'+(60-ex)+'" cy="'+ey+'" r="4.6" fill="#1c1a17"/><circle cx="'+(60+ex)+'" cy="'+ey+'" r="4.6" fill="#1c1a17"/>'+
+   '<circle cx="'+(60-ex+1.6)+'" cy="'+(ey-1.6)+'" r="1.6" fill="#fff"/><circle cx="'+(60+ex+1.6)+'" cy="'+(ey-1.6)+'" r="1.6" fill="#fff"/>';}
+ else if(eye===1){s+='<ellipse cx="'+(60-ex)+'" cy="'+ey+'" rx="3.6" ry="5.4" fill="#1c1a17"/><ellipse cx="'+(60+ex)+'" cy="'+ey+'" rx="3.6" ry="5.4" fill="#1c1a17"/>'+
+   '<circle cx="'+(60-ex+1.3)+'" cy="'+(ey-2)+'" r="1.5" fill="#fff"/><circle cx="'+(60+ex+1.3)+'" cy="'+(ey-2)+'" r="1.5" fill="#fff"/>';}
+ else{s+='<path d="M'+(60-ex-5)+' '+(ey+1)+' q5 -7 10 0" stroke="#1c1a17" stroke-width="3" fill="none" stroke-linecap="round"/>'+
+        '<path d="M'+(60+ex-5)+' '+(ey+1)+' q5 -7 10 0" stroke="#1c1a17" stroke-width="3" fill="none" stroke-linecap="round"/>';}
+ s+='<circle cx="'+(60-cr*0.78)+'" cy="'+(ey+6)+'" r="3.6" fill="#E8908A" opacity=".62"/>';
+ s+='<circle cx="'+(60+cr*0.78)+'" cy="'+(ey+6)+'" r="3.6" fill="#E8908A" opacity=".62"/>';
+ s+='<path d="M56 '+(ey+8)+' q4 4 8 0" stroke="#1c1a17" stroke-width="1.8" fill="none" stroke-linecap="round"/>';
+ if(tier===5){
+  s+='<path d="M22 30 l2 -6 l2 6 l6 2 l-6 2 l-2 6 l-2 -6 l-6 -2 Z" fill="#E3C56A" opacity=".9"/>';
+  s+='<path d="M99 46 l1.5 -4.5 l1.5 4.5 l4.5 1.5 l-4.5 1.5 l-1.5 4.5 l-1.5 -4.5 l-4.5 -1.5 Z" fill="#E3C56A" opacity=".8"/>';
+ }
+ return S+'<g transform="translate(60,62) scale('+sc+') translate(-60,-62)">'+s+'</g></svg>';
+}
+
+/* ===== 계산 ===== */
+function wOf(p){return p.lv<=3?W.low:W.high;}
+function tierOf(p){return Math.min(5,p.lv-1);}  /* 시즈1~5 = 1~5단계, 스타일리스트 = 6단계 */
+function got(p){var g=Object.assign({},p.got);
+ if(MODE&&DEMO[p.n])g=Object.assign({},DEMO[p.n]);
+ return g;}
+function total(p){var g=got(p),w=wOf(p),t=0;
+ AX.forEach(function(a){if(w[a.k]>0&&g[a.k]!=null)t+=g[a.k];});
+ return Math.max(0,t-p.late);}
+function maxOf(p){var w=wOf(p);return AX.reduce(function(s,a){return s+w[a.k];},0);}
+/* 강점·약점은 「기본(출근·지각)」을 빼고 판정한다.
+   지각 안 하는 건 잘하는 게 아니라 당연한 것 — 장점 자리에 올리면 진짜 장점이 가린다. */
+function strongWeak(p){var g=got(p),w=wOf(p),best=null,worst=null;
+ AX.forEach(function(a){if(a.k==='base')return;if(!w[a.k])return;if(g[a.k]==null)return;
+  var r=g[a.k]/w[a.k];
+  if(!best||r>best.r)best={k:a.k,n:a.n,r:r};
+  if(!worst||r<worst.r)worst={k:a.k,n:a.n,r:r};});
+ return {best:best,worst:worst};}
+var UNSET={n:'타입 미정',c:'#b9b3a8'};
+function typeOf(p){var sw=strongWeak(p);return sw.best?sw.best.k:null;}
+function tyv(p){var k=typeOf(p);return k?TYPE[k]:UNSET;}
+function filled(p){var g=got(p),w=wOf(p),n=0,d=0;
+ AX.forEach(function(a){if(!w[a.k])return;d++;if(g[a.k]!=null)n++;});
+ return [n,d];}
+
+/* ===== 렌더 ===== */
+function setView(v){VIEW=v;['dex','tree'].forEach(function(x){
+ document.getElementById('v_'+x).className='ghost'+(x===v?' on':'');
+ document.getElementById('p_'+x).style.display=(x===v?'block':'none');});render();}
+function setMode(m){MODE=m;
+ document.getElementById('m_real').className='ghost'+(m?'':' on');
+ document.getElementById('m_demo').className='ghost'+(m?' on':'');render();}
+function esc(s){return (s==null?'':(''+s)).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+
+function render(){
+ if(VIEW==='dex')renderDex();else renderTree();
+ var late=D.reduce(function(s,p){return s+p.late;},0);
+ var fn=0,fd=0;D.forEach(function(p){var f=filled(p);fn+=f[0];fd+=f[1];});
+ document.getElementById('k_n').textContent=D.length;
+ document.getElementById('k_evo').textContent=D.filter(function(p){return total(p)<wOf(p).pass;}).length;
+ document.getElementById('k_fill').textContent=Math.round(fn/fd*100)+'%';
+ document.getElementById('k_late').textContent=late;
+ document.getElementById('rule').innerHTML=
+  '📏 <b>합격을 이렇게 정한다</b> — 다섯 칸을 합쳐 100점. 레벨마다 <b>무게가 다르다.</b><br>'+
+  '· <b>시즈 1~3</b> (붙는 선 <b>75점</b>) — 기술 55 · 연습 25 · 알리기 10 · 팀 10<br>'+
+  '· <b>시즈 4~5</b> (붙는 선 <b>80점</b>) — 기술 40 · 알리기 30 · 연습 20 · 기본 10<br>'+
+  '· <b>지각은 회당 -1점</b>, 레벨 상관없이 똑같이 깎는다. <span style="color:#B3453A"><b>※ 지금 정본에는 시즈1~3에 행실 배점이 없다 — 이 감점 방식이 형이 말한 「평소행실 반영」의 최소 수정안이다. 확정 필요.</b></span><br>'+
+  '· 배점 출처: <b>content/교육/2026-07-22_교육시스템_통합본/채점_개정.html</b> (2026-07-22 정본). 새로 지어낸 숫자 없음.';
+}
+function renderDex(){
+ var w=document.getElementById('dex');w.innerHTML='';
+ D.forEach(function(p,idx){
+  var wt=wOf(p),g=got(p),tot=total(p),mx=maxOf(p),sw=strongWeak(p),tv=tyv(p),ti=tierOf(p);
+  var pass=tot>=wt.pass, need=Math.max(0,wt.pass-tot);
+  var rows='';
+  AX.forEach(function(a){
+   var cap=wt[a.k],v=g[a.k];
+   var cls=(sw.best&&sw.best.k===a.k&&v!=null)?' hi':((sw.worst&&sw.worst.k===a.k&&v!=null)?' lo':'');
+   var pctCap=cap/100*100;
+   var inner='';
+   if(!cap){inner='';}
+   else if(v==null){inner='<div class="cap" style="left:0;width:'+pctCap+'%"></div>';}
+   else {inner='<div class="cap" style="left:0;width:'+pctCap+'%;opacity:.55"></div>'+
+     '<div class="fi" style="width:'+(v)+'%;background:'+TYPE[a.k].c+'"></div>';}
+   rows+='<div class="row'+cls+'"><div class="k">'+a.n+'</div>'+
+     '<div class="tr">'+inner+'</div>'+
+     '<div class="v'+(cap?(v==null?' none':''):' none')+'">'+(cap?(v==null?'미입력':v+'/'+cap):'—')+'</div></div>';
+  });
+  var line;
+  if(sw.best) line='살릴 것 <b class="g">'+sw.best.n+'</b>'+
+     (sw.worst&&sw.worst.k!==sw.best.k?' &nbsp;·&nbsp; 채울 것 <b class="b">'+sw.worst.n+'</b>':'')+
+     (need?' &nbsp;·&nbsp; 붙는 선까지 <b>'+need+'점</b>':' &nbsp;·&nbsp; <b class="g">붙는 선 넘었다</b>')+
+     (p.late?' &nbsp;·&nbsp; <b class="b">지각 '+p.late+'회</b>':'');
+  else line='<span style="color:#b9b3a8">아직 받은 점수가 없다 — 뭘 잘하는지 말할 수 없다.</span>'+
+     (p.late?' <b class="b">지각 '+p.late+'회</b>':'');
+  var f=filled(p);
+  var det='<table><tr><th>과목</th><th>언제</th><th>선생님</th><th>해냈나</th><th>그날</th><th>과제</th><th>느나</th></tr>'+
+   p.subj.map(function(s){
+    return '<tr><td><b>'+esc(s.s)+'</b></td><td>'+esc(s.w)+'</td><td>'+esc(s.t)+'</td>'+
+     '<td><span class="g g'+(s.g||'X')+'">'+(s.g||'—')+'</span></td>'+
+     '<td><span class="chip'+(s.b==='정상'?' ok':' warn')+'">'+esc(s.b)+'</span></td>'+
+     '<td><span class="chip'+(s.a==='제출'?' ok':(s.a==='미제출'?' warn':''))+'">'+esc(s.a)+'</span></td>'+
+     '<td><span class="trend '+(s.tr>0?'up':(s.tr<0?'down':'flat'))+'">'+(s.tr>0?'↗':(s.tr<0?'↘':'→'))+'</span></td></tr>';}).join('')+
+   '</table>'+(p.memo?'<div style="font-size:11.5px;color:#6a655c;margin-top:8px"><b>메모</b> '+esc(p.memo)+'</div>':'');
+
+  var c=document.createElement('div');c.className='card';c.onclick=function(){OPEN=(OPEN===idx?null:idx);render();};
+  c.innerHTML='<div class="hd"><div class="mon">'+creature(p.n,ti,tv.c)+'</div>'+
+   '<div class="who"><div class="nm">'+esc(p.n)+'</div>'+
+   '<div class="sub">'+(p.lv<=5?'시즈 '+p.lv:'스타일리스트')+' · '+esc(p.br)+'</div>'+
+   '<span class="type" style="background:'+tv.c+'">'+tv.n+'</span>'+
+   '<div class="evo">'+[0,1,2,3,4,5].map(function(z){return '<i class="'+(ti>=z?'on':'')+'"></i>';}).join('')+
+   '<span>'+TIER[ti].c+' '+TIER[ti].n+'</span></div></div></div>'+
+   '<div class="xp"><div class="lab"><b>합계 '+tot+'</b><span style="margin-left:6px">/ '+mx+'</span>'+
+   '<span class="r">붙는 선 '+wt.pass+' · '+wt.label+'</span></div>'+
+   '<div class="xptrack"><div class="xpfill'+(pass?' pass':'')+'" style="width:'+tot+'%"></div>'+
+   '<div class="xpline" style="left:'+wt.pass+'%"></div></div>'+
+   '<div class="xpnote">'+(p.late?'지각 '+p.late+'회 → <b>-'+p.late+'점</b> 반영 · ':'')+
+   '채운 항목 '+f[0]+'/'+f[1]+'</div></div>'+
+   '<div class="stats">'+rows+'</div>'+
+   '<div class="oneline">'+line+'</div>'+
+   '<div class="detail'+(OPEN===idx?' open':'')+'"><h4>배운 과목 · 그때 어땠나</h4>'+det+'</div>';
+  w.appendChild(c);});
+}
+function renderTree(){
+ var w=document.getElementById('tree');w.innerHTML='';
+ [0,1,2,3,4,5].forEach(function(t){
+  var mem=D.filter(function(p){return tierOf(p)===t;});
+  var cap=['시즈 1 · 처음 들어온 때','시즈 2 · 기본기를 배우는 때','시즈 3 · 손님 앞에 서기 시작','시즈 4 · 혼자 해보는 때','시즈 5 · 자기 걸 만드는 때','스타일리스트 · 자기 손님을 받는 때'][t];
+  var mm=mem.map(function(p){return '<div class="mini">'+creature(p.n,t,tyv(p).c)+
+    '<div class="mn">'+esc(p.n)+'</div><div class="ml">'+(p.lv<=5?'시즈'+p.lv:'스타일')+'</div></div>';}).join('')
+    ||'<div style="font-size:12px;color:#b9b3a8">없음</div>';
+  var d=document.createElement('div');d.className='stage';
+  d.innerHTML='<h4>'+TIER[t].c+' · '+TIER[t].n+' <span style="color:#b9b3a8">('+mem.length+')</span></h4><div class="cap">'+cap+'</div><div class="mem">'+mm+'</div>';
+  w.appendChild(d);});
+}
+render();
+</script>
+</div></body></html>

@@ -27,3 +27,11 @@ outputs/*/fonts/
 outputs/*/bin/
 outputs/*/render_config.json
 outputs/_backup/
+
+# 로그 파일 (git 제외)
+logs/
+
+# 임시/리뷰 파일 (git 제외)
+_tmp/
+_jobs/_done/_review/
+_out/capsheet/

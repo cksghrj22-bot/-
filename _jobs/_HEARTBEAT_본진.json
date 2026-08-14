@@ -1,0 +1,20 @@
+{
+  "source": "본진-맥북",
+  "host": "chanoui-Mac-Studio.local",
+  "alive": true,
+  "watcher_running": true,
+  "watcher_pids": [
+    "18257"
+  ],
+  "ts": "2026-08-14 17:42:37",
+  "ts_epoch": 1786696957,
+  "queue": {
+    "pending": 0,
+    "processing": 20,
+    "done": 382
+  },
+  "notion": {
+    "notion_sync": "ok",
+    "last_notion_sync": "2026-08-14 17:34:43"
+  }
+}
