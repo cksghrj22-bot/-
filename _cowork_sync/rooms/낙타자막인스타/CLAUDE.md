@@ -91,3 +91,14 @@ python3 shorts/threads.py <이미지>
 ```
 - [방이름] 요청 내용 (급함/보통)
 ```
+
+## 수정 가능 범위
+| 폴더 | 용도 |
+|---|---|
+| `_out/cards/` | 카드 산출물 |
+| `_out/nakta/` | 낙타 산출물 |
+| `content/cards/` | 카드 콘텐츠 |
+| `_publish_jobs/` | 발행 대기 |
+| `_terminal_inbox/` | 작업 요청 |
+| `_state/rooms/낙타자막인스타.json` | 내 상태 |
+| `_ROOMS_LOG.md` | 작업 로그 (추가만) |

@@ -95,3 +95,13 @@ python3 shorts/tts.py <대본>
 ```
 - [방이름] 요청 내용 (급함/보통)
 ```
+
+## 수정 가능 범위
+| 폴더 | 용도 |
+|---|---|
+| `_out/` | 렌더 산출물 |
+| `content/shorts/` | 쇼츠 대본/매니페스트 |
+| `_clips_pool/` | 클립 소스 |
+| `_terminal_inbox/` | 작업 요청 |
+| `_state/rooms/유튜브쇼츠방.json` | 내 상태 |
+| `_ROOMS_LOG.md` | 작업 로그 (추가만) |

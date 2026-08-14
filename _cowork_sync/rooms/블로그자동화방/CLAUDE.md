@@ -72,3 +72,12 @@ python3 scripts/naver_publish.py <원고.md>
 ```
 - [방이름] 요청 내용 (급함/보통)
 ```
+
+## 수정 가능 범위
+| 폴더 | 용도 |
+|---|---|
+| `content/blog/` | 블로그 원고 |
+| `_blog_queue/` | 발행 대기열 |
+| `_terminal_inbox/` | 작업 요청 |
+| `_state/rooms/블로그자동화방.json` | 내 상태 |
+| `_ROOMS_LOG.md` | 작업 로그 (추가만) |

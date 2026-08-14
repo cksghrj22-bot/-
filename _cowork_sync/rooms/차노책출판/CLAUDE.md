@@ -81,3 +81,11 @@ cat _obsidian_in/차노_왜사전_*.md
 ```
 - [방이름] 요청 내용 (급함/보통)
 ```
+
+## 수정 가능 범위
+| 폴더 | 용도 |
+|---|---|
+| `content/book/` | 책 콘텐츠 |
+| `_terminal_inbox/` | 작업 요청 |
+| `_state/rooms/차노책출판.json` | 내 상태 |
+| `_ROOMS_LOG.md` | 작업 로그 (추가만) |

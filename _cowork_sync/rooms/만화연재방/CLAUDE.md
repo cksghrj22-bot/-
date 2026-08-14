@@ -81,3 +81,12 @@ python3 scripts/gemini_image.py <프롬프트>
 ```
 - [방이름] 요청 내용 (급함/보통)
 ```
+
+## 수정 가능 범위
+| 폴더 | 용도 |
+|---|---|
+| `content/comic/` | 만화 콘텐츠 |
+| `_out/comic/` | 만화 산출물 |
+| `_terminal_inbox/` | 작업 요청 |
+| `_state/rooms/만화연재방.json` | 내 상태 |
+| `_ROOMS_LOG.md` | 작업 로그 (추가만) |

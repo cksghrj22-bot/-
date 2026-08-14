@@ -79,3 +79,11 @@ python3 scripts/build_slides.py <주제>
 ```
 - [방이름] 요청 내용 (급함/보통)
 ```
+
+## 수정 가능 범위
+| 폴더 | 용도 |
+|---|---|
+| `content/교육/` | 교육 콘텐츠 |
+| `_terminal_inbox/` | 작업 요청 |
+| `_state/rooms/교육디렉터방.json` | 내 상태 |
+| `_ROOMS_LOG.md` | 작업 로그 (추가만) |
