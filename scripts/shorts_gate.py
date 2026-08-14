@@ -65,6 +65,17 @@ def ui_zone_hits(p: Path, w: int, h: int, dur: float, tmp: Path) -> list[tuple[f
     return hits
 
 
+def log_to_rooms(msg: str):
+    """_ROOMS_LOG.md에 자동 기록 — 방이 빼먹을 수 없게."""
+    from datetime import datetime
+    log_path = Path(__file__).parent.parent / "_ROOMS_LOG.md"
+    ts = datetime.now().strftime("%m-%d %H:%M")
+    line = f"- `{ts}` **유튜브쇼츠방** — {msg}\n"
+    with open(log_path, "a", encoding="utf-8") as f:
+        f.write(line)
+    print(f"[로그 자동기록] {line.strip()}")
+
+
 def main() -> int:
     if len(sys.argv) < 2:
         print("사용법: shorts_gate.py <영상.mp4 | 폴더>"); return 2
@@ -154,12 +165,19 @@ def main() -> int:
         print("\n[게이트 탈락] 이건 산출물이 아니다.")
         for f in fails:
             print("   " + f)
+        # 탈락도 로그에 기록
+        names = ", ".join(v.name for v in vids)
+        log_to_rooms(f"게이트 탈락. {names}. 사유: {fails[0][:50]}...")
         return 1
 
     print("[통과] 수치 규격 S1~S5")
     print("\n[S6] 발행 전 필수 — 위 스샷 시트를 **차노에게 띄우고** 전체를 보게 한 다음 발행한다.")
     print("   빨간 박스 = 유튜브 UI존. 그 안에 자막이 걸리면 안 된다.")
     print("   코드가 못 잡는 것(톤·어색함·컷 연결)은 만든 쪽이 직접 보고 판단한다.")
+
+    # 자동 로그 기록 — 방이 빼먹을 수 없게
+    names = ", ".join(v.name for v in vids)
+    log_to_rooms(f"게이트 통과. {names}. 스샷시트 생성. **형 확인 후 발행 대기.**")
     return 0
 
 
