@@ -26,7 +26,7 @@ from pathlib import Path
 
 # 정리 대상 폴더와 보존 기간 (일)
 CLEANUP_TARGETS = {
-    "_tmp": 7,           # 1주일
+    "_tmp": 14,          # 2주일
     "_out/preview": 14,  # 2주일
     "_jobs/_done": 30,   # 1달
     "_terminal_inbox/_done": 30,  # 1달
