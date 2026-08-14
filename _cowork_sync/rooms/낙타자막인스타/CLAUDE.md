@@ -85,3 +85,9 @@ python3 shorts/threads.py <이미지>
 ## 🔒 공유 자원 (읽기만)
 - secrets/, scripts/, CLAUDE.md, knowledge/ 규격 — **수정 금지**
 - 설정 바꿔야 하면 → 전략실에 요청
+
+## 설정 변경 요청
+`_cowork_sync/요청큐.md`에 한 줄 추가:
+```
+- [방이름] 요청 내용 (급함/보통)
+```
