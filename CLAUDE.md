@@ -192,15 +192,13 @@
 - 되돌릴 수 없는 일(발행·삭제·전송)은 **결과 URL을 확인하기 전까지 "했다"고 쓰지 않는다.**
 
 ### 본진에 시키는 법
-- **쓴다**: `_jobs/JOB-<ID>.json` 의 `kind:"probe"` + `probe_cmds` — 셸 직접 실행, 왕복 ~11초, codex 안 거침
+- **유일한 경로**: `_terminal_inbox/TASK_<이름>.json` — terminal_watcher.py가 감시
   ```json
-  {"kind":"probe","id":"X","probe_timeout":900,
-   "probe_cmds":["cd ~/atnown-content-pipeline; R=<결과파일>; : > $R; <명령> >> $R 2>&1; echo DONE >> $R"]}
+  {"room": "방이름", "task": "실행할 명령 또는 지시", "timeout": 30}
   ```
-  결과는 **반드시 파일로 떨어뜨리고 그 파일을 읽어** 확인한다.
-- **안 쓴다**: `_terminal_inbox` (codex 경유) — codex 부재 시 조용히 실패한다. 생존 확인 전 사용 금지.
-- 주의: probe 셸은 PATH가 다르다(ffmpeg 없음 → `export PATH=...` 붙일 것).
-  드라이브 기본 마운트는 `Operation not permitted` → 파일은 `scripts/drive_pull_ids.py` 로 받는다.
+- 처리 완료 후 `_terminal_inbox/_done/`으로 이동, `status`·`codex_result` 추가됨
+- ⚠️ `_jobs/JOB-*.json` 경로는 **감시하는 워처 없음** — 쓰지 않는다 (2026-08-14 확인)
+- 드라이브 파일은 `scripts/drive_pull_ids.py` 로 직접 받는다.
 
 ### 표준은 글이 아니라 검사 코드로 잠근다
 글로만 적은 규격은 다음 방이 안 읽으면 끝이다. **게이트 스크립트를 만들고 렌더러가 자동 호출**하게 한다.
