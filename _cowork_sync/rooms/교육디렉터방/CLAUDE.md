@@ -52,3 +52,10 @@ python3 scripts/build_slides.py <주제>
 
 - 영상/인스타/만화/블로그 (→ 각 방)
 - `git reset --hard`
+## 보고 규율
+
+작업 끝나면 `_ROOMS_LOG.md`에 한 줄 남긴다:
+```
+- `MM-DD HH:MM` **교육디렉터방** — 무슨 작업. 산출물 경로. 다음 상태.
+```
+

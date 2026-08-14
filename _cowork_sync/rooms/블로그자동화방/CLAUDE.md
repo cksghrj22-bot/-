@@ -43,3 +43,10 @@ python3 scripts/naver_publish.py <원고.md>
 
 - 영상/인스타/만화 (→ 각 방)
 - `git reset --hard`
+## 보고 규율
+
+작업 끝나면 `_ROOMS_LOG.md`에 한 줄 남긴다:
+```
+- `MM-DD HH:MM` **블로그자동화방** — 무슨 작업. 산출물 경로. 다음 상태.
+```
+

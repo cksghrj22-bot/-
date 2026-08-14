@@ -54,3 +54,10 @@ python3 scripts/gemini_image.py <프롬프트>
 - 영상/쇼츠 (→ 유튜브쇼츠방)
 - 낙타카드 (→ 낙타자막인스타)
 - `git reset --hard`
+## 보고 규율
+
+작업 끝나면 `_ROOMS_LOG.md`에 한 줄 남긴다:
+```
+- `MM-DD HH:MM` **만화연재방** — 무슨 작업. 산출물 경로. 다음 상태.
+```
+
