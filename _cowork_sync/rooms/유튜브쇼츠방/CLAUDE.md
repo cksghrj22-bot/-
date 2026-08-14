@@ -71,3 +71,17 @@ python3 shorts/tts.py <대본>
 - `MM-DD HH:MM` **유튜브쇼츠방** — 무슨 작업. 산출물 경로. 다음 상태.
 ```
 
+
+---
+## 연동 상태 (2026-08-14 확인)
+- ✅ 유튜브 업로드: `secrets/youtube.json`
+- ✅ 일레븐랩스 TTS: `secrets/elevenlabs.json`
+- ✅ 쇼츠 게이트: `scripts/shorts_gate.py`
+- ✅ 드라이브 업로드: `shorts/gdrive.py`
+- 📂 클립풀: `_clips_pool/senior/`, `_clips_pool/ai일기/`
+- 📂 산출물: `_out/`, `_jobs/_done/`
+
+## 해놓은 일 (최근)
+- S1_senior_v5.mp4 게이트 통과 (2026-08-14)
+- AI일기 ep1 렌더
+- 게이트 자동 로그 기능 추가 (`_ROOMS_LOG.md`)

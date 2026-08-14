@@ -68,3 +68,15 @@ python3 shorts/threads.py <이미지>
 - `MM-DD HH:MM` **낙타자막인스타** — 무슨 작업. 산출물 경로. 다음 상태.
 ```
 
+
+---
+## 연동 상태 (2026-08-14 확인)
+- ✅ 인스타 업로드: `secrets/instagram.json` (ig_user_id 포함)
+- ✅ 스레드 업로드: `secrets/threads.json`
+- ✅ 낙타 게이트: `scripts/cards/nakta_gate.py`
+- 📂 카드 템플릿: `content/cards/nakta/`
+- 📂 산출물: `_out/nakta/`
+
+## 해놓은 일 (최근)
+- 낙타 카드 게이트 스크립트 생성
+- 에이엠톤 2줄 규격 확정 (`knowledge/규격_에이엠톤식_좌하단두줄_v1.md`)

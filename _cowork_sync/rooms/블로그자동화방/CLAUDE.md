@@ -53,3 +53,12 @@ python3 scripts/naver_publish.py <원고.md>
 - `MM-DD HH:MM` **블로그자동화방** — 무슨 작업. 산출물 경로. 다음 상태.
 ```
 
+
+---
+## 연동 상태 (2026-08-14 확인)
+- ✅ 블로그 게이트: `scripts/blog_gate.py`
+- 📂 원고: `_blog_queue/`
+- 📂 산출물: `content/blog/`
+
+## 해놓은 일 (최근)
+- 블로그 게이트 스크립트 생성

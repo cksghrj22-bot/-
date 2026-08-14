@@ -61,3 +61,13 @@ python3 scripts/gemini_image.py <프롬프트>
 - `MM-DD HH:MM` **만화연재방** — 무슨 작업. 산출물 경로. 다음 상태.
 ```
 
+
+---
+## 연동 상태 (2026-08-14 확인)
+- ✅ 만화 게이트: `scripts/cards/comic_gate.py`
+- 📂 규격: `knowledge/규격_결이연재_카드폼.md`
+- 📂 산출물: `content/comic/결이/`
+
+## 해놓은 일 (최근)
+- 결이 연재 카드폼 규격 확정
+- 만화 게이트 스크립트 생성
