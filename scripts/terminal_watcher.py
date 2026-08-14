@@ -288,20 +288,37 @@ def process_task(task_file):
     
     result = call_codex(prompt, timeout=int(task.get("timeout", 900)))
 
-    task["status"] = "done"
-    task["completed_at"] = datetime.now().isoformat()
-    task["codex_result"] = result[:500]
+    # 🔴 산출물 검증 — 가짜 done 방지 (2026-08-14 버그 수정)
+    import re
+
+    # Codex 에러 체크
+    is_error = result.startswith("[오류]") or result.startswith("[타임아웃")
+
+    # 결과에서 파일 경로 찾기
+    file_patterns = re.findall(r'/Users/chanho/[^\s\]\)]+\.(mp4|png|jpg|jpeg|mov|pdf|json|csv)', result)
+    existing_files = [f for f in file_patterns if Path(f).exists()]
 
     # 📤 결과물 드라이브 업로드 + 링크 추출
-    import re
     drive_links = []
-    # Codex 결과에서 파일 경로 찾기
-    file_patterns = re.findall(r'/Users/chanho/[^\s\]\)]+\.(mp4|png|jpg|jpeg|mov|pdf)', result)
-    for fpath in file_patterns[:3]:  # 최대 3개
-        if Path(fpath).exists():
-            link = upload_to_drive(fpath)
-            if link:
-                drive_links.append(f"📎 {Path(fpath).name}: {link}")
+    for fpath in existing_files[:3]:  # 최대 3개
+        link = upload_to_drive(fpath)
+        if link:
+            drive_links.append(f"📎 {Path(fpath).name}: {link}")
+
+    # 🔴 상태 판정 — 에러거나 산출물 없으면 failed
+    if is_error:
+        task["status"] = "failed"
+        task["failure_reason"] = "codex_error"
+    elif not existing_files and "expected_output" in task:
+        # 기대 산출물이 명시됐는데 없으면 failed
+        task["status"] = "failed"
+        task["failure_reason"] = "no_output"
+    else:
+        task["status"] = "done"
+
+    task["completed_at"] = datetime.now().isoformat()
+    task["codex_result"] = result[:500]
+    task["verified_files"] = existing_files[:5]  # 실제 존재 확인된 파일
 
     task["drive_links"] = drive_links
 
