@@ -139,6 +139,33 @@ async function setColor(ed, page, hex, label) {
 }
 const bold = async (ed) => { const b = ed.locator('button.se-bold-toolbar-button').first(); if (await vis(b, 800)) { await b.click({timeout:4000}).catch(()=>{}); await sleep(220); return true; } return false; };
 
+// 예약발행 글 중복 체크 (2026-08-16 차노 지시: 임시저장뿐 아니라 예약발행도 체크)
+async function checkReserved(page) {
+  try {
+    // 글 관리 페이지에서 예약발행 글 확인
+    await page.goto(`https://blog.naver.com/PostList.naver?blogId=${BLOG}&categoryNo=0&from=postList`, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await sleep(2000);
+    // 예약발행 탭 클릭 (있으면)
+    const reserveTab = page.locator('a:has-text("예약발행"), button:has-text("예약")').first();
+    if (await vis(reserveTab, 2000)) {
+      await reserveTab.click({ timeout: 5000 }).catch(()=>{});
+      await sleep(2000);
+    }
+    // 같은 제목의 글 찾기
+    const titles = await page.locator('.post-title, .title, [class*="title"]').allInnerTexts().catch(() => []);
+    const found = titles.filter(t => t.includes(JOB.title));
+    if (found.length > 0) {
+      log('⚠️ 예약발행 중복 발견:', found.length, '건');
+      RP.skipped.push(`예약발행 중복 ${found.length}건: ${JOB.title}`);
+      return found.length;
+    }
+    return 0;
+  } catch (e) {
+    RP.skipped.push(`예약체크실패: ${(e?.message||'').slice(0,30)}`);
+    return 0;
+  }
+}
+
 async function reuse(ed, page) {
   const op = ed.locator('button[class*="save_count"]').first();
   if (!(await vis(op, 1500))) { RP.skipped.push('목록버튼 없음'); return 'new'; }
@@ -196,6 +223,16 @@ async function reuse(ed, page) {
       console.log('>>> 로그인 확인. 이어서 진행합니다.\n');
     }
     await saveState();
+
+    // 예약발행 중복 체크 (2026-08-16 차노 지시)
+    res('진행중', '', '예약발행 중복 체크');
+    const reservedCount = await checkReserved(page);
+    if (reservedCount > 0 && !process.env.FORCE_WRITE) {
+      log('⛔ 예약발행 중복 — 중단 (FORCE_WRITE=1 로 강제 진행 가능)');
+      res('중단', '', `예약발행 중복 ${reservedCount}건`);
+      RP.error = `예약발행 중복 ${reservedCount}건`;
+      await bye(1);
+    }
 
     await page.goto(`https://blog.naver.com/${BLOG}?Redirect=Write&`, { waitUntil: 'domcontentloaded', timeout: 60000 });
     await sleep(3500); await closePopups(page);
