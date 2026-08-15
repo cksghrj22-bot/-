@@ -317,7 +317,7 @@ def process_task(task_file):
         task["status"] = "done"
 
     task["completed_at"] = datetime.now().isoformat()
-    task["codex_result"] = result[:500]
+    task["codex_result"] = result[:2000]  # 500→2000 (블로그방 요청 08-15)
     task["verified_files"] = existing_files[:5]  # 실제 존재 확인된 파일
 
     task["drive_links"] = drive_links
