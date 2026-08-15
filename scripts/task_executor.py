@@ -58,18 +58,15 @@ def execute_task(task_file: Path):
             task["return_code"] = result.returncode
 
             log(f"{'✅' if status == 'success' else '❌'} [{room}] rc={result.returncode}")
-        else:
-            # 명령어 없으면 그냥 기록만
-            task["executed_at"] = datetime.now().isoformat()
-            task["status"] = "no_command"
-            task["output"] = "실행할 명령어 없음"
-            log(f"⏭️ [{room}] 명령어 없음, 기록만")
 
-        # _done으로 이동
-        DONE.mkdir(exist_ok=True)
-        done_file = DONE / task_file.name
-        done_file.write_text(json.dumps(task, ensure_ascii=False, indent=2))
-        task_file.unlink()
+            # _done으로 이동 (명령어 있을 때만)
+            DONE.mkdir(exist_ok=True)
+            done_file = DONE / task_file.name
+            done_file.write_text(json.dumps(task, ensure_ascii=False, indent=2))
+            task_file.unlink()
+        else:
+            # 명령어 없으면 스킵 — terminal_watcher.py가 처리하도록 남겨둠
+            log(f"⏭️ [{room}] bash 명령 없음, 스킵 (Codex용)")
 
     except subprocess.TimeoutExpired:
         log(f"⏰ [{room}] 타임아웃 (5분)")
