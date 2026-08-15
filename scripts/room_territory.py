@@ -1,0 +1,207 @@
+#!/usr/bin/env python3
+"""방별 영역 관리 — 충돌 방지 + 전체 참조
+
+각 방은 자기 영역만 쓰기, 전체는 _out/_index.json에서 참조.
+
+영역:
+    유튜브쇼츠방: _out/shorts/, content/shorts/
+    낙타방: _out/낙타/, _out/cards/, content/cards/
+    전략기획실: 전체 (제한 없음)
+
+사용법:
+    # 영역 확인
+    python3 scripts/room_territory.py check "유튜브쇼츠방" "_out/shorts/test.mp4"
+
+    # 전체 인덱스 갱신
+    python3 scripts/room_territory.py index
+
+    # 전체 산출물 보기
+    python3 scripts/room_territory.py list
+"""
+from __future__ import annotations
+import json
+import os
+import socket
+import sys
+from datetime import datetime
+from pathlib import Path
+
+# 방별 영역 정의
+TERRITORIES = {
+    "유튜브쇼츠방": [
+        "_out/shorts/",
+        "content/shorts/",
+    ],
+    "낙타방": [
+        "_out/낙타/",
+        "_out/cards/",
+        "content/cards/",
+    ],
+    "교육디렉터방": [
+        "_out/교육/",
+        "content/교육/",
+    ],
+    "전략기획실": None,  # None = 전체 접근
+    "본진터미널": None,
+}
+
+# 공유 영역 (잠금 필수)
+SHARED_ZONES = [
+    "_publish_jobs/",
+    "_ROOMS_LOG.md",
+    "_ROOMS.md",
+]
+
+# 전략기획실이 관리하는 전체 인덱스 (다른 방은 여기서 참조)
+INDEX_FILE = Path("_strategy/전체_산출물_인덱스.json")
+
+
+def is_bonjin() -> bool:
+    return "Mac-Studio" in socket.gethostname()
+
+
+def get_territory(room: str) -> list[str] | None:
+    """방의 영역 반환. None이면 전체 접근."""
+    if is_bonjin() or room in ["전략기획실", "본진터미널", "전략실"]:
+        return None
+    return TERRITORIES.get(room, [])
+
+
+def check_access(room: str, filepath: str) -> tuple[bool, str]:
+    """방이 파일에 접근 가능한지 확인"""
+    territory = get_territory(room)
+
+    # 전략실은 전체 접근
+    if territory is None:
+        return True, "✅ 전략실 — 전체 접근 가능"
+
+    # 공유 영역은 잠금 필요 경고
+    for zone in SHARED_ZONES:
+        if filepath.startswith(zone) or filepath == zone.rstrip("/"):
+            return True, f"⚠️ 공유 영역 — 잠금 권장: {zone}"
+
+    # 자기 영역 체크
+    for allowed in territory:
+        if filepath.startswith(allowed):
+            return True, f"✅ {room} 영역"
+
+    # 영역 밖
+    return False, f"❌ {room}은(는) 이 영역 접근 불가. 허용: {territory}"
+
+
+def build_index() -> dict:
+    """전체 산출물 인덱스 생성"""
+    index = {
+        "updated": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "rooms": {},
+        "all_files": []
+    }
+
+    out_dir = Path("_out")
+    if not out_dir.exists():
+        return index
+
+    for room, territories in TERRITORIES.items():
+        if territories is None:
+            continue
+        room_files = []
+        for territory in territories:
+            if territory.startswith("_out/"):
+                folder = Path(territory)
+                if folder.exists():
+                    for f in folder.rglob("*"):
+                        if f.is_file() and not f.name.startswith("."):
+                            room_files.append({
+                                "path": str(f),
+                                "size": f.stat().st_size,
+                                "modified": datetime.fromtimestamp(f.stat().st_mtime).strftime("%Y-%m-%d %H:%M")
+                            })
+        if room_files:
+            index["rooms"][room] = room_files
+            index["all_files"].extend(room_files)
+
+    # 미분류 파일
+    classified = set(f["path"] for f in index["all_files"])
+    for f in out_dir.rglob("*"):
+        if f.is_file() and not f.name.startswith(".") and str(f) not in classified:
+            index["all_files"].append({
+                "path": str(f),
+                "size": f.stat().st_size,
+                "modified": datetime.fromtimestamp(f.stat().st_mtime).strftime("%Y-%m-%d %H:%M"),
+                "room": "미분류"
+            })
+
+    # 저장
+    INDEX_FILE.parent.mkdir(exist_ok=True)
+    INDEX_FILE.write_text(json.dumps(index, ensure_ascii=False, indent=2))
+
+    return index
+
+
+def show_list():
+    """전체 산출물 목록"""
+    if not INDEX_FILE.exists():
+        print("인덱스 없음. 먼저 실행: room_territory.py index")
+        return
+
+    index = json.loads(INDEX_FILE.read_text())
+
+    print(f"📦 전체 산출물 ({index['updated']} 기준)")
+    print("=" * 50)
+
+    for room, files in index.get("rooms", {}).items():
+        print(f"\n🏠 {room} ({len(files)}개)")
+        for f in files[:5]:
+            size_kb = f["size"] // 1024
+            print(f"   {f['path']} ({size_kb}KB)")
+        if len(files) > 5:
+            print(f"   ... 외 {len(files) - 5}개")
+
+    # 미분류
+    unclassified = [f for f in index.get("all_files", []) if f.get("room") == "미분류"]
+    if unclassified:
+        print(f"\n❓ 미분류 ({len(unclassified)}개)")
+        for f in unclassified[:5]:
+            print(f"   {f['path']}")
+
+
+def main():
+    if len(sys.argv) < 2:
+        print("사용법: room_territory.py <check|index|list> [방] [파일]")
+        return 1
+
+    cmd = sys.argv[1]
+
+    if cmd == "check":
+        if len(sys.argv) < 4:
+            print("사용법: room_territory.py check <방> <파일>")
+            return 1
+        ok, msg = check_access(sys.argv[2], sys.argv[3])
+        print(msg)
+        return 0 if ok else 1
+
+    if cmd == "index":
+        index = build_index()
+        print(f"✅ 인덱스 갱신: {len(index['all_files'])}개 파일")
+        print(f"   저장: {INDEX_FILE}")
+        return 0
+
+    if cmd == "list":
+        show_list()
+        return 0
+
+    if cmd == "territories":
+        print("📋 방별 영역:")
+        for room, t in TERRITORIES.items():
+            if t is None:
+                print(f"  {room}: 전체")
+            else:
+                print(f"  {room}: {t}")
+        return 0
+
+    print(f"알 수 없는 명령: {cmd}")
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
