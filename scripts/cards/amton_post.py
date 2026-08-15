@@ -53,6 +53,17 @@ def draw_line(d, x, y, text, accent, font, col, acol):
         cur += d.textlength(seg, font=font)
     return cur
 
+def lint_card(c, i):
+    """매니페스트 단계 린트 — 노랑은 픽셀보다 여기서 정확히 잰다."""
+    msgs = []
+    for key, line in (("accent", "line1"), ("accent2", "line2")):
+        acc, txt = c.get(key), c.get(line, "")
+        if acc and txt and len(acc) / max(len(txt), 1) > 0.6:
+            msgs.append(f"카드{i}: {line} 의 {len(acc)}/{len(txt)}자가 노랑 — 한 단어만 (규격 v1)")
+    if c.get("accent") and c.get("accent2"):
+        msgs.append(f"카드{i}: 두 줄 다 노랑 — 금지 (규격 v1)")
+    return msgs
+
 def render_card(c, dflt, W, H, out):
     src = ROOT / c["src"] if not os.path.isabs(c["src"]) else pathlib.Path(c["src"])
     base = fit_cover(Image.open(src).convert("RGB"), W, H, c.get("anchor", dflt.get("anchor", 0.45)))
@@ -89,10 +100,18 @@ def main():
     dflt = m["defaults"]
     outdir = ROOT / m["out"]
     made = []
+    lint = [x for i, c in enumerate(m["cards"], 1) for x in lint_card(c, i)]
+    for x in lint: print("⛔ 린트:", x)
+    if lint: raise SystemExit("매니페스트 린트 실패 — 고치고 다시 돌린다.")
     for i, c in enumerate(m["cards"], 1):
         made.append(render_card(c, dflt, W, H, outdir / f"amton_{i}.jpg"))
         print(f"amton_{i}.jpg  <- {c['src']}   「{c['line1']} / {c.get('line2','')}」")
     return made
 
+def run_gate(outdir):
+    import subprocess
+    return subprocess.run(["python3", str(HERE / "amton_gate.py"), str(outdir)]).returncode
+
 if __name__ == "__main__":
-    main()
+    made = main()
+    raise SystemExit(run_gate(made[0].parent) if made else 1)
