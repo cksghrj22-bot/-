@@ -1,8 +1,11 @@
 {
-  "format": "amton_bottomleft_v1",
+  "kind": "amton_bottomleft_v1",
   "설명": "에이엠톤식 좌하단 두 줄 — 낙타형과 별개 줄기. 박스 없음, 하단 스크림, 노란 포인트 단어.",
   "grade": "warm_film",
-  "canvas": { "w": 1080, "h": 1350 },
+  "canvas": {
+    "w": 1080,
+    "h": 1350
+  },
   "out": "_out/사진카드_테스트/amton",
   "defaults": {
     "font": "NanumSquareRoundEB.ttf",
@@ -14,21 +17,30 @@
     "bottom": 0.075,
     "line_gap": 20,
     "anchor": 0.42,
-    "scrim": { "height": 0.46, "alpha": 165 }
+    "scrim": {
+      "height": 0.46,
+      "alpha": 165
+    }
   },
   "cards": [
-    { "src": "_tmp/필름시안/헤어_E.jpg",
+    {
+      "src": "_tmp/필름시안/헤어_E.jpg",
       "line1": "머리는 자르는 게 아니라",
       "line2": "얼굴을 다시 쓰는 일이다",
-      "accent2": "다시 쓰는" },
-    { "src": "_tmp/필름시안/헤어b_E.jpg",
+      "accent2": "다시 쓰는"
+    },
+    {
+      "src": "_tmp/필름시안/헤어b_E.jpg",
       "line1": "단발은 길이가 아니라",
       "line2": "각도로 결정된다",
-      "accent2": "각도" },
-    { "src": "_tmp/필름시안/헤어_E.jpg",
+      "accent2": "각도"
+    },
+    {
+      "src": "_tmp/필름시안/헤어_E.jpg",
       "line1": "13년 하고 알았다",
       "line2": "안 어울리는 머리는 없고 안 맞는 무게가 있을 뿐",
       "size_2": 38,
-      "accent2": "무게" }
+      "accent2": "무게"
+    }
   ]
 }
