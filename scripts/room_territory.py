@@ -26,28 +26,53 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-# 방별 영역 정의
+# 방별 영역 정의 — _ROOMS.md 정본 기준
 TERRITORIES = {
+    # 전략 (전체 접근)
+    "전략기획및개인업무": None,
+    "전략기획실": None,  # 별칭
+    "본진터미널": None,
+
+    # 낙타자막인스타스레드방 (코드 N)
+    "낙타자막인스타스레드방": [
+        "_out/낙타/",
+        "_out/cards/",
+        "_out/amton/",
+        "content/cards/",
+    ],
+
+    # 유튜브쇼츠방 (코드 A)
     "유튜브쇼츠방": [
         "_out/shorts/",
         "content/shorts/",
     ],
-    "낙타방": [
-        "_out/낙타/",
-        "_out/cards/",
-        "content/cards/",
+
+    # 블로그자동화방
+    "블로그자동화방": [
+        "_out/blog/",
+        "content/blog/",
+        "_publish_jobs/blog_parsed/",
     ],
+
+    # 만화연재방 (코드 M)
     "만화연재방": [
         "_out/만화/",
         "_out/연재/",
+        "_out/결이/",
         "content/만화/",
     ],
+
+    # 교육디렉터방
     "교육디렉터방": [
         "_out/교육/",
         "content/교육/",
     ],
-    "전략기획실": None,  # None = 전체 접근
-    "본진터미널": None,
+
+    # 차노책출판
+    "차노책출판": [
+        "_out/책/",
+        "content/책/",
+    ],
 }
 
 # 공유 영역 (잠금 필수)

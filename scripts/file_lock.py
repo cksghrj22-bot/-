@@ -81,8 +81,8 @@ def append_history(action: str, filepath: str, room: str, note: str = ""):
 
 
 def is_strategy_room(room: str) -> bool:
-    """전략기획실 여부"""
-    return room in ["전략기획실", "전략실", "본진터미널", "전략방"] or is_bonjin()
+    """전략기획실 여부 — _ROOMS.md 정본 이름"""
+    return room in ["전략기획및개인업무", "전략기획실", "본진터미널"] or is_bonjin()
 
 
 def lock_file(filepath: str, room: str) -> tuple[bool, str]:
