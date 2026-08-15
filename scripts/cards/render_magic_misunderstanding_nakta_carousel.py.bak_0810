@@ -1,0 +1,175 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""Render magic misunderstanding nakta carousel."""
+
+from __future__ import annotations
+
+import subprocess
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+
+from PIL import Image, ImageDraw, ImageFont, ImageOps
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(SCRIPT_DIR))
+
+import nakta_post
+
+
+ROOT = SCRIPT_DIR.parents[1]
+SRC = ROOT / "_clips_job" / "magic"
+OUT = ROOT / "_out" / "매직_오해_낙타캐러셀"
+W, H = 1080, 1350
+
+
+@dataclass(frozen=True)
+class Slide:
+    n: int
+    kind: str
+    file: str | None
+    top_text: str
+    bottom_text: str | None
+    bottom_role: str | None
+    start: float
+    duration: float
+    text_top: float
+    text_left: float
+    crop_y: float
+    top_size: int
+    bottom_size: int
+
+
+SLIDES = [
+    Slide(1, "video", "사랑해.MOV", "여름철 곱슬 때문에 힘드시죠?", None, None, 0.0, 4.0, 0.070, 0.050, 0.02, 66, 0),
+    Slide(2, "video", "IMG_1092.MOV", "매직의 오해", None, None, 17.0, 4.0, 0.690, 0.075, 0.16, 86, 0),
+    Slide(3, "photo", "IMG_0415.jpg", "매직은 잘 펴는 것?", "불필요한 곱슬을 찾는 것이다.", "결론", 0.0, 0.0, 0.090, 0.045, 0.00, 62, 44),
+    Slide(4, "video", "IMG_5853.MOV", "매직은 전체매직\n뿌리매직만 있다?", "갯수가 수만 가지다.\n사람마다 다르니까.", "시안", 3.0, 2.0, 0.045, 0.000, 0.02, 58, 42),
+    Slide(5, "video", "IMG_1245.MOV", "곱슬은 나쁘다, 지저분하다?", "착한 곱슬도 있다.", "시안", 0.0, 4.0, 0.600, 0.055, 0.18, 58, 56),
+]
+
+
+def cover_crop(im: Image.Image, crop_y: float) -> Image.Image:
+    im = ImageOps.exif_transpose(im).convert("RGB")
+    scale = max(W / im.width, H / im.height)
+    nw, nh = round(im.width * scale), round(im.height * scale)
+    im = im.resize((nw, nh), Image.Resampling.LANCZOS)
+    left = max(0, round((nw - W) / 2))
+    top = max(0, round((nh - H) * crop_y))
+    return im.crop((left, top, left + W, top + H))
+
+
+def fit_font(text: str, size: int, x: int) -> ImageFont.FreeTypeFont:
+    font_size = size
+    while font_size > 30:
+        fnt = nakta_post.F("NanumSquareRoundEB.ttf", font_size)
+        bb = ImageDraw.Draw(Image.new("RGBA", (1, 1))).textbbox((0, 0), text, font=fnt)
+        if x + (bb[2] - bb[0]) + 2 * nakta_post.PAD_X <= W - 36:
+            return fnt
+        font_size -= 2
+    return nakta_post.F("NanumSquareRoundEB.ttf", font_size)
+
+
+def make_overlay(slide: Slide) -> Path:
+    overlay = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(overlay)
+    x0 = int(W * slide.text_left)
+    y = int(H * slide.text_top)
+    gap = 8 if slide.n == 4 else nakta_post.GAP
+    step = 0 if slide.n == 4 else nakta_post.STEP
+    lines = [("설정", text, slide.top_size) for text in slide.top_text.splitlines()]
+    if slide.bottom_text and slide.bottom_role:
+        lines.extend((slide.bottom_role, text, slide.bottom_size) for text in slide.bottom_text.splitlines())
+    for i, (role, text, size) in enumerate(lines):
+        box, txt = nakta_post.STYLES[role]
+        bx = x0 + i * step
+        fnt = fit_font(text, size, bx)
+        bb = d.textbbox((0, 0), text, font=fnt)
+        tw, th = bb[2] - bb[0], bb[3] - bb[1]
+        bw = tw + 2 * nakta_post.PAD_X
+        bh = max(th + 2 * nakta_post.PAD_Y, 145) if slide.n == 4 else th + 2 * nakta_post.PAD_Y
+        d.rectangle([bx, y, bx + bw, y + bh], fill=box)
+        d.text((bx + nakta_post.PAD_X - bb[0], y + nakta_post.PAD_Y - bb[1]), text, font=fnt, fill=txt)
+        y += bh + gap
+    path = OUT / "_overlays" / f"slide_{slide.n}_overlay.png"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    overlay.save(path)
+    return path
+
+
+def render_photo(slide: Slide) -> Path:
+    if slide.file is None:
+        raise ValueError(f"slide {slide.n} photo source is missing")
+    base = cover_crop(Image.open(SRC / slide.file), slide.crop_y).convert("RGBA")
+    overlay = Image.open(make_overlay(slide)).convert("RGBA")
+    out = OUT / f"slide_{slide.n}.jpg"
+    Image.alpha_composite(base, overlay).convert("RGB").save(out, quality=92, optimize=True)
+    return out
+
+
+def render_video(slide: Slide) -> Path:
+    if slide.file is None:
+        raise ValueError(f"slide {slide.n} video source is missing")
+    overlay = make_overlay(slide)
+    out = OUT / f"slide_{slide.n}.mp4"
+    y_expr = f"(ih-oh)*{slide.crop_y:.4f}"
+    vf = (
+        f"[0:v]scale={W}:{H}:force_original_aspect_ratio=increase,"
+        f"crop={W}:{H}:(iw-ow)/2:{y_expr},setsar=1[base];"
+        f"[base][1:v]overlay=0:0:format=auto,format=yuv420p[v]"
+    )
+    cmd = [
+        "ffmpeg", "-y", "-hide_banner", "-loglevel", "error",
+        "-ss", f"{slide.start:.3f}", "-t", f"{slide.duration:.3f}",
+        "-i", str(SRC / slide.file),
+        "-i", str(overlay),
+        "-filter_complex", vf,
+        "-map", "[v]",
+        "-an",
+        "-c:v", "libx264", "-crf", "18", "-preset", "medium",
+        "-movflags", "+faststart",
+        str(out),
+    ]
+    subprocess.run(cmd, check=True)
+    return out
+
+
+def render_black(slide: Slide) -> Path:
+    im = Image.new("RGB", (W, H), (0, 0, 0))
+    d = ImageDraw.Draw(im)
+    fnt = fit_font(slide.top_text, slide.top_size, int(W * slide.text_left))
+    bb = d.textbbox((0, 0), slide.top_text, font=fnt)
+    x = int(W * slide.text_left)
+    y = int(H * slide.text_top)
+    d.text((x - bb[0], y - bb[1]), slide.top_text, font=fnt, fill=(255, 255, 255))
+    out = OUT / f"slide_{slide.n}.jpg"
+    im.save(out, quality=95, optimize=True)
+    return out
+
+
+def main() -> int:
+    OUT.mkdir(parents=True, exist_ok=True)
+    targets = {int(arg) for arg in sys.argv[1:]} if len(sys.argv) > 1 else {slide.n for slide in SLIDES}
+    for n in targets:
+        for old in OUT.glob(f"slide_{n}.*"):
+            if old.is_file():
+                old.unlink()
+    rendered = []
+    for slide in SLIDES:
+        if slide.n not in targets:
+            continue
+        if slide.kind == "video":
+            rendered.append(render_video(slide))
+        elif slide.kind == "photo":
+            rendered.append(render_photo(slide))
+        elif slide.kind == "black":
+            rendered.append(render_black(slide))
+        else:
+            raise ValueError(f"unknown slide kind: {slide.kind}")
+    for path in rendered:
+        print(path)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
