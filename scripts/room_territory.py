@@ -37,6 +37,11 @@ TERRITORIES = {
         "_out/cards/",
         "content/cards/",
     ],
+    "만화연재방": [
+        "_out/만화/",
+        "_out/연재/",
+        "content/만화/",
+    ],
     "교육디렉터방": [
         "_out/교육/",
         "content/교육/",
