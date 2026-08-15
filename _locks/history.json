@@ -1,0 +1,58 @@
+[
+  {
+    "action": "lock",
+    "file": "content/shorts/테스트.md",
+    "room": "유튜브쇼츠방",
+    "time": "2026-08-15 09:21:29",
+    "hostname": "chanoui-Mac-Studio.local",
+    "note": ""
+  },
+  {
+    "action": "lock_blocked",
+    "file": "content/shorts/테스트.md",
+    "room": "전략방",
+    "time": "2026-08-15 09:21:29",
+    "hostname": "chanoui-Mac-Studio.local",
+    "note": "충돌: 유튜브쇼츠방이 사용 중"
+  },
+  {
+    "action": "unlock",
+    "file": "content/shorts/테스트.md",
+    "room": "유튜브쇼츠방",
+    "time": "2026-08-15 09:21:45",
+    "hostname": "chanoui-Mac-Studio.local",
+    "note": "원래 잠금자: 유튜브쇼츠방"
+  },
+  {
+    "action": "lock",
+    "file": "content/테스트.md",
+    "room": "유튜브쇼츠방",
+    "time": "2026-08-15 09:22:38",
+    "hostname": "chanoui-Mac-Studio.local",
+    "note": ""
+  },
+  {
+    "action": "priority_override",
+    "file": "content/테스트.md",
+    "room": "전략기획실",
+    "time": "2026-08-15 09:22:38",
+    "hostname": "chanoui-Mac-Studio.local",
+    "note": "전략실 우선권으로 유튜브쇼츠방 잠금 해제"
+  },
+  {
+    "action": "lock",
+    "file": "content/테스트.md",
+    "room": "전략기획실",
+    "time": "2026-08-15 09:22:38",
+    "hostname": "chanoui-Mac-Studio.local",
+    "note": "전략실 우선권"
+  },
+  {
+    "action": "unlock",
+    "file": "content/테스트.md",
+    "room": "전략기획실",
+    "time": "2026-08-15 09:22:38",
+    "hostname": "chanoui-Mac-Studio.local",
+    "note": "원래 잠금자: 전략기획실"
+  }
+]

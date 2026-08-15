@@ -80,14 +80,33 @@ def append_history(action: str, filepath: str, room: str, note: str = ""):
     HISTORY_FILE.write_text(json.dumps(history, ensure_ascii=False, indent=2))
 
 
+def is_strategy_room(room: str) -> bool:
+    """전략기획실 여부"""
+    return room in ["전략기획실", "전략실", "본진터미널", "전략방"] or is_bonjin()
+
+
 def lock_file(filepath: str, room: str) -> tuple[bool, str]:
-    """파일 잠금 획득"""
+    """파일 잠금 획득 — 전략실은 우선순위"""
     locks = load_active()
 
     if filepath in locks:
         owner = locks[filepath]["room"]
         if owner == room:
             return True, f"이미 {room}이 잠금 중"
+
+        # 전략실은 우선순위 — 기존 잠금 밀어냄
+        if is_strategy_room(room):
+            append_history("priority_override", filepath, room, f"전략실 우선권으로 {owner} 잠금 해제")
+            locks[filepath] = {
+                "room": room,
+                "since": datetime.now().strftime("%Y-%m-%d %H:%M"),
+                "hostname": socket.gethostname(),
+                "priority": True
+            }
+            save_active(locks)
+            append_history("lock", filepath, room, "전략실 우선권")
+            return True, f"⚡ 전략실 우선권: {owner} 잠금 해제 → {room} 획득"
+
         append_history("lock_blocked", filepath, room, f"충돌: {owner}이 사용 중")
         return False, f"❌ 충돌: {owner}이 사용 중 ({locks[filepath]['since']})"
 
