@@ -60,6 +60,23 @@ def is_bonjin() -> bool:
     return "Mac-Studio" in socket.gethostname()
 
 
+def lookup_in_index(filepath: str) -> str | None:
+    """전략실 인덱스에서 파일 정보 조회"""
+    if not INDEX_FILE.exists():
+        return None
+
+    try:
+        index = json.loads(INDEX_FILE.read_text())
+        for f in index.get("all_files", []):
+            if filepath in f["path"] or f["path"].endswith(filepath):
+                room = f.get("room", "미분류")
+                size_kb = f["size"] // 1024
+                return f"{f['path']} ({size_kb}KB, {f['modified']}, {room})"
+    except:
+        pass
+    return None
+
+
 def get_territory(room: str) -> list[str] | None:
     """방의 영역 반환. None이면 전체 접근."""
     if is_bonjin() or room in ["전략기획실", "본진터미널", "전략실"]:
@@ -85,8 +102,11 @@ def check_access(room: str, filepath: str) -> tuple[bool, str]:
         if filepath.startswith(allowed):
             return True, f"✅ {room} 영역"
 
-    # 영역 밖
-    return False, f"❌ {room}은(는) 이 영역 접근 불가. 허용: {territory}"
+    # 영역 밖 → 전략실 인덱스 참조 안내
+    index_info = lookup_in_index(filepath)
+    if index_info:
+        return False, f"❌ {room} 영역 밖 → 전략실 참조:\n   📍 {index_info}"
+    return False, f"❌ {room} 영역 밖. 전략실 인덱스 확인: _strategy/전체_산출물_인덱스.json"
 
 
 def build_index() -> dict:
