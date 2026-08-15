@@ -21,17 +21,20 @@ ROOM_TERRITORY = {
         "_out/cards/",
         "_out/amton/",
         "content/cards/",
+        "content/amton/",
         "scripts/cards/amton_",
         "scripts/cards/nakta_",
         "scripts/film_grade.py",
         "scripts/cards/fonts/",
         "scripts/cards/glyphlib/",
+        "rooms/낙타방/",  # 방 전용 폴더
     ],
     "유튜브쇼츠방": [
         "_out/shorts/",
         "content/shorts/",
         "scripts/shorts/",
         "scripts/build_short",
+        "rooms/유튜브쇼츠방/",
     ],
     "만화연재방": [
         "_out/만화/",
@@ -40,6 +43,7 @@ ROOM_TERRITORY = {
         "content/만화/",
         "scripts/cards/comic_",
         "scripts/manga_",
+        "rooms/만화연재방/",
     ],
     "블로그자동화방": [
         "_out/blog/",
@@ -47,11 +51,13 @@ ROOM_TERRITORY = {
         "_publish_jobs/blog_parsed/",
         "scripts/naver_",
         "scripts/blog_",
+        "rooms/블로그자동화방/",
     ],
     "교육디렉터방": [
         "_out/교육/",
         "content/교육/",
         "scripts/edu_",
+        "rooms/교육디렉터방/",
     ],
 }
 
