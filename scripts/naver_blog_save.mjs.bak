@@ -2,7 +2,7 @@
 // 같은 제목이 이미 있으면 그걸 열어 본문만 갈아끼운다(새 글 안 만듦). 삭제는 ALLOW_DELETE=1 일 때만.
 // 발행 버튼은 절대 클릭하지 않는다.
 import { chromium } from 'playwright';
-import { mkdirSync, readFileSync, writeFileSync, existsSync, unlinkSync, readdirSync, statSync } from 'fs';
+import { mkdirSync, readFileSync, writeFileSync, existsSync, unlinkSync, readdirSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
@@ -46,15 +46,7 @@ const LOCK = join(PROFILE, '.run.lock');
 if (existsSync(LOCK)) {
   const pid = parseInt(readFileSync(LOCK, 'utf8').trim(), 10);
   let alive = false; try { process.kill(pid, 0); alive = true; } catch {}
-  // 10분 넘게 잡고 있는 락은 좀비로 보고 강제로 뺏는다 (오늘 5분+ 멈춤 사고)
-  let stale = false;
-  try { stale = (Date.now() - statSync(LOCK).mtimeMs) > 10 * 60 * 1000; } catch {}
-  if (alive && !stale) { console.error(`이미 실행 중 (PID ${pid})`); process.exit(0); }
-  if (alive && stale) {
-    console.error(`좀비 감지 (PID ${pid}, 10분 초과) — 종료하고 진행합니다`);
-    try { process.kill(pid, 'SIGKILL'); } catch {}
-    const until = Date.now() + 2000; while (Date.now() < until) {}
-  }
+  if (alive) { console.error(`이미 실행 중 (PID ${pid})`); process.exit(0); }
   try { unlinkSync(LOCK); } catch {}
 }
 writeFileSync(LOCK, String(process.pid), 'utf8');
@@ -211,15 +203,7 @@ async function reuse(ed, page) {
     log('모드', RP.mode, '기존', RP.existing, '삭제', RP.deleted);
     await noDim(ed, page, 6000);
 
-    // 본문 = 제목(se-documentTitle) 바깥의 텍스트 컴포넌트만. contenteditable 폴백 금지(제목이 잡힌다).
-    const BODY_SEL = '.se-component.se-text:not(.se-documentTitle) .se-text-paragraph, .se-section-text:not(.se-section-documentTitle) .se-text-paragraph';
-    const TITLE_SEL = '.se-documentTitle .se-text-paragraph, .se-section-documentTitle .se-text-paragraph, .se-title-text';
-    let bodyFirst = ed.locator(BODY_SEL).last();
-    if (!(await vis(bodyFirst, 3000))) {
-      const add = ed.locator('button.se-canvas-bottom-button, button:has-text("본문")').first();
-      if (await vis(add, 1500)) { await add.click({ timeout: 5000 }).catch(()=>{}); await sleep(900); }
-      bodyFirst = ed.locator(BODY_SEL).last();
-    }
+    const bodyFirst = ed.locator('.se-component.se-text .se-text-paragraph, [contenteditable="true"]').last();
     await bodyFirst.scrollIntoViewIfNeeded().catch(()=>{});
     await bodyFirst.click({ force: true, timeout: 8000 }).catch(()=>{}); await sleep(500);
     if (RP.mode === 'opened') {
@@ -229,22 +213,12 @@ async function reuse(ed, page) {
     }
 
     res('진행중', page.url(), '제목');
-    const tl = ed.locator(TITLE_SEL).first();
-    if (!(await vis(tl, 3000))) throw new Error('제목칸을 찾지 못했습니다');
+    const tl = ed.locator('.se-documentTitle .se-text-paragraph, .se-title-text, [contenteditable="true"]').first();
     const cur = (await tl.innerText().catch(() => '')).trim();
     if (!cur || cur === '제목') { await tl.click(); await page.keyboard.type(JOB.title, { delay: 8 }); await sleep(400); }
-    let tcheck = (await tl.innerText().catch(() => '')).trim();
-    if (tcheck && tcheck !== '제목' && tcheck !== JOB.title) {
-      RP.skipped.push(`제목 정정: "${tcheck.slice(0,30)}"`);
-      await tl.click(); await page.keyboard.press(`${MOD}+A`); await sleep(200);
-      await page.keyboard.press('Delete'); await sleep(300);
-      await page.keyboard.type(JOB.title, { delay: 8 }); await sleep(400);
-    }
-    RP.applied.title = (await tl.innerText().catch(() => '')).trim();
 
     res('진행중', page.url(), '본문 입력');
-    const bl = ed.locator(BODY_SEL).last();
-    if (!(await vis(bl, 3000))) throw new Error('본문칸을 찾지 못했습니다 — 제목칸에 쓰지 않기 위해 중단');
+    const bl = ed.locator('.se-component.se-text .se-text-paragraph, [contenteditable="true"]').last();
     await bl.scrollIntoViewIfNeeded().catch(()=>{});
     await bl.click({ force: true, timeout: 8000 }).catch(()=>{}); await sleep(400);
     const paras = JOB.blocks.filter(b => b.type !== 'image').map(b => ({ type: b.type, lines: (b.text || '').trim().split('\n') })).filter(p => p.lines.join(''));
@@ -258,18 +232,6 @@ async function reuse(ed, page) {
     }
     await sleep(1000);
 
-    // ① 글부터 저장한다. 서식이 실패해도 글은 남는다.
-    async function doSave(tag) {
-      const sv = ed.locator('button[class*="save_btn__"], button:has-text("저장")').first();
-      if (!(await vis(sv, 3000))) { RP.skipped.push(`${tag}: 저장버튼 없음`); return false; }
-      const st = (await sv.innerText().catch(() => '')).trim();
-      if (st.includes('발행') || st.includes('공개')) { RP.skipped.push(`${tag}: 발행버튼으로 보임 — 중단`); return false; }
-      await sv.click({ timeout: 8000 }).catch(()=>{}); await sleep(2500);
-      log('저장', tag); return true;
-    }
-    res('진행중', page.url(), '1차 저장(글만)');
-    RP.applied.savedText = await doSave('1차');
-
     res('진행중', page.url(), '전체 서식');
     await page.keyboard.press(`${MOD}+A`); await sleep(600);
     RP.applied.font = await setFont(ed, page);
@@ -277,53 +239,36 @@ async function reuse(ed, page) {
     RP.applied.center = await setCenter(ed, page);
     await sleep(400);
 
-    // ② 전체 서식 후 한 번 더 저장
-    RP.applied.savedGlobal = await doSave('2차');
-
     res('진행중', page.url(), '블록별 서식');
-    const DEADLINE = Date.now() + Number(process.env.FORMAT_BUDGET || 180) * 1000;
-    const P = ed.locator(BODY_SEL);
+    const P = ed.locator('.se-component.se-text .se-text-paragraph');
     RP.applied.paragraphs = await P.count().catch(() => 0);
-    let h=0,c=0,s=0,bo=0,pt=0;
+    let h=0,c=0,s=0,bo=0;
     for (const p of paras) {
-      if (!['heading','center','small','bold','point'].includes(p.type)) continue;
-      if (Date.now() > DEADLINE) { RP.skipped.push('서식 시간초과 — 남은 블록 건너뜀'); break; }
+      if (!['heading','center','small','bold'].includes(p.type)) continue;
       const key = p.lines[0].slice(0, 18);
       const tgt = P.filter({ hasText: key }).first();
       if (!(await vis(tgt, 800))) { RP.skipped.push(`문단못찾음: ${key}`); continue; }
       await tgt.click({ clickCount: 3 }).catch(()=>{}); await sleep(330);
-      if (p.type === 'point') {
-        // 진짜 강조 — 여기만 포인트색을 쓴다 (차노: "핑크는 진짜 강조할 때만")
+      if (p.type === 'heading' || p.type === 'center') {
         await setSize(ed, page, SZ_HEAD);
-        if (JOB.color) await setColor(ed, page, JOB.color, 'point');
-        await bold(ed); pt++;
-      } else if (p.type === 'heading' || p.type === 'center') {
-        // 소제목·선언 = 24px + 검은 굵게. 색 안 쓴다
-        await setSize(ed, page, SZ_HEAD);
+        if (JOB.color) await setColor(ed, page, JOB.color, p.type);
         await bold(ed);
         if (p.type === 'heading') h++; else c++;
       } else if (p.type === 'small') { await setSize(ed, page, SZ_SMALL); s++; }
       else { await bold(ed); bo++; }
       await sleep(280);
     }
-    RP.applied.heading=h; RP.applied.center_n=c; RP.applied.small=s; RP.applied.bold=bo; RP.applied.point=pt;
+    RP.applied.heading=h; RP.applied.center_n=c; RP.applied.small=s; RP.applied.bold=bo;
 
     res('진행중', page.url(), '임시저장');
-    const tfinal = (await ed.locator(TITLE_SEL).first().innerText().catch(() => '')).trim();
-    if (tfinal !== JOB.title) {
-      RP.skipped.push(`저장전 제목 불일치: "${tfinal.slice(0,40)}" → 재설정`);
-      const t2 = ed.locator(TITLE_SEL).first();
-      await t2.click(); await page.keyboard.press(`${MOD}+A`); await sleep(200);
-      await page.keyboard.press('Delete'); await sleep(300);
-      await page.keyboard.type(JOB.title, { delay: 8 }); await sleep(500);
-    }
-    RP.applied.titleFinal = (await ed.locator(TITLE_SEL).first().innerText().catch(() => '')).trim();
-
-    res('진행중', page.url(), '최종 저장');
-    RP.applied.savedFinal = await doSave('최종');
+    const save = ed.locator('button[class*="save_btn__"], button:has-text("저장")').first();
+    if (!(await vis(save, 3000))) throw new Error('저장 버튼 못 찾음');
+    const st = (await save.innerText().catch(() => '')).trim();
+    if (st.includes('발행') || st.includes('공개')) throw new Error('발행 버튼으로 보임 — 중단');
+    await save.click({ timeout: 8000 }); await sleep(3000);
 
     await saveState(); rep();
-    const sum = `모드:${RP.mode} 기존:${RP.existing} 삭제:${RP.deleted} | 서체:${RP.applied.font?'O':'X'} 19:${RP.applied.body19?'O':'X'} 가운데:${RP.applied.center?'O':'X'} 소제목:${h} 선언:${c} 검은굵게:${bo} 포인트색:${pt} 작은글씨:${s}`;
+    const sum = `모드:${RP.mode} 기존:${RP.existing} 삭제:${RP.deleted} | 서체:${RP.applied.font?'O':'X'} 19:${RP.applied.body19?'O':'X'} 가운데:${RP.applied.center?'O':'X'} 소제목:${h} 선언:${c} 검은굵게:${bo} 작은글씨:${s}`;
     res('성공', page.url(), '', sum);
     log('완료', sum);
   } catch (e) {

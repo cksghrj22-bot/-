@@ -5,7 +5,7 @@
 import re, json, sys
 from pathlib import Path
 
-TAG = re.compile(r"^\[(H|B|BOLD|QUOTE|CENTER|SMALL|COLOR|IMG:(\d+))\]\s*(.*)$")
+TAG = re.compile(r"^\[(H|B|BOLD|POINT|QUOTE|CENTER|SMALL|COLOR|IMG:(\d+))\]\s*(.*)$")
 
 def parse(txt_path: Path) -> dict:
     post = {"title": "", "color": "", "blocks": [], "images": {}}
@@ -31,8 +31,8 @@ def parse(txt_path: Path) -> dict:
                     post["blocks"].append({"type": "heading", "text": rest})
             elif tag == "COLOR":
                 post["color"] = rest
-            elif tag in ("B", "BOLD", "QUOTE", "CENTER", "SMALL"):
-                cur = {"B": "body", "BOLD": "bold", "QUOTE": "quote",
+            elif tag in ("B", "BOLD", "POINT", "QUOTE", "CENTER", "SMALL"):
+                cur = {"B": "body", "BOLD": "bold", "POINT": "point", "QUOTE": "quote",
                        "CENTER": "center", "SMALL": "small"}[tag]
                 if rest:
                     buf.append(rest)
