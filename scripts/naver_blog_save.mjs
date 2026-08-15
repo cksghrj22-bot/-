@@ -57,7 +57,15 @@ let CTX = null, SHUT = false;
 const RP = { job: JOB.name, title: JOB.title, color: JOB.color, mode: '', existing: 0, deleted: 0, applied: {}, skipped: [], error: null };
 const rep = () => writeFileSync(REPORT, JSON.stringify(RP, null, 2), 'utf8');
 const res = (s, u, b = '', x = '') => writeFileSync(RESULT, `상태: ${s}\n임시글URL: ${u || ''}\n막힌지점: ${b || ''}\n서식: ${x}\n`, 'utf8');
-async function saveState() { try { if (CTX) await CTX.storageState({ path: STATE }); } catch {} }
+async function saveState() {
+  try {
+    if (!CTX) return;
+    const prev = existsSync(STATE) ? JSON.parse(readFileSync(STATE, 'utf8')) : {};
+    const next = await CTX.storageState();
+    if (Array.isArray(prev.published_titles)) next.published_titles = prev.published_titles;
+    writeFileSync(STATE, JSON.stringify(next, null, 2), 'utf8');
+  } catch {}
+}
 async function bye(c) { if (SHUT) return; SHUT = true; await saveState(); rep(); try { if (CTX) await CTX.close(); } catch {} rel(); process.exit(c); }
 process.on('SIGINT', () => bye(0)); process.on('SIGTERM', () => bye(0));
 const vis = async (l, t = 1000) => { try { return await l.isVisible({ timeout: t }); } catch { return false; } };
@@ -165,7 +173,20 @@ async function reuse(ed, page) {
     if (existsSync(STATE)) { try { const st = JSON.parse(readFileSync(STATE, 'utf8')); if (st?.cookies?.length) await CTX.addCookies(st.cookies); } catch {} }
     const page = CTX.pages()[0] || await CTX.newPage();
     await page.goto('https://blog.naver.com/MyBlog.naver', { waitUntil: 'domcontentloaded', timeout: 60000 });
-    if (page.url().includes('nid.naver.com')) throw new Error('네이버 로그인 세션 없음');
+    if (page.url().includes('nid.naver.com')) {
+      // 로그인 화면이면 사람이 로그인할 때까지 기다린다. 계정 정보는 스크립트가 입력하지 않는다.
+      const WAIT = Number(process.env.LOGIN_WAIT || 600);
+      res('대기', page.url(), '네이버 로그인 대기 중 — 열린 창에서 로그인해 주세요');
+      console.log('\n>>> 열린 크롬 창에서 네이버 로그인만 해주세요. 되면 자동으로 이어서 글을 넣습니다.\n');
+      let ok = false;
+      for (let w = 0; w < WAIT; w += 3) {
+        await sleep(3000);
+        if (!page.url().includes('nid.naver.com')) { ok = true; break; }
+      }
+      if (!ok) throw new Error('로그인 대기 시간 초과');
+      await sleep(2500);
+      console.log('>>> 로그인 확인. 이어서 진행합니다.\n');
+    }
     await saveState();
 
     await page.goto(`https://blog.naver.com/${BLOG}?Redirect=Write&`, { waitUntil: 'domcontentloaded', timeout: 60000 });
