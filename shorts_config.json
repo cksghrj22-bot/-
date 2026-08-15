@@ -131,7 +131,7 @@
   "style_preset_film": {
     "_설명": "감성·서정·브랜딩 라인 — 필름톤 컬러 + 손글씨. footage가 주인공이되 무드를 얹는다.",
     "layout": "letterbox",
-    "grade": "clean",
+    "grade": "warm_film",
     "subtitle_style": {
       "font": "KyoboHandwriting2019",
       "size": 84,
@@ -248,10 +248,10 @@
       "measured": null
     }
   },
-  "_grade_note": "grade 이름 -> grades[name].vf 를 ffmpeg -vf 에 그대로 사용. 실측치는 채도/블랙(하위5%)/대비(95-5)/R-B.",
   "defaults_grade": {
     "video": "clean",
     "photo": "warm_film",
     "_확정": "2026-08-14 차노 지정: 쇼츠는 D(clean), 사진은 E(warm_film)"
-  }
+  },
+  "_grade_note": "grade 이름 -> grades[name].vf 를 ffmpeg -vf 에 그대로 사용. 실측치는 채도/블랙(하위5%)/대비(95-5)/R-B."
 }
