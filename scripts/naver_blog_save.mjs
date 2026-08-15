@@ -183,7 +183,8 @@ async function reuse(ed, page) {
     await noDim(ed, page, 6000);
 
     const bodyFirst = ed.locator('.se-component.se-text .se-text-paragraph, [contenteditable="true"]').last();
-    await bodyFirst.click({ timeout: 8000 }).catch(()=>{}); await sleep(500);
+    await bodyFirst.scrollIntoViewIfNeeded().catch(()=>{});
+    await bodyFirst.click({ force: true, timeout: 8000 }).catch(()=>{}); await sleep(500);
     if (RP.mode === 'opened') {
       res('진행중', page.url(), '기존 본문 비우기');
       await page.keyboard.press(`${MOD}+A`); await sleep(500);
@@ -197,7 +198,8 @@ async function reuse(ed, page) {
 
     res('진행중', page.url(), '본문 입력');
     const bl = ed.locator('.se-component.se-text .se-text-paragraph, [contenteditable="true"]').last();
-    await bl.click(); await sleep(400);
+    await bl.scrollIntoViewIfNeeded().catch(()=>{});
+    await bl.click({ force: true, timeout: 8000 }).catch(()=>{}); await sleep(400);
     const paras = JOB.blocks.filter(b => b.type !== 'image').map(b => ({ type: b.type, lines: (b.text || '').trim().split('\n') })).filter(p => p.lines.join(''));
     for (let i = 0; i < paras.length; i += 1) {
       const p = paras[i];
