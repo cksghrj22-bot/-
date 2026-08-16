@@ -30,7 +30,7 @@ def get_pending_tasks():
     for f in INBOX.glob("TASK_*.json"):
         try:
             task = json.loads(f.read_text())
-            if task.get("status") == "pending":
+            if task.get("status", "pending") == "pending":
                 tasks.append((f, task))
         except:
             pass
@@ -39,8 +39,11 @@ def get_pending_tasks():
 def dispatch_to_codex(task):
     """Codex CLI로 작업 전달"""
     room = task.get("room", "알수없음")
-    title = task.get("title", "제목없음")
-    request = task.get("request", "")
+    title = task.get("title") or task.get("task") or "제목없음"
+    # CLAUDE.md 규격은 {"room","task","timeout"} — request/instructions 도 함께 받는다
+    request = task.get("request") or task.get("task") or task.get("instructions") or ""
+    if not isinstance(request, str):
+        request = json.dumps(request, ensure_ascii=False, indent=2)
 
     prompt = f"""
 방: {room}
