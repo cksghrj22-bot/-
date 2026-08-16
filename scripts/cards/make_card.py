@@ -27,9 +27,9 @@ INK = (58, 42, 32)
 BROWN = (150, 92, 48)
 
 FONTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fonts")
-F_HEAD = os.path.join(FONTS, "NanumSquareRoundEB.ttf")  # 제목용 (ExtraBold)
-F_SUB = os.path.join(FONTS, "NanumSquareRoundB.ttf")    # 배지용 (Bold)
-F_BODY = os.path.join(FONTS, "NanumPen.ttf")            # 본문용 (펜체)
+F_HEAD = os.path.join(FONTS, "BlackHanSans-Regular.ttf")
+F_SUB = os.path.join(FONTS, "Jua-Regular.ttf")
+F_BODY = os.path.join(FONTS, "Gaegu-Bold.ttf")
 
 PAD = 52
 BAND_H = 168          # 헤드 밴드 높이
