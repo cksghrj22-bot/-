@@ -1,0 +1,23 @@
+{
+  "room": "전략실",
+  "task": "AI일기 2편 제작",
+  "created": "2026-08-16T03:30:00+09:00",
+  "priority": "high",
+  "instructions": [
+    "1. 소스 확인: _clips_pool/ai일기/ (926MB+224MB)",
+    "2. 규격 읽기: knowledge/규격_일기형쇼츠_정본.md",
+    "3. 매니페스트 읽기: content/manifests/AI일기_2편_컷매니페스트_2026-08-15.md",
+    "4. 컷편집 실행 (한 ffmpeg에서 trim+atrim+concat)",
+    "5. 군말 삭제: 어~/아~/음~/그~ 첫 토큰 전부",
+    "6. 게이트 통과 후 시안 드라이브 업로드",
+    "7. 작업로그에 기록"
+  ],
+  "source_files": [
+    "_clips_pool/ai일기/화면_기록_926MB.mov",
+    "_clips_pool/ai일기/dji_인터뷰.mov"
+  ],
+  "spec": "knowledge/규격_일기형쇼츠_정본.md",
+  "manifest": "content/manifests/AI일기_2편_컷매니페스트_2026-08-15.md",
+  "output": "_out/ai일기/2편_시안.mp4",
+  "notes": "싱크 주의: 덩어리 concat 금지, 한 ffmpeg 안에서 처리. 하단 UI존 y>1700 침범 금지."
+}
