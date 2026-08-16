@@ -26,7 +26,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-# 방별 영역 정의 — _ROOMS.md 정본 기준
+# 방별 영역 정의 — _ROOMS.md 7방 명부가 정본 (2026-08-16 동기화)
 TERRITORIES = {
     # 전략 (전체 접근)
     "전략기획및개인업무": None,
@@ -38,13 +38,18 @@ TERRITORIES = {
         "_out/낙타/",
         "_out/cards/",
         "_out/amton/",
+        "_out/스레드/",
         "content/cards/",
+        "content/amton/",
+        "content/threads/",
     ],
 
     # 유튜브쇼츠방 (코드 A)
     "유튜브쇼츠방": [
         "_out/shorts/",
         "content/shorts/",
+        "content/대본/",
+        "_jobs/_done/",
     ],
 
     # 블로그자동화방
@@ -74,6 +79,35 @@ TERRITORIES = {
         "content/책/",
     ],
 }
+
+# 별칭 → 정본 이름 (드라이브 인박스·구 방코드가 다른 이름을 쓴다)
+ALIASES = {
+    "낙타자막인스타": "낙타자막인스타스레드방",
+    "낙타방": "낙타자막인스타스레드방",
+    "N": "낙타자막인스타스레드방",
+    "인스타방": "낙타자막인스타스레드방",
+    "영상방": "유튜브쇼츠방",
+    "쇼츠영상방": "유튜브쇼츠방",
+    "A": "유튜브쇼츠방",
+    "블로그방": "블로그자동화방",
+    "D": "블로그자동화방",
+    "만화카드방": "만화연재방",
+    "M": "만화연재방",
+    "교육디렉터실": "교육디렉터방",
+    "E": "교육디렉터방",
+    "차노책출판방": "차노책출판",
+    "P": "차노책출판",
+    "전략실": "전략기획및개인업무",
+    "기획실": "전략기획및개인업무",
+    "전략방": "전략기획및개인업무",
+    "S": "전략기획및개인업무",
+}
+
+
+def canon(room: str) -> str:
+    """별칭을 정본 방 이름으로."""
+    return ALIASES.get(room, room)
+
 
 # 공유 영역 (잠금 필수)
 SHARED_ZONES = [
@@ -109,7 +143,8 @@ def lookup_in_index(filepath: str) -> str | None:
 
 def get_territory(room: str) -> list[str] | None:
     """방의 영역 반환. None이면 전체 접근."""
-    if is_bonjin() or room in ["전략기획실", "본진터미널", "전략실"]:
+    room = canon(room)
+    if is_bonjin() or room in ["전략기획실", "본진터미널", "전략실", "전략기획및개인업무"]:
         return None
     return TERRITORIES.get(room, [])
 
