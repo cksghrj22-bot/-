@@ -15,6 +15,9 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO_ROOT))
+
 def main():
     if len(sys.argv) < 3:
         print("사용법: drive_pull_ids.py <file_id> <output_path>")
@@ -24,28 +27,19 @@ def main():
     file_ids = sys.argv[1].split(",")
     output = Path(sys.argv[2])
 
-    try:
-        from shorts.gdrive import download_file, access_token, load_secrets
-    except ImportError:
-        print("shorts.gdrive 모듈 없음")
-        return 1
-
-    secrets = load_secrets()
-    token = access_token(secrets)
+    from shorts.gdrive import download_file
 
     if len(file_ids) == 1:
-        # 단일 파일
         file_id = file_ids[0]
         print(f"다운로드: {file_id} → {output}")
-        download_file(file_id, str(output), token)
+        download_file(file_id, str(output))
         print(f"✅ 완료: {output}")
     else:
-        # 여러 파일
         output.mkdir(parents=True, exist_ok=True)
         for file_id in file_ids:
             out_path = output / f"{file_id}"
             print(f"다운로드: {file_id}")
-            download_file(file_id, str(out_path), token)
+            download_file(file_id, str(out_path))
         print(f"✅ {len(file_ids)}개 완료")
 
     return 0
