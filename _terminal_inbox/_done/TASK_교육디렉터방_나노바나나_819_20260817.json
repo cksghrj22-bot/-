@@ -1,0 +1,9 @@
+{
+  "room": "교육디렉터방",
+  "task": "cd ~/atnown-content-pipeline && python3 scripts/edu_nanobanana_819.py && ls -l content/교육/2026-08-19_일본_이미지분류체계/img/ content/교육/2026-08-19_일본_이미지분류체계/L5_일본_이미지분류체계.pptx",
+  "timeout": 600,
+  "note": "8/19 L5 수업 덱에 나노바나나(gemini-2.5-flash-image) 일러 4장 생성 후 PPTX 재빌드. 코워크 샌드박스는 generativelanguage.googleapis.com 이 프록시 차단이라 맥에서만 된다. 성공 판정은 status:done 이 아니라 img/nb_*.png 4개 실재 + pptx 슬라이드 12장.",
+  "status": "done",
+  "completed_at": "2026-08-17T21:47:53.671533",
+  "codex_result": "실행 실패.\n\n- 신규 이미지: 0/4 — 네트워크 DNS 오류\n- PPTX 재빌드: 실패 — `pptxgenjs` 설치 중 네트워크 오류\n- 기존 PPTX: 있음, 490,776바이트\n- 기존 이미지: `map_a.png`, `map_b.png` 2개\n"
+}

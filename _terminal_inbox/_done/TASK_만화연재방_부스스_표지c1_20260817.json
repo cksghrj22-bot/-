@@ -5,5 +5,7 @@
   "timeout": 600,
   "source": "만화연재방",
   "priority": "표지 — 캐러셀 첫 장",
-  "status": "processing"
+  "status": "done",
+  "completed_at": "2026-08-17T21:51:43.265098",
+  "codex_result": "완료했습니다.\n\n- 산출: [c1.png](/Users/chanho/atnown-content-pipeline/_out/결이부스스_final__M/c1.png)\n- 실측: 1,211,541 bytes · 1080×1350px · RGB PNG\n- 작업로그 맨 위 기록 완료\n- 발행하지 않음\n\n※ Git 커밋은 다른 작업의 `.git/index.lock`이 사용 중이라 보류했습니다.\n"
 }

@@ -1,0 +1,11 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "fix_remote_dupes.py"
+  ],
+  "requested_by": "전략기획및개인업무(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "=== ① 원격 복구 ===\n  전: git@github.com:cksghrj22-bot/-.git\n  후: https://github.com/cksghrj22-bot/-.git\n\n=== ② 중복 데몬 정리 ===\n  전: 2 개\n  후: 1 개  (1개면 정상 — launchd 가 되살림)\n\n=== 전체 데몬 ===\n1130 scripts/codex_dispatch.py --daemon\n1938 scripts/cowork_multi_watch.py --daemon\n18257 /bin/bash /Users/chanho/atnown-content-pipeline/scripts/render_watch.sh\n18268 /usr/bin/caffeinate -dimsu /bin/bash /Users/chanho/atnown-content-pipeline/scripts/render_watch.sh",
+  "completed_at": "2026-08-17T21:48:14.720304"
+}

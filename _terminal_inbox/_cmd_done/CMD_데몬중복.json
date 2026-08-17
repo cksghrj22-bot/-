@@ -1,0 +1,11 @@
+{
+  "cmd": "pgrep",
+  "args": [
+    "codex_dispatch|cowork_multi|remote_cmd|render_watch"
+  ],
+  "requested_by": "전략기획및개인업무(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "1130 /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python scripts/codex_dispatch.py --daemon\n1131 /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python scripts/cowork_multi_watch.py --daemon\n1133 /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python scripts/cowork_multi_watch.py --daemon\n18257 /bin/bash /Users/chanho/atnown-content-pipeline/scripts/render_watch.sh\n18268 /usr/bin/caffeinate -dimsu /bin/bash /Users/chanho/atnown-content-pipeline/scripts/render_watch.sh",
+  "completed_at": "2026-08-17T21:47:03.661430"
+}
