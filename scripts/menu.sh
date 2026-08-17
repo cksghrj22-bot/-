@@ -1,8 +1,9 @@
 #!/bin/zsh
 # ─────────────────────────────────────────────
-#  본진 — 폰에서 쓰는 메뉴 (전략기획및개인업무 방)
+#  메뉴 — 폰에서 쓰는 상태/재시작/로그 메뉴
 #  긴 명령을 폰 키보드로 치지 않기 위한 것.
-#  설치:  alias 본진='zsh ~/atnown-content-pipeline/scripts/본진.sh'
+#  「본진」은 차노 원본(cd+caffeinate claude). 이건 「메뉴」/「bj」로 부른다.
+#  설치:  zsh ~/atnown-content-pipeline/scripts/setup_menu.sh
 # ─────────────────────────────────────────────
 ROOT="$HOME/atnown-content-pipeline"
 cd "$ROOT" 2>/dev/null || { echo "⛔ $ROOT 없음"; exit 1; }

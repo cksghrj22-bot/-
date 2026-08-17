@@ -1,0 +1,11 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "diag_repos.py"
+  ],
+  "requested_by": "전략기획및개인업무(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "홈에서 찾은 git 저장소: 3개\n\n■ /Users/chanho/atnown-content-pipeline ⭐본진\n   커밋 1829개 · 미커밋 8개\n   HEAD cc0636d6 2026-08-17 [전략기획및개인업무] 원격실행기 가동 + 멀티워치 403 수리 + 상황판 정본① 확정 + 별칭 충돌 정리\n   원격 https://github.com/cksghrj22-bot/-.git\n\n■ /Users/chanho/atnown-repo\n   커밋 1322개 · 미커밋 21개\n   HEAD 24e0005 2026-08-06 되쓰기(영수증): watcher push 수리(HTTP/1.1)+시안4편 감독 파일전달 완료 / 중복렌더 조치\n   원격 https://github.com/cksghrj22-bot/-.git\n\n■ /Users/chanho/atnown-trunk\n   커밋 1795개 · 미커밋 4개\n   HEAD 651c144 2026-08-16 상황판: ai일기 영상 소스 준비 완료 + 드라이브 직접 다운로드 경고\n   원격 /Users/chanho/atnown-repo\n\n■ 파이프라인 안의 '본진/' 폴더: 파일 3개 · 별도 저장소 아님(.git 없음)",
+  "completed_at": "2026-08-17T20:52:33.053418"
+}

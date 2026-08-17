@@ -1,0 +1,11 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "diag_repos2.py"
+  ],
+  "requested_by": "전략기획및개인업무(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "■ atnown-content-pipeline\n   뿌리커밋 98c87cc9c9 · 최근커밋 2026-08-17 · 최근90일 1829건\n■ atnown-trunk\n   뿌리커밋 98c87cc9c9 · 최근커밋 2026-08-16 · 최근90일 1795건\n■ atnown-repo\n   뿌리커밋 98c87cc9c9 · 최근커밋 2026-08-06 · 최근90일 1322건\n\n=== 계보 판정 ===\n  같은 뿌리 → 한 계보에서 갈라진 것. 병합 가능\n\n=== 파이프라인에만 있는 최신 정본 파일이 트렁크에도 있나 ===\n  _ROOMS.md                                        파이프라인 O · 트렁크 O · repo X\n  knowledge/방_공유_작업로그.md                           파이프라인 O · 트렁크 O · repo O\n  _strategy/전략기획및개인업무_전용규약.md                      파이프라인 O · 트렁크 X · repo X\n  scripts/remote_cmd_watch.py                      파이프라인 O · 트렁크 X · repo X",
+  "completed_at": "2026-08-17T20:53:08.790552"
+}
