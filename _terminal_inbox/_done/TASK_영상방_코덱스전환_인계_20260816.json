@@ -1,0 +1,15 @@
+{
+  "id": "cowork_영상방_코덱스전환_인계_20260816",
+  "room": "영상방",
+  "channel_id": "1537004782970077214",
+  "title": "[코덱스 전환] 유튜브쇼츠방 인계 + 전환 동작 확인",
+  "request": "## 코덱스 전환 첫 작업 — 유튜브쇼츠방 인계 (차노 \"코덱스로 전환해\")\n\n### 0) 먼저 읽어라\n**`knowledge/인계_유튜브쇼츠방_코덱스전환_2026-08-16.md`** — 규격·발행현황·소스·실패기록 전부 여기 있다.\n정본은 `pipeline/보완게이트_정본_2026-08-14.md` 하나다.\n\n### 1) 이 TASK 의 진짜 목적 = 전환이 실제로 도는지 확인\n⚠️ 08-15 실측: `_terminal_inbox` TASK 가 **실행 없이 `_done` 으로만 이동**했다.\n최근 8건 중 `codex_result` 가 채워진 건 1건뿐이다.\n→ **이 TASK 를 처리하면 `codex_result` 에 아래 4줄을 반드시 채워라.**\n```\nCODEX_OK\nffmpeg: <버전>\n현재 시각: <date>\n_terminal_inbox pending 개수: <n>\n```\n이게 안 채워지면 전환이 안 된 것이다.\n\n### 2) 이어받을 작업 — SEED13\n- 파일: 드라이브 `_최신_바로보기` 의 `SEED13_납작.mp4` (`1xjq-FmTOsORH3U7T_GB3MOBCSRhz3Vxk`)\n- **48kHz 리먹스 필요** (원본 96kHz):\n  `ffmpeg -y -i IN.mp4 -c:v copy -c:a aac -b:a 192k -ar 48000 -ac 2 -movflags +faststart OUT.mp4`\n- 실측(코워크): 40.6초 · 1080x1920 · 반복 32%(통과) · 검정 43%(기준 40% 근소초과) · 컷 6개가 2.2초 미만\n- 제목 확정: **「얼굴이 큰 게 아니라, 머리가 납작한 겁니다」** (차노 승인)\n- 예약 슬롯: **8/16 19:00 KST** = `publishAt 2026-08-16T10:00:00Z`\n- ⛔ **차노가 영상 보고 최종 OK 하기 전엔 업로드 금지.** 지금은 확인 대기 상태다.\n\n### 3) 남은 4편 (같은 방식으로 한 편씩)\n| 편 | 슬롯(KST) |\n|---|---|\n| SEED5 3주뒤 | 8/17 11:00 |\n| SOOT 숱 | 8/17 16:00 |\n| S4 십퍼센트 | 8/17 19:00 |\n| S7 번역기 | 8/18 11:00 |\n**한 편씩** 전 구간 프레임 훑고 → 소리 확인 → 체크리스트 → **차노에게 영상으로 띄우고** → 승인 후 예약.\n7편 몰아서 돌리다가 08-15 에 전량 폐기했다. 절대 반복하지 마라.\n\n### 4) 규율\n- 발행·공개전환·삭제는 **차노 승인 후에만**\n- 이미 예약된 `hwIFWYszMTU`(8/16 11:00) · `q7xVfFGAQ00`(8/16 16:00) 은 건드리지 않는다\n- 다른 방 컨텐츠 금지. 이 방 규격을 다른 방에 적용하지 않는다 (공통규약 §10-8)\n- 끝나면 `_ROOMS_LOG.md` 맨 위에 한 줄\n",
+  "status": "failed",
+  "created_at": "2026-08-16T01:10:00.000000",
+  "source": "코워크 쇼츠영상방",
+  "priority": "전환 동작 확인이 최우선 — codex_result 4줄 필수",
+  "drive_links": [],
+  "executed_at": "2026-08-16T11:30:28.691694",
+  "output": "/bin/sh: CODEX_OK: command not found\n/bin/sh: -c: line 1: syntax error near unexpected token `newline'\n/bin/sh: -c: line 1: `ffmpeg: <버전>'\n",
+  "return_code": 2
+}

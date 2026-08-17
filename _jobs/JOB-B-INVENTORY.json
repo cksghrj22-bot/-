@@ -1,0 +1,8 @@
+{
+  "kind": "probe",
+  "id": "B-INVENTORY",
+  "probe_timeout": 600,
+  "probe_cmds": [
+    "cd ~/atnown-content-pipeline && { echo '=== 본진에서 직접 본 영상 인벤토리 ==='; date '+%F %T'; echo; echo '--- _jobs/_done mp4 ---'; ls -la _jobs/_done/*.mp4 2>/dev/null | wc -l; ls -la _jobs/_done/*.mp4 2>/dev/null | tail -20; echo; echo '--- _jobs/_ascii ---'; ls -la _jobs/_ascii/ 2>/dev/null | head -20; echo; echo '--- _out/_fix48 ---'; ls -la _out/_fix48/ 2>/dev/null | head -20; echo; echo '--- _out/_ai일기 ---'; ls -la _out/_ai일기/ 2>/dev/null | head -20; echo; echo '--- _clips_pool/senior ---'; ls _clips_pool/senior/ 2>/dev/null | wc -l; echo '--- _clips_pool/ai일기 ---'; ls -la _clips_pool/ai일기/ 2>/dev/null | head; echo; echo '--- 전체 mp4 개수 ---'; find . -name '*.mp4' -not -path './node_modules/*' -not -path './.git/*' 2>/dev/null | wc -l; } > _out/inventory.txt 2>&1; echo EXIT=$? >> _out/inventory.txt"
+  ]
+}

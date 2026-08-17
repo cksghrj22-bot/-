@@ -1,0 +1,8 @@
+{
+  "room": "전략기획및개인업무",
+  "task": "차노책출판 방의 드라이브 인박스가 없다. 1) 구글드라이브에 '_코워크_차노책출판_inbox' 폴더를 만든다(다른 _코워크_*_inbox 와 같은 부모 폴더 밑에). 2) 그 폴더 ID를 secrets/cowork_rooms.json 에 \"차노책출판\": \"<폴더ID>\" 로 추가한다. 3) python3 scripts/cowork_multi_watch.py --rooms 로 7방이 다 나오는지 확인해서 보고. 폴더가 이미 있으면 만들지 말고 ID만 등록.",
+  "timeout": 180,
+  "status": "done",
+  "completed_at": "2026-08-17T11:07:13.484214",
+  "codex_result": "오류: error: invalid value '\n방: 전략기획및개인업무\n제목: 차노책출판 방의 드라이브 인박스가 없다. 1) 구글드라이브에 '_코워크_차노책출판_inbox' 폴더를 만든다(다른 _코워크_*_inbox 와 같은 부모 폴더 밑에). 2) 그 폴더 ID를 secrets/cowork_rooms.json 에 \"차노책출판\": \"<폴더ID>\" 로 추가한다. 3) python3 scripts/cowork_multi_watch.py --rooms 로 7방이 다 나오는지 확인해서 보고. 폴더가 이미 있으면 만들지 말고 ID만 등록.\n\n요청:\n차노책출판 방의 드라이브 인박스가 없다. 1) 구글드라이브에 '_코워크_차노책출판_inbox' 폴더를 만든다(다른 _코워크_*_inbox 와 같은 부모 폴더 밑에). 2) 그 폴더 ID를 secrets/cowork_rooms.json 에 \"차노책출판\": \"<폴더ID>\" 로 추가한다. 3) python3 scripts/cowork_multi_watch.py --rooms 로 7방이 다 나오는지 확인해서 보고. 폴더가 이미 있으면 만들지 말고 ID만 등록.\n\n작업 완료 후 결과만 간단히 보고.\n' for '--profile <CONFIG_PROFILE_V2>': invalid --profile value `\n방: 전략기획및개인업무\n제목: 차노책출판 방의 드라이브 인박스가 없다. 1) 구글드라이브에 '_코워크_차노책출판_inbox' 폴더를 만든다(다른 _코워크_*_inbox 와 같은 부모 폴더 밑에). 2) 그 폴더 ID를 secrets/cowork_rooms.json 에 \"차노책출판\": \"<폴더ID>\" 로 추가한다. 3) python3 scripts/cowork_multi_watch.py --rooms 로 7방이 다 나오는지 확인해서 보고. 폴더가 이미 있으면 만들지 말고 ID만 등록.\n\n요청:\n차노책출판 방의 드라이브 인박스가 없다. 1) 구글드라이브에 '_코워크_차노책출판_inbox' 폴더를 만든다(다른 _코워크_*_inbox 와 같은 부모 폴더 밑에). 2) 그 폴더 ID를 secrets/cowork_rooms.json 에 \"차노책출판\": \"<폴더ID>\" 로 추가한다. 3) python3 scripts/cowork_multi_watch.py --rooms 로 7방이 다 나오는지 확인해서 보고. 폴더가 이미 있으면 만들지 말고 ID만 등록.\n\n작업 완료 후 결과만 간단히 보고.\n`; pass a plain name such as `work`\n\nFor more information, try '--help'.\n"
+}

@@ -1,0 +1,15 @@
+{
+  "title": "차노 에세이 1 | 예쁘다는 건 뭘까",
+  "color": "#ff008c",
+  "block_count": 44,
+  "type_counts": {
+    "body": 28,
+    "heading": 5,
+    "bold": 3,
+    "quote": 1,
+    "point": 2,
+    "small": 4,
+    "center": 1
+  },
+  "images": {}
+}

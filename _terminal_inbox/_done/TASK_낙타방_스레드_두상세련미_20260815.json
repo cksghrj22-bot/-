@@ -1,0 +1,14 @@
+{
+  "id": "gihoek_스레드_두상세련미_20260815T165226",
+  "room": "낙타방",
+  "channel_id": "1537004853618933820",
+  "title": "⚡스레드 즉시 발행 — 두상 작아보이는 법·세련미",
+  "request": "## 전략기획방 → 낙타자막인스타스레드방(`N`) — **스레드 즉시 발행** (차노 «바로 스레드 올려»)\n\n### ✅ 발행 승인 받음\n차노 원문: **\"두상작아보이는법 세련미 바로 스레드 올려\"**\n→ **이 건은 차노 승인 완료.** 발행해도 된다. (다른 건은 여전히 승인 전 발행 금지)\n\n### 원본\n`_obsidian_out/구술/2026-08-15_두상_세련미.md` — 차노 원문. 여기서만 가져온다.\n\n### 재정의\n> **세련 = 시선이 모이는 것.** 분산이 아니라 얇은 선으로 모이는 것.\n> **두상을 작게 = 크기를 줄이는 게 아니라 불필요함을 찾는 일.**\n\n### 스레드 문안 (기획실 초안 — 그대로 써도 되고 다듬어도 된다)\n\n```\n두상이 작아 보이면 세련돼 보입니다.\n부풀어 있거나 부스스하면 그렇게 안 보여요.\n\n세련은 결국 시선이 모이는 겁니다.\n분산되는 게 아니라, 얇은 선으로 모이는 것.\n\n그래서 커트로는\n불필요하게 숱이 많은 곳,\n튀어나온 곳을 깊게 잘라 볼륨을 죽입니다.\n두상이 계란형이 되면 오목조목해 보여요.\n\n프릴도 포인트로 들어가야 세련되지\n전체에 들어가면 난잡해집니다.\n\n안 되는 경우는 없습니다. 무조건 만듭니다.\n당신의 불필요함은 어디인가요.\n\n불필요함을 찾는 눈,\n그게 디자이너의 역량이라고 생각합니다.\n```\n\n### 규율\n- 차노 원문 표현 유지. 없는 비유·수치 창작 금지\n- 자기 띄우기·남 비판 0\n- 발행 후 **실제 스레드 URL을 `_ROOMS_LOG.md` 에 남길 것** (없는 링크 보고 금지)\n- 배관: `scripts/threads_publish.py` · `secrets/threads.json`\n",
+  "status": "failed",
+  "created_at": "2026-08-15T16:52:26.161765",
+  "source": "전략기획방",
+  "priority": "⚡즉시 — 차노 발행 승인 완료",
+  "executed_at": "2026-08-16T01:52:27.972626",
+  "output": "/bin/sh: 두상이: command not found\n/bin/sh: line 1: 부풀어: command not found\n/bin/sh: line 3: 세련은: command not found\n/bin/sh: line 4: 분산되는: command not found\n/bin/sh: line 6: 그래서: command not found\n/bin/sh: line 7: 불필요하게: command not found\n/bin/sh: line 8: 튀어나온: command not found\n/bin/sh: line 9: 두상이: command not found\n/bin/sh: line 11: 프릴도: command not found\n/bin/sh: line 12: 전체에: command not found\n/bin/sh: line 14: 안: command not found\n/bin/sh: line 15: 당신의: command not found\n/bin/sh: line 17: 불필요함을: command not found\n/bin/sh: line 18: 그게: command not found\n",
+  "return_code": 127
+}

@@ -5,11 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AT NOWN · 성장 도감</title>
 <style>
-:root{
- --cream:#F7F5F1;--ink:#1c1a17;--gold:#A8895E;--gray:#6a655c;--line:#E4DFD6;--surf:#fcfcfb;
- --t1:#0A8A5F;--t2:#2F6FB5;--t3:#C4661F;--t4:#9B4A86;--t5:#B08A17;
- --good:#0A8A5F;--bad:#B3453A;--track:#E9E4DB;
-}
+:root{--cream:#F7F5F1;--ink:#1c1a17;--gold:#A8895E;--gray:#6a655c;--line:#E4DFD6;--surf:#fcfcfb;
+--t1:#0A8A5F;--t2:#2F6FB5;--t3:#C4661F;--t4:#9B4A86;--t5:#B08A17;
+--good:#0A8A5F;--bad:#B3453A;--track:#E9E4DB;}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#efece6;color:var(--ink);font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.55;padding:20px 12px 70px;-webkit-text-size-adjust:100%}
 .wrap{max-width:1180px;margin:0 auto}
@@ -18,26 +16,20 @@ body{background:#efece6;color:var(--ink);font-family:-apple-system,"Apple SD Got
 .cover h1{font-size:26px;font-weight:900;margin:7px 0 6px}
 .cover p{font-size:13.5px;color:#d7d1c6}
 .cover .stamp{font-size:11px;color:#9a948a;margin-top:9px;font-weight:700}
-
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:12px}
 .kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 10px;text-align:center}
 .kpi .n{font-size:24px;font-weight:900}.kpi .t{font-size:11px;color:var(--gray);margin-top:2px;font-weight:700}
 .kpi.alert .n{color:var(--bad)}
-
 .bar{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px;align-items:center}
 button{background:var(--ink);color:var(--cream);border:0;border-radius:9px;padding:8px 13px;font-size:12.5px;font-weight:800;cursor:pointer;font-family:inherit}
 button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
 button.on{background:var(--gold);color:#fff}
 label.fl{font-size:12px;font-weight:800;color:var(--gray)}
-select{border:1px solid var(--line);border-radius:8px;padding:8px 9px;font-size:13px;font-family:inherit;background:#fff}
-
 .panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:13px}
 .panel h2{font-size:14px;font-weight:900;margin-bottom:4px;display:flex;align-items:baseline;gap:8px}
 .panel h2 small{margin-left:auto;font-size:10.5px;letter-spacing:.12em;color:var(--gold);font-weight:800}
 .panel .lead{font-size:12.5px;color:var(--gray);margin-bottom:13px}
-
-/* 도감 카드 */
-.dex{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+.dex{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px}
 .card{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:14px 15px;cursor:pointer;transition:box-shadow .15s}
 .card:hover{box-shadow:0 3px 14px rgba(0,0,0,.09)}
 .card .hd{display:flex;gap:12px;align-items:flex-start}
@@ -51,8 +43,6 @@ select{border:1px solid var(--line);border-radius:8px;padding:8px 9px;font-size:
 .evo i{width:9px;height:9px;border-radius:50%;background:var(--track);display:inline-block}
 .evo i.on{background:var(--ink)}
 .evo span{font-size:10.5px;color:var(--gray);font-weight:800;margin-left:3px}
-
-/* 경험치 */
 .xp{margin-top:12px}
 .xp .lab{display:flex;font-size:11px;font-weight:800;color:var(--gray);margin-bottom:4px}
 .xp .lab b{color:var(--ink);font-size:12px}
@@ -63,11 +53,12 @@ select{border:1px solid var(--line);border-radius:8px;padding:8px 9px;font-size:
 .xpline{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--bad)}
 .xpnote{font-size:10.5px;color:var(--gray);font-weight:700;margin-top:4px}
 .xpnote b{color:var(--bad)}
-
-/* 스탯 */
 .stats{margin-top:12px;display:grid;gap:6px}
-.row{display:grid;grid-template-columns:48px 1fr 52px;align-items:center;gap:8px}
-.row .k{font-size:11.5px;font-weight:900}
+.row{display:grid;grid-template-columns:106px 1fr 52px;align-items:center;gap:8px}
+.wg{display:inline-block;font-size:9px;font-weight:900;color:#8d8677;background:#eeeae2;border-radius:7px;padding:0 5px;margin-left:4px;vertical-align:1px}
+.wg.cw{color:#fff;background:var(--gold)}
+.row .k{font-size:11.5px;font-weight:900;white-space:nowrap}
+.row .k.core{color:var(--gold)}
 .row .tr{position:relative;height:11px;background:var(--track);border-radius:6px;overflow:hidden}
 .row .fi{height:100%;border-radius:6px 0 0 6px}
 .row .cap{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(45deg,#f0ece4,#f0ece4 4px,#e6e1d7 4px,#e6e1d7 8px)}
@@ -75,14 +66,11 @@ select{border:1px solid var(--line);border-radius:8px;padding:8px 9px;font-size:
 .row.hi .k:after{content:" ▲";color:var(--good);font-size:10px}
 .row.lo .k:after{content:" ▼";color:var(--bad);font-size:10px}
 .row .v.none{color:#b9b3a8;font-style:italic}
-
 .oneline{margin-top:11px;border-top:1px dashed var(--line);padding-top:9px;font-size:12.5px;line-height:1.6}
 .oneline b.g{color:var(--good)}.oneline b.b{color:var(--bad)}
-
-/* 상세 */
 .detail{background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin-top:11px;display:none}
 .detail.open{display:block}
-.detail h4{font-size:12.5px;font-weight:900;margin-bottom:8px}
+.detail h4{font-size:12.5px;font-weight:900;margin:2px 0 8px}
 table{width:100%;border-collapse:collapse;font-size:11.5px}
 th{text-align:left;font-size:10px;color:var(--gray);font-weight:800;border-bottom:1px solid var(--line);padding:5px 6px}
 td{border-bottom:1px solid var(--line);padding:6px;vertical-align:middle}
@@ -94,8 +82,12 @@ tr:last-child td{border-bottom:none}
 .chip.ok{border-color:#b9dfcd;background:#f1faf6;color:var(--good);font-weight:900}
 .trend{font-weight:900;font-size:13px}
 .trend.up{color:var(--good)}.trend.flat{color:var(--gray)}.trend.down{color:var(--bad)}
-
-/* 진화 트리 */
+.up7{display:grid;grid-template-columns:44px 1fr 60px;gap:6px;font-size:11px;padding:4px 0;border-bottom:1px dashed var(--line)}
+.up7:last-child{border-bottom:none}
+.up7 .dt{font-weight:900;color:var(--gold)}
+.up7 .tc{color:var(--gray);font-weight:800;text-align:right}
+.prep{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 9px;margin-top:5px;font-size:10.5px;line-height:1.6;color:#5a554c}
+.prep b{color:var(--gold);font-weight:900}
 .tree{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:11px}
 .stage{background:var(--cream);border:1px solid var(--line);border-radius:13px;padding:14px}
 .stage h4{font-size:13px;font-weight:900}
@@ -105,9 +97,15 @@ tr:last-child td{border-bottom:none}
 .mini svg{width:56px;height:56px}
 .mini .mn{font-size:11px;font-weight:900;margin-top:-3px}
 .mini .ml{font-size:9.5px;color:var(--gray);font-weight:700}
-
+.wtbl{width:100%;border-collapse:collapse;font-size:12.5px;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.wtbl th{background:var(--ink);color:var(--cream);text-align:center;font-size:11px;padding:8px 6px;border:1px solid #333}
+.wtbl td{text-align:center;padding:8px 6px;border:1px solid var(--line)}
+.wtbl td.lv{font-weight:900;background:var(--cream)}
+.wtbl td.core{background:#f3efe7;font-weight:900;color:var(--gold)}
 .note-b{font-size:12.5px;color:var(--gray);background:var(--cream);border:1px solid var(--line);border-radius:11px;padding:13px 17px;line-height:1.75;margin-top:12px}
 .note-b b{color:var(--ink)}
+.alertbox{background:#fdf6f5;border:1px solid #e0c4c0;border-left:5px solid var(--bad);border-radius:11px;padding:13px 17px;font-size:12.5px;line-height:1.8;margin-top:12px}
+.alertbox b{color:var(--bad)}
 .legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:11.5px;font-weight:800;color:var(--gray);margin-top:10px}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{width:14px;height:11px;border-radius:3px;display:inline-block}
@@ -119,13 +117,13 @@ tr:last-child td{border-bottom:none}
 <div class="cover">
   <div class="t">AT NOWN · GROWTH DEX</div>
   <h1>성장 도감 — 레벨마다 모습이 바뀐다</h1>
-  <p>시험 점수 하나로 사람을 정하지 않는다.<br><b>얼마나 해냈나 · 얼마나 연습했나 · 평소에 어땠나</b> — 이 셋을 같이 보고, 레벨마다 다른 무게를 준다.<br>그래서 <b>잘하는 게 뭔지 눈에 보이고</b>, 그걸 살려서 키운다.</p>
-  <div class="stamp">교육디렉터방(방5) · 2026-08-14 · 앳나운 오리지널 캐릭터(외부 IP 미사용) · 빗금 = 아직 안 받은 항목</div>
+  <p>시험 점수 하나로 사람을 정하지 않는다.<br><b>해낸 것 · 꾸준함 · 평소 행실</b>을 같이 보고, <b>레벨마다 다른 무게</b>를 준다.<br>그래서 잘하는 게 눈에 보이고, 그걸 살려서 키운다.</p>
+  <div class="stamp">교육디렉터방(방5) · 2026-08-16 · <b>70%=가중치</b>(점수 아님) 정정 반영 · 2026-08-14 · 배점은 「교육_전체안내_배포용」 레벨별 70% 기준 반영 · 과목은 「캘린더_6」 69일정 + 「시즈용 안내」 70과목 준비물 연결</div>
 </div>
 
 <div class="kpis">
   <div class="kpi"><div class="n" id="k_n">0</div><div class="t">도감 등록</div></div>
-  <div class="kpi"><div class="n" id="k_evo">0</div><div class="t">다음 진화 대기</div></div>
+  <div class="kpi"><div class="n" id="k_up">0</div><div class="t">남은 수업(전체)</div></div>
   <div class="kpi"><div class="n" id="k_fill">0%</div><div class="t">항목 채움</div></div>
   <div class="kpi alert"><div class="n" id="k_late">0</div><div class="t">지각 누계</div></div>
 </div>
@@ -134,6 +132,7 @@ tr:last-child td{border-bottom:none}
   <label class="fl">보기</label>
   <button class="ghost on" id="v_dex" onclick="setView('dex')">도감</button>
   <button class="ghost" id="v_tree" onclick="setView('tree')">진화 트리</button>
+  <button class="ghost" id="v_w" onclick="setView('w')">가중치표</button>
   <label class="fl" style="margin-left:8px">데이터</label>
   <button class="ghost on" id="m_real" onclick="setMode(0)">지금 실제</button>
   <button class="ghost" id="m_demo" onclick="setMode(1)">다 채웠을 때</button>
@@ -141,105 +140,125 @@ tr:last-child td{border-bottom:none}
 
 <div class="panel" id="p_dex">
   <h2>도감 <small>DEX</small></h2>
-  <div class="lead">카드를 누르면 <b>그 사람이 배운 과목 하나하나</b>가 열린다 — 어떻게 해냈고, 그날 어땠고, 과제는 냈고, 나아지고 있나.</div>
+  <div class="lead">카드를 누르면 <b>받은 과목</b>(어떻게 해냈고·그날 어땠고·과제 냈고·나아지나)과 <b>앞으로 받을 과목</b>이 같이 열린다.</div>
   <div class="dex" id="dex"></div>
   <div class="legend">
-    <span><i style="background:var(--ink)"></i>채운 만큼</span>
+    <span><i style="background:var(--ink)"></i>그 축 점수 (0~100)</span>
     <span><i style="background:repeating-linear-gradient(45deg,#f0ece4,#f0ece4 4px,#e6e1d7 4px,#e6e1d7 8px)"></i>아직 안 받은 항목</span>
-    <span><i style="background:var(--track)"></i>이 레벨에서 안 보는 항목</span>
+    <span style="color:var(--gold)">금색 <b>%</b> = 그 레벨의 핵심 (가중치 70%)</span>
     <span>▲ 제일 잘하는 것 · ▼ 제일 빈 것</span>
   </div>
 </div>
 
 <div class="panel" id="p_tree" style="display:none">
   <h2>진화 트리 <small>EVOLUTION</small></h2>
-  <div class="lead">레벨이 오르면 모습이 바뀐다. <b>합격하면 진화한다</b> — 시험 하나가 아니라 위 다섯 칸을 합쳐서.<br><b>레벨 하나 = 단계 하나다.</b> 시즈1~5가 각각 다른 모습이고, 스타일리스트가 6단계다. 올라갈 때마다 하나씩 붙는다 — 껍질을 깨고 → 서고 → 뿔 나고 → 목도리 두르고 → 갈기 생기고 → 망토 입고 가위를 든다.</div>
+  <div class="lead">레벨 하나 = 단계 하나. 올라갈 때마다 하나씩 붙는다 — 껍질 깨고 → 팔 나고 → 목도리 두르고 → 갈기 생기고 → 망토 입고 가위를 든다.</div>
   <div class="tree" id="tree"></div>
 </div>
 
+<div class="panel" id="p_w" style="display:none">
+  <h2>가중치표 <small>WEIGHTS</small></h2>
+  <div class="lead"><b>70%는 「70점 만점」이 아니라 「가중치」다.</b> 축마다 0~100점을 매긴 뒤 이 %를 곱해서 더한 게 최종점수다. 나머지 30% 분배는 원문 미확정 → 이 방 제안값.</div>
+  <div id="wtbl"></div>
+  <div class="note-b" style="margin-top:12px">
+   📌 <b>나머지 30%를 이렇게 나눈 이유</b> — <b>다음 레벨의 핵심을 10점</b> 미리 넣었다. L3는 다음이 SNS니까 알리기 10, L4는 다음이 모객이니까 손님 10. <b>한 레벨 늦게 시작해서 못 따라가는 걸 막으려는 것</b>이다. 남은 두 칸은 각 5점, 성실(연습·과제·출결)은 전 레벨 공통 10점.<br>
+   · 원문: <b>"합격선을 넘으려면 그 레벨 핵심 기준에 최대 70% 가중치, 나머지 30%는 타 능력. 합격선 점수와 30% 분배 방식은 확정 후 반영."</b><br>
+   · <b>합격선</b>은 7/22 채점표의 75점(L1~3) / 80점(L4~5)을 그대로 썼다. 지각은 회당 -1.
+  </div>
+</div>
+
 <div class="note-b" id="rule"></div>
+<div class="alertbox" id="conflict"></div>
 
 <div class="note-b">
-🎨 <b>캐릭터 그림에 대해</b> — 포켓몬 그림을 그대로 쓰면 남의 회사 저작물이라 인스타에 못 올린다. 그래서 <b>「작고 둥근 몸 · 큰 눈 · 단계별 진화」라는 형식만</b> 가져오고, 캐릭터는 앳나운 것으로 새로 그렸다. 지금 보이는 건 이름에서 자동으로 생성되는 임시 도트 캐릭터다 — 같은 사람은 항상 같은 모습이 나온다.<br>
-👉 <b>제대로 된 그림은 방4(만화카드방) 라인으로</b> — 이미 「나노바나나 화풍 정본」이 있다. 형이 「캐릭터 그려」 하면 12명 × 6단계 = 72컷 (또는 단계별 6종 = 6컷 공용) 발주서를 그 규격으로 뽑는다. 지금 도감은 그림만 갈아끼우면 그대로 돌아간다.
+🎨 <b>캐릭터 그림</b> — 포켓몬 그림은 남의 회사 저작물이라 인스타에 못 올린다. 「작고 둥근 몸 · 큰 눈 · 단계별 진화」라는 형식만 가져오고 캐릭터는 앳나운 것으로 새로 그렸다. 지금은 이름에서 자동 생성되는 임시 도트 — 같은 사람은 항상 같은 모습이 나온다. 정식 아트는 방4(만화카드방) 나노바나나 라인으로 발주하면 그림만 갈아끼우면 된다.
 </div>
 
 <script>
-/* ===== 데이터 ===== */
+var SCHED=[{"m":8,"d":11,"t":"보미","lv":[4],"s":"웨이브 업스타일"},{"m":8,"d":12,"t":"창엽","lv":[1],"s":"가위 파지·도구"},{"m":8,"d":12,"t":"이호","lv":[5],"s":"쉬즈컷(가발)"},{"m":8,"d":13,"t":"보미","lv":[4],"s":"가발·헤어피스"},{"m":8,"d":13,"t":"성희","lv":[5],"s":"트렌드 분석·시안"},{"m":8,"d":16,"t":"성희","lv":[4],"s":"스트레이트+볼륨매직"},{"m":8,"d":18,"t":"신후","lv":[5],"s":"룩북 단발 C컬"},{"m":8,"d":19,"t":"차노","lv":[5],"s":"일본 이미지분류체계"},{"m":8,"d":20,"t":"창엽","lv":[1,2],"s":"스퀘어 원랭스"},{"m":8,"d":20,"t":"이호","lv":[4],"s":"휩시컷(가발)"},{"m":8,"d":23,"t":"차노","lv":[3],"s":"질감마스터 1"},{"m":8,"d":23,"t":"신후","lv":[4],"s":"C컬 중간머리"},{"m":8,"d":26,"t":"보미","lv":[3],"s":"클래식 번"},{"m":8,"d":27,"t":"차노","lv":[4],"s":"형용사 이론"},{"m":8,"d":30,"t":"성희","lv":[3],"s":"히피 트위스트"},{"m":9,"d":3,"t":"신후","lv":[4],"s":"S컬 중간머리"},{"m":9,"d":4,"t":"차노","lv":[1],"s":"펌제 원리"},{"m":9,"d":4,"t":"보미","lv":[2],"s":"기본 땋기(브레이드)"},{"m":9,"d":8,"t":"차노","lv":[2],"s":"연화·테스트"},{"m":9,"d":9,"t":"성희","lv":[2],"s":"호리존탈(기본)"},{"m":9,"d":10,"t":"신후","lv":[3],"s":"남성 아이롱펌"},{"m":9,"d":13,"t":"이호","lv":[3],"s":"두상·얼굴형 분석"},{"m":9,"d":15,"t":"보미","lv":[1],"s":"블로우·롤 드라이"},{"m":9,"d":22,"t":"차노","lv":[5],"s":"퍼스널컬러와 구조"},{"m":9,"d":23,"t":"창엽","lv":[1,2],"s":"그라쥬에이션(스퀘어)"},{"m":9,"d":23,"t":"보미","lv":[5],"s":"실전 완성"},{"m":9,"d":24,"t":"성희","lv":[5],"s":"디자인분석+약제선택"},{"m":9,"d":27,"t":"성희","lv":[4],"s":"단발 디자인콜드펌"},{"m":9,"d":30,"t":"이호","lv":[5],"s":"사모님보브(가발)"},{"m":10,"d":2,"t":"성희","lv":[2],"s":"다데+다이애거널"},{"m":10,"d":2,"t":"보미","lv":[3],"s":"포니테일 변형"},{"m":10,"d":2,"t":"차노","lv":[4],"s":"형용사 실습1(가발)"},{"m":10,"d":2,"t":"신후","lv":[5],"s":"룩북 중간 C·S컬"},{"m":10,"d":7,"t":"성희","lv":[3],"s":"호일펌"},{"m":10,"d":8,"t":"창엽","lv":[1,2],"s":"그라쥬에이션(라운드)"},{"m":10,"d":8,"t":"차노","lv":[3],"s":"질감마스터 2"},{"m":10,"d":14,"t":"이호","lv":[3],"s":"고객상담·이미지컨설팅"},{"m":10,"d":18,"t":"차노","lv":[2],"s":"디지털·셋팅펌 와인딩"},{"m":10,"d":20,"t":"보미","lv":[2],"s":"피쉬본·콘로우"},{"m":10,"d":25,"t":"신후","lv":[3],"s":"모류교정"},{"m":10,"d":27,"t":"차노","lv":[1],"s":"열펌 도구"},{"m":10,"d":28,"t":"보미","lv":[1],"s":"텐션·결 정리"},{"m":10,"d":29,"t":"성희","lv":[1],"s":"머리 말리는 법"},{"m":10,"d":30,"t":"보미","lv":[2],"s":"믹스 브레이드"},{"m":10,"d":30,"t":"이호","lv":[4],"s":"샤에컷(가발)"},{"m":11,"d":1,"t":"성희","lv":[5],"s":"상담+결과예측"},{"m":11,"d":4,"t":"성희","lv":[1],"s":"모발학(구조·ph)"},{"m":11,"d":5,"t":"보미","lv":[5],"s":"인플루언서 스타일"},{"m":11,"d":6,"t":"창엽","lv":[1,2],"s":"레이어(N.Inversion)"},{"m":11,"d":6,"t":"차노","lv":[5],"s":"골격과 구조커트"},{"m":11,"d":8,"t":"차노","lv":[4],"s":"형용사 실습2(가발)"},{"m":11,"d":11,"t":"성희","lv":[4],"s":"긴머리 디자인콜드펌"},{"m":11,"d":12,"t":"신후","lv":[5],"s":"룩북 긴머리 S컬"},{"m":11,"d":19,"t":"보미","lv":[4],"s":"혼주·신부 업스타일"},{"m":11,"d":22,"t":"이호","lv":[4],"s":"간이시험 40분"},{"m":11,"d":24,"t":"보미","lv":[3],"s":"핀워크·고정력"},{"m":11,"d":25,"t":"창엽","lv":[1,2],"s":"레이어(Flat)"},{"m":11,"d":26,"t":"성희","lv":[2],"s":"씽(Thin)"},{"m":11,"d":26,"t":"차노","lv":[3],"s":"질감마스터 3"},{"m":11,"d":29,"t":"차노","lv":[1],"s":"매직 스트레이트"},{"m":11,"d":29,"t":"이호","lv":[3],"s":"디자인 수정·리터치"},{"m":12,"d":1,"t":"차노","lv":[2],"s":"아이롱 기본"},{"m":12,"d":2,"t":"보미","lv":[1],"s":"기본 세팅"},{"m":12,"d":3,"t":"성희","lv":[3],"s":"스핀스왈로+핀컬"},{"m":12,"d":4,"t":"창엽","lv":[1,2],"s":"질감처리(질감·양감)"},{"m":12,"d":4,"t":"신후","lv":[4],"s":"손상모 복구"},{"m":12,"d":4,"t":"보미","lv":[5],"s":"방송·촬영 헤어"},{"m":12,"d":6,"t":"성희","lv":[1],"s":"콜드펌원리+세척·크리프"},{"m":12,"d":6,"t":"신후","lv":[3],"s":"디지털 와인딩 설계"}];
+var PREP={"가위 파지·도구":{"prep":"커트가위·틴닝가위·빗·분무기·클립·마네킹(1)","task":"가위·손목 각도 셀프촬영 후 제출","warn":"날 관리·소독 필수 / 손목만 쓰지 말고 팔 전체로","t":"창엽"},"헤드·바디·핑거 포지션":{"prep":"마네킹·홀더·거울·빗","task":"3가지 포지션 각 사진 촬영","warn":"거울 보지 말고 손 감각으로 / 자세 무너지면 라인 틀어짐","t":"창엽"},"스퀘어 원랭스":{"prep":"마네킹(전체길이)·물통·클립","task":"원랭스 1통 완성 촬영","warn":"가이드라인 한 번에 / 텐션 균일하게","t":"창엽"},"그라쥬에이션(스퀘어)":{"prep":"마네킹·각도기 개념 숙지·클립","task":"스퀘어 그라쥬 1통","warn":"시술각 45° 유지 / 언더 무게 확인","t":"창엽"},"그라쥬에이션(라운드)":{"prep":"마네킹·클립·빗","task":"라운드 그라쥬 1통","warn":"라운드 흐름 끊기지 않게 / 뒤통수 볼륨 체크","t":"창엽"},"레이어(N.Inversion)":{"prep":"마네킹·클립","task":"인버전 레이어 1통","warn":"탑 길이 기준 고정 / 오버디렉션 과하지 않게","t":"창엽"},"레이어(Flat)":{"prep":"마네킹·클립","task":"플랫 레이어 1통 + 인버전과 비교 메모","warn":"레이어별 무게차 이해 / 층 단차 확인","t":"창엽"},"질감처리(질감·양감)":{"prep":"틴닝가위·레이저(선택)·마네킹","task":"질감처리 전후 비교 촬영","warn":"숱 과다 제거 금지(되돌릴 수 없음) / 모량 보고 판단","t":"창엽"},"두상·얼굴형 분석":{"prep":"고객 사진 3장·분석 시트·줄자","task":"지인 3인 얼굴형 분석 리포트","warn":"정면·측면 같이 볼 것 / 골격 우선","t":"이호"},"고객상담·이미지컨설팅":{"prep":"상담지·태블릿/시안 이미지·거울","task":"가상 고객 상담 롤플레이 대본","warn":"고객 말 먼저 듣기 / 단정 짓지 말기","t":"이호"},"디자인 수정·리터치":{"prep":"기존 시술 사진·마네킹·가위","task":"리터치 전후 케이스 1건 정리","warn":"원본 디자인 존중 / 과수정 금지","t":"이호"},"휩시컷(가발)":{"prep":"가발(휩시)·홀더·커트가위·핀","task":"휩시컷 1피스 완성 촬영","warn":"가발모 되돌릴 수 없음 — 길게 시작 / 홀더 고정 확인","t":"이호"},"샤에컷(가발)":{"prep":"가발(샤에)·홀더·가위","task":"샤에컷 1피스 완성","warn":"실루엣 먼저 / 질감은 마지막","t":"이호"},"쉬즈컷(가발)":{"prep":"가발(쉬즈)·홀더·가위","task":"쉬즈컷 1피스 완성","warn":"레이어 흐름 유지 / 좌우 대칭 확인","t":"이호"},"사모님보브(가발)":{"prep":"가발(보브용)·홀더·가위·빗","task":"사모님보브 1피스 완성","warn":"무게라인 선명하게 / 볼륨 과하지 않게","t":"이호"},"간이시험 40분":{"prep":"지정 마네킹/가발·개인 도구 풀세트","task":"직전 4강 복습 후 응시","warn":"제한시간 40분 엄수 / 도구 미리 세팅","t":"이호"},"남성 아이롱펌":{"prep":"아이롱·열펌약·가발/마네킹·장갑·중화제","task":"아이롱펌 1케이스 촬영","warn":"온도·시간 기록 / 두피 화상 주의","t":"신후"},"모류교정":{"prep":"교정약·아이롱·클립·장갑","task":"가마·앞머리 모류 케이스 1건","warn":"모류 방향 파악 먼저 / 과교정 금지","t":"신후"},"디지털 와인딩 설계":{"prep":"롯드 풀세트·와인딩지·설계도","task":"와인딩 설계도 1장 + 실물","warn":"롯드 굵기·각도 기록 / 텐션 일정","t":"신후"},"C컬 중간머리":{"prep":"롯드·열펌약·마네킹(중간)·장갑","task":"C컬 1케이스","warn":"컬 방향 통일 / 손상모 텐션 낮게","t":"신후"},"S컬 중간머리":{"prep":"롯드·열펌약·마네킹·장갑","task":"S컬 1케이스 + C컬 비교","warn":"S흐름 자연스럽게 / 뿌리 볼륨 체크","t":"신후"},"손상모 복구":{"prep":"복구트리트먼트·약제·모발테스트지","task":"손상모 진단+시술계획서","warn":"연화 테스트 필수 / 약제 강도 낮춰 시작","t":"신후"},"룩북 단발 C컬":{"prep":"촬영용 모델/가발·롯드·스타일링제·카메라","task":"룩북컷 1세트 촬영·제출","warn":"촬영 각도·조명 확인 / 완성도 위주","t":"신후"},"룩북 중간 C·S컬":{"prep":"모델/가발·롯드·스타일링제","task":"룩북컷 1세트","warn":"믹스컬 균형 / 결 정돈","t":"신후"},"룩북 긴머리 S컬":{"prep":"긴머리 모델/가발·롯드·스타일링제","task":"룩북컷 1세트 (포트폴리오화)","warn":"긴 기장 텐션 관리 / 컬 지속력 확인","t":"신후"},"모발학(구조·ph)":{"prep":"모발 샘플·ph시험지·필기구","task":"모발구조·ph 요약 1장","warn":"이론 기반 — 결석 금지 / 용어 암기","t":"성희"},"머리 말리는 법":{"prep":"드라이어·브러시·마네킹/모델","task":"드라이 전후 촬영","warn":"두피 먼저 말리기 / 과열 주의","t":"성희"},"콜드펌원리+세척·크리프":{"prep":"콜드약1제·롯드·타이머·장갑","task":"크리프 타임 기록지","warn":"테스트컬 확인 후 중화 / 방치시간 준수","t":"성희"},"호리존탈(기본)":{"prep":"롯드·콜드약·와인딩지·장갑","task":"호리존탈 1통","warn":"베이스 각도 90° / 텐션 일정","t":"성희"},"다데+다이애거널":{"prep":"롯드·콜드약·장갑","task":"다데·다이애거널 각 1섹션","warn":"슬라이스 각도 유지 / 경계 자연스럽게","t":"성희"},"씽(Thin)":{"prep":"가는 롯드·콜드약·장갑","task":"씽펌 1케이스","warn":"얇은 슬라이스 / 두피 자극 주의","t":"성희"},"히피 트위스트":{"prep":"롯드·트위스트 도구·약","task":"히피펌 1케이스","warn":"꼬임 방향 통일 / 텐션 과하지 않게","t":"성희"},"호일펌":{"prep":"호일·롯드·약·장갑","task":"호일펌 1케이스","warn":"호일 밀봉 확인 / 열 발생 체크","t":"성희"},"스핀스왈로+핀컬":{"prep":"핀컬핀·롯드·약","task":"스핀스왈로+핀컬 1섹션","warn":"컬 겹침 주의 / 핀 자국 관리","t":"성희"},"스트레이트+볼륨매직":{"prep":"매직기·약·클립·장갑","task":"매직+볼륨 1케이스","warn":"뿌리 눌림 방지 / 온도 관리","t":"성희"},"단발 디자인콜드펌":{"prep":"마네킹(단발)·롯드·약","task":"단발 디자인펌 1케이스","warn":"디자인 설계 먼저 / 기장별 롯드 선택","t":"성희"},"긴머리 디자인콜드펌":{"prep":"마네킹(긴머리)·롯드·약","task":"긴머리 디자인펌 1케이스","warn":"무게 분산 / 컬 지속력 확인","t":"성희"},"트렌드 분석·시안":{"prep":"트렌드 이미지·시안보드·필기구","task":"이번 시즌 트렌드 시안 3장","warn":"출처 명확히 / 우리 살롱 톤에 맞추기","t":"성희"},"디자인분석+약제선택":{"prep":"모발테스트지·약제표·시안","task":"케이스별 약제 선택 리포트","warn":"모발상태 우선 / 약 강도 신중히","t":"성희"},"상담+결과예측":{"prep":"상담지·시안·결과예측 시트","task":"상담 롤플레이 + 결과예측 1건","warn":"과한 약속 금지 / 리스크 안내 필수","t":"성희"},"블로우·롤 드라이":{"prep":"드라이어·롤브러시·마네킹/모델","task":"블로우 드라이 전후 촬영","warn":"결 방향 일정 / 과열 주의","t":"보미"},"텐션·결 정리":{"prep":"빗·핀·스프레이·마네킹","task":"결 정리 전후 비교","warn":"텐션 일정하게 / 잔머리 정돈","t":"보미"},"기본 세팅":{"prep":"핀·망·스프레이·마네킹","task":"기본 세팅 1스타일","warn":"베이스 탄탄하게 / 핀 노출 금지","t":"보미"},"클래식 번":{"prep":"U핀·실핀·망·스프레이","task":"클래식 번 1스타일 촬영","warn":"번 위치 균형 / 고정력 확인","t":"보미"},"포니테일 변형":{"prep":"고무줄·핀·스프레이·마네킹","task":"포니 변형 2종","warn":"묶음 높이 균형 / 두피 당김 주의","t":"보미"},"핀워크·고정력":{"prep":"실핀·U핀·대핀 다량·망","task":"핀워크 연습 사진","warn":"핀 교차 고정 / 오래가는 구조 우선","t":"보미"},"혼주·신부 업스타일":{"prep":"장식핀·베일·망·스프레이·모델","task":"혼주/신부 각 1스타일","warn":"장식 무게 고려 / 오래 유지 필수","t":"보미"},"웨이브 업스타일":{"prep":"아이롱·핀·스프레이·모델","task":"웨이브 업스타일 1스타일","warn":"웨이브 먼저 만들고 세팅 / 결 살리기","t":"보미"},"가발·헤어피스":{"prep":"헤어피스·가발·핀·망","task":"피스 활용 업스타일 1건","warn":"피스 경계 감추기 / 색 매치 확인","t":"보미"},"방송·촬영 헤어":{"prep":"촬영 조명 고려 도구·스프레이·모델","task":"촬영용 헤어 1세트","warn":"조명 반사 주의 / 무너짐 방지","t":"보미"},"실전 완성":{"prep":"업스타일 도구 풀세트·모델","task":"실전 업스타일 1건 완성 촬영","warn":"시간 관리 / 완성도 위주","t":"보미"},"기본 땋기(브레이드)":{"prep":"빗·고무줄·핀·마네킹","task":"3가닥/4가닥 땋기 연습","warn":"장력 일정 / 두피 당김 주의 · 시험 무(無)","t":"보미"},"피쉬본·콘로우":{"prep":"빗·클립·고무줄·마네킹","task":"피쉬본·콘로우 각 1","warn":"섹션 균일 / 손목 피로 관리 · 시험 무(無)","t":"보미"},"믹스 브레이드":{"prep":"빗·핀·장식·마네킹","task":"믹스 브레이드 1스타일","warn":"기법 조합 자연스럽게 · 시험 무(無)","t":"보미"},"인플루언서 스타일":{"prep":"트렌드 레퍼런스·스타일링제·모델","task":"트렌드 스타일 1건 + 릴스","warn":"SNS 트렌드 반영 / 저작권 확인 · 시험 무(無)","t":"보미"},"펌제 원리":{"prep":"약제 샘플·ph자료·필기구","task":"1·2제 원리 요약 1장","warn":"이론 — 용어 정확히 / 안전 숙지","t":"차노"},"열펌 도구":{"prep":"아이롱·롯드·매직기·설명자료","task":"도구별 용도 정리표","warn":"장비 취급·화상 주의","t":"차노"},"매직 스트레이트":{"prep":"매직기·약·클립·마네킹","task":"매직 1케이스","warn":"뿌리 꺾임 방지 / 온도 관리","t":"차노"},"연화·테스트":{"prep":"약제·테스트지·타이머","task":"연화 테스트 기록지","warn":"연화도 과하면 손상 — 반드시 테스트","t":"차노"},"디지털·셋팅펌 와인딩":{"prep":"롯드·와인딩지·기계","task":"와인딩 1통","warn":"롯드 텐션 일정 / 열 균일","t":"차노"},"아이롱 기본":{"prep":"아이롱·마네킹/가발·장갑","task":"아이롱 컬 연습 촬영","warn":"온도·시간 기록 / 두피 화상 주의","t":"차노"},"질감마스터 1":{"prep":"가위·틴닝·마네킹","task":"질감 케이스 1","warn":"모량 보고 판단 / 과제거 금지","t":"차노"},"질감마스터 2":{"prep":"가위·레이저(선택)·마네킹","task":"질감 케이스 2","warn":"1단계 복습 후 진행","t":"차노"},"질감마스터 3":{"prep":"가위·마네킹","task":"질감 3종 비교 정리","warn":"질감별 차이 설명 가능해야","t":"차노"},"형용사 이론":{"prep":"형용사 지도·필기구","task":"이미지 형용사 매핑 1장","warn":"감각 언어화 — 결석 금지","t":"차노"},"형용사 실습1(가발)":{"prep":"가발·홀더·가위(아침)","task":"형용사→디자인 변환 1건","warn":"형용사 근거 명확히 / 가발 되돌림 불가","t":"차노"},"형용사 실습2(가발)":{"prep":"가발·홀더·가위(아침)","task":"형용사 실습 2건 완성","warn":"1차 피드백 반영","t":"차노"},"일본 이미지분류체계":{"prep":"이미지분류 자료·시안","task":"분류체계 요약 + 예시 3","warn":"체계 암기 / 우리 서사에 연결","t":"차노"},"퍼스널컬러와 구조":{"prep":"컬러천·시안·거울","task":"퍼스널컬러 진단 1건","warn":"조명 일정 / 단정 짓지 말기","t":"차노"},"골격과 구조커트":{"prep":"마네킹·줄자·가위","task":"골격 기반 커트 설계 1건","warn":"골격 우선 / 구조 흐름 유지","t":"차노"}};
+var EVENTS=[{"m":8,"d":12,"t":"와이","s":"맨즈 남자 스타일링·다운펌 최종 테스트"},{"m":8,"d":14,"t":"모델데이","s":"모델데이"},{"m":8,"d":21,"t":"특강","s":"특강 함경식 원장님·트렌드 세미나"},{"m":8,"d":21,"t":"와이","s":"맨즈 CS 마인드 교육"},{"m":8,"d":28,"t":"모델데이","s":"모델데이"},{"m":9,"d":4,"t":"와이","s":"맨즈 염색 터치·새치 커버"},{"m":9,"d":11,"t":"모델데이","s":"모델데이"},{"m":9,"d":18,"t":"특강","s":"특강 연교·탈색"},{"m":9,"d":24,"t":"와이","s":"맨즈 테스트"},{"m":9,"d":25,"t":"모델데이","s":"모델데이"},{"m":10,"d":1,"t":"와이","s":"맨즈 염색·업컬러"},{"m":10,"d":9,"t":"모델데이","s":"모델데이"},{"m":10,"d":16,"t":"특강","s":"특강 신후·자질"},{"m":10,"d":21,"t":"와이","s":"맨즈 테스트"},{"m":10,"d":23,"t":"모델데이","s":"모델데이"},{"m":11,"d":6,"t":"와이","s":"맨즈 연화 터치"},{"m":11,"d":13,"t":"모델데이","s":"모델데이"},{"m":11,"d":20,"t":"특강","s":"특강 재아·단발펌"},{"m":11,"d":25,"t":"와이","s":"맨즈 테스트"},{"m":11,"d":27,"t":"모델데이","s":"모델데이"},{"m":12,"d":11,"t":"특강","s":"특강 승현·컨설팅"},{"m":12,"d":14,"t":"특강","s":"디자이너쇼 (월 저녁 19시)"},{"m":12,"d":18,"t":"시험","s":"입봉시험 (금 저녁)"}];
+
+/* ===== 축 · 가중치 =====
+   ★ 70%는 「70점」이 아니라 「가중치」다. (2026-08-16 차노 정정)
+   각 축을 0~100점으로 채점한 뒤, 레벨별 가중치를 곱해 더한다 = 최종점수.
+   L1·2 기본기 70% / L3 모델작업·연습 70% / L4 SNS 70% / L5 모객+디자인·상담 70% / 스타일리스트 모객 70% */
 var AX=[
- {k:'skill',n:'기술',d:'배운 걸 손으로 해내는 힘 (실기·발표)'},
- {k:'prac', n:'연습',d:'혼자 얼마나 반복했나 (연습·과제)'},
- {k:'sns',  n:'알리기',d:'내 걸 밖에 내놓나 (SNS·시그니처)'},
- {k:'team', n:'팀',  d:'같이 하는 몫 (팀교육)'},
- {k:'base', n:'기본',d:'평소 행실 (출근·지각·태도)'}
+ {k:'base',  n:'기본기',   d:'실기·기본 기술을 손으로 해내는 힘'},
+ {k:'model', n:'모델작업·연습', d:'실제 모발과 부딪혀서 해낸다 + 반복 연습량'},
+ {k:'sns',   n:'SNS',     d:'내 걸 밖에 내놓는다 (피드·시그니처)'},
+ {k:'guest', n:'모객',     d:'내 손님을 만든다 (신규·재방문)'},
+ {k:'design',n:'디자인·상담', d:'디자인 설계력 + 상담으로 잡는 힘'},
+ {k:'dili',  n:'행실',     d:'출결·태도 (지각은 별도 감점)'}
 ];
-/* 레벨별 배점 = 정본 채점표(2026-07-22)를 5칸으로 묶은 것 */
+/* 가중치(%) — 합 100 */
 var W={
- low :{skill:55,prac:25,sns:10,team:10,base:0,  pass:75,label:'시즈 1~3'},
- high:{skill:40,prac:20,sns:30,team:0, base:10, pass:80,label:'시즈 4~5'}
+ 1:{base:70,model:10,sns:0, guest:0, design:10,dili:10,pass:75,core:['base'],          label:'L1'},
+ 2:{base:70,model:10,sns:0, guest:0, design:10,dili:10,pass:75,core:['base'],          label:'L2'},
+ 3:{base:5, model:70,sns:10,guest:0, design:5, dili:10,pass:75,core:['model'],         label:'L3'},
+ 4:{base:5, model:5, sns:70,guest:5, design:5, dili:10,pass:80,core:['sns'],           label:'L4'},
+ 5:{base:5, model:5, sns:10,guest:35,design:35,dili:10,pass:80,core:['guest','design'],label:'L5'},
+ 6:{base:5, model:5, sns:10,guest:70,design:0, dili:10,pass:80,core:['guest'],         label:'스타일리스트'}
 };
-var TYPE={skill:{n:'기술형',c:'#0A8A5F'},prac:{n:'연습형',c:'#2F6FB5'},sns:{n:'알리기형',c:'#C4661F'},team:{n:'팀형',c:'#9B4A86'},base:{n:'기본형',c:'#B08A17'}};
+var TYPE={base:{n:'기본기형',c:'#0A8A5F'},model:{n:'현장형',c:'#2F6FB5'},sns:{n:'SNS형',c:'#C4661F'},
+ guest:{n:'모객형',c:'#9B4A86'},design:{n:'디자인형',c:'#B08A17'},dili:{n:'성실형',c:'#6a655c'}};
 var TIER=[{n:'알',c:'1단계'},{n:'깨어남',c:'2단계'},{n:'첫걸음',c:'3단계'},{n:'자람',c:'4단계'},{n:'다 자람',c:'5단계'},{n:'홀로서기',c:'6단계'}];
 
-/* got = 지금 실제로 받은 점수 · null = 아직 안 받음(빗금) */
+/* pct = 0~1 달성률 · null = 아직 안 받음(빗금) */
 var D=[
- {n:'범서',lv:1,br:'메종한남',late:0,got:{skill:null,prac:null,sns:null,team:null},
+ {n:'범서',lv:1,br:'메종한남',late:0,pct:{dili:1.00},
   subj:[{s:'베이직',w:'8/12',t:'창엽',g:'',b:'정상',a:'—',tr:0},
         {s:'오피니언 제출',w:'8/13',t:'본인',g:'',b:'정상',a:'제출',tr:1}],
   memo:'신규 · 이론→가발작업 연결을 스스로 요청'},
- {n:'지민',lv:2,br:'본점',late:0,got:{skill:null,prac:null,sns:null,team:null},
+ {n:'지민',lv:2,br:'본점',late:0,pct:{dili:1.00},
   subj:[{s:'베이직',w:'8/12',t:'창엽',g:'',b:'정상',a:'—',tr:0}],memo:''},
- {n:'형우',lv:3,br:'플레이스',late:0,got:{skill:38,prac:16,sns:null,team:null},
-  subj:[{s:'원랭스',w:'8월',t:'—',g:'A',b:'정상',a:'—',tr:1},
-        {s:'스퀘어 과제',w:'8월',t:'—',g:'B',b:'정상',a:'제출',tr:1},
+ {n:'형우',lv:3,br:'플레이스',late:0,pct:{base:0.69,dili:0.90,model:0.55},
+  subj:[{s:'원랭스',w:'8월',t:'창엽',g:'A',b:'정상',a:'—',tr:1},
+        {s:'스퀘어 과제',w:'8월',t:'창엽',g:'B',b:'정상',a:'제출',tr:1},
         {s:'개인 연습 4회',w:'8월',t:'—',g:'A',b:'정상',a:'—',tr:1}],
-  memo:'태도 좋음 · 뿌리·씨컬 보완'},
- {n:'주민',lv:4,br:'플레이스',late:0,got:{skill:34,prac:18,sns:null,base:10},
-  subj:[{s:'기본아이롱',w:'8월',t:'—',g:'A',b:'정상',a:'—',tr:1},
+  memo:'태도 좋음 · 뿌리·씨컬 보완 · 현장(전투력) 기록 없음 — L3 핵심이 비어 있다'},
+ {n:'주민',lv:4,br:'플레이스',late:0,pct:{base:0.85,dili:1.00,model:0.60},
+  subj:[{s:'기본아이롱',w:'8월',t:'차노',g:'A',b:'정상',a:'—',tr:1},
         {s:'남자와인딩',w:'8월',t:'—',g:'A',b:'정상',a:'—',tr:1},
         {s:'업스타일',w:'8/12',t:'보미',g:'',b:'정상',a:'—',tr:1},
         {s:'과제 제출',w:'8월',t:'—',g:'A',b:'정상',a:'제출',tr:1},
         {s:'개인 연습 4회',w:'8월',t:'—',g:'A',b:'정상',a:'—',tr:1}],
-  memo:'전반 우수 · 태도 만점'},
- {n:'재아',lv:4,br:'본점',late:1,got:{skill:14,prac:5,sns:null,base:9},
+  memo:'전반 우수 · 태도 만점 · SNS(L4 핵심) 기록 없음'},
+ {n:'재아',lv:4,br:'본점',late:1,pct:{base:0.35,dili:0.40,model:0.25},
   subj:[{s:'플럼펌',w:'8월',t:'—',g:'D',b:'정상',a:'미제출',tr:-1},
         {s:'업스타일',w:'8/12',t:'보미',g:'',b:'지각',a:'—',tr:-1},
         {s:'개인 연습 2회',w:'8월',t:'—',g:'D',b:'정상',a:'—',tr:-1}],
   memo:'관리개입 · 9/14 등산 필참(회복 트랙)'},
- {n:'어진',lv:4,br:'메종한남',late:0,got:{skill:null,prac:null,sns:null,base:10},
+ {n:'어진',lv:4,br:'메종한남',late:0,pct:{dili:1.00},
   subj:[{s:'업스타일',w:'8/12',t:'보미',g:'',b:'정상',a:'—',tr:0}],
   memo:'재입사 · 직급시험 · 관찰 4주'},
- {n:'태원',lv:5,br:'본점',late:0,got:{skill:26,prac:6,sns:null,base:10},
-  subj:[{s:'볼륨매직',w:'8월',t:'—',g:'A',b:'정상',a:'—',tr:1},
-        {s:'포니테일 과제',w:'8월',t:'—',g:'D',b:'정상',a:'미제출',tr:-1},
+ {n:'태원',lv:5,br:'본점',late:0,pct:{base:0.65,dili:0.70,model:0.35},
+  subj:[{s:'볼륨매직',w:'8월',t:'성희',g:'A',b:'정상',a:'—',tr:1},
+        {s:'포니테일 과제',w:'8월',t:'보미',g:'D',b:'정상',a:'미제출',tr:-1},
         {s:'쉬즈컷',w:'8/12',t:'이호',g:'',b:'정상',a:'—',tr:0}],
-  memo:'기본기 강화 필요'},
- {n:'범진',lv:5,br:'본점',late:0,got:{skill:null,prac:null,sns:null,base:10},
+  memo:'기본기 강화 필요 · 손님(L5 핵심) 기록 없음'},
+ {n:'범진',lv:5,br:'본점',late:0,pct:{dili:1.00},
   subj:[{s:'쉬즈컷',w:'8/12',t:'이호',g:'',b:'정상',a:'—',tr:0}],memo:''},
- {n:'유안',lv:5,br:'본점',late:0,got:{skill:null,prac:null,sns:null,base:10},
+ {n:'유안',lv:5,br:'본점',late:0,pct:{dili:1.00},
   subj:[{s:'쉬즈컷',w:'8/12',t:'이호',g:'',b:'정상',a:'—',tr:0}],memo:''},
- {n:'가영',lv:5,br:'플레이스',late:0,got:{skill:28,prac:null,sns:null,base:10},
-  subj:[{s:'볼륨매직',w:'8월',t:'—',g:'B',b:'정상',a:'—',tr:1},
+ {n:'가영',lv:5,br:'플레이스',late:0,pct:{base:0.70,dili:0.90},
+  subj:[{s:'볼륨매직',w:'8월',t:'성희',g:'B',b:'정상',a:'—',tr:1},
         {s:'쉬즈컷',w:'8/12',t:'이호',g:'',b:'정상',a:'—',tr:0}],
   memo:'형태 양호 · 깔끔도 보완'},
- {n:'희선',lv:6,br:'본점',late:0,got:{skill:36,prac:null,sns:null,base:10},
+ {n:'희선',lv:6,br:'본점',late:0,pct:{base:0.90,dili:1.00},
   subj:[{s:'트렌드시안 커트',w:'8/13',t:'성희',g:'A',b:'정상',a:'예정',tr:1}],
   memo:'스타일리스트 · 따라오는 수준 상'},
- {n:'정민',lv:6,br:'플레이스',late:1,got:{skill:null,prac:null,sns:null,base:9},
+ {n:'정민',lv:6,br:'플레이스',late:1,pct:{dili:0.60},
   subj:[{s:'트렌드시안 커트',w:'8/13',t:'성희',g:'',b:'지각',a:'예정',tr:-1}],
   memo:'지각 관리 대상 · 9/14 등산 필참'}
 ];
-/* 다 채웠을 때 예시 — 형이 "이렇게 보이는구나" 확인용. 실제 점수 아님 */
-var DEMO={범서:{skill:41,prac:19,sns:7,team:8},지민:{skill:44,prac:20,sns:8,team:9},
- 형우:{skill:38,prac:16,sns:6,team:7},주민:{skill:34,prac:18,sns:24,base:10},
- 재아:{skill:14,prac:5,sns:9,base:9},어진:{skill:29,prac:13,sns:18,base:10},
- 태원:{skill:26,prac:6,sns:21,base:10},범진:{skill:31,prac:15,sns:12,base:10},
- 유안:{skill:33,prac:16,sns:26,base:10},가영:{skill:28,prac:12,sns:27,base:10},
- 희선:{skill:36,prac:17,sns:28,base:10},정민:{skill:25,prac:11,sns:14,base:9}};
+var DEMO={범서:{base:.78,model:.50,sns:.40,guest:.30,design:.55,dili:1},지민:{base:.85,model:.60,sns:.50,guest:.30,design:.60,dili:1},
+ 형우:{base:.69,model:.72,sns:.40,guest:.35,design:.50,dili:.90},주민:{base:.85,model:.70,sns:.62,guest:.40,design:.60,dili:1},
+ 재아:{base:.35,model:.30,sns:.28,guest:.20,design:.30,dili:.40},어진:{base:.60,model:.55,sns:.70,guest:.45,design:.55,dili:1},
+ 태원:{base:.65,model:.60,sns:.75,guest:.68,design:.62,dili:.70},범진:{base:.60,model:.62,sns:.50,guest:.60,design:.58,dili:1},
+ 유안:{base:.70,model:.68,sns:.80,guest:.75,design:.70,dili:1},가영:{base:.70,model:.60,sns:.82,guest:.70,design:.66,dili:.90},
+ 희선:{base:.90,model:.85,sns:.70,guest:.80,design:.82,dili:1},정민:{base:.55,model:.50,sns:.45,guest:.50,design:.48,dili:.60}};
 
-var MODE=0,VIEW='dex',OPEN=null;
-
-/* ===== 캐릭터 (앳나운 오리지널 · 이름으로 결정) ===== */
 function hash(s){var h=7;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
 function shade(hex,f){var n=parseInt(hex.slice(1),16),r=n>>16,g=(n>>8)&255,b=n&255;
  r=Math.round(r+(255-r)*f);g=Math.round(g+(255-g)*f);b=Math.round(b+(255-b)*f);
@@ -379,33 +398,35 @@ function creature(name,tier,col){
  return S+'<g transform="translate(60,62) scale('+sc+') translate(-60,-62)">'+s+'</g></svg>';
 }
 
-/* ===== 계산 ===== */
-function wOf(p){return p.lv<=3?W.low:W.high;}
-function tierOf(p){return Math.min(5,p.lv-1);}  /* 시즈1~5 = 1~5단계, 스타일리스트 = 6단계 */
-function got(p){var g=Object.assign({},p.got);
- if(MODE&&DEMO[p.n])g=Object.assign({},DEMO[p.n]);
- return g;}
-function total(p){var g=got(p),w=wOf(p),t=0;
- AX.forEach(function(a){if(w[a.k]>0&&g[a.k]!=null)t+=g[a.k];});
- return Math.max(0,t-p.late);}
-function maxOf(p){var w=wOf(p);return AX.reduce(function(s,a){return s+w[a.k];},0);}
-/* 강점·약점은 「기본(출근·지각)」을 빼고 판정한다.
-   지각 안 하는 건 잘하는 게 아니라 당연한 것 — 장점 자리에 올리면 진짜 장점이 가린다. */
-function strongWeak(p){var g=got(p),w=wOf(p),best=null,worst=null;
- AX.forEach(function(a){if(a.k==='base')return;if(!w[a.k])return;if(g[a.k]==null)return;
-  var r=g[a.k]/w[a.k];
-  if(!best||r>best.r)best={k:a.k,n:a.n,r:r};
-  if(!worst||r<worst.r)worst={k:a.k,n:a.n,r:r};});
+
+var MODE=0,VIEW='dex',OPEN=null,TODAY={m:8,d:16};
+
+function wOf(p){return W[p.lv];}
+function tierOf(p){return Math.min(5,p.lv-1);}
+function pctOf(p){return (MODE&&DEMO[p.n])?DEMO[p.n]:p.pct;}
+/* 축 점수 = 0~100점 (그 축만 놓고 본 점수) */
+function axScore(p,k){var g=pctOf(p);return g[k]==null?null:Math.round(g[k]*100);}
+/* 최종점수 = Σ(축점수 × 가중치%) ÷ 100 − 지각 */
+function total(p){var w=wOf(p),t=0;
+ AX.forEach(function(a){var v=axScore(p,a.k);if(v!=null&&w[a.k]>0)t+=v*w[a.k]/100;});
+ return Math.max(0,Math.round(t)-p.late);}
+/* 아직 안 받은 축의 가중치 합 = 「지금 못 받고 있는 %」 */
+function missingW(p){var w=wOf(p),m=0;
+ AX.forEach(function(a){if(w[a.k]>0&&axScore(p,a.k)==null)m+=w[a.k];});return m;}
+function isCore(p,k){return wOf(p).core.indexOf(k)>=0;}
+function strongWeak(p){var w=wOf(p),g=pctOf(p),best=null,worst=null;
+ AX.forEach(function(a){if(a.k==='dili')return;if(!w[a.k])return;if(g[a.k]==null)return;
+  if(!best||g[a.k]>best.r)best={k:a.k,n:a.n,r:g[a.k]};
+  if(!worst||g[a.k]<worst.r)worst={k:a.k,n:a.n,r:g[a.k]};});
  return {best:best,worst:worst};}
 var UNSET={n:'타입 미정',c:'#b9b3a8'};
-function typeOf(p){var sw=strongWeak(p);return sw.best?sw.best.k:null;}
-function tyv(p){var k=typeOf(p);return k?TYPE[k]:UNSET;}
-function filled(p){var g=got(p),w=wOf(p),n=0,d=0;
- AX.forEach(function(a){if(!w[a.k])return;d++;if(g[a.k]!=null)n++;});
- return [n,d];}
+function tyv(p){var sw=strongWeak(p);return sw.best?TYPE[sw.best.k]:UNSET;}
+function filled(p){var w=wOf(p),n=0,d=0;
+ AX.forEach(function(a){if(!w[a.k])return;d++;if(axScore(p,a.k)!=null)n++;});return [n,d];}
+function upcoming(p){var L=p.lv>5?5:p.lv;
+ return SCHED.filter(function(x){return x.lv.indexOf(L)>=0 && (x.m>TODAY.m||(x.m===TODAY.m&&x.d>TODAY.d));});}
 
-/* ===== 렌더 ===== */
-function setView(v){VIEW=v;['dex','tree'].forEach(function(x){
+function setView(v){VIEW=v;['dex','tree','w'].forEach(function(x){
  document.getElementById('v_'+x).className='ghost'+(x===v?' on':'');
  document.getElementById('p_'+x).style.display=(x===v?'block':'none');});render();}
 function setMode(m){MODE=m;
@@ -414,72 +435,107 @@ function setMode(m){MODE=m;
 function esc(s){return (s==null?'':(''+s)).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
 
 function render(){
- if(VIEW==='dex')renderDex();else renderTree();
- var late=D.reduce(function(s,p){return s+p.late;},0);
+ if(VIEW==='dex')renderDex();else if(VIEW==='tree')renderTree();else renderW();
  var fn=0,fd=0;D.forEach(function(p){var f=filled(p);fn+=f[0];fd+=f[1];});
  document.getElementById('k_n').textContent=D.length;
- document.getElementById('k_evo').textContent=D.filter(function(p){return total(p)<wOf(p).pass;}).length;
+ document.getElementById('k_up').textContent=SCHED.filter(function(x){return x.m>TODAY.m||(x.m===TODAY.m&&x.d>TODAY.d);}).length;
  document.getElementById('k_fill').textContent=Math.round(fn/fd*100)+'%';
- document.getElementById('k_late').textContent=late;
+ document.getElementById('k_late').textContent=D.reduce(function(s,p){return s+p.late;},0);
  document.getElementById('rule').innerHTML=
-  '📏 <b>합격을 이렇게 정한다</b> — 다섯 칸을 합쳐 100점. 레벨마다 <b>무게가 다르다.</b><br>'+
-  '· <b>시즈 1~3</b> (붙는 선 <b>75점</b>) — 기술 55 · 연습 25 · 알리기 10 · 팀 10<br>'+
-  '· <b>시즈 4~5</b> (붙는 선 <b>80점</b>) — 기술 40 · 알리기 30 · 연습 20 · 기본 10<br>'+
-  '· <b>지각은 회당 -1점</b>, 레벨 상관없이 똑같이 깎는다. <span style="color:#B3453A"><b>※ 지금 정본에는 시즈1~3에 행실 배점이 없다 — 이 감점 방식이 형이 말한 「평소행실 반영」의 최소 수정안이다. 확정 필요.</b></span><br>'+
-  '· 배점 출처: <b>content/교육/2026-07-22_교육시스템_통합본/채점_개정.html</b> (2026-07-22 정본). 새로 지어낸 숫자 없음.';
+  '📏 <b>합격은 이렇게 나온다 — 70%는 「70점」이 아니라 「가중치」다</b> <span style="color:#B3453A;font-weight:900">(2026-08-16 차노 정정)</span><br>'+
+  '<b>① 축마다 따로 0~100점을 매긴다</b> → <b>② 레벨별 가중치를 곱해서 더한다</b> → <b>③ 그게 최종점수</b>다.<br>'+
+  '· 예) L4가 SNS <b>80점</b>, 나머지 축 평균 <b>60점</b>이면 → 80×0.7 + 60×0.3 = <b>74점</b> → 붙는 선 80에 <b>미달</b>.<br>'+
+  '· 레벨별 핵심 70% — <b>L1·L2 기본기</b> / <b>L3 모델작업·연습</b> / <b>L4 SNS</b> / <b>L5 모객+디자인·상담</b> / <b>스타일리스트 모객</b><br>'+
+  '· 붙는 선 <b>L1~3 = 75점 / L4·L5·스타일리스트 = 80점</b> · <b>지각은 최종점수에서 회당 -1</b><br>'+
+  '· 출처: 「교육_전체안내 / 시즈용 안내」 레벨별 시험 판단 기준(핵심 70% 가중치) + 「채점_개정」(2026-07-22) 합격선. <b>나머지 30% 분배는 이 방 제안값 — 확정 필요.</b>';
+document.getElementById('conflict').innerHTML=
+  '⚠️ <b>문서 3종 대조 결과</b> (배포용 · 시즈용 · 캘린더_6 · 2026-08-14)<br>'+
+  '<b>🔴 배포 전에 반드시 고칠 것 — 1건</b><br>'+
+  '· <b>창엽 「헤드·바디·핑거 포지션」은 준비물 문서에 있는데 캘린더에 날짜가 없다.</b> 준비물 문서는 창엽 <b>8과목·총 70과목</b>이라고 적어놨는데 최신 캘린더에는 <b>69개</b>뿐이다. 시즈용 안내를 이대로 뿌리면 <b>아이들이 「언제 하는지 없는 과목」을 받게 된다.</b> 날짜를 넣든지 과목을 빼든지 하나로 맞춰야 한다. (70과목 중 이 하나만 일정 없음 — 나머지 69개는 전부 정확히 붙음)<br>'+
+  '<b>🟡 확인만 하면 되는 것</b><br>'+
+  '· <b>「가위 파지·도구」가 L1 단독</b>이 됐다(이전엔 L1·2 합반). 지금대로면 <b>지민(L2)은 가위 파지를 못 듣는다.</b> 의도인지 확인.<br>'+
+  '· <b>입봉시험</b> — 캘린더 <u>머리글</u>만 아직 「12/21 앞」이다. 본문·배포용·시즈용은 전부 <b>12/18(금 저녁)</b>. 머리글 문구만 고치면 끝.<br>'+
+  '· <b>특강 3째주 금 규칙</b> — 12/11만 2째주 금이다(12/6 정규 종료 때문으로 보임). 예외라고 한 줄 적어두는 게 낫다.<br>'+
+  '· <b>12월 모델데이 0회</b> — 8~11월은 매달 2회. 의도인지 확인.<br>'+
+  '<b>🟢 이번에 해결된 것</b><br>'+
+  '· <b>디자이너쇼 날짜 통일됨</b> — 앞서 배포용 12/11 vs 캘린더 12/14로 어긋났는데, <b>시즈용에서 12/14(월 저녁 7시)로 맞춰졌다.</b> 캘린더와 일치.<br>'+
+  '· <b>총 수업 70 vs 78은 오류 아님</b> — L1·2 합반 과목이 두 레벨에 각각 잡혀서 그렇다.<br>'+
+  '· <b>9/14(월) 등산 충돌 없음</b> — 월요일 전원 휴무, 캘린더도 비어 있다. 12/14(월) 디자이너쇼처럼 월요일 저녁 행사 전례도 있다.<br>'+
+  '· <b>선생님 라인업</b> — 신후(열펌·룩북 L3~5) 관계도 추가 완료, 시은은 정본에 없어 제외. 특강: 8/21 함경식(외부)·9/18 연교·10/16 신후·11/20 재아 실장·12/11 승현.';
+}
+function renderW(){
+ var h='<table class="wtbl"><thead><tr><th>레벨</th>';
+ AX.forEach(function(a){h+='<th>'+a.n+'</th>';});
+ h+='<th>합</th><th>붙는 선</th></tr></thead><tbody>';
+ [1,2,3,4,5,6].forEach(function(L){var w=W[L],s2=0;
+  h+='<tr><td class="lv">'+w.label+'</td>';
+  AX.forEach(function(a){s2+=w[a.k];
+   h+='<td class="'+(w.core.indexOf(a.k)>=0?'core':'')+'">'+(w[a.k]?w[a.k]+'%':'—')+'</td>';});
+  h+='<td><b>'+s2+'%</b></td><td><b>'+w.pass+'점</b></td></tr>';});
+ h+='</tbody></table>';
+ h+='<div style="font-size:12.5px;color:#6a655c;margin-top:10px;line-height:1.8">'+
+  '금색 칸 = 그 레벨의 <b>핵심</b>(합 70%). <b>이건 만점이 70점이라는 뜻이 아니다</b> — 그 축 점수에 0.7을 곱한다는 뜻이다.<br>'+
+  '<b>계산 예시</b> — L4 어진: SNS 70점 · 기본기 60 · 모델·연습 55 · 모객 45 · 디자인 55 · 행실 100<br>'+
+  '&nbsp;&nbsp;→ 70×0.7 + 60×0.05 + 55×0.05 + 45×0.05 + 55×0.05 + 100×0.10 = <b>49 + 3 + 2.75 + 2.25 + 2.75 + 10 = 69.75 → 70점</b> · 붙는 선 80 → <b>미달</b><br>'+
+  '&nbsp;&nbsp;<b>SNS를 70 → 85로 올리면</b> 49 → 59.5, 최종 <b>80.25 → 합격.</b> <b>핵심 축 하나가 판을 뒤집는다.</b> 그래서 70%다.</div>';
+ document.getElementById('wtbl').innerHTML=h;
 }
 function renderDex(){
  var w=document.getElementById('dex');w.innerHTML='';
  D.forEach(function(p,idx){
-  var wt=wOf(p),g=got(p),tot=total(p),mx=maxOf(p),sw=strongWeak(p),tv=tyv(p),ti=tierOf(p);
-  var pass=tot>=wt.pass, need=Math.max(0,wt.pass-tot);
+  var wt=wOf(p),tot=total(p),sw=strongWeak(p),tv=tyv(p),ti=tierOf(p);
+  var pass=tot>=wt.pass,need=Math.max(0,wt.pass-tot),miss=missingW(p);
   var rows='';
   AX.forEach(function(a){
-   var cap=wt[a.k],v=g[a.k];
+   var wg=wt[a.k],v=axScore(p,a.k),core=isCore(p,a.k);
+   if(!wg){rows+='<div class="row"><div class="k" style="color:#c9c3b8">'+a.n+'</div>'+
+     '<div class="tr"></div><div class="v none">이 레벨 안 봄</div></div>';return;}
    var cls=(sw.best&&sw.best.k===a.k&&v!=null)?' hi':((sw.worst&&sw.worst.k===a.k&&v!=null)?' lo':'');
-   var pctCap=cap/100*100;
-   var inner='';
-   if(!cap){inner='';}
-   else if(v==null){inner='<div class="cap" style="left:0;width:'+pctCap+'%"></div>';}
-   else {inner='<div class="cap" style="left:0;width:'+pctCap+'%;opacity:.55"></div>'+
-     '<div class="fi" style="width:'+(v)+'%;background:'+TYPE[a.k].c+'"></div>';}
-   rows+='<div class="row'+cls+'"><div class="k">'+a.n+'</div>'+
+   var inner=(v==null)?'<div class="cap" style="left:0;width:100%"></div>'
+     :'<div class="fi" style="width:'+v+'%;background:'+TYPE[a.k].c+'"></div>';
+   rows+='<div class="row'+cls+'"><div class="k'+(core?' core':'')+'">'+a.n+
+     '<span class="wg'+(core?' cw':'')+'">'+wg+'%</span></div>'+
      '<div class="tr">'+inner+'</div>'+
-     '<div class="v'+(cap?(v==null?' none':''):' none')+'">'+(cap?(v==null?'미입력':v+'/'+cap):'—')+'</div></div>';
-  });
+     '<div class="v'+(v==null?' none':'')+'">'+(v==null?'미입력':v+'점')+'</div></div>';});
+  var coreNames=wt.core.map(function(k){return AX.filter(function(a){return a.k===k;})[0].n;}).join(' + ');
+  var coreMissing=wt.core.some(function(k){return axScore(p,k)==null;});
   var line;
-  if(sw.best) line='살릴 것 <b class="g">'+sw.best.n+'</b>'+
-     (sw.worst&&sw.worst.k!==sw.best.k?' &nbsp;·&nbsp; 채울 것 <b class="b">'+sw.worst.n+'</b>':'')+
+  if(sw.best) line='살릴 것 <b class="g">'+sw.best.n+'</b> &nbsp;·&nbsp; 채울 것 <b class="b">'+(sw.worst?sw.worst.n:'—')+'</b>'+
      (need?' &nbsp;·&nbsp; 붙는 선까지 <b>'+need+'점</b>':' &nbsp;·&nbsp; <b class="g">붙는 선 넘었다</b>')+
-     (p.late?' &nbsp;·&nbsp; <b class="b">지각 '+p.late+'회</b>':'');
-  else line='<span style="color:#b9b3a8">아직 받은 점수가 없다 — 뭘 잘하는지 말할 수 없다.</span>'+
-     (p.late?' <b class="b">지각 '+p.late+'회</b>':'');
-  var f=filled(p);
-  var det='<table><tr><th>과목</th><th>언제</th><th>선생님</th><th>해냈나</th><th>그날</th><th>과제</th><th>느나</th></tr>'+
-   p.subj.map(function(s){
-    return '<tr><td><b>'+esc(s.s)+'</b></td><td>'+esc(s.w)+'</td><td>'+esc(s.t)+'</td>'+
-     '<td><span class="g g'+(s.g||'X')+'">'+(s.g||'—')+'</span></td>'+
-     '<td><span class="chip'+(s.b==='정상'?' ok':' warn')+'">'+esc(s.b)+'</span></td>'+
-     '<td><span class="chip'+(s.a==='제출'?' ok':(s.a==='미제출'?' warn':''))+'">'+esc(s.a)+'</span></td>'+
-     '<td><span class="trend '+(s.tr>0?'up':(s.tr<0?'down':'flat'))+'">'+(s.tr>0?'↗':(s.tr<0?'↘':'→'))+'</span></td></tr>';}).join('')+
-   '</table>'+(p.memo?'<div style="font-size:11.5px;color:#6a655c;margin-top:8px"><b>메모</b> '+esc(p.memo)+'</div>':'');
+     (coreMissing?'<br><b class="b">※ 이 레벨 핵심인 「'+coreNames+'」이 아직 비었다 — 여기가 <u>가중치 70%</u>다. 다른 데서 만점 받아도 못 메운다.</b>':'');
+  else line='<span style="color:#b9b3a8">아직 받은 점수가 없다 — 뭘 잘하는지 말할 수 없다.</span>';
+  var f=filled(p),up=upcoming(p);
+  var det='<h4>받은 과목 · 그때 어땠나</h4><table><tr><th>과목</th><th>언제</th><th>선생님</th><th>해냈나</th><th>그날</th><th>과제</th><th>느나</th></tr>'+
+   p.subj.map(function(x){return '<tr><td><b>'+esc(x.s)+'</b></td><td>'+esc(x.w)+'</td><td>'+esc(x.t)+'</td>'+
+    '<td><span class="g g'+(x.g||'X')+'">'+(x.g||'—')+'</span></td>'+
+    '<td><span class="chip'+(x.b==='정상'?' ok':' warn')+'">'+esc(x.b)+'</span></td>'+
+    '<td><span class="chip'+(x.a==='제출'?' ok':(x.a==='미제출'?' warn':''))+'">'+esc(x.a)+'</span></td>'+
+    '<td><span class="trend '+(x.tr>0?'up':(x.tr<0?'down':'flat'))+'">'+(x.tr>0?'↗':(x.tr<0?'↘':'→'))+'</span></td></tr>';}).join('')+'</table>'+
+   '<h4 style="margin-top:12px">앞으로 받을 과목 <span style="color:#b9b3a8;font-weight:700">('+up.length+'개 · 12/6까지 · 가까운 3개는 준비물까지)</span></h4>'+
+   (up.length?up.map(function(x,i){var pr=PREP[x.s]||{};
+     var ext=(i<3&&pr.prep)?('<div class="prep"><b>🎒 준비물</b> '+esc(pr.prep)+
+       (pr.task?'<br><b>📝 과제</b> '+esc(pr.task):'')+
+       (pr.warn?'<br><b>⚠️ 주의</b> '+esc(pr.warn):'')+'</div>'):'';
+     return '<div class="up7"><span class="dt">'+x.m+'/'+x.d+'</span><span>'+esc(x.s)+ext+'</span><span class="tc">'+esc(x.t)+'</span></div>';}).join('')
+    :'<div style="font-size:11.5px;color:#b9b3a8">정규 과목 없음 (스타일리스트는 졸업 트랙)</div>')+
+   (p.memo?'<div style="font-size:11.5px;color:#6a655c;margin-top:9px"><b>메모</b> '+esc(p.memo)+'</div>':'');
 
   var c=document.createElement('div');c.className='card';c.onclick=function(){OPEN=(OPEN===idx?null:idx);render();};
   c.innerHTML='<div class="hd"><div class="mon">'+creature(p.n,ti,tv.c)+'</div>'+
    '<div class="who"><div class="nm">'+esc(p.n)+'</div>'+
-   '<div class="sub">'+(p.lv<=5?'시즈 '+p.lv:'스타일리스트')+' · '+esc(p.br)+'</div>'+
+   '<div class="sub">'+(p.lv<=5?'시즈 '+p.lv:'스타일리스트')+' · '+esc(p.br)+' · 남은 수업 '+up.length+'</div>'+
    '<span class="type" style="background:'+tv.c+'">'+tv.n+'</span>'+
    '<div class="evo">'+[0,1,2,3,4,5].map(function(z){return '<i class="'+(ti>=z?'on':'')+'"></i>';}).join('')+
    '<span>'+TIER[ti].c+' '+TIER[ti].n+'</span></div></div></div>'+
-   '<div class="xp"><div class="lab"><b>합계 '+tot+'</b><span style="margin-left:6px">/ '+mx+'</span>'+
-   '<span class="r">붙는 선 '+wt.pass+' · '+wt.label+'</span></div>'+
+   '<div class="xp"><div class="lab"><b>최종 '+tot+'점</b><span style="margin-left:6px">/ 100</span>'+
+   '<span class="r">붙는 선 '+wt.pass+' · 핵심 '+coreNames+' <b style="color:#A8895E">70%</b></span></div>'+
    '<div class="xptrack"><div class="xpfill'+(pass?' pass':'')+'" style="width:'+tot+'%"></div>'+
    '<div class="xpline" style="left:'+wt.pass+'%"></div></div>'+
-   '<div class="xpnote">'+(p.late?'지각 '+p.late+'회 → <b>-'+p.late+'점</b> 반영 · ':'')+
-   '채운 항목 '+f[0]+'/'+f[1]+'</div></div>'+
+   '<div class="xpnote">'+(p.late?'지각 '+p.late+'회 → <b>-'+p.late+'점</b> · ':'')+
+   '채운 항목 '+f[0]+'/'+f[1]+(miss?' · <b>미입력 축이 가중치 '+miss+'% 차지</b>':'')+'</div></div>'+
    '<div class="stats">'+rows+'</div>'+
    '<div class="oneline">'+line+'</div>'+
-   '<div class="detail'+(OPEN===idx?' open':'')+'"><h4>배운 과목 · 그때 어땠나</h4>'+det+'</div>';
+   '<div class="detail'+(OPEN===idx?' open':'')+'">'+det+'</div>';
   w.appendChild(c);});
 }
 function renderTree(){

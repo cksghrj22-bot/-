@@ -1,0 +1,8 @@
+{
+  "room": "전략실",
+  "task": "3가지 확인 후 보고: 1) 개츠비 렌더 완료 여부 (_jobs/_done에 *개츠비*.mp4 있나) 2) AI일기 재촬영본 도착 여부 (_clips_pool/ai일기/ 새 파일) 3) 폴더통합 P1 결과 (디스코드 본진 채널)",
+  "timeout": 60,
+  "status": "done",
+  "completed_at": "2026-08-17T11:07:13.364877",
+  "codex_result": "오류: error: invalid value '\n방: 전략실\n제목: 3가지 확인 후 보고: 1) 개츠비 렌더 완료 여부 (_jobs/_done에 *개츠비*.mp4 있나) 2) AI일기 재촬영본 도착 여부 (_clips_pool/ai일기/ 새 파일) 3) 폴더통합 P1 결과 (디스코드 본진 채널)\n\n요청:\n3가지 확인 후 보고: 1) 개츠비 렌더 완료 여부 (_jobs/_done에 *개츠비*.mp4 있나) 2) AI일기 재촬영본 도착 여부 (_clips_pool/ai일기/ 새 파일) 3) 폴더통합 P1 결과 (디스코드 본진 채널)\n\n작업 완료 후 결과만 간단히 보고.\n' for '--profile <CONFIG_PROFILE_V2>': invalid --profile value `\n방: 전략실\n제목: 3가지 확인 후 보고: 1) 개츠비 렌더 완료 여부 (_jobs/_done에 *개츠비*.mp4 있나) 2) AI일기 재촬영본 도착 여부 (_clips_pool/ai일기/ 새 파일) 3) 폴더통합 P1 결과 (디스코드 본진 채널)\n\n요청:\n3가지 확인 후 보고: 1) 개츠비 렌더 완료 여부 (_jobs/_done에 *개츠비*.mp4 있나) 2) AI일기 재촬영본 도착 여부 (_clips_pool/ai일기/ 새 파일) 3) 폴더통합 P1 결과 (디스코드 본진 채널)\n\n작업 완료 후 결과만 간단히 보고.\n`; pass a plain name such as `work`\n\nFor more information, try '--help'.\n"
+}

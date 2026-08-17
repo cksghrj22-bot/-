@@ -1,0 +1,4 @@
+  ⚠️ 레퍼런스 없음: /Users/chanho/atnown-content-pipeline/_out/매듭이야기_final_복고텍스트/c2_매듭.png
+  ⚠️ 레퍼런스 없음: /Users/chanho/atnown-content-pipeline/_out/매듭이야기_final_복고텍스트/c1_표지.png
+  ⚠️ 레퍼런스 없음: /Users/chanho/atnown-content-pipeline/_out/매듭이야기_final_복고텍스트/c6_공간.png
+레퍼런스가 하나도 없다. 캐릭터가 깨지므로 생성하지 않는다.

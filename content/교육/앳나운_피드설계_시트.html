@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AT NOWN · 내 피드 설계 시트</title>
+<style>
+:root{--cream:#F7F5F1;--ink:#1c1a17;--gold:#A8895E;--gray:#6a655c;--line:#E4DFD6;
+--ok:#0A8A5F;--mid:#C4661F;--no:#B3453A;--blue:#2F6FB5;--pur:#9B4A86;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#efece6;color:var(--ink);font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.6;padding:22px 13px 70px;-webkit-text-size-adjust:100%}
+.wrap{max-width:1120px;margin:0 auto}
+.cover{background:var(--ink);color:var(--cream);border-radius:16px;padding:27px 29px;margin-bottom:14px}
+.cover .t{font-size:11px;letter-spacing:.24em;color:var(--gold);font-weight:800}
+.cover h1{font-size:27px;font-weight:900;margin:8px 0 7px;line-height:1.25}
+.cover p{font-size:13.5px;color:#d7d1c6}
+.cover .stamp{font-size:11px;color:#9a948a;margin-top:10px;font-weight:700}
+.lead{background:var(--cream);border-left:5px solid var(--gold);border-radius:0 12px 12px 0;padding:14px 18px;font-size:13.5px;line-height:1.85;margin-bottom:14px}
+.lead b{color:var(--ink)}
+.sec{margin:26px 0 11px}
+.sh{font-size:11px;letter-spacing:.16em;color:var(--gold);font-weight:800}
+.st{font-size:20px;font-weight:900;border-bottom:2px solid var(--ink);padding-bottom:7px}
+.st small{font-size:12px;font-weight:700;color:var(--gray);margin-left:9px}
+.desc{font-size:12.5px;color:var(--gray);margin:9px 0 11px;line-height:1.75}
+.desc b{color:var(--ink)}
+table{width:100%;border-collapse:collapse;font-size:12.5px;background:#fff;border:1px solid var(--line);border-radius:11px;overflow:hidden;margin-bottom:11px}
+th{background:var(--ink);color:var(--cream);font-size:11px;font-weight:800;padding:9px 8px;text-align:left;border:1px solid #333}
+th.c{text-align:center}
+td{padding:9px 8px;border:1px solid var(--line);vertical-align:top;line-height:1.6}
+td.c{text-align:center}
+td.k{background:var(--cream);font-weight:900;white-space:nowrap}
+td.blank{background:repeating-linear-gradient(45deg,#fbf9f5,#fbf9f5 6px,#f5f2ec 6px,#f5f2ec 12px);color:#bdb7ac;font-style:italic;font-size:11.5px}
+tr.head2 td{background:#f3efe7;font-weight:900}
+.pill{display:inline-block;font-size:10.5px;font-weight:900;color:#fff;border-radius:10px;padding:1px 8px;white-space:nowrap}
+.p-ok{background:var(--ok)}.p-mid{background:var(--mid)}.p-no{background:var(--no)}
+.p-lv{background:var(--gray)}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-bottom:11px}
+.d{background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px 8px;min-height:132px}
+.d.off{background:#f2efe9;border-style:dashed}
+.d.post{border-top:4px solid var(--gold)}
+.d.shoot{border-top:4px solid var(--blue)}
+.d.write{border-top:4px solid var(--pur)}
+.d .dn{font-size:13px;font-weight:900;text-align:center;margin-bottom:5px}
+.d .tag{display:block;font-size:9.5px;font-weight:900;color:#fff;border-radius:8px;padding:2px 5px;text-align:center;margin-bottom:6px}
+.t-post{background:var(--gold)}.t-shoot{background:var(--blue)}.t-write{background:var(--pur)}.t-off{background:#b6b0a5}
+.d ul{list-style:none;font-size:10.5px;line-height:1.55}
+.d li{padding:2px 0 2px 9px;position:relative;color:#4a463f}
+.d li:before{content:"·";position:absolute;left:1px;color:var(--gold);font-weight:900}
+.d .l5{font-size:9.5px;color:var(--gray);font-weight:800;border-top:1px dashed var(--line);margin-top:5px;padding-top:4px}
+.box{background:#fff;border:1px solid var(--line);border-radius:13px;padding:16px 18px;margin-bottom:11px}
+.box h3{font-size:14px;font-weight:900;margin-bottom:9px}
+.box h3 span{font-size:11px;font-weight:800;color:var(--gold);margin-left:7px}
+.box ul{list-style:none;font-size:13px}
+.box li{padding:4px 0 4px 15px;position:relative;line-height:1.7}
+.box li:before{content:"·";position:absolute;left:2px;color:var(--gold);font-weight:900}
+.ex{background:var(--cream);border:1px solid var(--line);border-radius:13px;padding:15px 17px;margin-bottom:10px}
+.ex .nm{font-size:16px;font-weight:900;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.ex .said{font-size:12px;color:var(--gray);font-style:italic;margin-bottom:10px}
+.ex table{margin-bottom:0;font-size:12px}
+.axis{background:var(--ink);color:var(--cream);border-radius:10px;padding:11px 14px;margin-top:10px;font-size:13px;line-height:1.7}
+.axis b{color:#E3C56A}
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:10px}
+.fstep{background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px 10px}
+.fstep .n{width:22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;margin-bottom:6px}
+.fstep .h{font-size:12.5px;font-weight:900;margin-bottom:4px}
+.fstep .b{font-size:11px;color:#4a463f;line-height:1.55}
+.warnbox{background:#fdf6f5;border:1px solid #e0c4c0;border-left:5px solid var(--no);border-radius:12px;padding:13px 17px;font-size:12.5px;line-height:1.8;margin-bottom:11px}
+.warnbox b{color:var(--no)}
+.foot{text-align:center;font-size:11px;letter-spacing:.28em;color:#b7b1a6;font-weight:800;margin:28px 0 4px}
+@media(max-width:860px){.week{grid-template-columns:repeat(2,1fr)}.flow{grid-template-columns:1fr 1fr}}
+@media print{body{background:#fff;padding:0}.cover{border-radius:0}}
+</style>
+</head>
+<body><div class="wrap">
+
+<div class="cover">
+  <div class="t">AT NOWN · MY FEED BLUEPRINT</div>
+  <h1>내 피드 설계 시트</h1>
+  <p>롤모델 피드를 <b>왜 이쁜지</b>까지 뜯어보고, 그중 <b>내가 지금 할 수 있는 것</b>만 골라, <b>무슨 요일에 뭘 올릴지</b>까지 정한다.<br>따라 하는 게 목적이 아니다. <b>따라 하다가 내 규칙을 찾는 게</b> 목적이다.</p>
+  <div class="stamp">교육디렉터방(방5) · 2026-08-16 · L1·2 주 2회 / L3·4·5 주 3회 (08-16 차노 상향) · L4 핵심 = SNS <b>가중치 70%</b> · 브이로그·에세이 인정 · 사전제출 없음(08-16 확정)</div>
+</div>
+
+<div class="lead">
+  <b>왜 이게 필요한가</b> — 지금 롤모델 피드를 모아온 건 잘한 거다. 그런데 <b>「이쁘다」에서 멈추면 다음 주에 올릴 게 없다.</b><br>
+  이쁜 이유를 <b>구도 · 빛 · 색 · 피사체</b> 네 칸으로 쪼개면, 그중 <b>지금 내 손으로 되는 게 뭔지</b>가 보인다. 되는 것부터 올리면 주 2~3회가 굴러간다.<br>
+  그리고 <b>L4는 시험 점수의 70%가 SNS 가중치</b>다. (70점이 아니라 <b>가중치 70%</b> — 축마다 0~100점 매긴 뒤 SNS 점수에 0.7을 곱한다) 지금 이건 취미가 아니라 <b>승급 과목</b>이다.<br>· <b>시술컷만 SNS가 아니다</b> — 헤어·내 직업에 관한 <b>브이로그·에세이도 1회로 센다.</b> 모델이 없어서 못 올린다는 말은 이제 성립하지 않는다.
+</div>
+
+<div class="warnbox" style="background:#fbf7ef;border-color:#e0d3b8;border-left-color:var(--gold)">
+📐 <b>「70%」가 무슨 뜻인지 먼저 — 70점이 아니다</b> <span style="color:#B3453A">(2026-08-16 차노 정정)</span><br>
+축마다 <b>따로 0~100점</b>을 매긴 다음, 레벨별 <b>가중치를 곱해서 더한 게</b> 최종점수다.<br>
+· <b>L1·L2</b> 기본기 70% &nbsp;·&nbsp; <b>L3</b> 모델작업·연습 70% &nbsp;·&nbsp; <b>L4</b> SNS 70% &nbsp;·&nbsp; <b>L5</b> 모객+디자인·상담 70% &nbsp;·&nbsp; <b>스타일리스트</b> 모객 70%<br>
+· 예) L4가 <b>SNS 80점</b>, 나머지 축 평균 60점 → 80×0.7 + 60×0.3 = <b>74점</b> → 붙는 선 80 <b>미달</b>. SNS를 <b>90점</b>으로 올리면 → <b>81점 합격.</b><br>
+· 그래서 L4는 <b>SNS 하나가 판을 뒤집는다.</b> 나머지를 아무리 잘해도 30%밖에 못 움직인다.
+</div>
+
+<!-- ① 롤모델 해부 -->
+<div class="sec"><div class="sh">STEP 1</div><div class="st">롤모델 해부 시트<small>피드 1개당 1장 · 최소 3개 해부</small></div></div>
+<div class="desc">「이뻐요」는 답이 아니다. <b>네 칸으로 쪼개서 적는다.</b> 마지막 칸이 제일 중요하다 — <b>내가 지금 할 수 있나.</b></div>
+<table>
+<tr><th style="width:78px">칸</th><th style="width:210px">뭘 보는 건가</th><th style="width:230px">이 피드는 어떻게 했나</th><th style="width:110px" class="c">나 지금 가능?</th><th>안 되면 대체안</th></tr>
+<tr><td class="k">구도</td><td>인물이 화면의 몇 %? 정면/측면/뒤? 여백은 위·아래 어디? 잘라낸 부분이 있나?</td><td class="blank">여기 적기</td><td class="c blank">⭕🔺❌</td><td class="blank">여기 적기</td></tr>
+<tr><td class="k">빛</td><td>자연광/조명? 그림자가 진한가 약한가? 빛이 어느 쪽에서 오나? 시간대는?</td><td class="blank">여기 적기</td><td class="c blank">⭕🔺❌</td><td class="blank">여기 적기</td></tr>
+<tr><td class="k">색·톤</td><td>채도 높나 낮나? 따뜻한가 차가운가? 흑백? 포인트 색이 딱 하나인가?</td><td class="blank">여기 적기</td><td class="c blank">⭕🔺❌</td><td class="blank">여기 적기</td></tr>
+<tr><td class="k">피사체</td><td>얼굴? 뒷모습? 손? 도구? 거리는 멀리/가까이? 완성컷인가 과정컷인가?</td><td class="blank">여기 적기</td><td class="c blank">⭕🔺❌</td><td class="blank">여기 적기</td></tr>
+<tr class="head2"><td colspan="5">⭕ 지금 그대로 가능 &nbsp;/&nbsp; 🔺 연습·장비 조금 필요 &nbsp;/&nbsp; ❌ 지금은 불가 → <b>반드시 대체안을 적는다.</b> 대체안 없는 ❌는 그냥 포기다.</td></tr>
+</table>
+
+<!-- ② 내 축 -->
+<div class="sec"><div class="sh">STEP 2</div><div class="st">내 축 찾기<small>롤모델을 그대로 하면 롤모델의 2등이 된다</small></div></div>
+<div class="desc">해부한 것 중 <b>⭕만 모아놓고</b> 아래 세 칸과 겹치는 걸 찾는다. <b>겹치는 자리가 내 축</b>이다.</div>
+<table>
+<tr><th style="width:150px">칸</th><th style="width:290px">질문</th><th>내 답</th></tr>
+<tr><td class="k">① 잘하는 것</td><td>선생님이 「이건 잘한다」고 한 게 뭐였나? 실기 등급 A 받은 과목은?</td><td class="blank">여기 적기</td></tr>
+<tr><td class="k">② 재밌는 것</td><td>시술 중에 시간 가는 줄 몰랐던 순간은? 남이 시키지 않아도 또 해보는 건?</td><td class="blank">여기 적기</td></tr>
+<tr><td class="k">③ 지금 가능한 것</td><td>모델 없이·장비 없이·오늘 당장 찍을 수 있는 건? (손·도구·뒷모습·과정)</td><td class="blank">여기 적기</td></tr>
+<tr class="head2"><td>= 내 축</td><td colspan="2" class="blank">「나는 ______를 ______하게 보여주는 사람」 — 한 문장으로 적는다</td></tr>
+</table>
+<div class="warnbox">
+⚠️ <b>축이 없으면 주 3회가 절대 안 굴러간다.</b> 매번 「오늘 뭐 올리지」부터 시작하니까. 축이 정해지면 <b>찍을 것이 미리 정해져 있어서</b> 고민이 사라진다.
+</div>
+
+<!-- ③ 요일표 -->
+<div class="sec"><div class="sh">STEP 3</div><div class="st">주간 요일표<small>올리는 날 · 안 올리는 날 · 준비 데이</small></div></div>
+<div class="desc">
+일주일을 <b>세 종류</b>로 나눈다. <b>올리는 날 · 준비 데이 · 안 올리는 날.</b><br>
+<b>안 올리는 날을 정하는 게 올리는 날 정하는 것만큼 중요하다</b> — 매일 올리려다 2주 만에 멈춘다. 그리고 <b>안 올리는 날에도 할 일이 있다.</b> 그날이 비면 다음 올리는 날에 올릴 게 없다.
+</div>
+<table>
+<tr><th style="width:120px">종류</th><th style="width:230px">그날 하는 일</th><th>왜 나눠야 하나</th></tr>
+<tr><td class="k" style="background:#f7f1e4">📤 올리는 날</td><td>업로드 + 캡션 + 답글</td><td>정해진 요일에만 올린다. <b>기분 좋을 때 몰아 올리면 다음 주가 빈다</b></td></tr>
+<tr><td class="k" style="background:#eef3f8">🎬 준비 데이</td><td>촬영 · 편집 · 글쓰기</td><td><b>영상은 하루 안에 못 만든다.</b> 찍는 날과 올리는 날이 같으면 반드시 펑크난다</td></tr>
+<tr><td class="k" style="background:#f2efe9">🌙 안 올리는 날</td><td>재료 모으기 · 완전 휴식</td><td>쉬는 날이 있어야 오래 간다. <b>단, 「모으는 날」과 「진짜 쉬는 날」은 구분한다</b></td></tr>
+</table>
+
+<div class="sec" style="margin-top:20px"><div class="sh">EXAMPLE</div><div class="st" style="font-size:17px">예시 — 앳나운 교육 스케줄 기준<small>이건 예시다. 각자 자기 스케줄로 다시 짠다</small></div></div>
+<div class="desc">앳나운은 <b>휴무 월·토</b>, 교육 <b>화·수·목·금·일 아침 07:30~09:30</b>, 모델작업 <b>저녁</b>이다. 이 리듬으로 짜면 이렇게 나온다는 <b>본보기</b>일 뿐이다 — <b>지점·근무·학원 스케줄이 다르면 요일을 바꾼다.</b></div>
+<div class="week">
+  <div class="d off"><div class="dn">월</div><span class="tag t-off">안 올림 · 모으기</span><ul><li>핀터레스트 <b>20장 저장</b></li><li>이번 주 올릴 3개 <b>미리 정하기</b></li></ul><div class="l5">휴무. 쉬면서 재료만 모은다</div></div>
+  <div class="d post"><div class="dn">화</div><span class="tag t-post">업로드 ①</span><ul><li>지난주 <b>결과컷</b></li><li>캡션 2줄 + 해시태그</li></ul><div class="l5">전 레벨 공통</div></div>
+  <div class="d shoot"><div class="dn">수</div><span class="tag t-shoot">준비 데이</span><ul><li>교육 끝나고 <b>그 자리에서</b> 촬영</li><li>오늘 배운 것 손·과정컷</li></ul><div class="l5">교육 직후 10분이 제일 확실하다</div></div>
+  <div class="d shoot"><div class="dn">목</div><span class="tag t-shoot">준비 데이</span><ul><li><b>모델작업 저녁</b> 전·후컷</li><li>영상이면 <b>편집까지</b> 이날</li></ul><div class="l5">찍고 바로 편집. 미루면 안 한다</div></div>
+  <div class="d post"><div class="dn">금</div><span class="tag t-post">업로드 ②</span><ul><li><b>과정컷</b> 또는 배운 것 1줄</li></ul><div class="l5">전 레벨 공통</div></div>
+  <div class="d off"><div class="dn">토</div><span class="tag t-off">완전 휴식</span><ul><li>아무것도 안 한다</li><li>핸드폰도 안 본다</li></ul><div class="l5">이 하루가 있어야 20주를 간다</div></div>
+  <div class="d write"><div class="dn">일</div><span class="tag t-write">업로드 ③ + 쓰기</span><ul><li><b>L3·L4·L5</b> 업로드 ③</li><li>전원: <b>브이로그·에세이</b> 1편</li></ul><div class="l5">L1·2는 올리지 않고 쓰기만 · ⑥은 그 자리에서 SNS 1회</div></div>
+</div>
+
+<div class="sec" style="margin-top:20px"><div class="sh">MY TURN</div><div class="st" style="font-size:17px">내 요일표 직접 짜기<small>먼저 채워놓은 예시 2개를 보고, 그다음 내 걸 채운다</small></div></div>
+<div class="desc"><b>칸마다 뭘 적는 건지</b> 아래 두 예시로 보면 된다. <b>사람마다 답이 다르다</b> — 레벨도 다르고, 모델이 있냐 없냐도 다르고, 교육 요일도 다르다.</div>
+
+<div class="ex">
+  <div class="nm">✍️ 채워놓은 예시 ① — 가영 <span class="pill p-lv">시즈5 · 플레이스</span> <span class="pill" style="background:var(--gold)">주 3회</span></div>
+  <div class="said">모델작업이 있고, 축은 「낯선 각도」(얼굴 없이 형태만). 교육은 수·일 아침.</div>
+  <table>
+  <tr><th style="width:56px" class="c">요일</th><th style="width:160px">내 일정</th><th style="width:96px" class="c">종류</th><th style="width:270px">그날 뭘 하나</th><th>올린다면 몇 번</th></tr>
+  <tr><td class="c k">월</td><td>휴무</td><td class="c">🌙</td><td>핀터레스트 20장 저장 → <b>3장만 남기고 이유 한 줄씩</b></td><td style="color:#b6b0a5">안 올림</td></tr>
+  <tr><td class="c k">화</td><td>근무 (교육 없음)</td><td class="c" style="background:#f7f1e4"><b>📤</b></td><td>지난 목요일에 찍은 <b>뒷모습 결과컷</b> 올림 · 캡션 2줄</td><td><b>① 결과컷</b></td></tr>
+  <tr><td class="c k">수</td><td>교육 07:30~09:30<br>+ 근무</td><td class="c" style="background:#eef3f8"><b>🎬</b></td><td>교육 끝나고 <b>롯드 감는 손 3컷</b> · 검은 천 위에서</td><td style="color:#b6b0a5">준비만</td></tr>
+  <tr><td class="c k">목</td><td>근무 + <b>모델작업 저녁</b></td><td class="c" style="background:#eef3f8"><b>🎬</b></td><td>모델 <b>뒷모습 전·후</b> 촬영 → <b>그날 밤에 편집 20분</b></td><td style="color:#b6b0a5">준비만</td></tr>
+  <tr><td class="c k">금</td><td>근무</td><td class="c" style="background:#f7f1e4"><b>📤</b></td><td>수요일에 찍은 <b>손 과정컷</b> 올림</td><td><b>② 과정·손컷</b></td></tr>
+  <tr><td class="c k">토</td><td>휴무</td><td class="c">🌙</td><td><b>완전 휴식.</b> 아무것도 안 한다</td><td style="color:#b6b0a5">안 올림</td></tr>
+  <tr><td class="c k">일</td><td>교육 07:30~09:30<br>+ 근무</td><td class="c" style="background:#f7f1e4"><b>📤</b></td><td>「요즘 인기 헤어와 이유」 <b>글 + 사진 3장</b></td><td><b>⑥ 브이로그·에세이</b></td></tr>
+  <tr class="head2"><td colspan="5">📱 <b>스토리</b> — 화·수·목·금 연습 기록 <b>4회</b> · @atnown.official 태그 + #앳나운</td></tr>
+  </table>
+  <div class="axis">✅ <b>체크</b> — 올리는 날 3회(화·금·일) ✓ &nbsp;/&nbsp; 화요일 앞에 목(준비), 금요일 앞에 수(준비) ✓ &nbsp;/&nbsp; 완전히 쉬는 날 = 토 ✓</div>
+</div>
+
+<div class="ex">
+  <div class="nm">✍️ 채워놓은 예시 ② — 범서 <span class="pill p-lv">시즈1 · 메종한남</span> <span class="pill p-lv">주 2회</span></div>
+  <div class="said">신입이라 모델이 없다. 마네킹·손만으로 짠다. 교육은 화·수·금·일 아침.</div>
+  <table>
+  <tr><th style="width:56px" class="c">요일</th><th style="width:160px">내 일정</th><th style="width:96px" class="c">종류</th><th style="width:270px">그날 뭘 하나</th><th>올린다면 몇 번</th></tr>
+  <tr><td class="c k">월</td><td>휴무</td><td class="c">🌙</td><td>핀터레스트 20장 · <b>이번 주 올릴 2개 번호로 정하기</b></td><td style="color:#b6b0a5">안 올림</td></tr>
+  <tr><td class="c k">화</td><td>교육 + 근무</td><td class="c" style="background:#f7f1e4"><b>📤</b></td><td>지난주 배운 <b>「가위 파지」 손 사진 1장 + 한 줄</b></td><td><b>③ 배운 것 1줄</b></td></tr>
+  <tr><td class="c k">수</td><td>교육 + 근무</td><td class="c" style="background:#eef3f8"><b>🎬</b></td><td>교육 끝나고 <b>마네킹 앞 손 3컷</b> (10분이면 끝)</td><td style="color:#b6b0a5">준비만</td></tr>
+  <tr><td class="c k">목</td><td>근무</td><td class="c">🌙</td><td><b>아무것도 안 한다.</b> 아직 벅차다 — 무리하면 3주 만에 멈춘다</td><td style="color:#b6b0a5">안 올림</td></tr>
+  <tr><td class="c k">금</td><td>교육 + 근무</td><td class="c" style="background:#f7f1e4"><b>📤</b></td><td>수요일에 찍은 <b>마네킹 과정컷</b></td><td><b>② 과정·손컷</b></td></tr>
+  <tr><td class="c k">토</td><td>휴무</td><td class="c">🌙</td><td><b>완전 휴식</b></td><td style="color:#b6b0a5">안 올림</td></tr>
+  <tr><td class="c k">일</td><td>교육 + 근무</td><td class="c">🌙</td><td>안 올린다(L1은 주 2회). 대신 <b>에세이 초고만</b> 써둔다 — L2 올라가면 바로 쓴다</td><td style="color:#b6b0a5">안 올림</td></tr>
+  <tr class="head2"><td colspan="5">📱 <b>스토리</b> — 화·수·목·금 연습 기록 <b>4회</b> · @atnown.official 태그 + #앳나운</td></tr>
+  </table>
+  <div class="axis">✅ <b>체크</b> — 올리는 날 2회(화·금) ✓ &nbsp;/&nbsp; 금요일 앞에 수(준비) ✓ &nbsp;/&nbsp; 완전히 쉬는 날 = 목·토 ✓<br>
+  📌 <b>모델이 없어도 짜진다.</b> ②과정컷과 ③배운 것 1줄만으로 주 2회가 굴러간다. <b>「모델 없어서 못 해요」는 답이 아니다.</b></div>
+</div>
+
+<div class="desc" style="margin-top:16px"><b>이제 내 걸 채운다.</b> 내 근무·교육·쉬는 날을 <b>먼저</b> 적고, 그 위에 올리는 날을 얹는다. 남의 요일표를 그대로 쓰면 첫 주에 무너진다.</div>
+<table>
+<tr><th style="width:56px" class="c">요일</th><th style="width:160px">내 일정<br><span style="font-weight:600;opacity:.7">(휴무 / 교육+근무 / 모델작업)</span></th><th style="width:96px" class="c">종류<br><span style="font-weight:600;opacity:.7">📤🎬🌙</span></th><th style="width:270px">그날 뭘 하나</th><th>올린다면 몇 번</th></tr>
+<tr><td class="c k">월</td><td class="blank">예: 휴무</td><td class="c blank">🌙</td><td class="blank">예: 핀터 20장 저장</td><td class="blank">안 올림</td></tr>
+<tr><td class="c k">화</td><td class="blank">예: 교육+근무</td><td class="c blank">📤</td><td class="blank">예: 지난주 결과컷 올림</td><td class="blank">①</td></tr>
+<tr><td class="c k">수</td><td class="blank">예: 교육+근무</td><td class="c blank">🎬</td><td class="blank">예: 교육 후 손 3컷</td><td class="blank">준비만</td></tr>
+<tr><td class="c k">목</td><td class="blank">예: 근무+모델작업</td><td class="c blank">🎬</td><td class="blank">예: 전·후컷 + 그날 편집</td><td class="blank">준비만</td></tr>
+<tr><td class="c k">금</td><td class="blank">예: 근무</td><td class="c blank">📤</td><td class="blank">예: 수요일 과정컷 올림</td><td class="blank">②</td></tr>
+<tr><td class="c k">토</td><td class="blank">예: 휴무</td><td class="c blank">🌙</td><td class="blank">예: 완전 휴식</td><td class="blank">안 올림</td></tr>
+<tr><td class="c k">일</td><td class="blank">예: 교육+근무</td><td class="c blank">📤</td><td class="blank">예: 에세이 1편</td><td class="blank">⑥</td></tr>
+<tr class="head2"><td colspan="5">✅ <b>다 적고 확인할 것 3가지</b> — ① 올리는 날 수가 <b>내 레벨 기준</b>과 맞나 &nbsp;② <b>올리는 날 앞에 준비 데이가 있나</b> (없으면 그날 못 올린다) &nbsp;③ <b>완전히 쉬는 날이 최소 1개</b> 있나<br>
+📱 <b>스토리 연습 기록</b> — 주 4회 요일도 여기 같이 적어둔다: <span style="color:#b6b0a5">____ / ____ / ____ / ____</span></td></tr>
+</table>
+
+<div class="sec" style="margin-top:20px"><div class="sh">HOW MANY</div><div class="st" style="font-size:17px">레벨별 횟수<small>2026-08-16 차노 상향 — L3도 주 3회</small></div></div>
+<table>
+<tr><th style="width:130px">레벨</th><th style="width:100px" class="c">주 몇 회</th><th style="width:180px">예시 요일</th><th>왜 이렇게</th></tr>
+<tr><td class="k">L1 · L2</td><td class="c"><span class="pill p-lv">주 2회</span></td><td>화 · 금</td><td>기본기 시기다. <b>올리는 것보다 찍는 습관</b>이 먼저다</td></tr>
+<tr><td class="k">L3</td><td class="c"><span class="pill" style="background:var(--gold)">주 3회</span></td><td>화 · 금 · 일</td><td><b>상향(08-16 차노).</b> L3 핵심은 <b>모델작업·연습(가중치 70%)</b>이라 SNS는 10%뿐이다. 그래도 여기서 <b>습관을 붙여놔야</b> L4에서 SNS 70%가 갑자기 안 무섭다</td></tr>
+<tr><td class="k">L4 · L5</td><td class="c"><span class="pill" style="background:var(--gold)">주 3회</span></td><td>화 · 금 · 일</td><td><b>L4 핵심 = SNS 가중치 70%.</b> 여기가 비면 다른 축 만점 받아도 못 메운다. <b>일요일 1개가 시그니처 자리</b></td></tr>
+<tr><td class="k">연습 기록</td><td class="c"><span class="pill" style="background:var(--pur)">주 4회</span></td><td><b>스토리</b> (피드 아님)</td><td>피드를 어지럽히지 않고 <b>꾸준함만 남긴다.</b> 주 4회 = 만점</td></tr>
+</table>
+
+<div class="box">
+<h3>🌙 안 올리는 날에 하는 것 <span>비워두면 다음 주가 빈다</span></h3>
+<table style="margin-bottom:0">
+<tr><th style="width:150px">종류</th><th style="width:250px">그날 하는 일</th><th>시간</th></tr>
+<tr><td class="k">재료 모으기</td><td>핀터레스트·인스타에서 <b>20장 저장</b> → 그중 <b>3장만</b> 남기고 이유 한 줄씩</td><td>15분</td></tr>
+<tr><td class="k">이번 주 정하기</td><td>올릴 3개를 <b>미리 정한다.</b> 「①결과컷 / ②과정컷 / ⑥에세이」처럼 번호로만</td><td>5분</td></tr>
+<tr><td class="k">지난주 돌아보기</td><td>제일 반응 좋았던 것 1개. <b>왜 좋았는지 한 줄</b> — 이게 쌓이면 내 규칙이 된다</td><td>5분</td></tr>
+<tr><td class="k">완전 휴식</td><td><b>아무것도 안 한다.</b> 주 1일은 반드시 이 날이어야 한다</td><td>하루</td></tr>
+</table>
+</div>
+
+<div class="box">
+<h3>🎬 준비 데이 — 영상 1개를 위해 필요한 것 <span>영상은 하루에 안 나온다</span></h3>
+<div class="desc" style="margin-top:0">브이로그·릴스를 올리기로 했으면 <b>올리는 날 전에 반드시 준비 데이가 하나 있어야 한다.</b> 없으면 그 주는 못 올린다.</div>
+<table style="margin-bottom:0">
+<tr><th style="width:44px" class="c">순서</th><th style="width:150px">할 일</th><th style="width:270px">구체적으로</th><th>걸리는 시간</th></tr>
+<tr><td class="c">1</td><td class="k">뭘 찍을지 한 줄</td><td>「오늘은 <b>롯드 감는 손</b>만 찍는다」 — 한 줄로 못 쓰면 못 찍는다</td><td>2분</td></tr>
+<tr><td class="c">2</td><td class="k">찍을 자리 정하기</td><td>창가·거울 앞·검은 천 위. <b>매번 같은 자리로 고정</b>하면 톤이 저절로 맞는다</td><td>3분</td></tr>
+<tr><td class="c">3</td><td class="k">3배 찍기</td><td>1개 쓸 거면 <b>3개 찍는다.</b> 흔들리고 초점 나간 게 반이다</td><td>10분</td></tr>
+<tr><td class="c">4</td><td class="k">그날 바로 편집</td><td><b>다음 날로 미루면 안 한다.</b> 컷 편집 + 자막 2줄이면 끝</td><td>20분</td></tr>
+<tr><td class="c">5</td><td class="k">캡션 미리 쓰기</td><td>올리는 날 아침에 쓰면 대충 쓰게 된다. <b>준비 데이에 같이 써둔다</b></td><td>5분</td></tr>
+<tr class="head2"><td colspan="4">총 <b>40분</b>. 준비 데이 하루에 40분 쓰면 그 주 업로드 하나가 확보된다.</td></tr>
+</table>
+</div>
+
+<div class="box">
+<h3>📱 연습 기록은 스토리에 <span>2026-08-16 차노 확정</span></h3>
+<ul>
+<li><b>연습은 피드가 아니라 스토리에 올린다.</b> 피드는 「보여주는 것」, 스토리는 「하고 있는 것」 — 섞으면 피드가 지저분해진다</li>
+<li>올릴 때 <b>@atnown.official 계정 태그 + <span style="color:var(--gold)">#앳나운</span></b> 을 같이 단다 <span style="color:var(--no);font-weight:900">(※ 공식계정 핸들 정확한지 차노 확인 필요)</span></li>
+<li>이렇게 하면 <b>샵 계정에서 스토리를 리그램</b>할 수 있다 — 아이 계정 팔로워가 적어도 <b>샵 계정 도달을 빌려 쓴다</b></li>
+<li><b>주 4회 = 만점.</b> 잘 찍을 필요 없다. 마네킹 앞 손, 연습한 시간, 오늘 몇 통 했는지 — <b>기록이면 된다</b></li>
+<li>스토리는 24시간 뒤 사라지니까 <b>하이라이트 「연습」</b>을 하나 만들어 거기 모은다. 승급 심사 때 그게 <b>증거</b>가 된다</li>
+</ul>
+</div>
+
+<!-- ④ 콘텐츠 5종 -->
+<div class="sec"><div class="sh">STEP 4</div><div class="st">뭘 올리나 — 6종 돌리기<small>매번 새로 고민하지 않기 위한 것</small></div></div>
+<div class="desc">올릴 게 없는 게 아니라 <b>정해두지 않아서</b> 없는 거다. 이 5종을 돌리면 한 달이 채워진다.</div>
+<table>
+<tr><th style="width:44px" class="c">#</th><th style="width:130px">종류</th><th style="width:250px">뭘 찍나</th><th style="width:140px">언제 찍나</th><th>이건 왜 필요한가</th></tr>
+<tr><td class="c"><b>1</b></td><td class="k">결과컷</td><td>완성 스타일 · 같은 각도로 전/후</td><td>목(모델작업 저녁)</td><td>실력을 보여주는 기본. <b>매주 최소 1개</b></td></tr>
+<tr><td class="c"><b>2</b></td><td class="k">과정·손컷</td><td>섹션 뜨는 손 · 각도 · 도구 · 롯드</td><td>수(교육 직후)</td><td><b>모델 없이 찍을 수 있는 유일한 종류.</b> 초반엔 이게 제일 많이 나온다</td></tr>
+<tr><td class="c"><b>3</b></td><td class="k">배운 것 1줄</td><td>그날 배운 것 한 문장 + 사진 1장</td><td>수·목 아무 때나</td><td>제일 쉽고, <b>성장이 쌓이는 게 보인다</b></td></tr>
+<tr><td class="c"><b>4</b></td><td class="k">레퍼런스 해석</td><td>핀터레스트 1장 + 내 해석 (STEP 5 공식)</td><td>일(에세이 쓰는 날)</td><td>시술이 없는 주에도 <b>피드가 안 끊긴다</b></td></tr>
+<tr><td class="c"><b>5</b></td><td class="k">나</td><td>작업 중인 내 모습 · 도구 정리 · 출근길</td><td>아무 때나</td><td>손님은 기술이 아니라 <b>사람을 보고 온다</b></td></tr>
+<tr style="background:#fbf7ef"><td class="c"><b>6</b></td><td class="k">브이로그<br>·에세이</td><td>헤어 또는 <b>내 직업에 관한</b> 감성 영상·글</td><td>일(쓰는 날) · 휴무</td><td><b>시술이 없는 주에도 SNS 1회가 채워진다.</b> 모델도 기획도 필요 없다 — 2026-08-16 차노 확정</td></tr>
+</table>
+<table>
+<tr><th style="width:44px" class="c">#</th><th style="width:210px">⑥ 브이로그·에세이 — 이런 것들이 다 인정된다</th><th>어떻게 만드나 (10분 안)</th></tr>
+<tr><td class="c">1</td><td class="k">트렌드</td><td>이번 시즌 뭐가 뜨는지 · 왜 뜨는지 한 문단. 근거 사진 1~3장</td></tr>
+<tr><td class="c">2</td><td class="k">특정 헤어 하나</td><td>「레이어드컷」 하나만 파기 — 어떤 얼굴형에 맞고 어떻게 관리하나</td></tr>
+<tr><td class="c">3</td><td class="k">내가 좋아하는 헤어</td><td><b>취향을 밝히는 글.</b> 왜 좋아하는지 이유가 있으면 그게 곧 내 색이 된다</td></tr>
+<tr><td class="c">4</td><td class="k">요즘 인기 헤어 + 이유</td><td>3번과 다르다 — <b>남들이 왜 좋아하는지</b>를 읽는 것. 손님 언어를 배우는 훈련</td></tr>
+<tr><td class="c">5</td><td class="k">이 일을 하는 이유</td><td>에세이. <b>제일 어렵고 제일 강하다.</b> 손님이 사람을 보고 오게 만드는 글</td></tr>
+<tr><td class="c">6</td><td class="k">휴무에 가기 좋은 곳</td><td>월·토에 간 곳. 미용과 상관없어도 된다 — <b>사람이 보이는 게 목적</b></td></tr>
+<tr class="head2"><td colspan="3">📌 형식은 자유다 — <b>영상(브이로그) · 글 + 사진 · 릴스</b> 아무거나. <b>1건 = SNS 1회</b>로 센다.</td></tr>
+</table>
+<table>
+<tr><th style="width:80px">주차</th><th class="c">화</th><th class="c">금</th><th class="c">일 (L4·5)</th><th>이번 주 목표</th></tr>
+<tr><td class="k">1주차</td><td class="c">② 과정·손컷</td><td class="c">③ 배운 것 1줄</td><td class="c">④ 레퍼런스 해석</td><td>모델 없이도 3개가 나온다는 걸 확인</td></tr>
+<tr><td class="k">2주차</td><td class="c">① 결과컷</td><td class="c">② 과정·손컷</td><td class="c">③ 배운 것 1줄</td><td>모델작업 1건을 피드로 만들기</td></tr>
+<tr><td class="k">3주차</td><td class="c">① 결과컷</td><td class="c">④ 레퍼런스 해석</td><td class="c">⑥ 브이로그·에세이</td><td>롤모델 구도를 <b>한 번 그대로</b> 따라 해보기</td></tr>
+<tr><td class="k">4주차</td><td class="c">① 결과컷</td><td class="c">② 과정·손컷</td><td class="c">① 결과컷 (시그니처)</td><td><b>내 규칙 3개 확정</b> (STEP 6)</td></tr>
+<tr class="head2"><td colspan="5">⚠️ <b>한 주에 ⑥만 두 개는 안 된다.</b> 편해서 브이로그로만 채우면 <b>기술이 안 보이는 피드</b>가 된다. <b>주당 최소 1개는 ①②③ 중에서</b> — 시술·기술이 들어간 것으로.</td></tr>
+</table>
+
+<!-- ⑤ 에세이 공식 -->
+<div class="sec"><div class="sh">STEP 5</div><div class="st">핀터레스트 → 내 피드 만드는 공식<small>남의 사진을 읽고 어떻게 내 것이 되나</small></div></div>
+<div class="desc">남의 사진을 그냥 퍼오면 그건 남의 피드다. <b>다섯 단계를 거치면 내 것이 된다.</b> 사진 1장에 10분이면 된다.</div>
+<div class="flow">
+  <div class="fstep"><div class="n">1</div><div class="h">왜 눈이 갔나</div><div class="b">한 줄로. <b>「이뻐서」는 금지.</b> 「목선이 다 보여서」처럼 <b>이유 하나</b>를 집는다</div></div>
+  <div class="fstep"><div class="n">2</div><div class="h">기술 하나 집기</div><div class="b">그 안에서 <b>내가 아는 기술 용어</b>로 말할 수 있는 요소 하나. 「언더 무게를 뺐다」</div></div>
+  <div class="fstep"><div class="n">3</div><div class="h">손님으로 번역</div><div class="b"><b>어떤 손님한테 이게 답이 되나?</b> 「목이 짧아서 고민인 손님」</div></div>
+  <div class="fstep"><div class="n">4</div><div class="h">내 손으로 재현</div><div class="b">마네킹·가발·모델 아무거나. <b>완성도는 낮아도 된다.</b> 시도한 게 콘텐츠다</div></div>
+  <div class="fstep"><div class="n">5</div><div class="h">캡션 = ①+③</div><div class="b">「왜 눈이 갔나」 + 「어떤 손님한테 답인가」. <b>두 줄이면 충분하다</b></div></div>
+</div>
+<div class="box">
+<h3>예시 <span>이렇게 쓰면 된다</span></h3>
+<ul>
+<li><b>① 왜 눈이 갔나</b> — 뒤통수가 동그랗게 살아 있어서. 옆에서 봤을 때 뒷머리가 납작하지 않았다</li>
+<li><b>② 기술 하나</b> — 라운드 그라쥬에이션. 시술각을 눕히지 않고 45°를 끝까지 유지했다</li>
+<li><b>③ 손님으로 번역</b> — <b>뒤통수 납작해서 늘 묶고 다니는 손님.</b> 자르는 게 아니라 각도로 만들어주는 거다</li>
+<li><b>④ 재현</b> — 마네킹으로 1통. 왼쪽만 45° 유지, 오른쪽은 일부러 눕혀서 <b>비교컷</b>으로 올림</li>
+<li><b>⑤ 캡션</b> — "뒤통수가 납작한 게 아니라 각도가 눕혀진 겁니다. 묶고만 다니셨던 분들, 이건 각도로 만들어집니다."</li>
+</ul>
+<div class="axis">🧱 이 다섯 줄이 <b>그대로 「과제 제출」</b>이 되고, <b>그대로 「SNS 1건」</b>이 되고, 시간이 쌓이면 <b>그대로 「내 시그니처의 근거」</b>가 된다. 한 번 쓰고 세 군데 쓰는 것이다.</div>
+</div>
+
+<!-- ⑥ 4주 단계 -->
+<div class="sec"><div class="sh">STEP 6</div><div class="st">4주 단계 — 따라 하기에서 내 것으로<small>처음부터 「나만의 것」을 만들려고 하면 아무것도 못 올린다</small></div></div>
+<table>
+<tr><th style="width:90px">주차</th><th style="width:150px">이번 주 할 일</th><th style="width:260px">구체적으로</th><th>끝나면 나오는 것</th></tr>
+<tr><td class="k">1주차<br><span style="font-weight:700;color:var(--gray);font-size:11px">모으기</span></td><td><b>해부만 한다</b></td><td>롤모델 피드 3개를 STEP 1 시트로 뜯는다. 핀터레스트 보드 하나 만들고 <b>30장</b> 저장</td><td>⭕ 목록 = <b>내가 지금 할 수 있는 것들</b></td></tr>
+<tr><td class="k">2주차<br><span style="font-weight:700;color:var(--gray);font-size:11px">흉내</span></td><td><b>그대로 따라 한다</b></td><td>⭕ 중에서 <b>구도 하나</b>만 골라 그대로. 배경·거리·각도까지 똑같이. 3개 다 같은 구도로</td><td>「똑같이 하면 이렇게 나오는구나」의 <b>기준선</b></td></tr>
+<tr><td class="k">3주차<br><span style="font-weight:700;color:var(--gray);font-size:11px">한 개만 바꾸기</span></td><td><b>딱 하나만 바꾼다</b></td><td>구도는 그대로 두고 <b>빛만</b> 바꾼다. 또는 빛은 두고 <b>피사체만</b>. <b>한 번에 하나씩</b></td><td>뭘 바꿨을 때 좋아지는지 <b>내 눈이 생긴다</b></td></tr>
+<tr><td class="k">4주차<br><span style="font-weight:700;color:var(--gray);font-size:11px">규칙 확정</span></td><td><b>내 규칙 3개를 적는다</b></td><td>예: ①항상 창가 자연광 ②얼굴은 안 넣는다 ③채도는 항상 낮춘다 — <b>이 3개는 앞으로 안 바꾼다</b></td><td><b>이게 「내 피드」다.</b> 다음 달부터는 규칙대로만 찍으면 된다</td></tr>
+</table>
+<div class="warnbox">
+⚠️ <b>3주차가 제일 중요하고 제일 많이 건너뛴다.</b> 2주차 흉내가 잘 되면 재밌어서 계속 흉내만 낸다. <b>한 개만 바꾸는 그 주가 있어야 내 것이 시작된다.</b>
+</div>
+
+<!-- ⑦ 예시 -->
+<div class="sec"><div class="sh">SAMPLE</div><div class="st">채워진 예시<small>올려준 롤모델 피드 기준 · 나머지는 본인이 채운다</small></div></div>
+
+<div class="ex">
+  <div class="nm">주민 <span class="pill p-lv">시즈4</span> <span class="pill" style="background:var(--gold)">주 3회</span></div>
+  <div class="said">롤모델: 앳나운 계열 계정들 — 롱헤어 레이어드 · 인물 화보톤 · 완성컷 위주</div>
+  <table>
+  <tr><th style="width:70px">칸</th><th style="width:240px">그 피드는 이렇게 했다</th><th style="width:100px" class="c">나 가능?</th><th>어떻게</th></tr>
+  <tr><td class="k">구도</td><td>정면 반신, 인물이 화면 70%, 위쪽 여백</td><td class="c"><span class="pill p-ok">⭕</span></td><td>거울 앞 정면. 오늘 당장 됨</td></tr>
+  <tr><td class="k">빛</td><td>실내 자연광, 그림자 약함, 얼굴 정면광</td><td class="c"><span class="pill p-ok">⭕</span></td><td><b>창가 자리 하나 정해서 거기서만</b> 찍는다</td></tr>
+  <tr><td class="k">색·톤</td><td>저채도 웜, 배경 무채색</td><td class="c"><span class="pill p-mid">🔺</span></td><td>보정 <b>프리셋 하나 정해서 고정.</b> 매번 바꾸지 않기</td></tr>
+  <tr><td class="k">피사체</td><td>완성 스타일 인물컷. 과정·손은 거의 없음</td><td class="c"><span class="pill p-no">❌</span></td><td>모델 매번 못 구함 → <b>대체: 동기끼리 서로 찍어주기 · 마네킹 완성컷</b></td></tr>
+  </table>
+  <div class="axis">📌 <b>내 축 제안</b> — 8월 실기가 <b>기본아이롱 A · 남자와인딩 A · 과제 A · 연습 4회 A</b>다. <b>손이 정확한 게 강점</b>이다.<br>
+  그런데 롤모델은 <b>결과컷만</b> 있는 피드다. 결과컷은 모델이 있어야 하고, 주민은 그게 제일 안 되는 부분이다.<br>
+  → <b>「정확한 손」을 축으로.</b> 롤모델의 <b>빛과 톤은 가져오되 피사체는 손·과정으로 바꾼다.</b> 모델 없이 주 3회가 실제로 굴러가고, 강점도 그대로 보인다.<br>
+  · <b>지금 L4 핵심(SNS)이 비어 있다.</b> 여기가 <b>가중치 70%</b>다 — 8월에 실기 전부 A 받아도 나머지는 30%뿐이라 <b>산술적으로 못 메운다.</b></div>
+</div>
+
+<div class="ex">
+  <div class="nm">가영 <span class="pill p-lv">시즈5</span> <span class="pill" style="background:var(--gold)">주 3회</span></div>
+  <div class="said">"살짝은 기괴하고 낯선 느낌일 수 있는데 이런 분위기를 세련되게 표현하고 싶습니다"</div>
+  <table>
+  <tr><th style="width:70px">칸</th><th style="width:240px">그 피드는 이렇게 했다</th><th style="width:100px" class="c">나 가능?</th><th>어떻게</th></tr>
+  <tr><td class="k">구도</td><td>클로즈업·부분 잘라내기, 대칭 깨기, 뒷모습 많음</td><td class="c"><span class="pill p-ok">⭕</span></td><td><b>얼굴이 안 나오니 모델 동의 부담이 없다.</b> 제일 큰 장점</td></tr>
+  <tr><td class="k">빛</td><td>강한 명암, 어두운 배경, 한쪽에서 오는 스팟</td><td class="c"><span class="pill p-ok">⭕</span></td><td><b>검은 천 한 장</b>이면 된다. 핸드폰 손전등 하나로 스팟</td></tr>
+  <tr><td class="k">색·톤</td><td>흑백 + 포인트 1색(블루·핑크)</td><td class="c"><span class="pill p-ok">⭕</span></td><td>흑백 변환은 무료. <b>포인트색은 시술이 있을 때만</b></td></tr>
+  <tr><td class="k">피사체</td><td>런웨이급 오브제·주얼리·아방가르드 헤어</td><td class="c"><span class="pill p-no">❌</span></td><td>→ <b>대체: 시술 도구를 오브제처럼.</b> 롯드·핀·가위를 검은 천 위에 놓고 찍기</td></tr>
+  </table>
+  <div class="axis">📌 <b>내 축 제안</b> — 「기괴하고 낯설게」는 좋은데, 그대로 가면 <b>런웨이 사진 수집가</b>가 된다. 내가 만든 게 없으니까.<br>
+  → <b>「낯선 각도」로 바꾼다.</b> 기괴한 <b>결과물</b>을 만드는 게 아니라, 평범한 시술을 <b>낯선 각도·빛으로 찍는 것</b>. 8월 평가가 「형태 양호 · 깔끔도 보완」이니 <b>형태를 강조하는 각도</b>가 강점과도 맞는다.<br>
+  · 이 방향은 <b>모델 섭외 부담이 제일 적어서</b> 주 3회가 실제로 가능한 유일한 축이다.</div>
+</div>
+
+<div class="ex">
+  <div class="nm">재아 <span class="pill p-lv">시즈4</span> <span class="pill p-lv">주 2회부터</span></div>
+  <div class="said">롤모델 피드 아직 미제출 — 9/7 등산 때 같이 정한다</div>
+  <table>
+  <tr><th style="width:70px">칸</th><th colspan="3">— 본인이 채운다 —</th></tr>
+  <tr><td class="k">구도</td><td class="blank" colspan="3">여기 적기</td></tr>
+  <tr><td class="k">빛</td><td class="blank" colspan="3">여기 적기</td></tr>
+  <tr><td class="k">색·톤</td><td class="blank" colspan="3">여기 적기</td></tr>
+  <tr><td class="k">피사체</td><td class="blank" colspan="3">여기 적기</td></tr>
+  </table>
+  <div class="axis">📌 <b>재아는 주 3회로 시작하지 않는다.</b> 지금 태도 4점·지각·실기 D가 겹쳐 있다. 여기서 주 3회를 얹으면 <b>둘 다 무너진다.</b><br>
+  → <b>4주간 주 2회(화·금)로만.</b> 종류도 ②과정·손컷 하나로 고정 — 모델도 기획도 필요 없는 것부터. <b>지키는 경험이 먼저다.</b> 4주 지키면 그때 주 3회로 올린다.</div>
+</div>
+
+<div class="box">
+<h3>제출 · 채점 <span>이 시트가 점수로 어떻게 들어가나</span></h3>
+<ul>
+<li><b>STEP 1 해부 시트 3장</b> — 롤모델 3개. 제출하면 <b>교육 과제 1건</b>으로 인정</li>
+<li><b>STEP 2 내 축 한 문장</b> — 4주차에 확정. 이게 <b>승급 심사 때 「시그니처」 항목의 근거</b>가 된다</li>
+<li><b>주간 업로드</b> — <b>L1·2 주 2회 / L3·4·5 주 3회</b> (2026-08-16 차노 상향, 기존 정본은 L1~3 주 2회였음)</li>
+<li>🚫 <b>사전 제출·사전 검사 없다.</b> 「3레벨 이하는 메시지를 디렉터에게 미리 제출」 규정은 <b>운영하지 않는다</b> (2026-08-16 차노 확정). <b>그냥 올린다.</b> 디렉터는 올라온 걸 나중에 본다<br><span style="color:#6a655c">— 미리 검사받으면 「검사 통과할 글」을 쓰게 된다. 그건 내 피드가 아니다. 대신 <b>틀린 정보·손님 사진 동의</b> 두 가지만 각자 책임진다</span></li>
+<li><b>연습 주 4회 = 만점 — 스토리에 올린다.</b> @atnown.official 태그 + #앳나운. 하이라이트 「연습」에 모아두면 승급 심사 때 증거가 된다</li>
+<li><b>브이로그·에세이(⑥)도 SNS 1회로 인정한다</b> — 헤어 또는 내 직업에 관한 것이면 된다. (2026-08-16 차노 확정) <b>단, 주당 최소 1개는 시술·기술 콘텐츠여야 한다.</b></li>
+<li>L4·5는 <b>시그니처 30개(5개월 기준)</b>가 SNS 축 점수의 실체다. 주 3회 × 20주 = 60개 중 절반이 시그니처면 채워진다</li>
+</ul>
+</div>
+
+<div class="warnbox">
+🔴 <b>이 시트를 뿌리기 전에 차노가 정할 것 3가지</b><br>
+1. ✅ <b>해결됨</b> — 「3레벨 이하 메시지 사전 제출」은 <b>운영 안 함</b>으로 확정(08-16). 다만 정본 <b>「채점_개정.html」에 "3레벨↓ = 메시지 전달(디렉터 사전 제출)" 문구가 남아 있다</b> — 그 문서에서 지워야 한다<br>
+2. <b>L3 주 3회 상향을 정본에 반영</b> — 기존 「기준_레벨별 승급게이트」는 L1·2·3 주 2회다. 문서를 고쳐야 채점이 맞는다<br>
+3. <b>재아 주 2회 완화안</b> 승인 여부 — 정본은 L4 주 3회다. 예외로 둘지, 그냥 3회 시킬지<br>4. <b>브이로그·에세이 상한</b> — 「주당 최소 1개는 기술 콘텐츠」로 걸어뒀다. 이 가드레일 없이 자유로 갈지 확정<br>5. <b>공식계정 핸들</b> — 스토리 태그를 @atnown.official로 적어뒀다. 맞는지 확인
+</div>
+
+<div class="foot">A T &nbsp; N O W N &nbsp;·&nbsp; M Y &nbsp; F E E D</div>
+</div></body></html>

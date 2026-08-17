@@ -1,0 +1,33 @@
+{
+  "id": "manhwa_고데기편_20260815",
+  "room": "만화카드방",
+  "code": "M",
+  "priority": "high",
+  "title": "결이 이야기 ④ 고데기 편 6컷 생성 — 구조 확정본",
+  "request": "코워크(만화연재방)가 구조를 확정했다. 아래 명령만 실행한다. 프롬프트·구성·문구를 새로 만들지 않는다.\n\n```bash\ncd /Users/chanho/atnown-content-pipeline\npython3 scripts/manga_pipeline2.py content/manga/고데기편_구조.json 2>&1 | tee _cowork_sync/briefings/고데기편_생성결과.txt\nls -l _out/결이고데기_raw _out/결이고데기_final__M >> _cowork_sync/briefings/고데기편_생성결과.txt\n```\n\n실패하면 고치려 들지 말고 에러 전문을 그대로 브리핑 파일에 남긴다.",
+  "expected_output": [
+    "_out/결이고데기_raw/c1..c6.png",
+    "_out/결이고데기_final__M/c1..c6.png (1080x1350)",
+    "_cowork_sync/briefings/고데기편_생성결과.txt"
+  ],
+  "rules": [
+    "생성 주도권: 코워크(구조) → 본진 → 코덱스(실행). 코덱스는 구조를 만들지 않는다.",
+    "구버전 scripts/manga_pipeline.py 사용 금지.",
+    "이미지 안에 글자·숫자 금지. 문구는 make_card.py가 얹는다.",
+    "c3 라벨(정수리/관자놀이/옆/뒷목)은 코워크가 조립 단계에서 얹는다. 그림엔 넣지 않는다.",
+    "발행 금지. 차노 '올려' 후 진행."
+  ],
+  "check_after": [
+    "6장 전부 1080x1350",
+    "이미지 안 글자·숫자 없음",
+    "c5는 판 아이롱(봉고데기 아님)",
+    "소용돌이·장미 모양 없음",
+    "c3 네 자리 곱슬 모양이 서로 다르게 구분되는가"
+  ],
+  "status": "failed",
+  "created_at": "2026-08-16T10:30:00+09:00",
+  "source": "cowork_만화연재방",
+  "executed_at": "2026-08-16T10:30:47.531029",
+  "output": "/Library/Developer/CommandLineTools/usr/bin/python3: can't open file '/Users/chanho/atnown-content-pipeline/scripts/manga_pipeline2.py': [Errno 2] No such file or directory\nls: _out/결이고데기_final__M: No such file or directory\nls: _out/결이고데기_raw: No such file or directory\n",
+  "return_code": 1
+}

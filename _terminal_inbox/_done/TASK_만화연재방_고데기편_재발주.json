@@ -1,0 +1,27 @@
+{
+  "id": "manhwa_고데기편_20260816_r2",
+  "room": "만화카드방",
+  "code": "M",
+  "priority": "high",
+  "title": "[재발주] 결이 이야기 ④ 고데기 편 6컷 — 스크립트·폰트 복구 완료",
+  "request": "직전 발주는 scripts/manga_pipeline2.py 가 없어서 실패했다. 코워크가 방금 복구했다(스크립트 + 폰트 3종 BlackHanSans/Jua/Gaegu-Bold). 아래만 실행한다.\n\n```bash\ncd /Users/chanho/atnown-content-pipeline\npython3 scripts/manga_pipeline2.py content/manga/고데기편_구조.json 2>&1 | tee _cowork_sync/briefings/고데기편_생성결과.txt\nls -l _out/결이고데기_raw _out/결이고데기_final__M >> _cowork_sync/briefings/고데기편_생성결과.txt\n```\n\n프롬프트·문구를 새로 만들지 않는다. 실패하면 고치지 말고 에러 전문을 브리핑에 남긴다.",
+  "note": "⚠️ scripts/manga_pipeline2.py 가 또 사라지면 알려라. 8/14 커밋분이 8/16에 없어져 있었다.",
+  "expected_output": [
+    "_out/결이고데기_raw/c1..c6.png",
+    "_out/결이고데기_final__M/c1..c6.png",
+    "_cowork_sync/briefings/고데기편_생성결과.txt"
+  ],
+  "check_after": [
+    "6장 1080x1350",
+    "이미지 안 글자 없음",
+    "c5는 판 아이롱",
+    "소용돌이·장미 없음",
+    "c3 네 자리 곱슬이 서로 다른가"
+  ],
+  "status": "failed",
+  "created_at": "2026-08-16T13:39:00+09:00",
+  "source": "cowork_만화연재방",
+  "executed_at": "2026-08-16T13:39:51.318279",
+  "output": "  ⚠️ 레퍼런스 없음: /Users/chanho/atnown-content-pipeline/_out/매듭이야기_final_복고텍스트/c2_매듭.png\n  ⚠️ 레퍼런스 없음: /Users/chanho/atnown-content-pipeline/_out/매듭이야기_final_복고텍스트/c1_표지.png\n  ⚠️ 레퍼런스 없음: /Users/chanho/atnown-content-pipeline/_out/매듭이야기_final_복고텍스트/c6_공간.png\n레퍼런스가 하나도 없다. 캐릭터가 깨지므로 생성하지 않는다.\nls: _out/결이고데기_final__M: No such file or directory\nls: _out/결이고데기_raw: No such file or directory\n",
+  "return_code": 1
+}

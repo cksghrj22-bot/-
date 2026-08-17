@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AT NOWN · 디자이너 관계도</title>
+<style>
+:root{--cream:#F7F5F1;--ink:#1c1a17;--gold:#A8895E;--gray:#6a655c;--line:#E4DFD6;
+--mentor:#3F6F5F;--peer:#4E7CA8;--infl:#B5793A;--tense:#B3453A;--warn:#B3453A;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#efece6;color:var(--ink);font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.55;padding:20px 12px 70px;-webkit-text-size-adjust:100%}
+.wrap{max-width:1200px;margin:0 auto}
+.cover{background:var(--ink);color:var(--cream);border-radius:16px;padding:24px 26px;margin-bottom:13px}
+.cover .t{font-size:11px;letter-spacing:.24em;color:var(--gold);font-weight:800}
+.cover h1{font-size:24px;font-weight:900;margin:7px 0 5px}
+.cover p{font-size:13px;color:#d7d1c6}
+.cover .stamp{font-size:11px;color:#9a948a;margin-top:9px;font-weight:700}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:12px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 10px;text-align:center}
+.kpi .n{font-size:22px;font-weight:900}.kpi .t{font-size:11px;color:var(--gray);margin-top:3px;font-weight:700}
+.kpi.alert .n{color:var(--warn)}
+.today{background:#fff;border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:12px;padding:13px 15px;margin-bottom:12px}
+.today h3{font-size:13px;font-weight:900;margin-bottom:8px}
+.today ul{list-style:none;display:flex;flex-wrap:wrap;gap:7px}
+.today li{font-size:12px;font-weight:700;background:var(--cream);border:1px solid var(--line);border-radius:20px;padding:5px 11px}
+.today li b{color:var(--warn)}
+.bar{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px;align-items:center}
+button{background:var(--ink);color:var(--cream);border:0;border-radius:9px;padding:8px 13px;font-size:12.5px;font-weight:800;cursor:pointer;font-family:inherit}
+button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+button.on{background:var(--gold)}
+button:hover{opacity:.9}
+select,input[type=text],textarea{border:1px solid var(--line);border-radius:8px;padding:8px 9px;font-size:13px;font-family:inherit;background:#fff;color:var(--ink)}
+label.fl{font-size:12px;font-weight:800;color:var(--gray)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:13px}
+.panel h2{font-size:14px;font-weight:900;margin-bottom:12px;display:flex;align-items:baseline;gap:8px}
+.panel h2 small{margin-left:auto;font-size:10.5px;letter-spacing:.12em;color:var(--gold);font-weight:800}
+/* 카드 */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:11px}
+.c{background:var(--cream);border:1px solid var(--line);border-radius:13px;padding:14px 15px;position:relative}
+.c.stale{border-color:#d8b8b3;background:#fdf6f5}
+.c .top{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:9px}
+.c .nm{font-size:17px;font-weight:900}
+.c .rl{font-size:10.5px;font-weight:900;color:#fff;background:var(--gray);border-radius:10px;padding:1px 8px}
+.c .br{font-size:11px;color:var(--gray);font-weight:800}
+.c .seat{margin-left:auto;font-size:10.5px;font-weight:900;color:var(--gold);border:1px solid var(--gold);border-radius:9px;padding:1px 8px}
+.c .feat{font-size:12.5px;font-weight:800;margin-bottom:9px;line-height:1.5}
+.c dl{display:grid;grid-template-columns:60px 1fr;gap:5px 8px;font-size:11.5px;align-items:start}
+.c dt{color:var(--gold);font-weight:900;font-size:10.5px;padding-top:1px}
+.c dd{color:#43403a;line-height:1.5}
+.c dd.empty{color:#b6b0a5;font-style:italic}
+.c .rels{margin-top:9px;border-top:1px dashed var(--line);padding-top:8px;display:flex;flex-wrap:wrap;gap:5px}
+.rc{font-size:10px;font-weight:900;color:#fff;border-radius:9px;padding:2px 7px}
+.rc.mentor{background:var(--mentor)}.rc.peer{background:var(--peer)}.rc.infl{background:var(--infl)}.rc.tense{background:var(--tense)}
+.c .upd{position:absolute;right:13px;bottom:11px;font-size:9.5px;color:#b6b0a5;font-weight:800}
+/* 자리 배치 */
+.shops{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.shop{background:var(--cream);border:1px solid var(--line);border-radius:13px;padding:14px}
+.shop h4{font-size:13px;font-weight:900;margin-bottom:4px}
+.shop .cap{font-size:10.5px;color:var(--gray);font-weight:700;margin-bottom:10px}
+.seats{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.st{background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 9px;min-height:56px}
+.st .no{font-size:9.5px;font-weight:900;color:var(--gold)}
+.st .who{font-size:13px;font-weight:900;margin-top:2px}
+.st .sub{font-size:10px;color:var(--gray);font-weight:700}
+.st.empty{background:repeating-linear-gradient(45deg,#f4f1eb,#f4f1eb 6px,#eeeae2 6px,#eeeae2 12px);border-style:dashed}
+.st.empty .who{color:#b6b0a5;font-weight:700;font-size:11.5px}
+/* 관계선 */
+#graph{width:100%;height:430px;display:block}
+.glegend{display:flex;flex-wrap:wrap;gap:12px;margin-top:9px;font-size:12px;font-weight:800}
+.glegend span{display:inline-flex;align-items:center;gap:6px}
+.glegend i{width:18px;height:3px;border-radius:2px;display:inline-block}
+/* 입력 */
+.frow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+.frow input[type=text]{flex:1;min-width:180px}
+.io{background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:12px;display:none;margin-top:10px}
+.io textarea{width:100%;height:70px;font-size:11px;font-family:ui-monospace,monospace}
+.note-b{font-size:12px;color:var(--gray);background:var(--cream);border:1px solid var(--line);border-radius:11px;padding:12px 16px;line-height:1.7;margin-top:12px}
+.note-b b{color:var(--ink)}
+@media(max-width:700px){.kpis{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body><div class="wrap">
+
+<div class="cover">
+  <div class="t">AT NOWN · DESIGNER RELATION MAP</div>
+  <h1>디자이너 관계도 🧭</h1>
+  <p>자리가 관계를 만든다. 옆자리가 곧 대화상대고, 대화상대가 곧 그 사람의 기준이 된다.<br>특징 · 자리 · 성격 · 지금 필요한 것 · 요즘 인스타 — 다섯 칸이 채워지면 그 사람에게 뭐라고 말을 걸어야 할지 보인다.</p>
+  <div class="stamp">교육디렉터방(방5) 겸 관계도방 · 개설 2026-08-14 · 라인업 정본 대조 완료 · 회색 칸은 아직 안 채운 것 — 채우는 게 이 방 일이다</div>
+</div>
+
+<div class="kpis">
+  <div class="kpi"><div class="n" id="k_n">0</div><div class="t">등록 인원</div></div>
+  <div class="kpi"><div class="n" id="k_seat">0</div><div class="t">자리 확정</div></div>
+  <div class="kpi"><div class="n" id="k_fill">0%</div><div class="t">니즈 3칸 채움</div></div>
+  <div class="kpi alert"><div class="n" id="k_stale">0</div><div class="t">확인 필요</div></div>
+</div>
+
+<div class="today"><h3>🔺 이번 달 손봐야 할 사람</h3><ul id="todo"></ul></div>
+
+<div class="bar">
+  <label class="fl">보기</label>
+  <button class="ghost on" id="v_card" onclick="setView('card')">카드</button>
+  <button class="ghost" id="v_seat" onclick="setView('seat')">자리 배치</button>
+  <button class="ghost" id="v_rel" onclick="setView('rel')">관계선</button>
+  <label class="fl" style="margin-left:8px">지점</label>
+  <select id="brFilter" onchange="render()">
+    <option value="all">전체</option><option>본점</option><option>플레이스</option><option>메종한남</option>
+  </select>
+  <label class="fl">상태</label>
+  <select id="stFilter" onchange="render()">
+    <option value="all">전체</option><option value="hole">빈칸 있는 사람</option><option value="ok">다 채운 사람</option>
+  </select>
+  <button class="ghost" onclick="toggleIO('save')">💾 저장</button>
+  <button class="ghost" onclick="toggleIO('load')">📥 불러오기</button>
+</div>
+
+<div class="panel" id="p_card"><h2>디자이너 카드 <small>PROFILE</small></h2><div class="cards" id="cards"></div></div>
+
+<div class="panel" id="p_seat" style="display:none"><h2>자리 배치 <small>FLOOR</small></h2><div class="shops" id="shops"></div>
+<div class="note-b">자리는 우연이 아니다. <b>누구 옆에 앉느냐가 그 사람이 하루에 듣는 말을 정한다.</b> 자리를 바꾸는 건 교육 한 번보다 셀 때가 있다. 빈 슬롯은 아직 안 적은 자리다.</div></div>
+
+<div class="panel" id="p_rel" style="display:none"><h2>관계선 <small>NETWORK</small></h2>
+<svg id="graph" viewBox="0 0 900 430" preserveAspectRatio="xMidYMid meet"></svg>
+<div class="glegend">
+  <span><i style="background:var(--mentor)"></i>멘토·사수</span>
+  <span><i style="background:var(--peer)"></i>동기·짝</span>
+  <span><i style="background:var(--infl)"></i>영향받음</span>
+  <span><i style="background:var(--tense)"></i>긴장·조심</span>
+</div></div>
+
+<div class="panel"><h2>기록 입력 <small>INPUT</small></h2>
+  <div class="frow">
+    <select id="f_who" onchange="loadPerson()"></select>
+    <input type="text" id="f_seat" placeholder="자리 (예: 본점 3번 · 창가)">
+    <input type="text" id="f_feat" placeholder="특징 — 한 줄로 이 사람">
+  </div>
+  <div class="frow">
+    <input type="text" id="f_pers" placeholder="성격 / 어떻게 말을 걸어야 하는 사람인가">
+    <input type="text" id="f_need" placeholder="지금 필요한 것 (기술·손님·인정·쉼·돈·판)">
+  </div>
+  <div class="frow">
+    <input type="text" id="f_insta" placeholder="요즘 인스타에 올리는 것 (주제·톤·빈도)">
+    <button onclick="savePerson()">저장</button>
+  </div>
+  <div class="frow">
+    <label class="fl">관계 추가</label>
+    <select id="r_from"></select>
+    <select id="r_type"><option value="mentor">멘토·사수</option><option value="peer">동기·짝</option><option value="infl">영향받음</option><option value="tense">긴장·조심</option></select>
+    <select id="r_to"></select>
+    <button class="ghost" onclick="addRel()">＋ 관계</button>
+  </div>
+  <div class="frow">
+    <label class="fl">새 인물</label>
+    <input type="text" id="n_name" placeholder="이름" style="min-width:110px;flex:0 0 130px">
+    <select id="n_role"><option>원장</option><option>부원장</option><option>실장</option><option selected>디자이너</option><option>스타일리스트</option><option>시즈</option></select>
+    <select id="n_br"><option>본점</option><option>플레이스</option><option>메종한남</option></select>
+    <button class="ghost" onclick="addPerson()">＋ 등록</button>
+  </div>
+  <div class="io" id="io">
+    <div id="io_label" style="font-size:12px;color:var(--gray)"></div>
+    <textarea id="io_txt"></textarea>
+    <div style="margin-top:6px;display:flex;gap:7px">
+      <button id="io_act" onclick="ioAction()">복사</button>
+      <button class="ghost" onclick="document.getElementById('io').style.display='none'">닫기</button>
+    </div>
+  </div>
+</div>
+
+<div class="note-b">
+🧭 <b>이 방이 이걸 왜 하나</b> — 교육은 「무엇을 가르치나」로 짜지만, 실제로 사람이 움직이는 건 「누가 말했나」다. 같은 말도 옆자리가 하면 듣고, 디렉터가 하면 안 듣는다. 그래서 자리·성격·지금 필요한 것·요즘 인스타를 붙여둔다. <b>가르칠 사람이 아니라 말 걸 사람을 정하려고.</b><br>
+📌 <b>기록 주기</b> — 월 1회 갱신이 기본. 60일 넘게 손 안 댄 사람은 위에 「확인 필요」로 뜬다. 인스타는 그 사람이 지금 뭘 팔고 싶은지가 제일 정직하게 나오는 자리라 매달 본다.<br>
+⚠️ <b>2026-08-14 정본 대조 결과</b> — 「교육_전체안내_배포용」의 선생님 라인업과 맞췄다. <b>신후(열펌·룩북 L3~L5)가 통째로 빠져 있어 추가</b>했고, <b>시은 부원장은 정본에 없어 제외</b>했다(앞서 10/16 특강 담당으로 잘못 적었음 — 실제는 신후). 특강 담당: 8/21 함경식 원장님(외부) · 9/18 연교 · 10/16 신후 · 11/20 재아 실장 · 12/11 승현.<br>· <b>재아 실장</b>과 시즈4 <b>재아</b>가 동명이인인지 확인 요망 — 지금은 별도 인물로 등록.
+</div>
+
+<script>
+var RT={mentor:'멘토',peer:'동기',infl:'영향',tense:'긴장'};
+var TODAY='2026-08-14';
+
+/* seed: 8월까지 리포에서 실측된 것만 채우고, 나머지는 빈칸으로 둔다 */
+var P=[
+ {n:'차노',role:'원장',br:'본점',seat:'',feat:'교육 총괄 · 디자인 미감·방법 L1~L5 (15과목, 최다)',pers:'',need:'',insta:'',upd:'2026-08-14',rel:[]},
+ {n:'와이',role:'원장',br:'본점',seat:'',feat:'맨즈(옴므) 프로그램 총괄 — 별도 트랙 8회 + 테스트',pers:'',need:'',insta:'',upd:'2026-08-14',rel:[]},
+ {n:'창엽',role:'부원장',br:'본점',seat:'',feat:'커트 기초 L1·L2 (7과목) · 수·목·금 아침 7:30 · 쇼츠 23편 전량 완결(콘텐츠 자산 최다)',pers:'',need:'',insta:'',upd:'2026-08-14',rel:[{t:'mentor',to:'범서'},{t:'mentor',to:'지민'}]},
+ {n:'성희',role:'부원장',br:'본점',seat:'',feat:'콜드펌 L1~L5 (15과목) · 8/13 트렌드시안 커트',pers:'',need:'넓은 판 — "시야를 넓히는 수업이 더 많아야 한다"고 직접 남김',insta:'',upd:'2026-08-14',rel:[{t:'mentor',to:'희선'},{t:'mentor',to:'정민'},{t:'mentor',to:'태원'},{t:'mentor',to:'가영'}]},
+ {n:'보미',role:'실장',br:'플레이스',seat:'',feat:'업스타일·브레이드 L1~L5 (15과목) · 8/12 업스타일',pers:'',need:'',insta:'',upd:'2026-08-14',rel:[{t:'mentor',to:'주민'},{t:'tense',to:'재아'}]},
+ {n:'신후',role:'실장',br:'본점',seat:'',feat:'열펌·룩북 L3~L5 (9과목) · 10/16 특강 「자질」 ※ 관계도 신규 등재(2026-08-14 정본 대조로 누락 발견)',pers:'',need:'',insta:'',upd:'2026-08-14',rel:[]},
+ {n:'이호',role:'실장',br:'본점',seat:'',feat:'커트 디자인·시그니처 L3~L5 (8과목) · 가발 시그니처 · 간이시험 담당',pers:'',need:'',insta:'',upd:'2026-08-14',rel:[{t:'mentor',to:'태원'},{t:'mentor',to:'범진'},{t:'mentor',to:'유안'},{t:'mentor',to:'가영'}]},
+ {n:'연교',role:'부원장',br:'플레이스',seat:'',feat:'9/18 특강 「탈색」',pers:'',need:'',insta:'',upd:'2026-08-14',rel:[]},
+ {n:'재아(실장)',role:'실장',br:'본점',seat:'',feat:'11/20 특강 「단발펌」 ※ 시즈4 재아와 동명이인 확인 필요',pers:'',need:'',insta:'',upd:'2026-08-14',rel:[]},
+ {n:'승현',role:'실장',br:'본점',seat:'',feat:'12/11 특강 「컨설팅」',pers:'',need:'',insta:'',upd:'2026-08-14',rel:[]},
+ {n:'희선',role:'스타일리스트',br:'본점',seat:'',feat:'8/13 트렌드시안 커트 — 따라오는 수준 상',pers:'',need:'',insta:'',upd:'2026-08-13',rel:[{t:'peer',to:'정민'}]},
+ {n:'정민',role:'스타일리스트',br:'플레이스',seat:'',feat:'8/13 교육 지각 — 관리 대상 · 9/14 등산 필참',pers:'',need:'',insta:'',upd:'2026-08-13',rel:[]},
+ {n:'주민',role:'시즈',br:'플레이스',seat:'',feat:'시즈4 · 8월 전반 우수·태도 만점 · L4 핵심(SNS) 기록 없음',pers:'',need:'',insta:'',upd:'2026-08-14',rel:[]},
+ {n:'재아',role:'시즈',br:'본점',seat:'',feat:'시즈4 · 태도4·지각 경고 · 9/14 등산 필참(회복 트랙)',pers:'',need:'',insta:'',upd:'2026-08-13',rel:[]},
+ {n:'어진',role:'시즈',br:'메종한남',seat:'',feat:'시즈4 재입사(3→4) · 직급시험 · 관찰 4주',pers:'',need:'',insta:'',upd:'2026-08-13',rel:[]},
+ {n:'범서',role:'시즈',br:'메종한남',seat:'',feat:'시즈1 신규 · "정확한 이론을 배경으로 가발작업까지" 요청',pers:'',need:'이론→실기 연결 커리큘럼',insta:'',upd:'2026-08-13',rel:[]},
+ {n:'지민',role:'시즈',br:'본점',seat:'',feat:'시즈2 · ⚠️ 최신 캘린더에서 「가위 파지·도구」가 L1 단독이 되어 이 과목을 못 듣는다',pers:'',need:'',insta:'',upd:'2026-08-14',rel:[]},
+ {n:'형우',role:'시즈',br:'플레이스',seat:'',feat:'시즈3 · 태도 좋음 · L3 핵심(현장·전투력) 기록 없음',pers:'',need:'',insta:'',upd:'2026-08-14',rel:[]},
+ {n:'태원',role:'시즈',br:'본점',seat:'',feat:'시즈5 · 기본기 강화 필요 · L5 핵심(손님) 기록 없음',pers:'',need:'',insta:'',upd:'2026-08-14',rel:[]},
+ {n:'범진',role:'시즈',br:'본점',seat:'',feat:'시즈5',pers:'',need:'',insta:'',upd:'',rel:[]},
+ {n:'유안',role:'시즈',br:'본점',seat:'',feat:'시즈5',pers:'',need:'',insta:'',upd:'',rel:[]},
+ {n:'가영',role:'시즈',br:'플레이스',seat:'',feat:'시즈5 · 형태 양호 · 깔끔도 보완',pers:'',need:'',insta:'',upd:'2026-08-13',rel:[]}
+];
+
+var VIEW='card';
+function setView(v){VIEW=v;
+  ['card','seat','rel'].forEach(function(x){
+    document.getElementById('v_'+x).className='ghost'+(x===v?' on':'');
+    document.getElementById('p_'+x).style.display=(x===v?'block':'none');});
+  render();}
+function esc(s){return (s==null?'':(''+s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+function daysSince(d){if(!d)return 9999;
+  var a=new Date(TODAY),b=new Date(d);return Math.round((a-b)/86400000);}
+function holes(p){var h=0;['seat','feat','pers','need','insta'].forEach(function(k){if(!p[k])h++;});return h;}
+function isStale(p){return !p.upd||daysSince(p.upd)>60||holes(p)>=4;}
+function list(){
+  var br=document.getElementById('brFilter').value, st=document.getElementById('stFilter').value;
+  return P.filter(function(p){
+    if(br!=='all'&&p.br!==br)return false;
+    if(st==='hole'&&holes(p)===0)return false;
+    if(st==='ok'&&holes(p)>0)return false;
+    return true;});}
+
+function render(){
+  if(VIEW==='card')renderCards();
+  if(VIEW==='seat')renderSeats();
+  if(VIEW==='rel')renderGraph();
+  updKPI();updToday();fillSelects();
+}
+function renderCards(){
+  var w=document.getElementById('cards');w.innerHTML='';
+  list().forEach(function(p){
+    var d=document.createElement('div');d.className='c'+(isStale(p)?' stale':'');
+    var rels=p.rel.map(function(r){return '<span class="rc '+r.t+'">'+RT[r.t]+' · '+esc(r.to)+'</span>';}).join('');
+    d.innerHTML='<div class="top"><span class="nm">'+esc(p.n)+'</span><span class="rl">'+esc(p.role)+'</span>'+
+      '<span class="br">'+esc(p.br)+'</span>'+
+      (p.seat?'<span class="seat">'+esc(p.seat)+'</span>':'<span class="seat" style="color:#b6b0a5;border-color:#ddd7cc">자리 미정</span>')+'</div>'+
+      '<div class="feat">'+(p.feat?esc(p.feat):'<span style="color:#b6b0a5;font-weight:600">특징 미기재</span>')+'</div>'+
+      '<dl>'+
+      '<dt>성격</dt><dd class="'+(p.pers?'':'empty')+'">'+(p.pers?esc(p.pers):'—')+'</dd>'+
+      '<dt>지금필요</dt><dd class="'+(p.need?'':'empty')+'">'+(p.need?esc(p.need):'—')+'</dd>'+
+      '<dt>인스타</dt><dd class="'+(p.insta?'':'empty')+'">'+(p.insta?esc(p.insta):'—')+'</dd>'+
+      '</dl>'+(rels?'<div class="rels">'+rels+'</div>':'')+
+      '<div class="upd">'+(p.upd?esc(p.upd):'미확인')+'</div>';
+    w.appendChild(d);});
+}
+function renderSeats(){
+  var w=document.getElementById('shops');w.innerHTML='';
+  ['본점','플레이스','메종한남'].forEach(function(b){
+    var mem=P.filter(function(p){return p.br===b;});
+    var seated=mem.filter(function(p){return p.seat;}),un=mem.filter(function(p){return !p.seat;});
+    var slots='';
+    seated.forEach(function(p,i){slots+='<div class="st"><div class="no">'+esc(p.seat)+'</div><div class="who">'+esc(p.n)+'</div><div class="sub">'+esc(p.role)+'</div></div>';});
+    un.forEach(function(p){slots+='<div class="st empty"><div class="no">자리 미정</div><div class="who">'+esc(p.n)+'</div><div class="sub">'+esc(p.role)+'</div></div>';});
+    var d=document.createElement('div');d.className='shop';
+    d.innerHTML='<h4>'+b+'</h4><div class="cap">'+mem.length+'명 · 자리 확정 '+seated.length+'</div><div class="seats">'+slots+'</div>';
+    w.appendChild(d);});
+}
+function renderGraph(){
+  var svg=document.getElementById('graph');
+  var mem=list();var N=mem.length;var cx=450,cy=205,rx=350,ry=165;
+  var pos={};mem.forEach(function(p,i){var a=-Math.PI/2+i*2*Math.PI/N;pos[p.n]={x:cx+rx*Math.cos(a),y:cy+ry*Math.sin(a),a:a};});
+  var C={mentor:'#3F6F5F',peer:'#4E7CA8',infl:'#B5793A',tense:'#B3453A'};
+  var lines='',nodes='';
+  mem.forEach(function(p){p.rel.forEach(function(r){
+    if(!pos[r.to])return;var a=pos[p.n],b=pos[r.to];
+    lines+='<path d="M'+a.x.toFixed(1)+' '+a.y.toFixed(1)+' Q'+cx+' '+cy+' '+b.x.toFixed(1)+' '+b.y.toFixed(1)+
+      '" fill="none" stroke="'+C[r.t]+'" stroke-width="2" opacity=".62"/>';});});
+  mem.forEach(function(p){var q=pos[p.n];var right=Math.cos(q.a)>-0.01;
+    nodes+='<circle cx="'+q.x.toFixed(1)+'" cy="'+q.y.toFixed(1)+'" r="'+(p.rel.length?6.5:4.5)+'" fill="'+(p.rel.length?'#1c1a17':'#b6b0a5')+'"/>'+
+      '<text x="'+(q.x+(right?11:-11)).toFixed(1)+'" y="'+(q.y+4).toFixed(1)+'" text-anchor="'+(right?'start':'end')+
+      '" font-size="12" font-weight="800" fill="#1c1a17" font-family="-apple-system,sans-serif">'+esc(p.n)+'</text>';});
+  svg.innerHTML=lines+nodes;
+}
+function updKPI(){
+  document.getElementById('k_n').textContent=P.length;
+  var seat=P.filter(function(p){return p.seat;}).length;
+  document.getElementById('k_seat').textContent=seat;
+  var full=P.filter(function(p){return p.pers&&p.need&&p.insta;}).length;
+  document.getElementById('k_fill').textContent=Math.round(full/P.length*100)+'%';
+  document.getElementById('k_stale').textContent=P.filter(isStale).length;
+}
+function updToday(){
+  var ul=document.getElementById('todo');var it=[];
+  var noSeat=P.filter(function(p){return !p.seat;}).length;
+  if(noSeat)it.push('자리 미기재 <b>'+noSeat+'명</b>');
+  var noInsta=P.filter(function(p){return !p.insta;}).length;
+  if(noInsta)it.push('인스타 미확인 <b>'+noInsta+'명</b>');
+  var noPers=P.filter(function(p){return !p.pers;}).length;
+  if(noPers)it.push('성격 미기재 <b>'+noPers+'명</b>');
+  var iso=P.filter(function(p){
+    if(p.rel.length)return false;
+    return !P.some(function(q){return q.rel.some(function(r){return r.to===p.n;});});});
+  if(iso.length)it.push('관계선 없음 · <b>'+iso.map(function(p){return p.n;}).slice(0,6).join('·')+(iso.length>6?' 외':'')+'</b>');
+  var need=P.filter(function(p){return p.need;});
+  need.forEach(function(p){it.push('<b>'+esc(p.n)+'</b> 지금 필요: '+esc(p.need).slice(0,22));});
+  ul.innerHTML=it.map(function(t){return '<li>'+t+'</li>';}).join('');
+}
+function fillSelects(){
+  ['f_who','r_from','r_to'].forEach(function(id){
+    var s=document.getElementById(id),v=s.value;s.innerHTML='';
+    P.forEach(function(p,i){s.innerHTML+='<option value="'+(id==='f_who'?i:esc(p.n))+'">'+esc(p.n)+' ('+esc(p.role)+')</option>';});
+    if(v)s.value=v;});
+}
+function loadPerson(){var p=P[+document.getElementById('f_who').value];if(!p)return;
+  ['seat','feat','pers','need','insta'].forEach(function(k){document.getElementById('f_'+k).value=p[k]||'';});}
+function savePerson(){var i=+document.getElementById('f_who').value;var p=P[i];
+  ['seat','feat','pers','need','insta'].forEach(function(k){p[k]=document.getElementById('f_'+k).value.trim();});
+  p.upd=TODAY;render();}
+function addRel(){var f=document.getElementById('r_from').value,t=document.getElementById('r_type').value,to=document.getElementById('r_to').value;
+  if(f===to)return;var p=P.find(function(x){return x.n===f;});if(!p)return;
+  if(!p.rel.some(function(r){return r.to===to&&r.t===t;}))p.rel.push({t:t,to:to});
+  p.upd=TODAY;render();}
+function addPerson(){var n=document.getElementById('n_name').value.trim();if(!n)return;
+  P.push({n:n,role:document.getElementById('n_role').value,br:document.getElementById('n_br').value,
+    seat:'',feat:'',pers:'',need:'',insta:'',upd:TODAY,rel:[]});
+  document.getElementById('n_name').value='';render();}
+var ioMode='save';
+function toggleIO(m){ioMode=m;var io=document.getElementById('io');io.style.display='block';
+  document.getElementById('io_label').textContent=m==='save'?'아래 코드 전체 복사해 보관 → 다음에 [불러오기]로 붙여넣기.':'저장한 코드를 붙여넣고 [적용].';
+  document.getElementById('io_act').textContent=m==='save'?'복사':'적용';
+  var t=document.getElementById('io_txt');
+  if(m==='save'){t.value=JSON.stringify(P);t.select();}else{t.value='';t.focus();}}
+function ioAction(){var t=document.getElementById('io_txt');
+  if(ioMode==='save'){t.select();document.execCommand('copy');document.getElementById('io_act').textContent='복사됨 ✓';}
+  else{try{var d=JSON.parse(t.value.trim());if(Array.isArray(d)){P=d;render();document.getElementById('io').style.display='none';}else alert('형식 안 맞음');}catch(e){alert('읽을 수 없음');}}}
+
+render();loadPerson();
+</script>
+</div></body></html>
