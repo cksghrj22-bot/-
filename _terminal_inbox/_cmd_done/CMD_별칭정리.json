@@ -1,0 +1,11 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "fix_aliases.py"
+  ],
+  "requested_by": "전략기획및개인업무(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "지운 줄:\n  - alias 본진='cd ~/atnown-content-pipeline && caffeinate claude'\n  - alias 본진='zsh /Users/chanho/atnown-content-pipeline/scripts/menu.sh'\n\n지금 상태:\n  본진  → 클로드 코드 (차노 원본 복구)\n  메뉴  → 상태·재시작·로그\n  bj    → 메뉴와 같음\n\n백업: .zshrc.bak.*",
+  "completed_at": "2026-08-17T20:47:50.702556"
+}

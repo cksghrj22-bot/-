@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ATNOWN · L5 일본 이미지분류체계</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{--cream:#F7F5F1;--ink:#111;--gold:#A8895E;--gray:#9B958C;--line:#E4DFD6;}
+  body{background:#e8e5df;color:var(--ink);font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;padding:28px 16px;}
+  .deck{max-width:960px;margin:0 auto;}
+  .slide{background:var(--cream);border:1px solid var(--line);margin-bottom:20px;padding:86px 56px 52px;position:relative;overflow:hidden;min-height:300px;}
+  .serif{font-family:"Cormorant Garamond","Times New Roman",serif;}
+  .mono{position:absolute;top:34px;left:56px;display:flex;align-items:center;gap:14px;}
+  .an{width:34px;height:34px;border:1.5px solid var(--ink);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:"Cormorant Garamond",serif;font-weight:700;font-size:15px;letter-spacing:1px;}
+  .mlabel{font-size:10px;letter-spacing:.28em;color:var(--gray);font-weight:700;}
+  .vlabel{position:absolute;right:20px;top:50%;transform:translateY(-50%) rotate(180deg);writing-mode:vertical-rl;font-size:10px;letter-spacing:.3em;color:var(--gray);font-weight:700;}
+  .cover{min-height:440px;padding-top:52px;display:flex;flex-direction:column;justify-content:center;}
+  .cover h1{font-size:58px;line-height:1.04;font-weight:600;letter-spacing:.01em;}
+  .cover h1 .g{color:var(--gold);}
+  .cover .krsub{font-size:16px;margin-top:22px;font-weight:500;}
+  .cover .encap{font-size:11px;letter-spacing:.2em;color:var(--gray);margin-top:8px;font-weight:700;}
+  .icons{display:flex;gap:24px;margin-top:34px;flex-wrap:wrap;}
+  .ico{display:flex;flex-direction:column;align-items:center;gap:7px;}
+  .ico .c{width:26px;height:26px;border:1.3px solid var(--gold);border-radius:50%;}
+  .ico .l{font-size:9px;letter-spacing:.1em;color:var(--gray);font-weight:700;}
+  .kicker{font-size:11px;letter-spacing:.24em;color:var(--gold);font-weight:700;margin-bottom:14px;}
+  .slide h2{font-family:"Cormorant Garamond","Times New Roman",serif;font-size:38px;font-weight:600;line-height:1.14;}
+  .slide h2 .g{color:var(--gold);}
+  .slide .goal{font-size:14px;color:#666;margin-top:10px;line-height:1.7;max-width:620px;}
+  .num{font-family:"Cormorant Garamond",serif;font-size:15px;color:var(--gold);font-weight:700;letter-spacing:.1em;}
+  .big{font-family:"Cormorant Garamond",serif;font-size:120px;line-height:.8;color:var(--gold);opacity:.16;position:absolute;right:44px;bottom:24px;font-weight:600;}
+  .points{margin-top:22px;list-style:none;max-width:660px;}
+  .points li{font-size:15px;padding:11px 0 11px 26px;border-bottom:1px solid var(--line);position:relative;color:#333;line-height:1.6;}
+  .points li:last-child{border-bottom:none;}
+  .points li::before{content:"—";position:absolute;left:0;color:var(--gold);font-weight:700;}
+  .points b{font-weight:800;color:var(--ink);}
+  .even{position:absolute;top:34px;right:56px;font-size:10px;font-weight:800;color:var(--cream);background:var(--ink);padding:3px 10px;border-radius:20px;letter-spacing:.05em;}
+  .master{min-height:340px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+  .master h2{font-size:42px;}
+  .master .sub{font-size:14px;color:var(--gray);margin-top:16px;letter-spacing:.05em;line-height:1.8;}
+  .foot{text-align:center;font-size:10px;letter-spacing:.35em;color:#b7b1a6;font-weight:700;margin:26px 0 4px;}
+  /* 좌표판 */
+  .map{margin-top:30px;position:relative;height:420px;border:1px solid var(--line);background:#fff;}
+  .map .ax{position:absolute;background:var(--line);}
+  .map .axh{left:0;right:0;top:50%;height:1px;}
+  .map .axv{top:0;bottom:0;left:50%;width:1px;}
+  .map .lab{position:absolute;font-size:10px;letter-spacing:.22em;font-weight:800;color:var(--gold);}
+  .map .lt{top:8px;left:50%;transform:translateX(-50%);}
+  .map .lb{bottom:8px;left:50%;transform:translateX(-50%);}
+  .map .ll{left:10px;top:50%;transform:translateY(-50%);}
+  .map .lr{right:10px;top:50%;transform:translateY(-50%);}
+  .cell{position:absolute;transform:translate(-50%,-50%);text-align:center;}
+  .cell .kr{font-size:13px;font-weight:800;color:var(--ink);white-space:nowrap;}
+  .cell .en{font-size:8px;letter-spacing:.14em;color:var(--gray);font-weight:700;margin-top:2px;white-space:nowrap;}
+  .cell.hi .kr{color:var(--gold);}
+  .cell.hi::before{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:74px;height:74px;border:1px solid var(--gold);border-radius:50%;opacity:.5;}
+  table.t{margin-top:24px;width:100%;border-collapse:collapse;font-size:13.5px;}
+  table.t th{text-align:left;padding:10px 8px;border-bottom:1.5px solid var(--ink);font-size:10px;letter-spacing:.16em;color:var(--gray);font-weight:800;text-transform:uppercase;}
+  table.t td{padding:12px 8px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.6;color:#333;}
+  table.t td b{color:var(--ink);}
+  table.t .g{color:var(--gold);font-weight:800;}
+  .quote{margin-top:26px;font-family:"Cormorant Garamond",serif;font-size:27px;line-height:1.4;color:var(--ink);border-left:2px solid var(--gold);padding-left:22px;max-width:640px;}
+  .warn{margin-top:24px;background:#fff;border:1px solid var(--gold);padding:18px 22px;max-width:660px;}
+  .warn .h{font-size:10px;letter-spacing:.2em;color:var(--gold);font-weight:800;margin-bottom:8px;}
+  .warn .b{font-size:14px;line-height:1.75;color:#333;}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:26px;}
+  .card{background:#fff;border:1px solid var(--line);padding:22px 24px;}
+  .card .t{font-size:11px;letter-spacing:.18em;color:var(--gold);font-weight:800;margin-bottom:10px;}
+  .card .n{font-size:19px;font-weight:800;line-height:1.35;}
+  .card .d{font-size:13px;color:#555;margin-top:10px;line-height:1.7;}
+  .steps{display:flex;gap:0;margin-top:30px;flex-wrap:wrap;}
+  .step{flex:1;min-width:120px;border-top:2px solid var(--gold);padding:14px 12px 0 0;}
+  .step .n{font-family:"Cormorant Garamond",serif;color:var(--gold);font-size:20px;font-weight:700;}
+  .step .t{font-size:15px;font-weight:800;margin-top:4px;}
+  .step .d{font-size:11.5px;color:var(--gray);margin-top:6px;line-height:1.6;}
+  @media print{body{background:#fff;padding:0}.slide{page-break-after:always;margin:0;border:none}}
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- COVER -->
+  <div class="slide cover">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">ATNOWN ACADEMY · L5</div></div>
+    <div class="vlabel">IMAGE SCALE</div>
+    <h1 class="serif">일본<br><span class="g">이미지분류</span>체계</h1>
+    <div class="krsub">손님의 말을 시술로 옮기는 번역기 · 8/19(수) 07:30 · 차노</div>
+    <div class="encap">WARM &middot; COOL &middot; SOFT &middot; HARD &middot; CHILD &middot; ADULT &middot; CURVE &middot; STRAIGHT</div>
+    <div class="icons">
+      <div class="ico"><div class="c"></div><div class="l">WORD</div></div>
+      <div class="ico"><div class="c"></div><div class="l">MAP</div></div>
+      <div class="ico"><div class="c"></div><div class="l">DISTANCE</div></div>
+      <div class="ico"><div class="c"></div><div class="l">VARIABLE</div></div>
+      <div class="ico"><div class="c"></div><div class="l">CONFIRM</div></div>
+    </div>
+  </div>
+
+  <!-- 왜 -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">ATNOWN ACADEMY · L5</div></div>
+    <div class="even">00</div>
+    <div class="kicker">WHY &mdash; 오늘 이걸 배우는 이유</div>
+    <h2 class="serif">"청순하게 해주세요"는<br><span class="g">주문서가 아니다.</span></h2>
+    <div class="goal">그 말은 <b>좌표</b>다. 좌표로 옮기기 전까지 정해진 건 아무것도 없다.<br>
+    같은 단어를 손님과 내가 다른 그림으로 상상하는 순간, 그 시술은 이미 어긋나 있다.</div>
+    <ul class="points">
+      <li>일본이 이미지를 나눈 이유는 취향 놀이가 아니라 <b>감각을 말로 주고받기</b> 위해서다</li>
+      <li>좌표가 없으면 상담은 매번 운이다. 좌표가 있으면 <b>재현</b>된다</li>
+      <li>L5 시험 기준 = 모객력 · 디자인력 · <b>상담력</b> — 좌표를 말로 설명하는 게 상담력이다</li>
+    </ul>
+    <div class="big serif">01</div>
+  </div>
+
+  <!-- A축 -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">ATNOWN ACADEMY · L5</div></div>
+    <div class="even">A</div>
+    <div class="kicker">AXIS A &mdash; 언어 이미지 스케일 (NCD)</div>
+    <h2 class="serif">손님이 <span class="g">원하는 것</span></h2>
+    <div class="goal">일본컬러디자인연구소가 만든 색·형용사 좌표. 가로 <b>WARM↔COOL</b>, 세로 <b>SOFT↔HARD</b>.<br>
+    보조축으로 <b>CLEAR↔GRAYISH</b>(맑음↔탁함)가 있다. 형용사·색·질감이 전부 이 판 위에 얹힌다.</div>
+
+    <div class="map">
+      <div class="ax axh"></div><div class="ax axv"></div>
+      <div class="lab lt">SOFT &middot; 부드럽다</div>
+      <div class="lab lb">HARD &middot; 단단하다</div>
+      <div class="lab ll">WARM<br>따뜻</div>
+      <div class="lab lr">COOL<br>차갑</div>
+
+      <div class="cell" style="left:30%;top:13%"><div class="kr">로맨틱</div><div class="en">ROMANTIC</div></div>
+      <div class="cell" style="left:13%;top:24%"><div class="kr">프리티</div><div class="en">PRETTY</div></div>
+      <div class="cell" style="left:74%;top:12%"><div class="kr">클리어</div><div class="en">CLEAR</div></div>
+      <div class="cell" style="left:33%;top:38%"><div class="kr">내추럴</div><div class="en">NATURAL</div></div>
+      <div class="cell" style="left:14%;top:45%"><div class="kr">캐주얼</div><div class="en">CASUAL</div></div>
+      <div class="cell" style="left:76%;top:37%"><div class="kr">쿨 캐주얼</div><div class="en">COOL CASUAL</div></div>
+      <div class="cell hi" style="left:53%;top:30%"><div class="kr">엘레강트</div><div class="en">ELEGANT</div></div>
+      <div class="cell" style="left:60%;top:57%"><div class="kr">시크</div><div class="en">CHIC</div></div>
+      <div class="cell" style="left:12%;top:66%"><div class="kr">다이나믹</div><div class="en">DYNAMIC</div></div>
+      <div class="cell" style="left:11%;top:84%"><div class="kr">와일드</div><div class="en">WILD</div></div>
+      <div class="cell" style="left:29%;top:62%"><div class="kr">고저스</div><div class="en">GORGEOUS</div></div>
+      <div class="cell" style="left:29%;top:82%"><div class="kr">에스닉</div><div class="en">ETHNIC</div></div>
+      <div class="cell" style="left:47%;top:76%"><div class="kr">클래식</div><div class="en">CLASSIC</div></div>
+      <div class="cell" style="left:64%;top:88%"><div class="kr">댄디</div><div class="en">DANDY</div></div>
+      <div class="cell" style="left:83%;top:70%"><div class="kr">모던</div><div class="en">MODERN</div></div>
+      <div class="cell" style="left:84%;top:88%"><div class="kr">포멀</div><div class="en">FORMAL</div></div>
+    </div>
+    <div class="warn">
+      <div class="h">외울 것 / 안 외울 것</div>
+      <div class="b"><b>축만 외운다.</b> 칸 이름 16개는 축이 있으면 저절로 나온다.<br>
+      위쪽은 밝고 가볍고 여리다 · 아래쪽은 어둡고 무겁고 세다 · 왼쪽은 따뜻하고 사람 냄새 난다 · 오른쪽은 차갑고 정돈돼 있다.</div>
+    </div>
+  </div>
+
+  <!-- B축 -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">ATNOWN ACADEMY · L5</div></div>
+    <div class="even">B</div>
+    <div class="kicker">AXIS B &mdash; 얼굴타입 8분류</div>
+    <h2 class="serif">손님이 <span class="g">이미 가진 것</span></h2>
+    <div class="goal">일본 미용에서 상담에 쓰는 얼굴 인상 좌표. 세로 <b>아이↔어른</b>, 가로 <b>곡선↔직선</b>.<br>
+    ⚠️ <b>얼굴형(윤곽)이 아니라 얼굴 인상</b>이다. 계란형·사각형 얘기가 아니다.</div>
+
+    <div class="map" style="height:380px">
+      <div class="ax axh"></div><div class="ax axv"></div>
+      <div class="lab lt">CHILD &middot; 아이 인상</div>
+      <div class="lab lb">ADULT &middot; 어른 인상</div>
+      <div class="lab ll">CURVE<br>곡선</div>
+      <div class="lab lr">STRAIGHT<br>직선</div>
+
+      <div class="cell hi" style="left:18%;top:18%"><div class="kr">큐트</div><div class="en">CUTE</div></div>
+      <div class="cell" style="left:38%;top:33%"><div class="kr">액티브 큐트</div><div class="en">ACTIVE CUTE</div></div>
+      <div class="cell" style="left:63%;top:18%"><div class="kr">프레시</div><div class="en">FRESH</div></div>
+      <div class="cell" style="left:84%;top:33%"><div class="kr">쿨 캐주얼</div><div class="en">COOL CASUAL</div></div>
+      <div class="cell" style="left:17%;top:82%"><div class="kr">페미닌</div><div class="en">FEMININE</div></div>
+      <div class="cell" style="left:38%;top:66%"><div class="kr">소프트 엘레강트</div><div class="en">SOFT ELEGANT</div></div>
+      <div class="cell" style="left:63%;top:66%"><div class="kr">엘레강트</div><div class="en">ELEGANT</div></div>
+      <div class="cell hi" style="left:84%;top:82%"><div class="kr">쿨</div><div class="en">COOL</div></div>
+    </div>
+
+    <table class="t">
+      <tr><th>타입</th><th>인상</th><th>안전한 실루엣</th><th>기본 컬러 방향</th></tr>
+      <tr><td><b>큐트</b> · 아이×곡선</td><td>동글고 친근함</td><td>숏~세미 · 안말음 · 컬 앞머리</td><td class="g">핑크 · 베이지</td></tr>
+      <tr><td><b>액티브 큐트</b> · 아이×곡선강</td><td>발랄·개성</td><td>숏~세미 · 뚜렷한 라인 · 일자뱅</td><td class="g">오렌지 · 체리 · 블랙</td></tr>
+      <tr><td><b>프레시</b> · 아이×직선</td><td>산뜻·중성</td><td>숏~세미 · 스트레이트/겉말음</td><td class="g">애쉬 · 베이지</td></tr>
+      <tr><td><b>쿨 캐주얼</b> · 아이×직선강</td><td>보이시·시크</td><td>울프 · 러프한 결</td><td class="g">한색 · 올리브</td></tr>
+      <tr><td><b>페미닌</b> · 어른×곡선</td><td>화사·여성</td><td>세미~롱 · 웨이브 · 컬 앞머리</td><td class="g">베이지 · 로즈브라운</td></tr>
+      <tr><td><b>소프트 엘레강트</b> · 어른×중간</td><td>단정·부드러움</td><td>숏보브~세미 · 굵은 원컬</td><td class="g">내추럴 · 애쉬</td></tr>
+      <tr><td><b>엘레강트</b> · 어른×직선약</td><td>또렷·세련</td><td>롱 · 큰 웨이브 · 앞머리 없음</td><td class="g">브라운 계열</td></tr>
+      <tr><td><b>쿨</b> · 어른×직선</td><td>샤프·도회적</td><td>세미~롱 스트레이트</td><td class="g">그레이 · 라벤더 그레이지</td></tr>
+    </table>
+  </div>
+
+  <!-- 다리 -->
+  <div class="slide master">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">ATNOWN ACADEMY · L5</div></div>
+    <div class="kicker">THE BRIDGE</div>
+    <h2 class="serif">두 판은 <span class="g">같은 단어</span>를 쓴다</h2>
+    <div class="sub">엘레강트 · 캐주얼 · 쿨 — 겹치는 단어가 다리다.<br>
+    A판은 <b>원하는 것</b>, B판은 <b>가진 것</b>. 둘을 겹쳐 놓으면 거리가 보인다.</div>
+    <div class="quote" style="margin-top:34px;border-left:none;padding:0;text-align:center;">
+      디자인이란,<br>그 <span style="color:var(--gold)">거리</span>를 다루는 일이다.
+    </div>
+  </div>
+
+  <!-- 5단계 -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">ATNOWN ACADEMY · L5</div></div>
+    <div class="even">CORE</div>
+    <div class="kicker">THE METHOD &mdash; 오늘의 전부</div>
+    <h2 class="serif">말 → 좌표 → 거리 → <span class="g">변수</span> → 확인</h2>
+    <div class="steps">
+      <div class="step"><div class="n serif">01</div><div class="t">말</div><div class="d">손님 단어 그대로 받아적는다. 바꾸지 않는다</div></div>
+      <div class="step"><div class="n serif">02</div><div class="t">좌표</div><div class="d">A판에 찍는다. 애매하면 "연예인 누구요?"</div></div>
+      <div class="step"><div class="n serif">03</div><div class="t">거리</div><div class="d">B판(얼굴)과 얼마나 먼가. 좁힐지 벌릴지 판단</div></div>
+      <div class="step"><div class="n serif">04</div><div class="t">변수</div><div class="d">길이 · 질감 · 컬 · 컬러 · 앞머리 5개로 번역</div></div>
+      <div class="step"><div class="n serif">05</div><div class="t">확인</div><div class="d">변수 5개를 말로 되읽어 준다. 그게 계약이다</div></div>
+    </div>
+    <div class="warn">
+      <div class="h">시안의 함정</div>
+      <div class="b">시안에는 <b>결과</b>만 있고 <b>변수</b>가 없다. 시안을 받았으면 거기서 변수 5개를 뽑아
+      말로 확인해야 계약이 된다. "이거요" 하고 끄덕이는 건 계약이 아니다.</div>
+    </div>
+    <div class="big serif">05</div>
+  </div>
+
+  <!-- 예시 3 -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">ATNOWN ACADEMY · L5</div></div>
+    <div class="even">CASE</div>
+    <div class="kicker">EXAMPLES &mdash; 예시 3 (과제와 같은 포맷)</div>
+    <h2 class="serif">실제로 <span class="g">이렇게</span> 굴린다</h2>
+    <table class="t">
+      <tr><th style="width:15%">손님 말</th><th style="width:17%">A 좌표</th><th style="width:15%">B 얼굴</th><th style="width:13%">거리</th><th>변수 5개 · 함정</th></tr>
+      <tr>
+        <td><b>"청순하게요"</b></td>
+        <td>WARM–SOFT<br><span class="g">클리어 / 로맨틱 사이</span></td>
+        <td>아이×곡선<br><b>큐트</b></td>
+        <td><b>가깝다</b><br>→ 좁힌다</td>
+        <td>세미롱 · 결 매끈 · 끝 원컬 안말음 · 베이지 · 시스루뱅<br>
+        <span class="g">함정</span> — '청순'이 <b>"어려 보이게"</b>인지 <b>"정돈되게"</b>인지 갈린다. 되물어야 좌표가 확정된다</td>
+      </tr>
+      <tr>
+        <td><b>"시크하게요"</b></td>
+        <td>COOL–HARD · GRAYISH<br><span class="g">시크 / 모던</span></td>
+        <td>어른×직선<br><b>쿨</b></td>
+        <td><b>가깝다</b><br>→ 좁히되 5% 남긴다</td>
+        <td>세미~롱 · 매끈 · 스트레이트 · 그레이지 · 앞머리 없음<br>
+        <span class="g">함정</span> — 100% 맞추면 <b>차가워 보인다.</b> 끝에 살짝 C컬 하나만 남겨 사람 온도를 만든다</td>
+      </tr>
+      <tr>
+        <td><b>"센 언니처럼요"</b></td>
+        <td>WARM–HARD<br><span class="g">다이나믹 / 와일드</span></td>
+        <td>아이×곡선<br><b>큐트</b></td>
+        <td class="g"><b>멀다</b><br>→ 일부러 벌린다</td>
+        <td>단발 · 질감 거칠게 · 스트레이트+끝 꺾임 · 어두운 애쉬 · 일자뱅<br>
+        <span class="g">함정</span> — 부조화가 개성이 되려면 손님이 <b>감당</b>해야 한다. 직업·나이·아침 관리시간을 먼저 묻는다. 이 판단이 L5다</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- 우리 서사 -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">ATNOWN ACADEMY · L5</div></div>
+    <div class="even">AT NOWN</div>
+    <div class="kicker">OUR STORY &mdash; 왜 하필 지금 이 수업인가</div>
+    <h2 class="serif">오늘은 <span class="g">바닥판</span>이다</h2>
+    <div class="two">
+      <div class="card"><div class="t">8/27 · L4</div><div class="n">형용사 이론</div><div class="d">오늘 만든 좌표 위에 <b>말</b>을 얹는 수업</div></div>
+      <div class="card"><div class="t">9/22 · L5</div><div class="n">퍼스널컬러와 구조</div><div class="d">같은 좌표 위에 <b>색</b>을 얹는 수업. NCD는 원래 색 체계다</div></div>
+      <div class="card"><div class="t">8/23 · L3</div><div class="n">질감마스터 1</div><div class="d">SOFT↔HARD를 <b>가위로</b> 만드는 법</div></div>
+      <div class="card"><div class="t">11/6 · L5</div><div class="n">골격과 구조커트</div><div class="d">좌표 위에 <b>몸</b>을 얹는 수업</div></div>
+    </div>
+    <div class="quote">Four classes, one map.</div>
+  </div>
+
+  <!-- 공부법 + 과제 -->
+  <div class="slide">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">ATNOWN ACADEMY · L5</div></div>
+    <div class="even">HOMEWORK</div>
+    <div class="kicker">HOW TO STUDY &mdash; 그리고 과제</div>
+    <h2 class="serif">감이 아니라 <span class="g">기록</span>으로 는다</h2>
+    <ul class="points">
+      <li><b>한 손님 = 한 좌표 기록.</b> 말 → 좌표 → 얼굴타입 → 거리 → 변수 5개 → 결과 사진. 6칸</li>
+      <li><b>인스타 100장 좌표 찍기.</b> 저장한 시안을 A판에 흩뿌려 봐라 — 몰린 곳이 내 한계이자 내 시그니처다</li>
+      <li><b>질문하는 법.</b> "뭐 해드려요?" ✕ → <b>"이렇게 좌표 찍었는데, 좁혀야 할까요 벌려야 할까요?"</b> ○</li>
+    </ul>
+    <div class="warn" style="border-color:var(--ink)">
+      <div class="h" style="color:var(--ink)">과제 · 다음 수업까지</div>
+      <div class="b">① <b>분류체계 요약 1장</b> — 축 2개 + 칸 이름. <b>안 보고</b> 그린다<br>
+      ② <b>예시 3건</b> — 실제 손님 케이스. 말 → 좌표 → 거리 → 변수 5개 → 결과<br>
+      제출: <code>과제_이미지분류_시트.html</code> 양식</div>
+    </div>
+  </div>
+
+  <!-- 클로징 -->
+  <div class="slide master">
+    <div class="mono"><div class="an serif">AN</div><div class="mlabel">ATNOWN ACADEMY · L5</div></div>
+    <div class="kicker">CLOSING</div>
+    <h2 class="serif">체계를 <span class="g">외우지</span> 마라</h2>
+    <div class="sub">좌표는 손님 앞에서 꺼내는 자가 아니다.<br>
+    내 <b>머릿속 지도</b>다. 지도를 보여주는 사람은 길을 모르는 사람이다.</div>
+    <div class="quote" style="margin-top:34px;border-left:none;padding:0;text-align:center;">
+      이미지 분류는 취향 놀이가 아니라,<br>손님 말을 시술로 옮기는 <span style="color:var(--gold)">번역기</span>다.
+    </div>
+  </div>
+
+  <div class="foot">AT NOWN ACADEMY &middot; L5 IMAGE CLASSIFICATION &middot; 2026.08.19 &middot; CHANO</div>
+</div>
+</body>
+</html>

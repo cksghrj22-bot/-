@@ -1,0 +1,12 @@
+{
+  "room": "전략기획및개인업무",
+  "task": "﻿토큰 절약형 상황판 (2026-08-14)\r\n규칙\r\n1. 월요일만 브라우저로 마인드 콘텐츠 7개 검색 → 마인드풀.md에 저장\r\n2. 매일 9시/22시: 마인드풀에서 1개 뽑기 (검색 안 함)\r\n상황판 템플릿 (짧게)\r\n아침 9시\r\n📋 할일: (3개만)\r\n\r\n\r\n💪 건강: 운동/수면 체크\r\n\r\n\r\n🎬 마인드: [마인드풀에서 1개]\r\n저녁 22시\r\n✅ 완료: (핵심만)\r\n\r\n\r\n📝 내일: (3개만)\r\n\r\n\r\n🎬 마인드: [마인드풀에서 1개]\r\n토큰\r\n항목\r\n\t토큰\r\n\t상황판 생성\r\n\t~1k\r\n\t마인드풀 참조\r\n\t~0.5k\r\n\t1회 총\r\n\t~1.5k\r\n\t하루 2회\r\n\t~3k\r\n\t월\r\n\t~90k\r\n\t\r\n\r\n기존 720k → 90k = 8배 절약",
+  "timeout": 300,
+  "title": "TASK_토큰절약_상황판규칙.md",
+  "request": "﻿토큰 절약형 상황판 (2026-08-14)\r\n규칙\r\n1. 월요일만 브라우저로 마인드 콘텐츠 7개 검색 → 마인드풀.md에 저장\r\n2. 매일 9시/22시: 마인드풀에서 1개 뽑기 (검색 안 함)\r\n상황판 템플릿 (짧게)\r\n아침 9시\r\n📋 할일: (3개만)\r\n\r\n\r\n💪 건강: 운동/수면 체크\r\n\r\n\r\n🎬 마인드: [마인드풀에서 1개]\r\n저녁 22시\r\n✅ 완료: (핵심만)\r\n\r\n\r\n📝 내일: (3개만)\r\n\r\n\r\n🎬 마인드: [마인드풀에서 1개]\r\n토큰\r\n항목\r\n\t토큰\r\n\t상황판 생성\r\n\t~1k\r\n\t마인드풀 참조\r\n\t~0.5k\r\n\t1회 총\r\n\t~1.5k\r\n\t하루 2회\r\n\t~3k\r\n\t월\r\n\t~90k\r\n\t\r\n\r\n기존 720k → 90k = 8배 절약",
+  "status": "failed",
+  "created_at": "2026-08-17T20:35:45.367203",
+  "source": "cowork_inbox/전략기획및개인업무",
+  "completed_at": "2026-08-17T20:35:49.712434",
+  "codex_result": "오류: Reading additional input from stdin...\nOpenAI Codex v0.147.0\n--------\nworkdir: /Users/chanho/atnown-content-pipeline\nmodel: o4-mini\nprovider: openai\napproval: never\nsandbox: workspace-write [workdir, /tmp, $TMPDIR]\nreasoning effort: medium\nreasoning summaries: none\nsession id: 01a00f81-9a70-7340-9376-3f89fce744f2\n--------\nuser\n방: 전략기획및개인업무\n제목: TASK_토큰절약_상황판규칙.md\n\n요청:\n﻿토큰 절약형 상황판 (2026-08-14)\n규칙\n1. 월요일만 브라우저로 마인드 콘텐츠 7개 검색 → 마인드풀.md에 저장\n2. 매일 9시/22시: 마인드풀에서 1개 뽑기 (검색 안 함)\n상황판 템플릿 (짧게)\n아침 9시\n📋 할일: (3개만)\n\n\n💪 건강: 운동/수면 체크\n\n\n🎬 마인드: [마인드풀에서 1개]\n저녁 22시\n✅ 완료: (핵심만)\n\n\n📝 내일: (3개만)\n\n\n🎬 마인드: [마인드풀에서 1개]\n토큰\n항목\n\t토큰\n\t상황판 생성\n\t~1k\n\t마인드풀 참조\n\t~0.5k\n\t1회 총\n\t~1.5k\n\t하루 2회\n\t~3k\n\t월\n\t~90k\n\t\n\n기존 720k → 90k = 8배 절약\n\n작업 완료 후 결과만 간단히 보고.\n\nwarning: Model metadata for `o4-mini` not found. Defaulting to fallback metadata; this can degrade performance and cause issues.\nERROR: {\"type\":\"error\",\"status\":400,\"error\":{\"type\":\"invalid_request_error\",\"message\":\"The 'o4-mini' model is not supported when using Codex with a ChatGPT account.\"}}\nERROR: {\"type\":\"error\",\"status\":400,\"error\":{\"type\":\"invalid_request_error\",\"message\":\"The 'o4-mini' model is not supported when using Codex with a ChatGPT account.\"}}"
+}

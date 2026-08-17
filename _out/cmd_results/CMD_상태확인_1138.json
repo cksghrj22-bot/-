@@ -1,0 +1,8 @@
+{
+  "cmd": "status",
+  "requested_by": "전략기획및개인업무(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "{\n  \"데몬\": [\n    \"51368 /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python /Users/chanho/atnown-content-pipeline/scripts/blog_watcher.py\",\n    \"74917 /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python scripts/codex_dispatch.py --daemon\",\n    \"74924 /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python scripts/cowork_multi_watch.py --daemon\"\n  ],\n  \"미커밋\": 18,\n  \"최근커밋\": [\n    \"59c759c3 자동저장 2026-08-17 14:50 (8개 파일)\",\n    \"d5909fe5 [만화연재방] 작업로그 — 이 방 산출물이 전부 「영역 밖」이던 것 정정 + 4편 소급 기록\",\n    \"cb7dba13 [블로그자동화방] 블로그 씨앗 7자리 정리 — 볼트 원문 기준\"\n  ],\n  \"대기주문서\": [\n    \"(없음)\"\n  ],\n  \"실패주문서\": [\n    \"TASK_전략기획및개인업무_TASK_아침저녁상황판_규칙_20260817T203546.json\",\n    \"TASK_전략기획및개인업무_TASK_토큰절약_상황판규칙_20260817T203545.json\"\n  ]\n}",
+  "completed_at": "2026-08-17T20:38:09.122872"
+}

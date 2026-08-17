@@ -1,0 +1,11 @@
+{
+  "room": "전략기획및개인업무",
+  "title": "차노책출판 드라이브 인박스 생성·등록 (08-16 발주 재발주)",
+  "task": "차노책출판 방의 드라이브 인박스가 없다. secrets/cowork_rooms.json 에 6방만 있고 '차노책출판' 키가 빠져 있음(실측 08-17). 1) 구글드라이브에서 기존 '_코워크_*_inbox' 폴더들의 부모 폴더를 찾는다. 2) 그 밑에 '_코워크_차노책출판_inbox' 폴더가 이미 있으면 만들지 말고 ID만 쓰고, 없으면 새로 만든다. 3) 그 폴더 ID를 secrets/cowork_rooms.json 에 \"차노책출판\": \"<폴더ID>\" 로 추가한다(기존 키는 건드리지 않는다). 4) python3 scripts/cowork_multi_watch.py --rooms 로 7방이 다 나오는지 확인하고, 출력 그대로 보고한다.",
+  "timeout": 300,
+  "status": "done",
+  "created_at": "2026-08-17T11:45:00",
+  "재발주_사유": "08-16 동일 발주가 디스패처 인자 버그(codex -p = --profile)로 실패했는데 status:done 으로 찍히고 _done 으로 이동해 유실됨",
+  "completed_at": "2026-08-17T11:39:19.637890",
+  "codex_result": "오류: error: invalid value '\n방: 전략기획및개인업무\n제목: 차노책출판 드라이브 인박스 생성·등록 (08-16 발주 재발주)\n\n요청:\n차노책출판 방의 드라이브 인박스가 없다. secrets/cowork_rooms.json 에 6방만 있고 '차노책출판' 키가 빠져 있음(실측 08-17). 1) 구글드라이브에서 기존 '_코워크_*_inbox' 폴더들의 부모 폴더를 찾는다. 2) 그 밑에 '_코워크_차노책출판_inbox' 폴더가 이미 있으면 만들지 말고 ID만 쓰고, 없으면 새로 만든다. 3) 그 폴더 ID를 secrets/cowork_rooms.json 에 \"차노책출판\": \"<폴더ID>\" 로 추가한다(기존 키는 건드리지 않는다). 4) python3 scripts/cowork_multi_watch.py --rooms 로 7방이 다 나오는지 확인하고, 출력 그대로 보고한다.\n\n작업 완료 후 결과만 간단히 보고.\n' for '--profile <CONFIG_PROFILE_V2>': invalid --profile value `\n방: 전략기획및개인업무\n제목: 차노책출판 드라이브 인박스 생성·등록 (08-16 발주 재발주)\n\n요청:\n차노책출판 방의 드라이브 인박스가 없다. secrets/cowork_rooms.json 에 6방만 있고 '차노책출판' 키가 빠져 있음(실측 08-17). 1) 구글드라이브에서 기존 '_코워크_*_inbox' 폴더들의 부모 폴더를 찾는다. 2) 그 밑에 '_코워크_차노책출판_inbox' 폴더가 이미 있으면 만들지 말고 ID만 쓰고, 없으면 새로 만든다. 3) 그 폴더 ID를 secrets/cowork_rooms.json 에 \"차노책출판\": \"<폴더ID>\" 로 추가한다(기존 키는 건드리지 않는다). 4) python3 scripts/cowork_multi_watch.py --rooms 로 7방이 다 나오는지 확인하고, 출력 그대로 보고한다.\n\n작업 완료 후 결과만 간단히 보고.\n`; pass a plain name such as `work`\n\nFor more information, try '--help'.\n"
+}

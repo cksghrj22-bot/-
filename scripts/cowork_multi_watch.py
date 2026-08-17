@@ -22,6 +22,8 @@ INBOX = ROOT / "_terminal_inbox"
 SECRETS = ROOT / "secrets"
 LOGS = ROOT / "logs"
 PROCESSED_FILE = ROOT / "data" / "cowork_multi_processed.json"
+FAILED_FILE = ROOT / "data" / "cowork_multi_failed.json"
+MAX_TRY = 3   # 같은 파일 3회 실패하면 포기 (로그 폭주 방지)
 ROOMS_FILE = SECRETS / "cowork_rooms.json"
 INTERVAL = 10
 
@@ -72,6 +74,20 @@ def save_processed(ids: set):
     PROCESSED_FILE.write_text(json.dumps(sorted(ids), ensure_ascii=False))
 
 
+def get_failed() -> dict:
+    if FAILED_FILE.exists():
+        try:
+            return json.loads(FAILED_FILE.read_text())
+        except Exception:
+            return {}
+    return {}
+
+
+def save_failed(d: dict):
+    FAILED_FILE.parent.mkdir(exist_ok=True)
+    FAILED_FILE.write_text(json.dumps(d, ensure_ascii=False, indent=2))
+
+
 def list_files(folder_id: str, token: str) -> list:
     q = f"'{folder_id}' in parents and trashed=false"
     url = ("https://www.googleapis.com/drive/v3/files"
@@ -80,8 +96,25 @@ def list_files(folder_id: str, token: str) -> list:
     return json.loads(urllib.request.urlopen(req, timeout=30).read()).get("files", [])
 
 
-def download(file_id: str, token: str) -> str:
-    url = f"https://www.googleapis.com/drive/v3/files/{file_id}?alt=media"
+def fetch_body(f: dict, token: str):
+    """드라이브 파일 본문을 가져온다.
+
+    ⚠️ 2026-08-17 실사고: 예전엔 파일명이 .md 면 무조건 alt=media 로 받았다.
+       구글 독스로 만들어진 'TASK_*.md' 는 alt=media 가 403 Forbidden 이라
+       형이 넣은 지시 2건이 9시간 동안 4073회 재시도만 하고 못 들어왔다.
+       → mimeType 을 먼저 보고, 구글 문서형이면 export 로 받는다.
+    """
+    mt = f.get("mimeType", "")
+    fid = f["id"]
+    if mt == "application/vnd.google-apps.folder":
+        return None
+    if mt.startswith("application/vnd.google-apps."):
+        url = (f"https://www.googleapis.com/drive/v3/files/{fid}/export"
+               f"?mimeType={urllib.parse.quote('text/plain')}")
+    elif mt.startswith("text/") or f["name"].endswith((".txt", ".md", ".json")):
+        url = f"https://www.googleapis.com/drive/v3/files/{fid}?alt=media"
+    else:
+        return f"드라이브 파일: {f['name']} (ID: {fid})"
     req = urllib.request.Request(url, headers={"Authorization": f"Bearer {token}"})
     return urllib.request.urlopen(req, timeout=60).read().decode("utf-8", errors="ignore")
 
@@ -110,6 +143,7 @@ def check_once() -> int:
     rooms = load_rooms()
     token = get_token()
     processed = get_processed()
+    failed = get_failed()
     made = 0
 
     for room, folder_id in rooms.items():
@@ -122,19 +156,30 @@ def check_once() -> int:
             continue
 
         for f in files:
-            if f["id"] in processed:
+            fid = f["id"]
+            if fid in processed:
                 continue
+            if failed.get(fid, 0) >= MAX_TRY:
+                continue          # 포기한 건 조용히 건너뛴다
             try:
-                is_text = f["mimeType"].startswith("text/") or f["name"].endswith((".txt", ".md", ".json"))
-                body = download(f["id"], token) if is_text else f"드라이브 파일: {f['name']} (ID: {f['id']})"
+                body = fetch_body(f, token)
+                if body is None:
+                    processed.add(fid)
+                    continue
                 fname = create_task(room, f["name"], body)
-                processed.add(f["id"])
+                processed.add(fid)
+                failed.pop(fid, None)
                 made += 1
                 log(f"📥 {room} ← {f['name']} → {fname}")
             except Exception as e:
-                log(f"⚠️ {room}/{f['name']} 처리 실패: {e}")
+                failed[fid] = failed.get(fid, 0) + 1
+                n = failed[fid]
+                if n == 1 or n >= MAX_TRY:
+                    tail = f" — {MAX_TRY}회 실패, 포기함. 형 확인 필요" if n >= MAX_TRY else ""
+                    log(f"⚠️ {room}/{f['name']} 처리 실패({n}/{MAX_TRY}): {e}{tail}")
 
     save_processed(processed)
+    save_failed(failed)
     return made
 
 

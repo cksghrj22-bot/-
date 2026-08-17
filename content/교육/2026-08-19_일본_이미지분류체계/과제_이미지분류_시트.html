@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>과제 · L5 일본 이미지분류체계 (8/19)</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{--cream:#F7F5F1;--ink:#111;--gold:#A8895E;--gray:#9B958C;--line:#E4DFD6;}
+  body{background:#e8e5df;color:var(--ink);font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;padding:28px 16px;}
+  .wrap{max-width:900px;margin:0 auto;background:var(--cream);border:1px solid var(--line);padding:48px 52px;}
+  .serif{font-family:"Cormorant Garamond","Times New Roman",serif;}
+  .head{display:flex;align-items:center;gap:14px;margin-bottom:26px;}
+  .an{width:34px;height:34px;border:1.5px solid var(--ink);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:"Cormorant Garamond",serif;font-weight:700;font-size:15px;}
+  .mlabel{font-size:10px;letter-spacing:.28em;color:var(--gray);font-weight:700;}
+  h1{font-family:"Cormorant Garamond",serif;font-size:40px;font-weight:600;line-height:1.1;}
+  h1 .g{color:var(--gold);}
+  .sub{font-size:13.5px;color:#666;margin-top:12px;line-height:1.8;}
+  .meta{display:flex;gap:18px;margin-top:22px;flex-wrap:wrap;}
+  .mf{flex:1;min-width:150px;border-bottom:1px solid var(--ink);padding-bottom:7px;}
+  .mf .l{font-size:9.5px;letter-spacing:.18em;color:var(--gold);font-weight:800;}
+  .mf .v{height:24px;}
+  h2{font-family:"Cormorant Garamond",serif;font-size:26px;margin-top:46px;font-weight:600;}
+  h2 .n{color:var(--gold);}
+  .hint{font-size:12.5px;color:var(--gray);margin-top:7px;line-height:1.7;}
+  .grid{margin-top:18px;position:relative;height:400px;border:1px solid var(--ink);background:#fff;}
+  .grid .ax{position:absolute;background:var(--line);}
+  .grid .axh{left:0;right:0;top:50%;height:1px;}
+  .grid .axv{top:0;bottom:0;left:50%;width:1px;}
+  .grid .lab{position:absolute;font-size:9.5px;letter-spacing:.2em;font-weight:800;color:var(--gray);}
+  .grid .lt{top:8px;left:50%;transform:translateX(-50%);}
+  .grid .lb{bottom:8px;left:50%;transform:translateX(-50%);}
+  .grid .ll{left:10px;top:50%;transform:translateY(-50%);}
+  .grid .lr{right:10px;top:50%;transform:translateY(-50%);}
+  .grid .g2{position:absolute;left:0;right:0;top:0;bottom:0;background-image:linear-gradient(#f2efe9 1px,transparent 1px),linear-gradient(90deg,#f2efe9 1px,transparent 1px);background-size:40px 40px;opacity:.7;}
+  table{width:100%;border-collapse:collapse;margin-top:18px;font-size:13px;}
+  th{text-align:left;padding:9px 8px;border-bottom:1.5px solid var(--ink);font-size:9.5px;letter-spacing:.16em;color:var(--gold);font-weight:800;}
+  td{border-bottom:1px solid var(--line);padding:0;vertical-align:top;}
+  td .fill{min-height:62px;padding:9px 8px;line-height:1.7;color:#333;}
+  .caseno{font-family:"Cormorant Garamond",serif;font-size:22px;color:var(--gold);font-weight:700;padding:9px 8px;}
+  .vars{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid var(--line);}
+  .vars .v{border-right:1px solid var(--line);padding:8px;min-height:56px;}
+  .vars .v:last-child{border-right:none;}
+  .vars .v .l{font-size:9px;letter-spacing:.14em;color:var(--gold);font-weight:800;margin-bottom:5px;}
+  .rule{background:#fff;border:1px solid var(--gold);padding:16px 20px;margin-top:20px;}
+  .rule .h{font-size:9.5px;letter-spacing:.2em;color:var(--gold);font-weight:800;margin-bottom:7px;}
+  .rule .b{font-size:13px;line-height:1.8;color:#333;}
+  .foot{text-align:center;font-size:9.5px;letter-spacing:.32em;color:#b7b1a6;font-weight:700;margin-top:40px;}
+  @media print{body{background:#fff;padding:0}.wrap{border:none;padding:24px}h2{page-break-before:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head"><div class="an serif">AN</div><div class="mlabel">ATNOWN ACADEMY · L5 · 과제</div></div>
+  <h1 class="serif">일본 <span class="g">이미지분류</span> 과제</h1>
+  <div class="sub">8/19(수) 수업 과제 · 제출 = 다음 수업 시작 전<br>
+  ① 분류체계 요약 1장(<b>안 보고</b> 그리기) &nbsp;② 실제 손님 예시 3건</div>
+
+  <div class="meta">
+    <div class="mf"><div class="l">이름</div><div class="v"></div></div>
+    <div class="mf"><div class="l">레벨 / 지점</div><div class="v"></div></div>
+    <div class="mf"><div class="l">제출일</div><div class="v"></div></div>
+  </div>
+
+  <h2 class="serif"><span class="n">01.</span> 분류체계 요약 — 안 보고 그린다</h2>
+  <div class="hint">축 이름 4개(가로 양끝 · 세로 양끝)를 먼저 쓰고, 기억나는 칸만 찍어라. <b>16칸 다 채우는 게 목표가 아니다.</b> 축이 맞으면 통과.</div>
+  <div class="grid">
+    <div class="g2"></div><div class="ax axh"></div><div class="ax axv"></div>
+    <div class="lab lt">(세로 위 : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</div>
+    <div class="lab lb">(세로 아래 : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</div>
+    <div class="lab ll">(가로 왼쪽 :<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</div>
+    <div class="lab lr">(가로 오른쪽 :<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</div>
+  </div>
+  <div class="rule">
+    <div class="h">한 줄로 답해라</div>
+    <div class="b">A판(원하는 것)과 B판(가진 것)의 차이를 한 문장으로: <br><br>
+    ________________________________________________________________</div>
+  </div>
+
+  <h2 class="serif"><span class="n">02.</span> 실제 손님 예시 3건</h2>
+  <div class="hint">지어내지 마라. <b>이번 주에 실제로 받은 손님</b>으로. 결과가 실패였어도 그대로 써라 — 실패 케이스가 더 좋은 과제다.</div>
+
+  <table>
+    <tr><th style="width:6%">#</th><th style="width:26%">손님이 한 말 (그대로)</th><th style="width:22%">A 좌표 (원하는 것)</th><th style="width:22%">B 얼굴타입 (가진 것)</th><th>거리 판단 — 좁힐까 / 벌릴까 · 왜</th></tr>
+    <tr><td class="caseno serif">1</td><td><div class="fill"></div></td><td><div class="fill"></div></td><td><div class="fill"></div></td><td><div class="fill"></div></td></tr>
+  </table>
+  <div class="vars">
+    <div class="v"><div class="l">길이</div></div><div class="v"><div class="l">질감</div></div><div class="v"><div class="l">컬</div></div><div class="v"><div class="l">컬러</div></div><div class="v"><div class="l">앞머리</div></div>
+  </div>
+  <table><tr><th>결과 · 다음에 바꿀 것 한 줄</th></tr><tr><td><div class="fill"></div></td></tr></table>
+
+  <table style="margin-top:34px">
+    <tr><th style="width:6%">#</th><th style="width:26%">손님이 한 말 (그대로)</th><th style="width:22%">A 좌표 (원하는 것)</th><th style="width:22%">B 얼굴타입 (가진 것)</th><th>거리 판단 — 좁힐까 / 벌릴까 · 왜</th></tr>
+    <tr><td class="caseno serif">2</td><td><div class="fill"></div></td><td><div class="fill"></div></td><td><div class="fill"></div></td><td><div class="fill"></div></td></tr>
+  </table>
+  <div class="vars">
+    <div class="v"><div class="l">길이</div></div><div class="v"><div class="l">질감</div></div><div class="v"><div class="l">컬</div></div><div class="v"><div class="l">컬러</div></div><div class="v"><div class="l">앞머리</div></div>
+  </div>
+  <table><tr><th>결과 · 다음에 바꿀 것 한 줄</th></tr><tr><td><div class="fill"></div></td></tr></table>
+
+  <table style="margin-top:34px">
+    <tr><th style="width:6%">#</th><th style="width:26%">손님이 한 말 (그대로)</th><th style="width:22%">A 좌표 (원하는 것)</th><th style="width:22%">B 얼굴타입 (가진 것)</th><th>거리 판단 — 좁힐까 / 벌릴까 · 왜</th></tr>
+    <tr><td class="caseno serif">3</td><td><div class="fill"></div></td><td><div class="fill"></div></td><td><div class="fill"></div></td><td><div class="fill"></div></td></tr>
+  </table>
+  <div class="vars">
+    <div class="v"><div class="l">길이</div></div><div class="v"><div class="l">질감</div></div><div class="v"><div class="l">컬</div></div><div class="v"><div class="l">컬러</div></div><div class="v"><div class="l">앞머리</div></div>
+  </div>
+  <table><tr><th>결과 · 다음에 바꿀 것 한 줄</th></tr><tr><td><div class="fill"></div></td></tr></table>
+
+  <div class="rule" style="margin-top:34px;border-color:var(--ink)">
+    <div class="h" style="color:var(--ink)">채점 기준 (미리 알려준다)</div>
+    <div class="b">
+      · <b>축이 맞나</b> — 칸 이름 개수는 안 본다<br>
+      · <b>말을 그대로 옮겼나</b> — 손님 말을 내 말로 바꿔 쓴 건 감점<br>
+      · <b>거리 판단에 이유가 있나</b> — "어울려서"는 이유가 아니다<br>
+      · <b>변수 5개가 다 찼나</b> — 빈 칸은 상담이 덜 끝난 것<br>
+      · 실패 케이스 = <b>감점 없음.</b> 왜 어긋났는지 쓰면 오히려 가점
+    </div>
+  </div>
+
+  <div class="foot">AT NOWN ACADEMY &middot; L5 &middot; 2026.08.19 &middot; CHANO</div>
+</div>
+</body>
+</html>

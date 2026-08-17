@@ -1,0 +1,11 @@
+{
+  "cmd": "ls",
+  "args": [
+    "_strategy/보류_발주"
+  ],
+  "requested_by": "자가테스트",
+  "status": "done",
+  "returncode": 0,
+  "result": "total 4\n-rw------- 1 rcw-01dff4tkdt9jtv6cdo7f6tlp rcw-01dff4tkdt9jtv6cdo7f6tlp 1034 Aug 17 02:40 TASK_전략실_차노책출판_인박스생성_20260817.json",
+  "completed_at": "2026-08-17T05:06:40.400152"
+}

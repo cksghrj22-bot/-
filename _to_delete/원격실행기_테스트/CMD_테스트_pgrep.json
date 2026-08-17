@@ -1,0 +1,11 @@
+{
+  "cmd": "pgrep",
+  "args": [
+    "python3"
+  ],
+  "requested_by": "자가테스트",
+  "status": "done",
+  "returncode": 0,
+  "result": "1 bwrap\n2 bash\n5 bash\n10 python3",
+  "completed_at": "2026-08-17T05:06:40.406796"
+}

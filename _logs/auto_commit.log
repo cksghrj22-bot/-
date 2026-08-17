@@ -980,3 +980,78 @@ are terminated then try again. If it still fails, a git process
 may have crashed in this repository earlier:
 remove the file manually to continue.
 
+=== 자동 커밋 (2026-08-17 11:50:29.606774) ===
+자동 커밋 대상: 3개
+  - knowledge/\353\260\251_\352\263\265\354\234\240_\354\236\221\354\227\205\353\241\234\352\267\270.md
+  - scripts/codex_dispatch.py
+  - content/\352\265\220\354\234\241/2026-08-19_\354\235\274\353\263\270_\354\235\264\353\257\270\354\247\200\353\266\204\353\245\230\354\262\264\352\263\204/
+❌ 커밋 실패: fatal: Unable to create '/Users/chanho/atnown-content-pipeline/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+
+=== 자동 커밋 (2026-08-17 12:50:32.401908) ===
+자동 커밋 대상: 3개
+  - knowledge/\353\260\251_\352\263\265\354\234\240_\354\236\221\354\227\205\353\241\234\352\267\270.md
+  - scripts/codex_dispatch.py
+  - content/\352\265\220\354\234\241/2026-08-19_\354\235\274\353\263\270_\354\235\264\353\257\270\354\247\200\353\266\204\353\245\230\354\262\264\352\263\204/
+❌ 커밋 실패: fatal: Unable to create '/Users/chanho/atnown-content-pipeline/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+
+=== 자동 커밋 (2026-08-17 13:50:33.129557) ===
+자동 커밋 대상: 3개
+  - knowledge/\353\260\251_\352\263\265\354\234\240_\354\236\221\354\227\205\353\241\234\352\267\270.md
+  - scripts/codex_dispatch.py
+  - content/\352\265\220\354\234\241/2026-08-19_\354\235\274\353\263\270_\354\235\264\353\257\270\354\247\200\353\266\204\353\245\230\354\262\264\352\263\204/
+❌ 커밋 실패: fatal: Unable to create '/Users/chanho/atnown-content-pipeline/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+
+=== 자동 커밋 (2026-08-17 14:50:33.848928) ===
+자동 커밋 대상: 8개
+  - knowledge/\353\260\251_\352\263\265\354\234\240_\354\236\221\354\227\205\353\241\234\352\267\270.md
+  - scripts/codex_dispatch.py
+  - _out/cmd_results/
+  - content/\352\265\220\354\234\241/2026-08-19_\354\235\274\353\263\270_\354\235\264\353\257\270\354\247\200\353\266\204\353\245\230\354\262\264\352\263\204/
+  - scripts/launchd/com.atnown.codex-dispatch.plist
+  - scripts/launchd/com.atnown.cowork-multi-watch.plist
+  - scripts/launchd/com.atnown.remote-cmd.plist
+  - scripts/remote_cmd_watch.py
+✅ 커밋 완료: 자동저장 2026-08-17 14:50 (8개 파일)
+=== 자동 커밋 (2026-08-17 15:50:34.527625) ===
+자동 커밋 대상: 2개
+  - knowledge/\353\260\251_\352\263\265\354\234\240_\354\236\221\354\227\205\353\241\234\352\267\270.md
+  - content/\352\265\220\354\234\241/2026-08-19_\354\235\274\353\263\270_\354\235\264\353\257\270\354\247\200\353\266\204\353\245\230\354\262\264\352\263\204/
+❌ 커밋 실패: 
+=== 자동 커밋 (2026-08-17 16:50:34.930269) ===
+자동 커밋 대상: 2개
+  - knowledge/\353\260\251_\352\263\265\354\234\240_\354\236\221\354\227\205\353\241\234\352\267\270.md
+  - content/\352\265\220\354\234\241/2026-08-19_\354\235\274\353\263\270_\354\235\264\353\257\270\354\247\200\353\266\204\353\245\230\354\262\264\352\263\204/
+❌ 커밋 실패: 
+=== 자동 커밋 (2026-08-17 17:50:35.163437) ===
+자동 커밋 대상: 2개
+  - knowledge/\353\260\251_\352\263\265\354\234\240_\354\236\221\354\227\205\353\241\234\352\267\270.md
+  - content/\352\265\220\354\234\241/2026-08-19_\354\235\274\353\263\270_\354\235\264\353\257\270\354\247\200\353\266\204\353\245\230\354\262\264\352\263\204/
+❌ 커밋 실패: 
+=== 자동 커밋 (2026-08-17 18:50:35.509384) ===
+자동 커밋 대상: 2개
+  - knowledge/\353\260\251_\352\263\265\354\234\240_\354\236\221\354\227\205\353\241\234\352\267\270.md
+  - content/\352\265\220\354\234\241/2026-08-19_\354\235\274\353\263\270_\354\235\264\353\257\270\354\247\200\353\266\204\353\245\230\354\262\264\352\263\204/
+❌ 커밋 실패: 
+=== 자동 커밋 (2026-08-17 19:50:35.707254) ===
+자동 커밋 대상: 2개
+  - knowledge/\353\260\251_\352\263\265\354\234\240_\354\236\221\354\227\205\353\241\234\352\267\270.md
+  - content/\352\265\220\354\234\241/2026-08-19_\354\235\274\353\263\270_\354\235\264\353\257\270\354\247\200\353\266\204\353\245\230\354\262\264\352\263\204/
+❌ 커밋 실패: 
