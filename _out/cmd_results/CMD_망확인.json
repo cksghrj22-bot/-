@@ -1,0 +1,11 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "diag_net.py"
+  ],
+  "requested_by": "전략기획및개인업무(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "=== 호스트 이름 ===\nchanoui-Mac-Studio\nchanoui-Mac-Studio.local\n\n=== 집안 IP (LAN) ===\n\n192.168.219.105\n192.168.219.105\n169.254.205.39\n\n=== SSH 열려있나 ===\n\n\n=== 잠자기 설정 ===\nnetworkoversleep     0\n disksleep            10\n sleep                0 (sleep prevented by Claude, coreaudiod, sharingd, sharingd, sharingd, sharingd, sharingd, caffeinate, caffeinate, caffeinate, caffeinate, ChatGPT, powerd, corespeechd, corespeechd, caffeinate, caffeinate)\n displaysleep         0 (display sleep prevented by caffeinate)\n womp                 1",
+  "completed_at": "2026-08-17T21:13:12.234692"
+}

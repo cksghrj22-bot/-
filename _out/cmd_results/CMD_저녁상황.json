@@ -1,0 +1,8 @@
+{
+  "cmd": "status",
+  "requested_by": "전략기획및개인업무(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "{\n  \"데몬\": [\n    \"51368 /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python /Users/chanho/atnown-content-pipeline/scripts/blog_watcher.py\",\n    \"76335 /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python scripts/codex_dispatch.py --daemon\",\n    \"76349 /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python scripts/cowork_multi_watch.py --daemon\"\n  ],\n  \"미커밋\": 9,\n  \"최근커밋\": [\n    \"458e704b [전략기획및개인업무] 노트북 본진 접속 설치법 문서화\",\n    \"873f6344 [전략기획및개인업무] 저장소 정본=파이프라인 확정 + 동결 보류 근거\",\n    \"cc0636d6 [전략기획및개인업무] 원격실행기 가동 + 멀티워치 403 수리 + 상황판 정본① 확정 + 별칭 충돌 정리\"\n  ],\n  \"대기주문서\": [\n    \"(없음)\"\n  ],\n  \"실패주문서\": [\n    \"TASK_전략기획및개인업무_TASK_아침저녁상황판_규칙_20260817T203546.json\",\n    \"TASK_전략기획및개인업무_TASK_토큰절약_상황판규칙_20260817T203545.json\"\n  ]\n}",
+  "completed_at": "2026-08-17T21:36:13.262736"
+}
