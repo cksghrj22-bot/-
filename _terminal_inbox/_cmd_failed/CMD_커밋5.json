@@ -1,0 +1,11 @@
+{
+  "cmd": "git_commit",
+  "args": [
+    "[전략기획및개인업무] 쇼츠 중복·싱크 진단서 + 쇼츠방 발주"
+  ],
+  "requested_by": "전략기획및개인업무(코워크)",
+  "status": "failed",
+  "returncode": 128,
+  "result": "[stderr]\n✅ 낙타자막인스타스레드방 — 전체 접근\nfatal: cannot lock ref 'HEAD': Unable to create '/Users/chanho/atnown-content-pipeline/.git/HEAD.lock': File exists.\n\nAnother git process seems to be running in this repository, e.g.\nan editor opened by 'git commit'. Please make sure all processes\nare terminated then try again. If it still fails, a git process\nmay have crashed in this repository earlier:\nremove the file manually to continue.\n--- HEAD ---\n5cb7ba50 [만화연재방] 고데기 편 c5 시술 내용 오류 정정 — 저온이 아니라 약+열매직기 한 번",
+  "completed_at": "2026-08-17T22:37:24.143798"
+}

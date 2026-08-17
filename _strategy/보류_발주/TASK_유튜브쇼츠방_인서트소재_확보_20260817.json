@@ -1,0 +1,22 @@
+{
+  "task": "쇼츠 렌더 전 인서트 소재 확보",
+  "requested_by": "유튜브쇼츠방",
+  "date": "2026-08-17",
+  "status": "blocked_material",
+  "priority": "high",
+  "rule": "편당 필요 컷 수의 1.5배 이상, 출처 3종 이상을 _clips_pool/<주제>/인서트/에 확보한 뒤 렌더",
+  "topics": [
+    {
+      "topic": "senior",
+      "measured_files": 1,
+      "request": "시니어 당사자/상담/시술/완성 장면을 포함한 서로 다른 출처의 인서트 확보",
+      "block_render": true
+    },
+    {
+      "topic": "ai일기",
+      "measured_files": 2,
+      "request": "규칙 문서, 검사 로그, 체크표시, 탈락 스샷 장면을 각각 확보",
+      "block_render": true
+    }
+  ]
+}

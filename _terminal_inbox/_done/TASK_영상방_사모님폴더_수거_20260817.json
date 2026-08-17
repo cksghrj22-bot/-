@@ -1,0 +1,8 @@
+{
+  "room": "유튜브쇼츠방",
+  "task": "cd ~/atnown-content-pipeline && mkdir -p _out/shorts/_드라이브목록 && python3 rooms/유튜브쇼츠방/drive_ls.py --path 앳나운영상/사모님 > _out/shorts/_드라이브목록/사모님_20260817.txt 2>&1; echo '--- exit:' $? >> _out/shorts/_드라이브목록/사모님_20260817.txt; cat _out/shorts/_드라이브목록/사모님_20260817.txt",
+  "timeout": 180,
+  "status": "done",
+  "completed_at": "2026-08-17T22:35:24.243799",
+  "codex_result": "실행 완료. 드라이브 OAuth 서버 DNS 연결 실패로 목록 조회는 실패했습니다(`exit: 1`).\n\n로그: [_out/shorts/_드라이브목록/사모님_20260817.txt](/Users/chanho/atnown-content-pipeline/_out/shorts/_드라이브목록/사모님_20260817.txt)\n"
+}

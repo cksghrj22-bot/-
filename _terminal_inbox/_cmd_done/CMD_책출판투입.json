@@ -1,0 +1,11 @@
+{
+  "cmd": "move_order",
+  "args": [
+    "_strategy/보류_발주/TASK_전략실_차노책출판_인박스생성_20260817.json"
+  ],
+  "requested_by": "전략기획및개인업무(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "투입 완료: _terminal_inbox/TASK_전략실_차노책출판_인박스생성_20260817.json",
+  "completed_at": "2026-08-17T22:06:58.285031"
+}

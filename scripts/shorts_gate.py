@@ -19,12 +19,19 @@
   [S6] 발행 전 스샷 시트 — 등간격 12컷 + **UI존 경계선을 그려서** 한눈에 보이게 만든다.
 """
 from __future__ import annotations
-import json, subprocess, sys
+import argparse, difflib, json, re, statistics, subprocess, sys, tempfile
 from pathlib import Path
+
+from shot_variety import SIM_LIMIT, cos
 
 FF, FP = "ffmpeg", "ffprobe"
 # 1080x1920 기준 UI존 — 다른 해상도는 비율로 계산
 UI_ZONE_RATIO = 1540 / 1920  # 바닥 20%가 UI존
+S9_LIMIT = 0.80
+MIN_CUT_SEC = 1.6
+MAX_ASSET_CUTS = 4
+MAX_CONSECUTIVE = 2
+MIN_SOURCES = 3
 
 
 def probe(p: Path) -> dict:
@@ -65,6 +72,147 @@ def ui_zone_hits(p: Path, w: int, h: int, dur: float, tmp: Path) -> list[tuple[f
     return hits
 
 
+def load_cut_manifest(path: Path | None) -> list[dict]:
+    """JSON cuts/beats 또는 표 형태 MD의 말/화면/일치를 읽는다."""
+    if not path:
+        return []
+    if path.suffix.lower() == ".json":
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return data.get("cuts") or data.get("beats") or data.get("segments") or []
+    cuts = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.lstrip().startswith("|"):
+            continue
+        cells = [x.strip() for x in line.strip().strip("|").split("|")]
+        if len(cells) < 5 or not re.fullmatch(r"\d+", cells[0]):
+            continue
+        m = re.match(r"([0-9.]+)\s*[~〜-]\s*([0-9.]+)", cells[1])
+        if not m:
+            continue
+        cuts.append({"start": float(m.group(1)), "end": float(m.group(2)),
+                     "말": cells[2], "화면": cells[3], "일치": cells[4]})
+    return cuts
+
+
+def cut_bounds(cut: dict) -> tuple[float, float]:
+    start = float(cut.get("start", cut.get("t0", cut.get("s", 0))))
+    end = float(cut.get("end", cut.get("t1", cut.get("e", start))))
+    if end <= start and cut.get("duration") is not None:
+        end = start + float(cut["duration"])
+    return start, end
+
+
+def s9_match(cuts: list[dict]) -> dict:
+    weighted = total = 0.0
+    missing = 0
+    for cut in cuts:
+        start, end = cut_bounds(cut); length = max(0.0, end - start)
+        raw = cut.get("일치", cut.get("match", cut.get("matched")))
+        if raw is None:
+            missing += 1; continue
+        if isinstance(raw, str):
+            raw = 1.0 if any(x in raw.lower() for x in ("✅", "yes", "true", "일치")) else 0.0
+        score = float(raw)
+        if score > 1: score /= 100.0
+        weighted += length * max(0.0, min(1.0, score)); total += length
+    return {"score": weighted / total if total else None, "missing": missing, "seconds": total}
+
+
+def _gray_frames(p: Path, fps: float = 2.0, w: int = 24, h: int = 42) -> list[list[float]]:
+    raw = subprocess.run([FF, "-v", "error", "-i", str(p), "-vf",
+                          f"fps={fps},scale={w}:{h},format=gray", "-f", "rawvideo", "-"],
+                         capture_output=True, check=True).stdout
+    n = w * h
+    return [[float(x) for x in raw[i:i+n]] for i in range(0, len(raw)-n+1, n)]
+
+
+def s7_variety(p: Path) -> dict:
+    """완성본 프레임을 구간으로 접고, 떨어진 구간끼리 shot_variety 지문으로 비교."""
+    fps = 2.0; frames = _gray_frames(p, fps=fps)
+    if not frames: return {"scenes": 0, "duplicates": []}
+    runs = [[0, frames[0]]]
+    for i, frame in enumerate(frames[1:], 1):
+        if cos(runs[-1][1], frame) < SIM_LIMIT:
+            runs.append([i, frame])
+        else:
+            # 같은 연속구간은 평균 대표 프레임으로 접는다.
+            runs[-1][1] = [(a+b)/2 for a, b in zip(runs[-1][1], frame)]
+    hits = []
+    for i in range(len(runs)):
+        for j in range(i + 2, len(runs)):  # 이웃 구간은 컷 연결이므로 중복으로 세지 않는다.
+            sim = cos(runs[i][1], runs[j][1])
+            if sim >= SIM_LIMIT:
+                hits.append((round(runs[i][0]/fps, 2), round(runs[j][0]/fps, 2), round(sim, 3)))
+    return {"scenes": len(runs), "duplicates": hits}
+
+
+def s7_manifest(cuts: list[dict]) -> list[str]:
+    problems = []
+    if not cuts: return problems
+    assets, sources, consecutive = {}, set(), 0
+    prev = None
+    for cut in cuts:
+        start, end = cut_bounds(cut); length = end-start
+        asset = str(cut.get("clip", cut.get("asset", cut.get("화면", ""))))
+        source = str(cut.get("source", cut.get("출처", ""))).strip()
+        if asset: assets[asset] = assets.get(asset, 0) + 1
+        if source: sources.add(source)
+        consecutive = consecutive + 1 if asset and asset == prev else 1
+        if consecutive > MAX_CONSECUTIVE: problems.append(f"연속사용 {consecutive}컷 > {MAX_CONSECUTIVE}컷")
+        if 0 < length < MIN_CUT_SEC: problems.append(f"{asset or '컷'} {length:.2f}초 < {MIN_CUT_SEC}초")
+        prev = asset
+    if any(n > MAX_ASSET_CUTS for n in assets.values()): problems.append(f"같은 자료컷 {max(assets.values())}회 > {MAX_ASSET_CUTS}회")
+    if len(sources) < MIN_SOURCES: problems.append(f"출처 {len(sources)}종 < {MIN_SOURCES}종")
+    return problems
+
+
+def _caption_changes(p: Path, w: int, h: int) -> list[float]:
+    fps = 10; top = int(h * .56); height = int(h * .24)
+    raw = subprocess.run([FF, "-v", "error", "-i", str(p), "-vf",
+                          f"crop={w}:{height}:0:{top},fps={fps},scale=180:72,format=gray",
+                          "-f", "rawvideo", "-"], capture_output=True, check=True).stdout
+    n = 180*72; fs = [raw[i:i+n] for i in range(0, len(raw)-n+1, n)]
+    diffs = [sum(abs(a-b) for a,b in zip(fs[i-1][::4], fs[i][::4]))/(n/4) for i in range(1,len(fs))]
+    if not diffs: return []
+    med = statistics.median(diffs); mad = statistics.median(abs(x-med) for x in diffs)
+    threshold = max(3.0, med + 6*mad)
+    out=[]
+    for i, value in enumerate(diffs, 1):
+        t=i/fps
+        if value > threshold and (not out or t-out[-1] > .45): out.append(t)
+    return out
+
+
+def _whisper_words(p: Path) -> list[dict] | None:
+    try:
+        from faster_whisper import WhisperModel
+    except ImportError:
+        return None
+    with tempfile.TemporaryDirectory(prefix="shorts_s8_") as td:
+        wav = Path(td)/"audio.wav"
+        subprocess.run([FF,"-y","-v","error","-i",str(p),"-ac","1","-ar","16000",str(wav)], check=True)
+        model=WhisperModel("small", device="cpu", compute_type="int8")
+        segs,_=model.transcribe(str(wav),language="ko",word_timestamps=True,vad_filter=False,beam_size=5)
+        return [{"start":float(w.start),"end":float(w.end),"word":(w.word or "").strip()}
+                for s in segs for w in (s.words or []) if (w.word or "").strip()]
+
+
+def s8_sync(p: Path, w: int, h: int, cuts: list[dict]) -> dict:
+    caps=_caption_changes(p,w,h); words=_whisper_words(p)
+    if words is None: return {"ok":False,"reason":"로컬 faster-whisper 없음"}
+    onsets=[words[0]["start"]] if words else []
+    onsets += [words[i]["start"] for i in range(1,len(words)) if words[i]["start"]-words[i-1]["end"] >= .45]
+    # 대본과 전사문을 실제로 정렬해 불일치 단어는 싱크 앵커에서 제외한다.
+    script=" ".join(str(c.get("말",c.get("speech",c.get("text","")))) for c in cuts)
+    stt=" ".join(w["word"] for w in words)
+    ratio=difflib.SequenceMatcher(None,re.sub(r"\s+","",script),re.sub(r"\s+","",stt)).ratio() if script else None
+    if not caps or not onsets: return {"ok":False,"reason":"자막 전환 또는 말 시작 검출 실패","align":ratio}
+    errors=[min(abs(o-c) for o in onsets) for c in caps]
+    median=statistics.median(errors); maximum=max(errors)
+    return {"ok":maximum <= .30,"median":round(median,3),"max":round(maximum,3),
+            "caption_changes":len(caps),"speech_onsets":len(onsets),"align":None if ratio is None else round(ratio,3)}
+
+
 def log_to_rooms(msg: str):
     """_ROOMS_LOG.md에 자동 기록 — 방이 빼먹을 수 없게."""
     from datetime import datetime
@@ -77,9 +225,12 @@ def log_to_rooms(msg: str):
 
 
 def main() -> int:
-    if len(sys.argv) < 2:
-        print("사용법: shorts_gate.py <영상.mp4 | 폴더>"); return 2
-    tgt = Path(sys.argv[1])
+    parser=argparse.ArgumentParser(description="쇼츠 S1~S9 렌더 게이트")
+    parser.add_argument("target", type=Path)
+    parser.add_argument("--manifest", type=Path, help="컷 매니페스트(JSON/MD, S9와 S7 상한의 근거)")
+    args=parser.parse_args()
+    tgt = args.target
+    cuts=load_cut_manifest(args.manifest)
     vids = sorted(tgt.glob("*.mp4")) if tgt.is_dir() else [tgt]
     vids = [v for v in vids if not v.name.startswith("_")]
     if not vids:
@@ -105,6 +256,40 @@ def main() -> int:
 
         if v["audio"] == 0:
             fails.append(f"[S3] {p.name} 오디오 없음 (쇼츠는 나레이션+BGM)")
+
+        # S9를 가장 먼저 검사한다. 말/화면/일치 근거가 없는 렌더도 산출물로 인정하지 않는다.
+        if not cuts:
+            fails.append(f"[S9] {p.name} 컷 매니페스트 없음 — --manifest에 말/화면/일치를 적어야 한다")
+        else:
+            match=s9_match(cuts)
+            if match["score"] is None or match["missing"]:
+                fails.append(f"[S9] {p.name} 일치 판정 누락 {match['missing']}컷")
+            elif match["score"] < S9_LIMIT:
+                fails.append(f"[S9] {p.name} 말↔화면 길이가중 {match['score']:.1%} < 80%")
+            else:
+                print(f"  S9 말↔화면 길이가중 {match['score']:.1%}")
+
+        # S7: 완성본 픽셀 중복 + 문서에만 있던 소재 상한을 함께 잠근다.
+        variety=s7_variety(p)
+        duplicate_count=len(variety["duplicates"])
+        if duplicate_count >= 2:
+            fails.append(f"[S7] {p.name} 떨어진 중복구간 {duplicate_count}건 >= 2 {variety['duplicates'][:4]}")
+        elif duplicate_count == 1:
+            warns.append(f"[S7] {p.name} 떨어진 중복구간 1건 {variety['duplicates'][0]}")
+        else:
+            print(f"  S7 접은 장면 {variety['scenes']}개 · 떨어진 중복 0건")
+        for problem in s7_manifest(cuts):
+            fails.append(f"[S7] {p.name} {problem}")
+
+        # S8: starts[]가 아닌 완성본 자막띠 픽셀과 로컬 Whisper 단어 타임스탬프만 사용.
+        sync=s8_sync(p,w,h,cuts)
+        if not sync.get("ok"):
+            if "max" in sync:
+                fails.append(f"[S8] {p.name} 실측 싱크 중앙 {sync['median']:.3f}s · 최대 {sync['max']:.3f}s > 0.300s")
+            else:
+                fails.append(f"[S8] {p.name} {sync.get('reason','실측 실패')}")
+        else:
+            print(f"  S8 실측 싱크 중앙 {sync['median']:.3f}s · 최대 {sync['max']:.3f}s")
 
         tmp = p.parent / "_review" / f"_gate_{p.stem}"; tmp.mkdir(parents=True, exist_ok=True)
         for f in tmp.glob("*.png"): f.unlink()
@@ -170,7 +355,7 @@ def main() -> int:
         log_to_rooms(f"게이트 탈락. {names}. 사유: {fails[0][:50]}...")
         return 1
 
-    print("[통과] 수치 규격 S1~S5")
+    print("[통과] 수치 규격 S1~S9")
     print("\n[S6] 발행 전 필수 — 위 스샷 시트를 **차노에게 띄우고** 전체를 보게 한 다음 발행한다.")
     print("   빨간 박스 = 유튜브 UI존. 그 안에 자막이 걸리면 안 된다.")
     print("   코드가 못 잡는 것(톤·어색함·컷 연결)은 만든 쪽이 직접 보고 판단한다.")
