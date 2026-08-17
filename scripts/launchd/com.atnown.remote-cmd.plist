@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.atnown.remote-cmd</string>
+
+  <!-- 로그인 셸로 띄운다: homebrew python3 · codex CLI 가 PATH 에 잡히게 -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>-lc</string>
+    <string>cd "$HOME/atnown-content-pipeline" &amp;&amp; exec python3 scripts/remote_cmd_watch.py --daemon</string>
+  </array>
+
+  <key>WorkingDirectory</key><string>/Users/chanho/atnown-content-pipeline</string>
+
+  <!-- 죽으면 자동 부활. 08-16 cowork_multi_watch 가 이틀 멈춰 있던 것 방지 -->
+  <key>KeepAlive</key><true/>
+  <key>RunAtLoad</key><true/>
+  <key>ThrottleInterval</key><integer>15</integer>
+
+  <key>StandardOutPath</key><string>/Users/chanho/atnown-content-pipeline/logs/remote-cmd.out</string>
+  <key>StandardErrorPath</key><string>/Users/chanho/atnown-content-pipeline/logs/remote-cmd.err</string>
+</dict>
+</plist>

@@ -14,9 +14,11 @@ from datetime import datetime
 ROOT = Path(__file__).parent.parent
 INBOX = ROOT / "_terminal_inbox"
 DONE = INBOX / "_done"
+FAILED = INBOX / "_failed"
 LOGS = ROOT / "logs"
 
 DONE.mkdir(exist_ok=True)
+FAILED.mkdir(exist_ok=True)
 LOGS.mkdir(exist_ok=True)
 
 def log(msg):
@@ -37,7 +39,7 @@ def get_pending_tasks():
     return sorted(tasks, key=lambda x: x[1].get("created_at", ""))
 
 def dispatch_to_codex(task):
-    """Codex CLI로 작업 전달"""
+    """Codex CLI로 작업 전달 (비대화형 exec)"""
     room = task.get("room", "알수없음")
     title = task.get("title") or task.get("task") or "제목없음"
     # CLAUDE.md 규격은 {"room","task","timeout"} — request/instructions 도 함께 받는다
@@ -45,8 +47,7 @@ def dispatch_to_codex(task):
     if not isinstance(request, str):
         request = json.dumps(request, ensure_ascii=False, indent=2)
 
-    prompt = f"""
-방: {room}
+    prompt = f"""방: {room}
 제목: {title}
 
 요청:
@@ -56,36 +57,67 @@ def dispatch_to_codex(task):
 """
 
     try:
-        result = subprocess.run(
-            ["codex", "-p", prompt],
-            capture_output=True,
-            text=True,
-            timeout=300,
-            cwd=str(ROOT)
-        )
-        return result.stdout if result.returncode == 0 else f"오류: {result.stderr}"
-    except subprocess.TimeoutExpired:
-        return "오류: 5분 타임아웃"
-    except Exception as e:
-        return f"오류: {e}"
+        timeout = int(task.get("timeout") or 300)
+    except (TypeError, ValueError):
+        timeout = 300
+    timeout = max(30, min(timeout, 1800))
+
+    # ⚠️ 2026-08-17 실사고: `codex -p <프롬프트>` 로 보내고 있었다.
+    #    codex 의 -p 는 --profile(프로파일 이름)이라 주문서 전량이
+    #    "invalid --profile value" 로 실패했다. 비대화형 실행은 `codex exec <프롬프트>` 다.
+    attempts = [
+        ["codex", "exec", prompt],   # 현행 CLI
+        ["codex", prompt],           # 구버전 폴백(위치인자)
+    ]
+    last_err = ""
+    for cmd in attempts:
+        try:
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+                cwd=str(ROOT),
+            )
+        except subprocess.TimeoutExpired:
+            return f"오류: {timeout}초 타임아웃"
+        except FileNotFoundError:
+            return "오류: codex CLI 없음 (PATH 확인)"
+        except Exception as e:
+            return f"오류: {e}"
+
+        if result.returncode == 0:
+            return result.stdout
+
+        last_err = (result.stderr or result.stdout or "").strip()
+        # 인자 형식 문제일 때만 다음 후보로 넘어간다
+        if not any(k in last_err for k in ("unexpected argument", "unrecognized subcommand", "invalid value")):
+            break
+
+    return f"오류: {last_err}"
 
 def process_task(filepath, task):
-    log(f"처리 시작: {task.get('title', '?')}")
+    name = task.get("title") or task.get("task") or "?"
+    log(f"처리 시작: {name}")
 
     task["status"] = "processing"
     filepath.write_text(json.dumps(task, ensure_ascii=False, indent=2))
 
     result = dispatch_to_codex(task)
 
-    task["status"] = "done"
+    # 공유규약 §10-6 「발주 ≠ 완료」 — 실패를 done 으로 찍지 않는다.
+    # 예전 코드는 무조건 done + _done 이동이라 실패 주문서가 조용히 사라졌다(2026-08-17 실사고).
+    ok = not result.lstrip().startswith("오류:")
+
+    task["status"] = "done" if ok else "failed"
     task["completed_at"] = datetime.now().isoformat()
     task["codex_result"] = result[:2000]
 
-    done_path = DONE / filepath.name
-    done_path.write_text(json.dumps(task, ensure_ascii=False, indent=2))
+    dest = (DONE if ok else FAILED) / filepath.name
+    dest.write_text(json.dumps(task, ensure_ascii=False, indent=2))
     filepath.unlink()
 
-    log(f"완료: {task.get('title', '?')}")
+    log(("완료: " if ok else "⛔실패(→_failed): ") + name)
     return result
 
 def watch():

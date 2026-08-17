@@ -1,0 +1,8 @@
+{
+  "cmd": "rm -rf /",
+  "requested_by": "자가테스트",
+  "status": "failed",
+  "returncode": 2,
+  "result": "오류: 허용되지 않은 명령 'rm -rf /'. 가능: git_commit, git_push, ls, move_order, pgrep, python_script, restart, restart_dispatcher, restart_multiwatch, status, tail_log",
+  "completed_at": "2026-08-17T05:06:40.409971"
+}
