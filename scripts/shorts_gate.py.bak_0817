@@ -32,17 +32,9 @@ FF, FP = "ffmpeg", "ffprobe"
 UI_ZONE_RATIO = 1540 / 1920  # 바닥 20%가 UI존
 S9_LIMIT = 0.80
 MIN_CUT_SEC = 1.6
-# 2026-08-17 차노 지시 — "불필요한 상한선·제한 때문에 새 렌더가 다 막힌다. 기존 규약 말고 요즘 규약으로 바꿔라"
-#
-# ⛔ 폐기한 상한 (2026-08-14 「충돌방지 상한」)
-#    · 자료컷 4개  ← 소재를 많이 쓸수록 탈락시켜 반복을 조장했다. 목적과 정반대라 삭제
-#    · 연속 사용 2컷 ← 클립 기준 연속 제한. 아래 「한 인물 연속 12초」로 대체
-#    · 출처 3종    ← 아래 「등장 인물 3명 이상」으로 대체
-#
-# ✅ 적용 규약 = 보완게이트 정본 §10-1 (차노 2026-08-16 확정, 요즘 규약)
-MAX_ASSET_SHARE = 0.40        # 동일 소스 파일 사용 한 편에 최대 40%
-MAX_PERSON_RUN_SEC = 12.0     # 한 인물 연속 노출 12초 초과 금지 — 넘으면 다른 인물 컷을 끼운다
-MIN_PERSONS = 3               # 한 편 내 등장 인물 3명 이상 (구 「2명 이상」에서 상향)
+MAX_ASSET_CUTS = 4
+MAX_CONSECUTIVE = 2
+MIN_SOURCES = 3
 
 
 def probe(p: Path) -> dict:
@@ -100,11 +92,8 @@ def load_cut_manifest(path: Path | None) -> list[dict]:
         m = re.match(r"([0-9.]+)\s*[~〜-]\s*([0-9.]+)", cells[1])
         if not m:
             continue
-        cut = {"start": float(m.group(1)), "end": float(m.group(2)),
-               "말": cells[2], "화면": cells[3], "일치": cells[4]}
-        # 2026-08-17 수정: 출처 열을 안 읽어 MD 매니페스트는 항상 「출처 0종」으로 탈락했다
-        if len(cells) >= 6: cut["source"] = cells[5]
-        cuts.append(cut)
+        cuts.append({"start": float(m.group(1)), "end": float(m.group(2)),
+                     "말": cells[2], "화면": cells[3], "일치": cells[4]})
     return cuts
 
 
@@ -173,34 +162,22 @@ def s7_variety(p: Path) -> dict:
 
 
 def s7_manifest(cuts: list[dict]) -> list[str]:
-    """소재 편중 검사 — 정본 §10-1 (2026-08-16). 소재 가짓수에는 상한을 걸지 않는다."""
     problems = []
     if not cuts: return problems
-    secs_per, persons = {}, set()
-    total = 0.0
-    run_person, run_sec = None, 0.0
+    assets, sources, consecutive = {}, set(), 0
+    prev = None
     for cut in cuts:
-        start, end = cut_bounds(cut); length = max(0.0, end-start); total += length
-        asset  = str(cut.get("clip", cut.get("asset", cut.get("화면", "")))).strip()
-        person = str(cut.get("source", cut.get("출처", cut.get("인물", "")))).strip()
-        if asset: secs_per[asset] = secs_per.get(asset, 0.0) + length
-        if person and person != "카드": persons.add(person)
-        # 한 인물 연속 노출
-        if person and person == run_person:
-            run_sec += length
-        else:
-            run_person, run_sec = person, length
-        if person and person != "카드" and run_sec > MAX_PERSON_RUN_SEC + 1e-6:
-            problems.append(f"인물 '{person}' 연속 {run_sec:.1f}초 > {MAX_PERSON_RUN_SEC:.0f}초 — 다른 인물 컷을 끼울 것")
-            run_sec = 0.0
-        if 0 < length < MIN_CUT_SEC - 1e-6:
-            problems.append(f"{asset or '컷'} {length:.2f}초 < {MIN_CUT_SEC}초")
-    if total > 0:
-        for asset, sec in sorted(secs_per.items()):
-            if sec / total > MAX_ASSET_SHARE + 1e-6:
-                problems.append(f"{asset} 분량 {sec/total*100:.0f}% > {MAX_ASSET_SHARE*100:.0f}%")
-    if persons and len(persons) < MIN_PERSONS:
-        problems.append(f"등장 인물 {len(persons)}명 < {MIN_PERSONS}명")
+        start, end = cut_bounds(cut); length = end-start
+        asset = str(cut.get("clip", cut.get("asset", cut.get("화면", ""))))
+        source = str(cut.get("source", cut.get("출처", ""))).strip()
+        if asset: assets[asset] = assets.get(asset, 0) + 1
+        if source: sources.add(source)
+        consecutive = consecutive + 1 if asset and asset == prev else 1
+        if consecutive > MAX_CONSECUTIVE: problems.append(f"연속사용 {consecutive}컷 > {MAX_CONSECUTIVE}컷")
+        if 0 < length < MIN_CUT_SEC: problems.append(f"{asset or '컷'} {length:.2f}초 < {MIN_CUT_SEC}초")
+        prev = asset
+    if len(assets) > MAX_ASSET_CUTS: problems.append(f"자료컷 {len(assets)}개 > {MAX_ASSET_CUTS}개")
+    if len(sources) < MIN_SOURCES: problems.append(f"출처 {len(sources)}종 < {MIN_SOURCES}종")
     return problems
 
 

@@ -185,12 +185,13 @@ def act_python(args):
 
 def act_git_commit(args):
     msg = args[0] if args else f"자동저장 {datetime.now():%Y-%m-%d %H:%M} (원격 명령)"
-    lock = ROOT / ".git" / "index.lock"
-    if lock.exists() and (time.time() - lock.stat().st_mtime) > 600:
-        # 10분 넘게 방치된 락 = 죽은 락. 지우지 않고 치워둔다.
-        stash = ROOT / "_to_delete" / "gitlock"
-        stash.mkdir(parents=True, exist_ok=True)
-        lock.rename(stash / f"index.lock.{int(time.time())}")
+    # index.lock 뿐 아니라 HEAD.lock 도 남는다 (2026-08-17 실사고: git rc=128)
+    stash = ROOT / "_to_delete" / "gitlock"
+    for name in ("index.lock", "HEAD.lock"):
+        lock = ROOT / ".git" / name
+        if lock.exists() and (time.time() - lock.stat().st_mtime) > 600:
+            stash.mkdir(parents=True, exist_ok=True)
+            lock.rename(stash / f"{name}.{int(time.time())}")
     rc, o1 = run(["git", "add", "-A"], timeout=180)
     if rc != 0:
         return rc, o1
@@ -259,10 +260,14 @@ def process(path):
         "completed_at": datetime.now().isoformat(),
     })
     blob = json.dumps(req, ensure_ascii=False, indent=2)
+    RESULTS.mkdir(parents=True, exist_ok=True)
     (RESULTS / path.name).write_text(blob)
     # unlink 대신 rename — 삭제 권한이 없는 마운트에서도 동작하고, 원자적이다
     path.write_text(blob)
-    path.rename((CMD_DONE if ok else CMD_FAILED) / path.name)
+    # 목적지 폴더가 없으면 rename 이 실패해 무한 재시도가 된다 (2026-08-17 실사고)
+    dest_dir = CMD_DONE if ok else CMD_FAILED
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    path.rename(dest_dir / path.name)
     log(("완료: " if ok else "⛔실패: ") + f"{path.name} (rc={rc})")
     return ok
 

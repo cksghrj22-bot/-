@@ -107,7 +107,11 @@ def build(a):
         top = y + 18
         canvas.paste(fit(art, W - PAD * 2, H - top - PAD), (PAD, top))
     else:  # ── 본문형 / 전후형
-        f_head = ImageFont.truetype(F_HEAD, 64)
+        head_size = 64
+        f_head = ImageFont.truetype(F_HEAD, head_size)
+        while a.head and d.textlength(a.head, font=f_head) > W - PAD * 2 and head_size > 42:
+            head_size -= 2
+            f_head = ImageFont.truetype(F_HEAD, head_size)
         f_body = ImageFont.truetype(F_BODY, 56)
         body_lines = [s for s in (a.body or "").split("|") if s]
         panel_h = (30 + LINE_BODY * len(body_lines) + 30) if body_lines else 0
@@ -134,6 +138,21 @@ def build(a):
                             fill=(255, 252, 245), outline=BROWN, width=4)
         d.text((x + 24, y + 10), a.pin, font=f_pin, fill=INK)
 
+    # 도해용 라벨. ``텍스트|x비율|y비율``을 여러 번 받을 수 있다.
+    # 문구는 생성 이미지가 아니라 조립 단계에서만 얹는다.
+    for spec in a.label or []:
+        text, sx, sy = spec.rsplit("|", 2)
+        text = text.replace("\\n", "\n")
+        x, y = float(sx) * W, float(sy) * H
+        f_label = ImageFont.truetype(F_SUB, 35)
+        box = d.multiline_textbbox((0, 0), text, font=f_label, spacing=4, align="center")
+        tw, th = box[2] - box[0], box[3] - box[1]
+        pad_x, pad_y = 22, 14
+        d.rounded_rectangle([x, y, x + tw + pad_x * 2, y + th + pad_y * 2], 22,
+                            fill=(255, 252, 245), outline=BROWN, width=3)
+        d.multiline_text((x + pad_x, y + pad_y - box[1]), text,
+                         font=f_label, fill=INK, spacing=4, align="center")
+
     os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
     canvas.save(a.out)
     print(a.out, canvas.size)
@@ -149,5 +168,7 @@ if __name__ == "__main__":
     p.add_argument("--body", help="하단 패널 본문. | 로 줄바꿈")
     p.add_argument("--pin", help="지시선 말풍선")
     p.add_argument("--pin-xy", default="0.55,0.30")
+    p.add_argument("--label", action="append",
+                   help=r'도해 라벨 "텍스트\\n둘째줄|x비율|y비율" (반복 가능)')
     p.add_argument("--bleed", action="store_true", help="(호환용·무시)")
     build(p.parse_args())

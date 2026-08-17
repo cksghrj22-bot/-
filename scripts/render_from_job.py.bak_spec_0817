@@ -1861,7 +1861,7 @@ def main():
                 # 카드 없는 클립 비트에서는 자막 y를 전역 상수로 고정한다.
                 # cap_pos/cap_scale은 강조용으로 남기되, 같은 편 안에서 y가 중앙으로 튀면
                 # B방 검수 기준상 실패다.
-                oy=int(job.get("caption_y", job.get("clip_caption_y", 1436)))   # 2026-08-17 수정: 1580은 UI존(1540) 침범 — 정본 y=1436
+                oy=int(job.get("caption_y", job.get("clip_caption_y", 1580)))
             elif bpos=="center":   oy=int((1920-ch)/2)
             elif bpos=="upper":  oy=int(1920*0.34)
             elif isinstance(bpos,(int,float)): oy=int(bpos)
@@ -1976,7 +1976,7 @@ def main():
     # (실측 사고 2026-08-06: 인트로 2.2초 때문에 전체가 2.2초 어긋남 = "대사랑 렌더가 안 맞음")
     lead_ms=int(140+ effective_intro_sec*1000)
     _dl("AUDIO_LEAD=%dms (intro=%.2fs separate=%s)"%(lead_ms,effective_intro_sec,separate_intro))
-    subprocess.run(["ffmpeg","-y","-i","%s/voice.mp3"%WK,"-af","adelay=%d|%d,apad"%(lead_ms,lead_ms),"-t",str(VD),"-ar","48000","-ac","2","%s/voice.wav"%WK],capture_output=True)
+    subprocess.run(["ffmpeg","-y","-i","%s/voice.mp3"%WK,"-af","adelay=%d|%d,apad"%(lead_ms,lead_ms),"-t",str(VD),"-ar","44100","-ac","2","%s/voice.wav"%WK],capture_output=True)
     if not os.path.exists("%s/voice.wav"%WK) or clen("%s/voice.wav"%WK) < 1.0:
         raise RuntimeError("voice.wav 생성 실패/길이 비정상")
     _vv=subprocess.run(["ffmpeg","-i","%s/voice.wav"%WK,"-af","volumedetect","-f","null","-"],
