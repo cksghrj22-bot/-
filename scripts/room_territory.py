@@ -60,11 +60,23 @@ TERRITORIES = {
     ],
 
     # 만화연재방 (코드 M)
+    # 2026-08-17 만화연재방 정정 — 이 방 산출물이 전부 「영역 밖」으로 튕기고 있었다.
+    #   실제 산출은 _out/결이<편이름>_final__M/ 형태다(_ROOMS.md 파일명/락 규칙).
+    #   "_out/결이/" 는 뒤 슬래시 때문에 그걸 못 잡았고, 폴더 자체도 없다.
+    #   콘텐츠도 content/만화/ 가 아니라 content/manga/ 에 있었다.
+    #   전용규약이 자기 것이라 적어둔 content/manifests/만화_*.json 도 막혀 있었다.
+    #   ※ 이 방 줄만 고쳤다. 다른 방 줄은 건드리지 않았다.
     "만화연재방": [
         "_out/만화/",
         "_out/연재/",
-        "_out/결이/",
+        "_out/결이",              # _out/결이/ + _out/결이고데기_final__M/ 등 편별 폴더
         "content/만화/",
+        "content/manga/",
+        "content/manifests/만화_",
+        "content/manifests/결이_",
+        "scripts/cards/comic_",
+        "scripts/manga_",
+        "rooms/만화연재방/",
     ],
 
     # 교육디렉터방
