@@ -65,9 +65,17 @@ def dispatch_to_codex(task):
     # ⚠️ 2026-08-17 실사고: `codex -p <프롬프트>` 로 보내고 있었다.
     #    codex 의 -p 는 --profile(프로파일 이름)이라 주문서 전량이
     #    "invalid --profile value" 로 실패했다. 비대화형 실행은 `codex exec <프롬프트>` 다.
+    # ⚠️ 2026-08-17 실사고 #2 — 샌드박스가 네트워크를 끊고 있었다.
+    #    실측: CODEX_SANDBOX=seatbelt · CODEX_SANDBOX_NETWORK_DISABLED=1
+    #          → `curl: (6) Could not resolve host` · `scutil --dns: No DNS configuration available`
+    #    증상: 드라이브 다운로드·pip 설치 등 셸에서 나가는 작업이 전부 죽었다.
+    #          MCP 커넥터는 코덱스 자체 통로라 살아있지만 34MB 넘는 파일을 못 받는다.
+    #    조치: 차노 2026-08-17 지시("무조건 드라이브에서 받아라") → 샌드박스 네트워크를 연다.
+    NET = ["--sandbox", "danger-full-access"]
     attempts = [
-        ["codex", "exec", prompt],   # 현행 CLI
-        ["codex", prompt],           # 구버전 폴백(위치인자)
+        ["codex", "exec"] + NET + [prompt],   # 네트워크 허용 (기본)
+        ["codex", "exec", prompt],            # 플래그 미지원 CLI 폴백
+        ["codex", prompt],                    # 구버전 폴백(위치인자)
     ]
     last_err = ""
     for cmd in attempts:

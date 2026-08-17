@@ -27,6 +27,7 @@ try:  # `python scripts/...`와 `python -m scripts...` 둘 다 지원
 except ImportError:
     from scripts.shot_variety import SIM_LIMIT, cos
 
+ROOT = Path(__file__).resolve().parent.parent
 FF, FP = "ffmpeg", "ffprobe"
 # 1080x1920 기준 UI존 — 다른 해상도는 비율로 계산
 UI_ZONE_RATIO = 1540 / 1920  # 바닥 20%가 UI존
@@ -56,9 +57,15 @@ def probe(p: Path) -> dict:
 
 
 def ui_zone_hits(p: Path, w: int, h: int, dur: float, tmp: Path) -> list[tuple[float, float]]:
-    """등간격 프레임의 UI존에서 흰 픽셀 비율을 잰다. 해상도에 맞게 스케일."""
+    """UI존에 **자막 글자**가 있는지 본다.
+
+    ⚠️ 2026-08-17 수정 — 예전엔 그냥 「밝은 픽셀 비율」을 셌다. 그래서 **흰 커트보·조명·흰 벽**이
+    전부 자막으로 잡혔다(실측: v5 23.45초에서 44.52% — 실제로는 글자 0개, 커트보였다).
+    자막은 **흰 글씨 + 검은 테두리**다. 아주 밝은 픽셀 바로 옆에 아주 어두운 픽셀이 있어야 글자다.
+    커트보는 넓게 밝기만 하고 옆에 검정이 없다.
+    """
     try:
-        from PIL import Image
+        from PIL import Image, ImageFilter
     except ImportError:
         return []
 
@@ -76,9 +83,18 @@ def ui_zone_hits(p: Path, w: int, h: int, dur: float, tmp: Path) -> list[tuple[f
                         "-vf", f"crop={w}:{ui_zone_height}:0:{ui_zone_top}",
                         str(f)], check=True)
         im = Image.open(f).convert("L")
-        hist = im.histogram()
-        ratio = sum(hist[201:]) / max(1, sum(hist))
-        if ratio > 0.010:
+        near_dark = im.filter(ImageFilter.MinFilter(5))   # 5x5 안에 어두운 픽셀이 있으면 어두워진다
+        px, nd = im.load(), near_dark.load()
+        W, H = im.size
+        step = 2                                          # 2픽셀 간격 샘플 — 속도
+        outlined = total = 0
+        for y in range(0, H, step):
+            for x in range(0, W, step):
+                total += 1
+                if px[x, y] > 235 and nd[x, y] < 60:      # 아주 밝은데 바로 옆이 아주 어둡다 = 글자 획
+                    outlined += 1
+        ratio = outlined / max(1, total)
+        if ratio > 0.004:
             hits.append((round(t, 2), round(ratio * 100, 2)))
     return hits
 
@@ -378,8 +394,12 @@ def main() -> int:
             fails.append(f"[S7] {p.name} {problem}")
 
         tmp = p.parent / "_review" / f"_gate_{p.stem}"; tmp.mkdir(parents=True, exist_ok=True)
-        for f in tmp.glob("*.png"): f.unlink()
-        for f in tmp.glob("*.jpg"): f.unlink()
+        for f in tmp.glob("*.png"):
+            try: f.unlink()
+            except OSError: pass   # 임시파일 정리 실패가 검사 결과를 삼키면 안 된다 (2026-08-17)
+        for f in tmp.glob("*.jpg"):
+            try: f.unlink()
+            except OSError: pass
 
         # S4 경계 무음
         if v["audio"]:
@@ -409,16 +429,24 @@ def main() -> int:
         ui_zone_height = h - ui_zone_top
         thumb_w, thumb_h = 240, int(240 * h / w)
 
+        # 2026-08-17 수정: 맥 ffmpeg 는 fontfile 없는 drawtext 에서 rc=8 로 죽는다.
+        # 시트는 참고용이다 — 실패해도 검사 결과를 삼키면 안 된다.
+        _font = ROOT / "assets/fonts/nsqr_eb.ttf"
+        _label = (f",drawtext=fontfile={_font}:text='{{t}}s':x=10:y=10:fontsize=28:"
+                  "fontcolor=yellow:box=1:boxcolor=black@0.7") if _font.exists() else ""
         for i in range(12):
             t = dur * (i + 0.5) / 12
-            subprocess.run([FF, "-y", "-hide_banner", "-loglevel", "error", "-ss", f"{t:.2f}",
-                            "-i", str(p), "-frames:v", "1",
-                            "-vf", (f"drawbox=x=0:y={ui_zone_top}:w={w}:h={ui_zone_height}:"
-                                    "color=red@0.9:t=4,"
-                                    f"drawtext=text='{t:.1f}s':x=10:y=10:fontsize=28:"
-                                    "fontcolor=yellow:box=1:boxcolor=black@0.7,"
-                                    f"scale={thumb_w}:{thumb_h}"),
-                            "-q:v", "4", str(tmp / f"sheet_{i:02d}.jpg")], check=True)
+            vf = (f"drawbox=x=0:y={ui_zone_top}:w={w}:h={ui_zone_height}:color=red@0.9:t=4"
+                  + _label.replace("{t}", f"{t:.1f}")
+                  + f",scale={thumb_w}:{thumb_h}")
+            r = subprocess.run([FF, "-y", "-hide_banner", "-loglevel", "error", "-ss", f"{t:.2f}",
+                                "-i", str(p), "-frames:v", "1", "-vf", vf,
+                                "-q:v", "4", str(tmp / f"sheet_{i:02d}.jpg")], capture_output=True)
+            if r.returncode:   # 라벨 없이 한 번 더
+                subprocess.run([FF, "-y", "-hide_banner", "-loglevel", "error", "-ss", f"{t:.2f}",
+                                "-i", str(p), "-frames:v", "1",
+                                "-vf", f"drawbox=x=0:y={ui_zone_top}:w={w}:h={ui_zone_height}:color=red@0.9:t=4,scale={thumb_w}:{thumb_h}",
+                                "-q:v", "4", str(tmp / f"sheet_{i:02d}.jpg")], capture_output=True)
 
         sheet = p.parent / f"_발행전_스샷_{p.stem}.jpg"
         subprocess.run([FF, "-y", "-hide_banner", "-loglevel", "error",
