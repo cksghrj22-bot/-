@@ -144,3 +144,91 @@ def upload_reel(video_path: str | Path, caption: str, creds: dict, timeout_sec: 
         pass  # 로그 실패해도 발행은 성공
 
     return media_id
+
+
+def _wait_ready(container_id: str, token: str, timeout_sec: int = 600) -> None:
+    """영상 아이템은 인스타가 처리(FINISHED)할 때까지 기다려야 게시할 수 있다."""
+    import time as _t
+    t0 = _t.time()
+    while _t.time() - t0 < timeout_sec:
+        st = _get(f"{GRAPH}/{container_id}", {"fields": "status_code,status", "access_token": token})
+        code = st.get("status_code")
+        if code == "FINISHED":
+            return
+        if code == "ERROR":
+            raise RuntimeError(f"컨테이너 {container_id} 처리 실패: {st.get('status')}")
+        _t.sleep(5)
+    raise TimeoutError(f"컨테이너 {container_id} 처리 대기 시간 초과")
+
+
+def upload_mixed_carousel(items: list[dict], caption: str, creds: dict,
+                          dry_run: bool = True) -> str:
+    """사진·영상 섞인 캐러셀을 게시한다.
+
+    items = [{"url": "...", "kind": "image"|"video"}, ...]  (2~10개)
+
+    ⚠️ Graph API 는 로컬 파일을 받지 않는다. **인스타 서버가 직접 받아갈 수 있는 공개 URL**이어야 한다.
+       구글드라이브 공유링크는 HTML 리다이렉트라 자주 거부된다 — 쓰지 말 것.
+
+    dry_run=True 면 **아무것도 게시하지 않고** URL 도달 가능성만 실측해서 보고한다.
+    발행은 되돌릴 수 없으므로 기본값이 dry_run 이다. 실제 게시는 명시적으로 dry_run=False.
+    """
+    if not 2 <= len(items) <= 10:
+        raise ValueError("캐러셀은 2~10개여야 한다")
+    token = creds["access_token"]
+    user = creds["ig_user_id"]
+
+    # 0) URL 실측 — 인스타가 못 받아갈 URL 이면 게시 자체가 실패한다
+    problems = []
+    for it in items:
+        try:
+            req = urllib.request.Request(it["url"], method="HEAD")
+            with urllib.request.urlopen(req, timeout=30) as r:
+                ctype = r.headers.get("Content-Type", "")
+                clen = int(r.headers.get("Content-Length") or 0)
+                ok_type = ("video" in ctype) if it["kind"] == "video" else ("image" in ctype)
+                print(f"  {it['kind']:5s} {clen/1048576:7.2f}MB  {ctype:28s} {it['url']}")
+                if not ok_type:
+                    problems.append(f"{it['url']} → Content-Type 이 {ctype} (파일이 아니라 페이지일 수 있다)")
+        except Exception as e:
+            problems.append(f"{it['url']} → 접근 실패 {e}")
+    if problems:
+        for p in problems:
+            print("  ⛔ " + p)
+        raise RuntimeError(f"공개 URL {len(problems)}건이 인스타가 받아갈 수 없는 상태다. 게시 중단.")
+
+    if dry_run:
+        print(f"\n[DRY RUN] URL {len(items)}건 전부 도달 가능. 캡션 {len(caption)}자.")
+        print("  실제 게시하려면 dry_run=False. **되돌릴 수 없다.**")
+        return "(dry-run)"
+
+    # 1) 자식 컨테이너
+    children = []
+    for it in items:
+        params = {"is_carousel_item": "true", "access_token": token}
+        if it["kind"] == "video":
+            params["media_type"] = "VIDEO"
+            params["video_url"] = it["url"]
+        else:
+            params["image_url"] = it["url"]
+        child = _post(f"{GRAPH}/{user}/media", params)
+        children.append((child["id"], it["kind"]))
+        print(f"  자식 생성 {child['id']} ({it['kind']})")
+
+    # 2) 영상은 처리 완료 대기
+    for cid, kind in children:
+        if kind == "video":
+            _wait_ready(cid, token)
+            print(f"  처리 완료 {cid}")
+
+    # 3) 부모 컨테이너 → 게시
+    container = _post(f"{GRAPH}/{user}/media", {
+        "media_type": "CAROUSEL",
+        "children": ",".join(c for c, _ in children),
+        "caption": caption,
+        "access_token": token,
+    })
+    _wait_ready(container["id"], token)
+    published = _post(f"{GRAPH}/{user}/media_publish",
+                      {"creation_id": container["id"], "access_token": token})
+    return published["id"]

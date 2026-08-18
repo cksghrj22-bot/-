@@ -161,10 +161,13 @@ def make_sheet(folder: Path, slides: list[Path], info: dict) -> Path:
             d.rectangle([x0, y0, x1, y1], outline=(255, 40, 40), width=6)
         sc = thumb_w / im.width
         im = im.resize((thumb_w, int(im.height * sc)))
-        d = ImageDraw.Draw(im)
-        d.rectangle([0, 0, 74, 30], fill=(0, 0, 0))
-        d.text((10, 8), p.stem[-8:], fill=(255, 255, 0))
-        ims.append(im)
+        # 라벨은 이미지 **위에 덮지 않는다.** 덮으면 상단 자막이 잘린 것처럼 보여
+        # 시트가 거짓 신호를 준다(2026-08-18 실측). 위에 띠를 따로 붙인다.
+        lab = Image.new("RGB", (thumb_w, im.height + 26), (24, 24, 24))
+        ld = ImageDraw.Draw(lab)
+        ld.text((6, 6), p.stem, fill=(255, 220, 0))
+        lab.paste(im, (0, 26))
+        ims.append(lab)
 
     H = max(i.height for i in ims)
     sheet = Image.new("RGB", (len(ims) * (thumb_w + pad) + pad, H + 2 * pad), (24, 24, 24))
