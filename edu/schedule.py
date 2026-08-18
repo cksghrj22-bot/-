@@ -80,8 +80,19 @@ def build():
     tc_wd = defaultdict(Counter)   # 선생님별 요일 사용횟수(요일 분산용)
     day_load = Counter()           # 날짜별 과목수(하루 몰림 완화)
     misplaced = []
+    fixed_keys = set(getattr(spec, 'FIXED_CLASSES', {}))
+    track_lookup = {(teacher, label): lset for teacher, subs in spec.TRACKS.items()
+                    for label, lset in subs}
+    for key, dt in getattr(spec, 'FIXED_CLASSES', {}).items():
+        teacher, label = key
+        lset = track_lookup[key]
+        DATA[dt].append((label, teacher, spec.lvtxt(lset)))
+        day_lv[dt] |= lset; day_tc[dt].add(teacher)
+        tc_wd[teacher][dt.weekday()] += 1; day_load[dt] += 1
     cap = spec.RULES['max_same_weekday']
     for ideal, teacher, label, lset in items:
+        if (teacher, label) in fixed_keys:
+            continue
         # 이상적 주 근처에서 후보를 모으되, 첫 후보가 나와도 +2주까지 더 훑어
         # '덜 쓴 요일'을 고를 여지를 준다(요일 벽 방지 + 이상적 주 근접 유지).
         cands = []          # (dt, off) — off=이상적 주와의 거리
@@ -125,7 +136,8 @@ def build():
                 ((d, i, lab, tc, lvt)
                  for d in list(DATA) if isinstance(d, datetime.date) and d.month == src_m
                  for i, (lab, tc, lvt) in enumerate(DATA[d])
-                 if tc not in ('모델', '특강', '시험') and level in _lset_of(lvt)),
+                 if tc not in ('모델', '특강', '시험') and (tc, lab) not in fixed_keys
+                 and level in _lset_of(lvt)),
                 key=lambda x: (x[3], x[0].toordinal(), x[2]))
             moved = False
             for d0, i0, lab, tc, lvt in srcs:
@@ -178,7 +190,8 @@ def build():
                                 mcnt[int(x)] += 1
         srcs = sorted(((d, i, DATA[d][i]) for d in list(DATA)
                        if isinstance(d, datetime.date) and d.month == from_m
-                       for i, (l, t, v) in enumerate(DATA[d]) if t == tc),
+                       for i, (l, t, v) in enumerate(DATA[d])
+                       if t == tc and (t, l) not in fixed_keys),
                       key=lambda x: (x[0].toordinal(), x[2][0]))
         tdays = set(d for d in DATA if isinstance(d, datetime.date)
                     for _l, _t, _v in DATA[d] if _t == tc)
@@ -237,6 +250,8 @@ def build():
         if i0 is None:
             return None
         lab, _t, lvt = DATA[day][i0]; lset = _lset_of(lvt)
+        if (tc, lab) in fixed_keys:
+            return None
         others = set(ds) - {day}
         cands = sorted(
             (d for wk in weeks for d in wk_dates[wk]
@@ -281,6 +296,8 @@ def build():
         if i0 is None:
             return None
         lab, _t, lvt = DATA[day][i0]; lset = _lset_of(lvt)
+        if (tc, lab) in fixed_keys:
+            return None
         # 그 달의 레벨별 개수(occ를 뺐을 때 어떤 레벨이 0이 되는지 판단)
         mcnt = Counter()
         for dd in DATA:
@@ -364,7 +381,9 @@ def build():
                 DATA[fd].append(('모델데이', '모델', ''))
             if idx == 3:
                 DATA[fd].append((f'특강 {spec.LECT.get(m, "")}', '특강', ''))
-    DATA[spec.EXAM].append(('입봉시험', '시험', ''))
+    DATA[spec.EXAM].append((f'입봉시험 · {spec.EXAM_TIME}', '시험', ''))
+    DATA[spec.DESIGNER_SHOW.date()].append(
+        (f'디자이너쇼 · {spec.DESIGNER_SHOW:%H:%M}', '특강', ''))
 
     # 맨즈(와이 원장) 고정 일정 — window 안 날짜만 캘린더에 표기(별도 프로그램·검증 제외)
     for d, title, is_test in getattr(spec, 'MENS_PROGRAM', []):
@@ -467,5 +486,11 @@ def validate(DATA):
         for a, b in zip(ds, ds[1:]):
             if (b - a).days == 1:
                 problems.append(f"{t} 연달아: {a}({wd[a.weekday()]})→{b}({wd[b.weekday()]})")
+
+    # 11) 일정정본이 지정한 고정 수업은 정확한 날짜에 한 번만 등장
+    for (teacher, label), fixed_date in getattr(spec, 'FIXED_CLASSES', {}).items():
+        dates = [d for d, l, t, _ in reg if t == teacher and l == label]
+        if dates != [fixed_date]:
+            problems.append(f"고정 일정 불일치: {teacher} {label} {dates} (정본 {fixed_date})")
 
     return problems

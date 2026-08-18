@@ -70,9 +70,9 @@ body{{background:#e8e5df;color:var(--ink);font-family:-apple-system,"Apple SD Go
 <body><div class="wrap">
 <div class="head"><div class="eye">AT NOWN · EDUCATION SCHEDULE 2026</div>
 <h1>교육 일정 캘린더 — 8월 2째주 ~ 12월</h1>
-<div class="sub">정규교육 <b>8/10 ~ 12/6</b> (입봉시험 12/21 앞) · <b>기본 아침교육 {spec.MORNING}</b> · <b>모델작업은 {spec.EVENING}</b> · 월·토 휴무 · 맨즈(옴므) 별도</div></div>
+<div class="sub">정규교육 <b>8/10 ~ 12/6</b> · 입봉시험 <b>{spec.EXAM.month}/{spec.EXAM.day}(금 {spec.EXAM_TIME})</b> · <b>기본 아침교육 {spec.MORNING}</b> · <b>모델작업은 {spec.EVENING}</b> · 월·토 휴무 · 맨즈(옴므) 별도</div></div>
 <div class="legend">{legend}</div>
-<div class="note">· <b>기본은 아침 교육 {spec.MORNING}</b>, <b>모델 작업은 {spec.EVENING}</b>.<br>· 특강 = 3째주 금 · 모델데이 = 2·4주 금 · 입봉시험 <b>12/21(월)</b> · 월·토 휴무.<br>· 칸 앞 <b>L1~L5</b>는 과목 레벨 표기.</div>
+<div class="note">· <b>기본은 아침 교육 {spec.MORNING}</b>, <b>모델 작업은 {spec.EVENING}</b>.<br>· 특강 = 3째주 금 · 모델데이 = 2·4주 금 · 디자이너쇼 <b>{spec.DESIGNER_SHOW.month}/{spec.DESIGNER_SHOW.day} 19시</b> · 입봉시험 <b>{spec.EXAM.month}/{spec.EXAM.day}(금 {spec.EXAM_TIME})</b> · 월·토 휴무.<br>· 칸 앞 <b>L1~L5</b>는 과목 레벨 표기.</div>
 {months}
 <div class="foot">A T &nbsp; N O W N &nbsp;·&nbsp; 8 ~ 12 월 교육 일정</div>
 </div></body></html>'''
@@ -311,7 +311,7 @@ table.menstbl{{border-collapse:collapse;background:#fff;border:1px solid var(--l
 <div class="sec" id="sys"><div class="sh">SYSTEM</div><div class="st">① 교육 시스템</div>
 <div class="grid2">
 <div class="card"><h3>기간 · 시간</h3><ul>
-<li>정규교육 <b>8/10 ~ 12/6</b> · 입봉시험 <b>12/21(월)</b></li>
+<li>정규교육 <b>8/10 ~ 12/6</b> · 입봉시험 <b>{spec.EXAM.month}/{spec.EXAM.day}(금 {spec.EXAM_TIME})</b></li>
 <li>기본 <b>아침 교육 {spec.MORNING}</b></li>
 <li>모델 작업은 <b>{spec.EVENING}</b></li>
 <li>휴무 <b>월 · 토</b> (전원)</li>
@@ -319,7 +319,8 @@ table.menstbl{{border-collapse:collapse;background:#fff;border:1px solid var(--l
 <div class="card"><h3>이벤트</h3><ul>
 <li>특강 = 매월 <b>3째주 금</b></li>
 <li>모델데이 = 매월 <b>2·4째주 금</b></li>
-<li>입봉시험 = <b>12/21(월)</b></li>
+<li>디자이너쇼 = <b>{spec.DESIGNER_SHOW.month}/{spec.DESIGNER_SHOW.day}(월) 19시</b></li>
+<li>입봉시험 = <b>{spec.EXAM.month}/{spec.EXAM.day}(금 {spec.EXAM_TIME})</b></li>
 </ul></div>
 </div>
 <div style="height:12px"></div>

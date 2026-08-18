@@ -67,6 +67,15 @@ class TestEduSchedule(unittest.TestCase):
     def test_build_check_exits_ok(self):
         self.assertEqual(build.main(write=False), 0)
 
+    def test_2026_08_15_canonical_dates(self):
+        for (teacher, label), expected in spec.FIXED_CLASSES.items():
+            dates = [d for d, rows in self.DATA.items() if isinstance(d, datetime.date)
+                     for lab, tc, _ in rows if (tc, lab) == (teacher, label)]
+            self.assertEqual(dates, [expected])
+        self.assertIn(('입봉시험 · 저녁', '시험', ''), self.DATA[spec.EXAM])
+        self.assertIn(('디자이너쇼 · 19:00', '특강', ''),
+                      self.DATA[spec.DESIGNER_SHOW.date()])
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -3,15 +3,15 @@
 
 검증 실패 시 HTML을 쓰지 않고 종료코드 1 (버그가 산출물로 새는 걸 코드가 막음).
 결과물:
-  content/교육/2026-07-23_교육시스템_정본/교육일정_캘린더_2026.html
-  content/교육/2026-07-23_교육시스템_정본/과목별_준비물_과제_주의사항.html
+  content/교육/2026-08-15_일정정본/교육일정_캘린더_2026.html
+  content/교육/2026-08-15_일정정본/과목별_준비물_과제_주의사항.html
 """
 import os, sys
 from . import spec, schedule, render
 from .prep_data import TEACHERS
 
 OUT_DIR = os.path.join(os.path.dirname(__file__), '..',
-                       'content', '교육', '2026-07-23_교육시스템_정본')
+                       'content', '교육', '2026-08-15_일정정본')
 CAL = '교육일정_캘린더_2026.html'
 PREP = '과목별_준비물_과제_주의사항.html'
 ALL = '교육_전체안내_배포용.html'
