@@ -17,7 +17,7 @@
 `|` 가 줄바꿈. 본문은 2줄 권장(최대 3줄), 행당 18자 이내.
 """
 import argparse, os
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageEnhance, ImageFont, ImageStat
 
 W, H = 1080, 1350
 CREAM = (247, 239, 223)      # 카드 바탕
@@ -34,6 +34,24 @@ F_BODY = os.path.join(FONTS, "Gaegu-Bold.ttf")
 PAD = 52
 BAND_H = 168          # 헤드 밴드 높이
 LINE_BODY = 74        # 본문 행간
+
+
+def feed_tone(img):
+    """카드폼 §11 피드 톤. 반드시 문구 조립 전 그림에만 적용한다."""
+    im = ImageEnhance.Color(img.convert("RGB")).enhance(0.92)
+    mean = ImageStat.Stat(im).mean
+    luminance = sum(mean) / 3
+    if luminance < 232:
+        # 원화의 명암을 보존하면서 밝기를 피드 카드 쪽으로 완만히 리프트한다.
+        factor = 1 + (232 / max(luminance, 1) - 1) * 0.35
+        im = ImageEnhance.Brightness(im).enhance(factor)
+        mean = ImageStat.Stat(im).mean
+    # R-B 웜캐스트를 20 근처로 맞춘다. G와 명암은 건드리지 않는다.
+    delta = (20 - (mean[0] - mean[2])) / 2
+    r, g, b = im.split()
+    r = r.point(lambda v: max(0, min(255, round(v + delta))))
+    b = b.point(lambda v: max(0, min(255, round(v - delta))))
+    return Image.merge("RGB", (r, g, b))
 
 
 def fit(img, w, h):
@@ -91,6 +109,8 @@ def build(a):
     canvas = Image.new("RGB", (W, H), CREAM)
     d = ImageDraw.Draw(canvas)
     art = Image.open(a.img).convert("RGB")
+    if a.feed_tone:
+        art = feed_tone(art)
 
     if a.title:  # ── 표지형
         f_title = ImageFont.truetype(F_HEAD, 82)
@@ -171,4 +191,6 @@ if __name__ == "__main__":
     p.add_argument("--label", action="append",
                    help=r'도해 라벨 "텍스트\\n둘째줄|x비율|y비율" (반복 가능)')
     p.add_argument("--bleed", action="store_true", help="(호환용·무시)")
+    p.add_argument("--feed-tone", action="store_true",
+                   help="카드폼 §11 보정을 그림에만 적용한 뒤 밴드·패널 조립")
     build(p.parse_args())

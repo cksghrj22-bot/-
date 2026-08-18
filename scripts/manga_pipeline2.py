@@ -112,7 +112,7 @@ def generate(prompt: str, out_path: Path, refs: list, tries: int = 3) -> bool:
 def assemble(panel: dict, raw: Path, out: Path):
     """make_card.py 로 1080x1350 + 문구."""
     cmd = ["python3", str(ROOT / "scripts/cards/make_card.py"),
-           "--img", str(raw), "--out", str(out)]
+           "--img", str(raw), "--out", str(out), "--feed-tone"]
     if panel.get("bleed"):
         cmd.append("--bleed")
     for k in ("badge", "title", "head", "body", "pin"):
