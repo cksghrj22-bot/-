@@ -48,9 +48,12 @@ EDGE_STD_L = 7.0            # 좌측정렬이므로 왼쪽 끝은 거의 안 흔
 EDGE_STD_R = 22.0           # 오른쪽 끝(글자폭)은 조금 흔들린다
 LONG_TEXT  = 22             # 이보다 길면 「부연」 — 최대 크기로 두면 안 된다
 MAX_BOX_H  = 0.22           # 박스 높이 상한(캔버스 대비) — 머리카락 덩어리 차단
-# 2026-08-18 차노 지시 「아니야 2초 괜찮아」 → 하한 3.0 → 2.0.
-# 08-15 쇼츠 길이규격 폐기와 같은 원칙: **길이 맞추려고 늘리거나 늦추지 않는다. 길이는 내용이 정한다.**
-VIDEO_SEC = (2.0, 5.0)
+# 영상 슬라이드 길이 — 2026-08-18 차노 지시 2회로 개정.
+#   ① 「아니야 2초 괜찮아」        → 하한 3.0 → 2.0
+#   ② 「그냥 쭈욱 길게 / 5초제한 빼」 → **상한 폐기(None)**
+# 남은 건 하한뿐이다. 원칙 = 08-15 쇼츠 길이규격 폐기와 같다:
+# **길이를 맞추려고 자르거나 늘리거나 늦추지 않는다. 길이는 내용이 정한다.**
+VIDEO_SEC = (2.0, None)
 
 
 # ── 박스 검출 ────────────────────────────────────────────────
@@ -303,8 +306,10 @@ def main() -> int:
         sec = video_seconds(v)
         if sec is None:
             warns.append(f"[N7] {v.name} 길이 미측정 (ffprobe 없음)")
-        elif not (VIDEO_SEC[0] <= sec <= VIDEO_SEC[1]):
-            fails.append(f"[N7] {v.name} {sec:.2f}초 — 정본 {VIDEO_SEC[0]:.0f}~{VIDEO_SEC[1]:.0f}초")
+        elif sec < VIDEO_SEC[0]:
+            fails.append(f"[N7] {v.name} {sec:.2f}초 — 하한 {VIDEO_SEC[0]:.0f}초 미만")
+        elif VIDEO_SEC[1] is not None and sec > VIDEO_SEC[1]:
+            fails.append(f"[N7] {v.name} {sec:.2f}초 — 상한 {VIDEO_SEC[1]:.0f}초 초과")
 
     # N8 문안 원문 대조
     if src_file:
