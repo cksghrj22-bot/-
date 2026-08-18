@@ -36,7 +36,7 @@ def sheet(job_path, out_path, cols=4, tw=300):
             src=os.path.join(d,b.get("clip",""))
             tmp="/tmp/_cc%d.jpg"%i
             ss=float(b.get("start",0.5) or 0.5)
-            subprocess.run(["ffmpeg","-y","-v","error","-ss","%.2f"%max(0.0,ss),"-i",src,
+            subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-y","-v","error","-ss","%.2f"%max(0.0,ss),"-i",src,
                             "-frames:v","1","-vf","scale=%d:%d"%(tw,th),tmp],capture_output=True)
             if os.path.exists(tmp):
                 try: canvas.paste(Image.open(tmp),(cx,cy))

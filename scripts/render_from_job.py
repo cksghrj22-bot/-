@@ -237,7 +237,7 @@ def tts_ts_batch(texts,out_mp3,key,vid,model_id=TTS_MODEL_ID,voice_settings=None
             inputs+=["-f","lavfi","-t","%.3f"%dur,"-i","anullsrc=r=44100:cl=stereo"]
         labels.append("[%d:a]"%idx)
     fc="".join(labels)+"concat=n=%d:v=0:a=1[a]"%len(parts)
-    r=subprocess.run(["ffmpeg","-y"]+inputs+["-filter_complex",fc,"-map","[a]","-ar","44100","-ac","2",out_mp3],capture_output=True)
+    r=subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-y"]+inputs+["-filter_complex",fc,"-map","[a]","-ar","44100","-ac","2",out_mp3],capture_output=True)
     if r.returncode!=0 or not os.path.exists(out_mp3):
         raise RuntimeError("TTS_BATCH_CONCAT_FAIL "+r.stderr.decode("utf-8","ignore")[-300:])
     if os.path.getsize(out_mp3)<TTS_MIN_BYTES:
@@ -355,7 +355,7 @@ def tts_ts_local(text,out_mp3):
             if r.returncode!=0 or not os.path.exists(aiff):
                 last_err="macOS say TTS 실패 voice=%s: %s"%(voice,r.stderr.decode("utf-8","ignore")[-220:])
                 continue
-            cv=subprocess.run(["ffmpeg","-v","error","-y","-i",aiff,"-ar","44100","-ac","1",wav],capture_output=True)
+            cv=subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-v","error","-y","-i",aiff,"-ar","44100","-ac","1",wav],capture_output=True)
             if cv.returncode!=0 or not os.path.exists(wav):
                 last_err="macOS say WAV 변환 실패 voice=%s: %s"%(voice,cv.stderr.decode("utf-8","ignore")[-220:])
                 continue
@@ -406,7 +406,7 @@ def tts_ts_local(text,out_mp3):
             inputs+=["-f","lavfi","-t","%.3f"%dur,"-i","anullsrc=r=44100:cl=mono"]
         labels.append("[%d:a]"%idx); idx+=1
     fc="".join(labels)+"concat=n=%d:v=0:a=1,volume=2.2[a]"%len(labels)
-    r=subprocess.run(["ffmpeg","-y"]+inputs+["-filter_complex",fc,"-map","[a]","-ar","44100","-ac","2",out_mp3],
+    r=subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-y"]+inputs+["-filter_complex",fc,"-map","[a]","-ar","44100","-ac","2",out_mp3],
                      capture_output=True)
     if r.returncode!=0 or not os.path.exists(out_mp3):
         raise RuntimeError("local TTS concat 실패: "+r.stderr.decode("utf-8","ignore")[-300:])
@@ -475,7 +475,7 @@ def wb_filter(src, ss, strength=0.85, look=True, target_luma=128.0):
     '색 치우침'으로 오해해 반대색으로 밀어버린다(실측 사고 2026-08-06: 빨간 상의 → 화면이 초록).
     """
     try:
-        raw=subprocess.run(["ffmpeg","-v","error","-ss","%.3f"%max(0.0,float(ss)),"-i",src,"-frames:v","1",
+        raw=subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-v","error","-ss","%.3f"%max(0.0,float(ss)),"-i",src,"-frames:v","1",
                             "-vf","scale=64:64,format=rgb24","-f","rawvideo","-"],capture_output=True).stdout
         n=len(raw)//3
         if n<100: return ""
@@ -514,7 +514,7 @@ def neutral_profile(src, fracs=(0.30,0.45,0.60,0.75)):
         ts=[max(0.0,dur*f) for f in fracs] if dur>0.6 else [max(0.0,dur*0.5)]
         sR=sG=sB=0.0; cnt=0; lum_s=0.0; ncnt=0
         for t in ts:
-            raw=subprocess.run(["ffmpeg","-v","error","-ss","%.2f"%t,"-i",src,"-frames:v","1",
+            raw=subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-v","error","-ss","%.2f"%t,"-i",src,"-frames:v","1",
                                 "-vf","scale=64:64,format=rgb24","-f","rawvideo","-"],capture_output=True).stdout
             n=len(raw)//3
             if n<100: continue
@@ -575,7 +575,7 @@ def frame_stats(src, t):
     ck=(src,round(t,2))
     if ck in _FS_CACHE: return _FS_CACHE[ck]
     try:
-        raw=subprocess.run(["ffmpeg","-v","error","-ss","%.2f"%max(0.0,t),"-i",src,"-frames:v","1",
+        raw=subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-v","error","-ss","%.2f"%max(0.0,t),"-i",src,"-frames:v","1",
                             "-vf","scale=48:48,format=rgb24","-f","rawvideo","-"],capture_output=True).stdout
         n=len(raw)//3
         if n<100: return None
@@ -726,7 +726,7 @@ def make_thumb_png(text, out, font_path):
 def thumb_bar_present(video_path, t=0.3):
     """첫 0.6초 상단 바 존재를 픽셀로 스모크 확인한다."""
     try:
-        raw=subprocess.run(["ffmpeg","-v","error","-ss","%.2f"%t,"-i",video_path,"-frames:v","1",
+        raw=subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-v","error","-ss","%.2f"%t,"-i",video_path,"-frames:v","1",
                             "-vf","crop=1080:150:0:%d,format=rgb24"%max(0,THUMB_Y-20),
                             "-f","rawvideo","-"],capture_output=True,timeout=30).stdout
         n=len(raw)//3
@@ -743,7 +743,7 @@ def thumb_bar_present(video_path, t=0.3):
 def black_sample_ratio(video_path):
     """B방 검수 기준: 4fps, 32x57 gray 평균 12 미만 프레임 비율."""
     try:
-        raw=subprocess.run(["ffmpeg","-v","error","-i",video_path,
+        raw=subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-v","error","-i",video_path,
                             "-vf","fps=4,scale=32:57,format=gray",
                             "-f","rawvideo","-"],
                            capture_output=True,timeout=600).stdout
@@ -1044,7 +1044,7 @@ def _stt_words(audio_path, model_name=None):
     return ws
 
 def _wav16k_from_media(media_path, out_wav):
-    r=subprocess.run(["ffmpeg","-v","error","-y","-i",media_path,"-vn","-ac","1","-ar","16000",out_wav],
+    r=subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-v","error","-y","-i",media_path,"-vn","-ac","1","-ar","16000",out_wav],
                      capture_output=True,text=True,timeout=240)
     if r.returncode!=0 or not os.path.exists(out_wav):
         raise RuntimeError("WAV16K_EXTRACT_FAIL "+(r.stderr or "")[-300:])
@@ -1069,7 +1069,7 @@ def _stt_segments(audio_path, model_name=None):
 
 def _voice_onset_in_media(path):
     try:
-        rr=subprocess.run(["ffmpeg","-i",path,"-af","silencedetect=noise=-40dB:d=0.15","-f","null","-"],
+        rr=subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-i",path,"-af","silencedetect=noise=-40dB:d=0.15","-f","null","-"],
                           capture_output=True,text=True,timeout=180).stderr
         m=re.search(r"silence_end:\s*([\d.]+)",rr)
         if m: return float(m.group(1))
@@ -1906,9 +1906,9 @@ def main():
                                     "ay":[A[0],A[1]],"by":[B[0],B[1]],
                                     "t":[round(max(A[2],B[2]),2),round(min(A[3],B[3]),2)]})
         _nf=max(1,int(round(bd*FPS)))   # -t 대신 정확한 프레임 수로 잘라야 길이가 안 흔들린다
-        subprocess.run(["ffmpeg","-y"]+inp+["-filter_complex",fc,"-map",last,"-frames:v",str(_nf),"-r",str(FPS),"-an","-pix_fmt","yuv420p","-preset","fast","-crf","16",v],capture_output=True)
+        subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-y"]+inp+["-filter_complex",fc,"-map",last,"-frames:v",str(_nf),"-r",str(FPS),"-an","-pix_fmt","yuv420p","-preset","fast","-crf","16",v],capture_output=True)
         if not os.path.exists(v):
-            r2=subprocess.run(["ffmpeg","-y"]+inp+["-filter_complex",fc,"-map",last,"-t",str(bd),"-r",str(FPS),"-an","-pix_fmt","yuv420p","-preset","fast","-crf","16",v],capture_output=True)
+            r2=subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-y"]+inp+["-filter_complex",fc,"-map",last,"-t",str(bd),"-r",str(FPS),"-an","-pix_fmt","yuv420p","-preset","fast","-crf","16",v],capture_output=True)
             if not os.path.exists(v): _dl("SEG%d_FAIL: %s"%(i,r2.stderr.decode('utf-8','ignore')[-500:]))
         parts.append(v)
     # 인트로 카드(맨 앞)는 명시적으로 separate_intro=true일 때만 쓴다.
@@ -1953,7 +1953,7 @@ def main():
                 thumb_overlay_added=True
             else:
                 ifc="[0][1]overlay=(W-w)/2:%d[o]"%_ity
-        subprocess.run(["ffmpeg","-y"]+iinp+["-filter_complex",ifc,"-map","[o]","-t",str(effective_intro_sec),"-r",str(FPS),"-an","-pix_fmt","yuv420p","-preset","fast","-crf","16",iv],capture_output=True)
+        subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-y"]+iinp+["-filter_complex",ifc,"-map","[o]","-t",str(effective_intro_sec),"-r",str(FPS),"-an","-pix_fmt","yuv420p","-preset","fast","-crf","16",iv],capture_output=True)
         if os.path.exists(iv): parts.insert(0,iv)
     outro_extra=0.0
     if job.get("outro"):
@@ -1961,13 +1961,13 @@ def main():
         # 페이드는 짧게만 걸어 1.3초 안에서도 문구가 읽히게 둔다.
         osec=min(1.3, max(0.8, float(job.get("outro_sec",1.3) or 1.3))); ov="%s/vo.mp4"%WK; outro_extra=osec
         o_png,ow,oh=make_text_png(job["outro"].split("|"),"%s/outro.png"%WK,FONT,64,box_alpha=0)
-        subprocess.run(["ffmpeg","-y","-f","lavfi","-i","color=c=black:s=1080x1920:d=%.2f"%osec,"-i",o_png,
+        subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-y","-f","lavfi","-i","color=c=black:s=1080x1920:d=%.2f"%osec,"-i",o_png,
             "-filter_complex","[0][1]overlay=(W-w)/2:(H-h)/2,fade=t=in:st=0:d=0.18,fade=t=out:st=%.2f:d=0.22[o]"%max(0.1,osec-0.22),
             "-map","[o]","-t",str(osec),"-r",str(FPS),"-an","-pix_fmt","yuv420p","-preset","fast","-crf","16",ov],capture_output=True)
         parts.append(ov)
     with open("%s/vl.txt"%WK,"w") as f:
         for p in parts: f.write("file '%s'\n"%p)
-    subprocess.run(["ffmpeg","-y","-f","concat","-safe","0","-i","%s/vl.txt"%WK,"-c:v","libx264","-preset","slow","-crf","18","-maxrate","12M","-bufsize","24M","-pix_fmt","yuv420p","-r",str(FPS),"%s/vid.mp4"%WK],capture_output=True)
+    subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-y","-f","concat","-safe","0","-i","%s/vl.txt"%WK,"-c:v","libx264","-preset","slow","-crf","18","-maxrate","12M","-bufsize","24M","-pix_fmt","yuv420p","-r",str(FPS),"%s/vid.mp4"%WK],capture_output=True)
     VD=clen("%s/vid.mp4"%WK)
 
     # ── STAGE C: 오디오 (연속 보이스 + BGM 옵션A) ──
@@ -1976,10 +1976,10 @@ def main():
     # (실측 사고 2026-08-06: 인트로 2.2초 때문에 전체가 2.2초 어긋남 = "대사랑 렌더가 안 맞음")
     lead_ms=int(140+ effective_intro_sec*1000)
     _dl("AUDIO_LEAD=%dms (intro=%.2fs separate=%s)"%(lead_ms,effective_intro_sec,separate_intro))
-    subprocess.run(["ffmpeg","-y","-i","%s/voice.mp3"%WK,"-af","adelay=%d|%d,apad"%(lead_ms,lead_ms),"-t",str(VD),"-ar","48000","-ac","2","%s/voice.wav"%WK],capture_output=True)
+    subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-y","-i","%s/voice.mp3"%WK,"-af","adelay=%d|%d,apad"%(lead_ms,lead_ms),"-t",str(VD),"-ar","48000","-ac","2","%s/voice.wav"%WK],capture_output=True)
     if not os.path.exists("%s/voice.wav"%WK) or clen("%s/voice.wav"%WK) < 1.0:
         raise RuntimeError("voice.wav 생성 실패/길이 비정상")
-    _vv=subprocess.run(["ffmpeg","-i","%s/voice.wav"%WK,"-af","volumedetect","-f","null","-"],
+    _vv=subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-i","%s/voice.wav"%WK,"-af","volumedetect","-f","null","-"],
                        capture_output=True,text=True).stderr
     _vm=re.search(r"mean_volume:\s*(-?[\d.]+)",_vv)
     if _vm and float(_vm.group(1)) <= -45.0:
@@ -1992,13 +1992,13 @@ def main():
         if bgm_src and os.path.exists(bgm_src):
             # ── 실제 음원(형 뮤팟 BGM 등) — 합성음 대신 최우선 ──
             # VD 길이로 트림 + 인/아웃 페이드 + 볼륨. 긴 곡이면 앞부분 사용.
-            subprocess.run(["ffmpeg","-y","-i",bgm_src,"-af",
+            subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-y","-i",bgm_src,"-af",
                 "volume=%.2f,afade=t=in:st=0:d=%.2f,afade=t=out:st=%.2f:d=1.8,atrim=0:%.2f,aformat=channel_layouts=stereo"%(bvol,float(job.get("bgm_fadein",1.6)),max(0.1,VD-1.8),VD),
                 "-ar","44100","-ac","2",bg],capture_output=True)
             _dl("BGM_FILE=%s vol=%.2f"%(bgm_src,bvol))
         else:
             # ── fallback: 합성 패드(음원 없을 때만) ──
-            subprocess.run(["ffmpeg","-y",
+            subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-y",
                 "-f","lavfi","-i","sine=frequency=261.63:sample_rate=44100",
                 "-f","lavfi","-i","sine=frequency=329.63:sample_rate=44100",
                 "-f","lavfi","-i","sine=frequency=392:sample_rate=44100",
@@ -2011,7 +2011,7 @@ def main():
             _dl("BGM_SYNTH(fallback) vol=0.5")
         mx="%s/mix.wav"%WK
         # 사이드체인: 말할 때만 BGM 살짝 죽임(과하지 않게) → 스피치 중에도 안 사라짐, 비트 사이 gap에서 확 들림
-        subprocess.run(["ffmpeg","-y","-i","%s/voice.wav"%WK,"-i",bg,"-filter_complex",
+        subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-y","-i","%s/voice.wav"%WK,"-i",bg,"-filter_complex",
             "[1][0]sidechaincompress=threshold=0.1:ratio=3:attack=20:release=350[bd];"
             "[0][bd]amix=inputs=2:normalize=0:duration=first","-ar","44100","-ac","2",mx],capture_output=True)
         if os.path.exists(mx) and clen(mx) >= 1.0:
@@ -2023,7 +2023,7 @@ def main():
     if os.path.exists(out):
         render_backup="%s/previous_output.mp4"%WK
         shutil.copy2(out, render_backup)
-    _r=subprocess.run(["ffmpeg","-y","-i","%s/vid.mp4"%WK,"-i",final_a,"-map","0:v:0","-map","1:a:0","-c:v","copy","-af","loudnorm=I=-14:TP=-1.5:LRA=11","-c:a","aac","-b:a","192k","-ar","48000","-ac","2","-shortest",out],capture_output=True)
+    _r=subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-y","-i","%s/vid.mp4"%WK,"-i",final_a,"-map","0:v:0","-map","1:a:0","-c:v","copy","-af","loudnorm=I=-14:TP=-1.5:LRA=11","-c:a","aac","-b:a","192k","-ar","48000","-ac","2","-shortest",out],capture_output=True)
     _dl("VID_EXISTS=%s OUT_EXISTS=%s"%(os.path.exists("%s/vid.mp4"%WK),os.path.exists(out)))
     if not os.path.exists(out): _dl("MUX_FAIL: "+_r.stderr.decode("utf-8","ignore")[-500:])
 
@@ -2032,7 +2032,7 @@ def main():
         c=["ffprobe","-v","error","-show_entries",ent,"-of","default=nk=1:nw=1"]+(["-select_streams",st] if st else [])
         return subprocess.run(c+[out],capture_output=True,text=True).stdout.strip()
     def astats(f):
-        rr=subprocess.run(["ffmpeg","-i",f,"-af","volumedetect","-f","null","-"],capture_output=True,text=True).stderr
+        rr=subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-i",f,"-af","volumedetect","-f","null","-"],capture_output=True,text=True).stderr
         m=re.search(r"mean_volume:\s*(-?[\d.]+)",rr); x=re.search(r"max_volume:\s*(-?[\d.]+)",rr)
         return (float(m.group(1)) if m else -99.0, float(x.group(1)) if x else -99.0)
     fd=clen(out); sz=os.path.getsize(out)/1e6 if os.path.exists(out) else 0
@@ -2062,7 +2062,7 @@ def main():
     # A/V 동기 게이트: 목소리 시작이 인트로 길이와 맞는지 실측(어긋나면 대사↔화면 불일치)
     def voice_onset():
         try:
-            rr=subprocess.run(["ffmpeg","-i","%s/voice.wav"%WK,"-af","silencedetect=noise=-40dB:d=0.15","-f","null","-"],
+            rr=subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-i","%s/voice.wav"%WK,"-af","silencedetect=noise=-40dB:d=0.15","-f","null","-"],
                               capture_output=True,text=True).stderr
             m=re.search(r"silence_end:\s*([\d.]+)",rr)
             if m: return float(m.group(1))

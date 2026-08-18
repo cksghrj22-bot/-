@@ -47,7 +47,7 @@ def run_blog_save(job_name):
 
     env = {"JOB": job_name}
     result = subprocess.run(
-        ["node", str(ROOT / "scripts/naver_blog_save.mjs")],
+        ["/opt/homebrew/bin/node", str(ROOT / "scripts/naver_blog_save.mjs")],
         cwd=str(ROOT),
         capture_output=True,
         text=True,

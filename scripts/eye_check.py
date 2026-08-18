@@ -21,7 +21,7 @@ FPS  = 10
 TXT_THR = 200            # 이 밝기 이상이면 글자 픽셀로 본다 (자막은 흰 글씨)
 
 def gray(path, vf):
-    return subprocess.run(["ffmpeg","-v","error","-i",path,"-vf",vf,"-f","rawvideo","-"],
+    return subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-v","error","-i",path,"-vf",vf,"-f","rawvideo","-"],
                           capture_output=True).stdout
 
 def frames(path):
@@ -58,7 +58,7 @@ def speech_onsets(path):
         from faster_whisper import WhisperModel
     except Exception:
         return None
-    subprocess.run(["ffmpeg","-y","-v","error","-i",path,"-ac","1","-ar","16000","/tmp/_eye.wav"],
+    subprocess.run(["/Users/chanho/.local/bin/ffmpeg","-y","-v","error","-i",path,"-ac","1","-ar","16000","/tmp/_eye.wav"],
                    capture_output=True)
     m = WhisperModel(os.environ.get("FW_MODEL","small"), device="cpu", compute_type="int8")
     segs,_ = m.transcribe("/tmp/_eye.wav", language="ko", word_timestamps=True,
