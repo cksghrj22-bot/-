@@ -1,0 +1,11 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "ls_lookbook.py"
+  ],
+  "requested_by": "전략기획및개인업무(코워크)",
+  "status": "failed",
+  "returncode": 1,
+  "result": "=== ls -la ===\nls: fts_read: Resource deadlock avoided\ntotal 0\n\n=== find ===\n/Users/chanho/Library/CloudStorage/GoogleDrive-cksghrj22@gmail.com/내 드라이브/앳나운_영상/성희룩북\n\n[stderr]\nTraceback (most recent call last):\n  File \"/Users/chanho/atnown-content-pipeline/scripts/ls_lookbook.py\", line 10, in <module>\n    r3 = subprocess.run([\"bash\",\"-lc\", f'xattr -l \"{P}\" 2>&1 | head -5; stat -f \"%z bytes  %N\" \"{P}\" 2>&1'], capture_output=True, text=True, timeout=60)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py\", line 557, in run\n    stdout, stderr = process.communicate(input, timeout=timeout)\n                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py\", line 1221, in communicate\n    stdout, stderr = self._communicate(input, endtime, timeout)\n                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py\", line 2194, in _communicate\n    stdout = self._translate_newlines(stdout,\n                                      self.stdout.encoding,\n                                      self.stdout.errors)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py\", line 1099, in _translate_newlines\n    data = data.decode(encoding, errors)\nUnicodeDecodeError: 'utf-8' codec can't decode bytes in position 28-29: invalid continuation byte",
+  "completed_at": "2026-08-18T14:18:44.750182"
+}

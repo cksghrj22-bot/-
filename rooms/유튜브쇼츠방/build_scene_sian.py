@@ -92,7 +92,10 @@ def main():
             tot = dur(src); ss = float(sc[0].get("in", 0.2))
             if ss + seg > tot - 0.05: ss = max(0.0, tot - seg - 0.05)
             base = ["-ss", "%.2f" % ss, "-t", "%.2f" % seg, "-i", src]
-            pre = "[0]scale=-2:1920,crop=1080:1920,setsar=1,fps=30[v]"
+            # 2026-08-18 — 소스에 **구워진 자막은 항상 화면 아래쪽**에 있다(send_유행·1961 실측).
+            # 높이 2100 으로 키우고 **위쪽 1920 만** 따면 아래 180px 이 잘려나가 그 자막이 사라진다.
+            # 인물은 대체로 화면 중상단에 있으므로 구도 손해가 거의 없다.
+            pre = "[0]scale=-2:2100,crop=1080:1920:(iw-1080)/2:0,setsar=1,fps=30[v]"
         fc = pre + ";" + ";".join(filt)
         cmd = ["ffmpeg","-v","error"] + base + inputs + ["-an","-filter_complex", fc,
                "-map", cur_lbl, "-c:v","libx264","-preset","veryfast","-pix_fmt","yuv420p",

@@ -1,0 +1,13 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "make_short_run.py",
+    "content/manifests/쇼츠_장마철떡짐_20260818.json",
+    "_out/shorts/장마철떡짐_v1_20260818.mp4"
+  ],
+  "requested_by": "유튜브쇼츠방(코워크)",
+  "status": "failed",
+  "returncode": 1,
+  "result": "[stderr]\nTraceback (most recent call last):\n  File \"/Users/chanho/atnown-content-pipeline/rooms/유튜브쇼츠방/make_short.py\", line 91, in <module>\n    sys.exit(main())\n             ~~~~^^\n  File \"/Users/chanho/atnown-content-pipeline/rooms/유튜브쇼츠방/make_short.py\", line 34, in main\n    wk = ROOT / \"_out/shorts/_build_%s\" % stem\n         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~\nTypeError: unsupported operand type(s) for %: 'PosixPath' and 'str'",
+  "completed_at": "2026-08-18T09:51:06.148439"
+}

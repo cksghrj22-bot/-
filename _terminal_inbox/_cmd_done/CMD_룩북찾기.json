@@ -1,0 +1,11 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "find_lookbook.py"
+  ],
+  "requested_by": "전략기획및개인업무(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "[파일] /Users/chanho/Desktop/퍼스널컬러/유이레/2023 앳나운 SS 헤어디자인 룩북 촬영 모습입니다_ ( 헤어디자이너들의 인터뷰 )(1080p).mp4\n  [파일] /Users/chanho/Desktop/타인의책장_성희_썸네일_2026-07-13.jpg\n  [파일] /Users/chanho/Documents/ATNOWN_ref/mood-card.html\n  [파일] /Users/chanho/Downloads/MP_모던 룩북 브금.mp3\n  [파일] /Users/chanho/Downloads/moodboard_성희.pdf\n  [파일] /Users/chanho/Downloads/앳나운_룩북베이스_교육영상_10편구성안.pdf\n  [파일] /Users/chanho/atnown-content-pipeline/_terminal_inbox/CMD_룩북찾기.json\n  [파일] /Users/chanho/atnown-content-pipeline/content/blog/2026-07-19_04_여자숏컷_무드.md\n  [파일] /Users/chanho/atnown-content-pipeline/content/shorts/2026-07-20/07_앳나운사전_무드.txt\n  [파일] /Users/chanho/atnown-content-pipeline/content/대본/2026-07-23_무드디자인_주파수.md\n  [파일] /Users/chanho/atnown-content-pipeline/content/대본/2026-07-23_무드편_어울림은무드.md\n  [파일] /Users/chanho/atnown-content-pipeline/content/촬영가이드/무드_토킹_촬영가이드.html\n  [파일] /Users/chanho/atnown-content-pipeline/scripts/__pycache__/find_lookbook.cpython-310.pyc\n  [파일] /Users/chanho/atnown-content-pipeline/scripts/find_lookbook.py\n  [파일] /Users/chanho/atnown-repo/content/blog/2026-07-19_04_여자숏컷_무드.md\n  [파일] /Users/chanho/atnown-repo/content/shorts/2026-07-20/07_앳나운사전_무드.txt\n  [파일] /Users/chanho/atnown-repo/content/대본/2026-07-23_무드디자인_주파수.md\n  [파일] /Users/chanho/atnown-repo/content/대본/2026-07-23_무드편_어울림은무드.md\n  [파일] /Users/chanho/atnown-repo/content/촬영가이드/무드_토킹_촬영가이드.html\n  [파일] /Users/chanho/atnown-trunk/content/blog/2026-07-19_04_여자숏컷_무드.md\n  [파일] /Users/chanho/atnown-trunk/content/shorts/2026-07-20/07_앳나운사전_무드.txt\n  [파일] /Users/chanho/atnown-trunk/content/대본/2026-07-23_무드디자인_주파수.md\n  [파일] /Users/chanho/atnown-trunk/content/대본/2026-07-23_무드편_어울림은무드.md\n  [파일] /Users/chanho/atnown-trunk/content/촬영가이드/무드_토킹_촬영가이드.html",
+  "completed_at": "2026-08-18T09:41:45.651061"
+}

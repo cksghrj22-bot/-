@@ -1,0 +1,11 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "probe_moodsrc.py"
+  ],
+  "requested_by": "전략기획및개인업무(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "✅ /Users/chanho/Downloads/moodboard_성희.pdf  (380KB)\n✅ /Users/chanho/Desktop/타인의책장_성희_썸네일_2026-07-13.jpg  (328KB)\n✅ /Users/chanho/Documents/ATNOWN_ref/mood-card.html  (11KB)\n✅ /Users/chanho/Downloads/앳나운_룩북베이스_교육영상_10편구성안.pdf  (4KB)\n\n=== '성희' 들어간 폴더 (홈 깊이6) ===\n  (없음)\n\n=== Desktop / Downloads 최근 폴더 ===\n/Users/chanho/Downloads/단발트렌드/\n/Users/chanho/Downloads/개인 페이지 & 공유된 페이지 11/\n/Users/chanho/Downloads/개인 페이지 & 공유된 페이지 10/\n/Users/chanho/Downloads/개인 페이지 & 공유된 페이지 9/\n/Users/chanho/Downloads/개인 페이지 & 공유된 페이지 8/\n/Users/chanho/Downloads/개인 페이지 & 공유된 페이지 7/\n/Users/chanho/Downloads/개인 페이지 & 공유된 페이지 6/\n/Users/chanho/Downloads/개인 페이지 & 공유된 페이지 5/\n/Users/chanho/Downloads/개인 페이지 & 공유된 페이지 4/\n/Users/chanho/Downloads/개인 페이지 & 공유된 페이지 3/\n/Users/chanho/Downloads/개인 페이지 & 공유된 페이지 2/\n/Users/chanho/Downloads/개인 페이지 & 공유된 페이지/\n/Users/chanho/Downloads/업체 (2)/\n/Users/chanho/Desktop/앳나운_야간공장_2026-07-30/",
+  "completed_at": "2026-08-18T09:43:16.051986"
+}

@@ -1,0 +1,11 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "find_lookbook4.py"
+  ],
+  "requested_by": "전략기획및개인업무(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "=== One Touch 전체 목록 ===\n7:2 프롬프트이즈미 준비\nAutorun.inf\nNana💕_files\nSeagate\nStart_Here_Chromebook.pdf\nStart_Here_Mac.app\nStart_Here_Win.exe\nSystem Volume Information\nWarranty.pdf\nyoutube\n가발\n기준개발\n기획\n나의 모습\n남자\n내 교재들\n단발\n매직\n무제 폴더\n무제 폴더 2\n무제.fcpbundle\n발표\n세미나\n쇼츠\n앳나운_아카이브\n앳나운_영상원본\n영상\n영상유통\n웨입\n유튜뷰최종\n인스타프로젝트\n정희두\n차노쌤_인터뷰쇼츠\n컬러교육의시작\n컬러제이피지\n키노트 발표자료\n타입별 연예인\n토킹쇼츠\n퍼스널컬러\n펌연습\n\n=== 앳나운 들어간 폴더 (외장·드라이브, 띄어쓰기 무관) ===\n/Users/chanho/Library/CloudStorage/GoogleDrive-cksghrj22@gmail.com/내 드라이브/앳나운_산출물\n/Users/chanho/Library/CloudStorage/GoogleDrive-cksghrj22@gmail.com (2026. 8. 2. 오전 2:08)/내 드라이브/앳나운_콘텐츠허브\n/Users/chanho/Library/CloudStorage/GoogleDrive-cksghrj22@gmail.com (2026. 8. 2. 오전 2:08)/내 드라이브/앳나운_영상\n/Users/chanho/Library/CloudStorage/GoogleDrive-cksghrj22@gmail.com (2026. 8. 2. 오전 2:08)/내 드라이브/앳나운_옵시디언_볼트\n/Users/chanho/Library/CloudStorage/GoogleDrive-cksghrj22@gmail.com (2026. 8. 2. 오전 2:08)/내 드라이브/앳나운_옵시디언_볼트/앳나운_지식\n\n=== 성희 (파일·폴더 전부, 외장 깊이8) ===\n  (없음)\n\n=== 룩북 (전 볼륨) ===\n  (없음)",
+  "completed_at": "2026-08-18T09:49:49.812289"
+}

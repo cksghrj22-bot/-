@@ -1,0 +1,11 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "pull_lookbook_api.py"
+  ],
+  "requested_by": "전략기획및개인업무(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "폴더 후보: [{'id': '1sYY8dTNmXAsMqnHSUvlcdM0-oL63WXcf', 'name': '성희룩북'}]\n폴더 내 파일 17개\n  ✅ KakaoTalk_Photo_2026-08-18-09-39-11.jpeg  (360KB)\n  ✅ KakaoTalk_Photo_2026-08-18-09-39-02 012.jpeg  (145KB)\n  ✅ KakaoTalk_Photo_2026-08-18-09-39-02 014.jpeg  (216KB)\n  ✅ KakaoTalk_Photo_2026-08-18-09-39-02 013.jpeg  (238KB)\n  ✅ KakaoTalk_Photo_2026-08-18-09-39-02 011.jpeg  (261KB)\n  ✅ KakaoTalk_Photo_2026-08-18-09-39-02 016.jpeg  (262KB)\n  ✅ KakaoTalk_Photo_2026-08-18-09-39-02 015.jpeg  (136KB)\n  ✅ KakaoTalk_Photo_2026-08-18-09-39-01 010.jpeg  (248KB)\n  ✅ KakaoTalk_Photo_2026-08-18-09-39-01 009.jpeg  (382KB)\n  ✅ KakaoTalk_Photo_2026-08-18-09-39-01 005.jpeg  (266KB)\n  ✅ KakaoTalk_Photo_2026-08-18-09-39-01 006.jpeg  (228KB)\n  ✅ KakaoTalk_Photo_2026-08-18-09-39-01 008.jpeg  (568KB)\n  ✅ KakaoTalk_Photo_2026-08-18-09-39-01 004.jpeg  (359KB)\n  ✅ KakaoTalk_Photo_2026-08-18-09-39-01 003.jpeg  (323KB)\n  ✅ KakaoTalk_Photo_2026-08-18-09-39-01 007.jpeg  (306KB)\n  ✅ KakaoTalk_Photo_2026-08-18-09-39-00 002.jpeg  (341KB)\n  ✅ KakaoTalk_Photo_2026-08-18-09-39-00 001.jpeg  (146KB)\n\n내려받음 17개  →  /Users/chanho/atnown-content-pipeline/_intray_무드보드_보이드태그/성희룩북",
+  "completed_at": "2026-08-18T14:20:05.882985"
+}

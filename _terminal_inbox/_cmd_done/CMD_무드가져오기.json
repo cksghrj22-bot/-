@@ -1,0 +1,11 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "pull_moodsrc.py"
+  ],
+  "requested_by": "전략기획및개인업무(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "복사 moodboard_성희.pdf (380KB)\n복사 타인의책장_성희_썸네일_2026-07-13.jpg (328KB)\n복사 앳나운_룩북베이스_교육영상_10편구성안.pdf (4KB)\n/Users/chanho/atnown-content-pipeline/_intray_무드보드_보이드태그/moodboard_성희.pdf: could not find /Users/chanho/atnown-content-pipeline/_intray_무드보드_보이드태그/moodboard_성희.pdf.\n페이지수(추정) 0\n이미지객체(추정) 0\n\n대상 폴더: /Users/chanho/atnown-content-pipeline/_intray_무드보드_보이드태그",
+  "completed_at": "2026-08-18T09:47:09.555646"
+}

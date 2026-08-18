@@ -1,0 +1,11 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "find_lookbook5.py"
+  ],
+  "requested_by": "전략기획및개인업무(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "=== 앳나운_영상 안 ===\n_최신_바로보기\n매직\n재활용_소스\n\n=== 그 안에서 성희/룩북 ===\n  (없음)\n\n=== 하위 폴더별 파일수 ===\nGoogleDrive-cksghrj22@gmail.com\n(2026.\n8.\n2.\n오전\n내\n\"  →         0개\nGoogleDrive-cksghrj22@gmail.com\n(2026.\n8.\n2.\n오전\n내\n\"  →         0개\nGoogleDrive-cksghrj22@gmail.com\n(2026.\n8.\n2.\n오전\n내\n\"  →         0개",
+  "completed_at": "2026-08-18T09:50:40.700110"
+}

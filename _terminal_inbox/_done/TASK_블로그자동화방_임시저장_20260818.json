@@ -1,0 +1,10 @@
+{
+  "room": "블로그자동화방",
+  "title": "블로그 임시저장 4건 — node 경로 수리본으로 재실행",
+  "task": "bash scripts/blog_save_pending.sh 를 실행하라. 이 스크립트는 _publish_jobs/blog_parsed/ 의 대기 잡을 전부 순차로 네이버 임시저장한다.\n\n[이전 실패 원인 — 수리 완료]\n어제 이 방 발주에서 '임시저장 0/4 성공 (node 실행경로 오류)' 가 났다. 원인은 디스패처 PATH 에 node 가 없었던 것. 스크립트 상단에 PATH 보강 + NODE_BIN 자동탐지를 넣어 수리했다. node 를 못 찾으면 스크립트가 즉시 '⛔ node 를 못 찾았습니다' 를 출력하고 종료하니, 그 메시지가 나오면 which node 결과를 회신에 그대로 적어라.\n\n[제약 — 어기지 말 것]\n- 임시저장까지만. 발행·삭제 금지. (코드에서 이미 꺼져 있다. ALLOW_DELETE 설정하지 말 것)\n- 로그인 창이 뜨면 LOGIN_WAIT 600초 안에 차노가 로그인한다. 대신 로그인 시도하지 말 것.\n- 브라우저를 반복 실행하지 말 것. 스크립트가 순차로 알아서 돈다.\n\n[회신에 반드시 포함 — status:done 은 증거가 아니다]\n1) _publish_jobs/blog_state.json 전문 (각 잡의 상태·임시글URL)\n2) _cowork_sync/briefings/블로그_일괄_결과.txt 전문\n3) ls _publish_jobs/blog_parsed/ 와 ls _publish_jobs/blog_done/ 결과\n4) 막힌 게 있으면 /tmp/blog_save_<잡이름>.log 의 마지막 20줄\n실행 안 하고 성공이라고 회신하는 사고가 2건 있었다. 위 4개 실측치가 없으면 미완료로 간주한다.",
+  "timeout": 1800,
+  "발주": "블로그자동화방",
+  "status": "done",
+  "completed_at": "2026-08-18T09:48:44.166328",
+  "codex_result": "실행 결과: `node` 정상 탐지. 하지만 대기 폴더가 비어 있어 이번 실행에서 임시저장된 글은 0건입니다.\n\n1) `_publish_jobs/blog_state.json` 전문\n\n```json\n{}\n```\n\n2) `_cowork_sync/briefings/블로그_일괄_결과.txt` 전문\n\n```text\n대기 중인 원고 없음. 전부 임시저장돼 있습니다.\n```\n\n3) 디렉터리 실측\n\n`ls _publish_jobs/blog_parsed/`\n\n```text\n(비어 있음)\n```\n\n`ls _publish_jobs/blog_done/`\n\n```text\n20260815_소년등과와_색_0917\n20260815_예쁨1편_예쁘다는건뭘까_0919\n20260817_단골_방향성_0920\n```\n\n4) 발견된 로그 마지막 20줄\n\n`/tmp/blog_save_20260815_두상_세련미.log`\n\n```text\n>>> 열린 크롬 창에서 네이버 로그인만 해주세요. 되면 자동으로 이어서 글을 넣습니다.\n\n>>> 로그인 확인. 이어서 진행합니다.\n\n2026-08-15T17:34:23.292Z - 같은 제목 0 건\n2026-08-15T17:34:23.906Z - 모드 new 기존 0 삭제 0\n```\n\n요청된 4건이 `blog_parsed`에 존재하지 않고 완료 폴더에는 3건만 있어, 4건 임시저장 완료로 판정할 수 없습니다.\n"
+}

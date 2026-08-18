@@ -1,0 +1,8 @@
+{
+  "room": "차노책출판",
+  "task": "cd ~/atnown-content-pipeline && mkdir -p _intray_헤어사진/프로필 _out/책 && python3 rooms/유튜브쇼츠방/drive_ls.py --path 앳나운영상/프로필 > _out/책/드라이브_프로필_목록.txt 2>&1; echo '--- ls exit:' $? >> _out/책/드라이브_프로필_목록.txt; python3 - <<'EOF'\nimport re,subprocess,pathlib\np=pathlib.Path('_out/책/드라이브_프로필_목록.txt')\nids=[l.split('\\t')[1] for l in p.read_text().splitlines() if l.startswith('FILE')]\nprint('받을 파일 수:',len(ids))\nif ids:\n    subprocess.run(['python3','scripts/drive_pull_ids.py',','.join(ids),'_intray_헤어사진/프로필/'])\nEOF\necho '=== 받은 파일 ==='; ls -la _intray_헤어사진/프로필/",
+  "timeout": 300,
+  "status": "done",
+  "completed_at": "2026-08-18T15:16:38.721379",
+  "codex_result": "실행 완료.\n\n- 목록 조회: 실패(exit 1) — `앳나운영상` 후보가 2개라 선택 필요\n- 다운로드 대상: 0개\n- 받은 파일: 0개\n- 로그: [_out/책/드라이브_프로필_목록.txt](/Users/chanho/atnown-content-pipeline/_out/책/드라이브_프로필_목록.txt)\n"
+}

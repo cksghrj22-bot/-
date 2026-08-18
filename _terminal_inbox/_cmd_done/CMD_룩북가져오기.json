@@ -1,0 +1,11 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "pull_lookbook.py"
+  ],
+  "requested_by": "전략기획및개인업무(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "원본: 이미지 0개 · 기타 0개\n\n복사 완료 0/0  →  /Users/chanho/atnown-content-pipeline/_intray_무드보드_보이드태그/성희룩북",
+  "completed_at": "2026-08-18T14:16:26.366103"
+}

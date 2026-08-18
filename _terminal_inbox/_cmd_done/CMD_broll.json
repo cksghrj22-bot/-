@@ -1,0 +1,11 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "broll_scan.py"
+  ],
+  "requested_by": "유튜브쇼츠방(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "IMG_0848.MOV                              8.4s  샷   1개  쓸수있는    8.4s\nIMG_2471.MOV                             87.7s  샷   1개  쓸수있는   87.2s\nIMG_7224.MOV                             11.4s  샷   1개  쓸수있는   11.4s\nIMG_9604.MOV                              7.4s  샷   1개  쓸수있는    7.4s\nIMG_9605.MOV                              3.6s  샷   1개  쓸수있는    3.6s\nIMG_9608.MOV                              8.5s  샷   1개  쓸수있는    8.5s\nIMG_9609.MOV                              9.7s  샷   1개  쓸수있는    9.7s\nIMG_9610.MOV                             24.9s  샷   1개  쓸수있는   24.9s\nsend_유행.mp4                              44.2s  샷   1개  쓸수있는   44.2s\nvideo-1949_singular_display.mov         176.3s  샷   1개  쓸수있는  176.3s\nvideo-1961_singular_display.mov         180.3s  샷   1개  쓸수있는  180.3s\n쇼트으.mov                                7.0s  샷   2개  쓸수있는    5.6s\n바비.mov                                    5.2s  샷   2개  쓸수있는    5.2s\n\n총 574.7초 · 1.6초 이상 샷 15개 · 실사용 가능 572.9초",
+  "completed_at": "2026-08-18T10:15:21.490632"
+}

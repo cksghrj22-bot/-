@@ -1,0 +1,11 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "find_lookbook2.py"
+  ],
+  "requested_by": "전략기획및개인업무(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "=== 클라우드 마운트 ===\nGoogleDrive-cksghrj22@gmail.com\nGoogleDrive-cksghrj22@gmail.com (2026. 8. 2. 오전 2:08)\n\n=== 외장/볼륨 ===\nCreator OS\nMacintosh HD\nNotion Installer\nObsidian 1.12.7-universal\nOne Touch\n\n=== '앳나운영상' 폴더 ===\n  (없음)\n\n=== '성희' 폴더 (클라우드·외장 포함) ===\n  (없음)\n\n=== 구글드라이브 최상위 ===\n[/Users/chanho/Library/CloudStorage/GoogleDrive-cksghrj22@gmail.com (2026. 8. 2. 오전 2:08)/]\n내 드라이브\n[/Users/chanho/Library/CloudStorage/GoogleDrive-cksghrj22@gmail.com/]\n내 드라이브\n다른 컴퓨터",
+  "completed_at": "2026-08-18T09:48:08.813108"
+}
