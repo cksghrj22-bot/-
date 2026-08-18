@@ -24,9 +24,28 @@ TONE_BAND = 5.0   # 한 편 안에서 허용하는 톤(R-B) 폭 — 8 로는 +12
 LEDGER = ROOT / "_out/shorts/_broll_ledger.json"
 # ⛔ B롤로 쓰면 안 되는 파일 — **자막이 이미 구워진 완성본**이다.
 #    2026-08-18 실사고: send_유행 을 소재로 쓴 2편이 S5(UI존 자막 침범)로 탈락했다.
+# ⛔ B롤로 쓰면 안 되는 것 — **완성본**(자막이 구워짐)과 **다른 방 산출물**이다.
+#    2026-08-18: 자동 수거가 낙타 영상·오늘의한문장·SEED 완성본까지 끌어왔다.
+#    이름 규칙으로 거른다. 새 완성본이 들어와도 자동으로 빠진다.
 EXCLUDE = {"send_유행.mp4"}
+EXCLUDE_PAT = ("낙타", "오늘의한문장", "SEED", "연습_최종", "_최종본", "_final",
+               "시니어_통합편", "_v5", "_v6", "_v7", "_v8", "_v9", "_v1", "시안")
 SEG    = 3.6      # 한 장면 예약 길이 — 문방구 클립 상당수가 짧아 6초로는 못 쓴다(2026-08-18)
 HEAD   = 0.3      # 클립 맨 앞 여백
+
+def size(p):
+    r = subprocess.run(["ffprobe","-v","error","-select_streams","v:0","-show_entries",
+                        "stream=width,height","-of","csv=p=0",str(p)], capture_output=True, text=True)
+    try:
+        w,h = r.stdout.strip().split(",")[:2]; return int(w), int(h)
+    except Exception: return 0, 0
+
+def is_finished(p):
+    """완성 쇼츠인가 — **정확히 1080x1920** 이면 우리가 뽑은 결과물이다.
+    원본 B롤은 4K(3840x2160) 나 세로4K(2160x3840) 나 폰 원본이라 이 치수가 안 나온다.
+    2026-08-18: 이름 목록으로 거르니 S7_번역기 같은 게 계속 새어 나왔다 → 치수로 잠근다."""
+    w, h = size(p)
+    return (w, h) == (1080, 1920)
 
 def dur(p):
     r = subprocess.run(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0",str(p)],
@@ -51,6 +70,8 @@ def pool(only=None):
     for f in cands:
         if f.suffix.lower() not in (".mov", ".mp4"): continue
         if f.name in EXCLUDE: continue
+        if any(x in f.name for x in EXCLUDE_PAT): continue
+        if is_finished(f): continue
         if only and f.name not in only: continue
         d = dur(f)
         if d >= 4.0: out.append((str(f.relative_to(ROOT/"_clips_pool")), d))
