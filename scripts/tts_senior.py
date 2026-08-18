@@ -13,11 +13,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 CFG  = json.loads((ROOT / "secrets/elevenlabs.json").read_text())
 OUT  = ROOT / "_out/shorts/_voice"
-PAD_HEAD, PAD_TAIL = 0.24, 0.30   # 2026-08-18 차노 "컷과 컷 편집 첫음절 묵음" → 머리 여백 2배      # 말 앞뒤 여백 — 컷이 말에 딱 붙어 숨 막히지 않게
+PAD_HEAD, PAD_TAIL = 0.06, 0.10
+# 2026-08-18 실측 — 0.24/0.30 으로 했더니 **49.8초 중 22.3초(45%)가 무음**이었다.
+# 차노: "컷과 컷 사이 소리 안 나오는 건 여전한데?" → 그 침묵의 정체가 이 여백이다.
+# 첫음절 보호는 여백이 아니라 **줄별 앞뒤 무음 제거(trim_silence)** 로 한다.      # 말 앞뒤 여백 — 컷이 말에 딱 붙어 숨 막히지 않게
 # 2026-08-10 에 1.12 로 리듬이 깨진 적이 있어 1.05 로 내렸으나,
 # 2026-08-18 차노 판정 "너무 느려 지루해" → 1.12 복귀. 느리면 안 보고 나간다.
 VS = {"stability": 0.42, "similarity_boost": 0.85, "style": 0.15,
-      "use_speaker_boost": True, "speed": 1.12}   # 2026-08-18 차노 "너무 느려 지루해" → 1.05 → 1.12
+      "use_speaker_boost": True, "speed": 1.08}   # 2026-08-18 차노 1.05→1.12→"조금만 줄이고"→1.08
 
 def dur(p):
     r = subprocess.run(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0",str(p)],

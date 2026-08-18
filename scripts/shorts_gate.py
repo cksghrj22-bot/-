@@ -239,12 +239,24 @@ def s7_manifest(cuts: list[dict]) -> list[str]:
         if person and person != "카드" and run_sec > MAX_PERSON_RUN_SEC + 1e-6:
             problems.append(f"인물 '{person}' 연속 {run_sec:.1f}초 > {MAX_PERSON_RUN_SEC:.0f}초 — 다른 인물 컷을 끼울 것")
             run_sec = 0.0
-        if 0 < length < MIN_CUT_SEC - 1e-6:
-            problems.append(f"{asset or '컷'} {length:.2f}초 < {MIN_CUT_SEC}초")
+        # 최소 길이는 **장면(통컷)** 단위로 잰다. 통컷 안에서 자막이 여러 번 바뀌는 건 정상이고,
+        # 자막 한 줄이 1.6초보다 짧다고 화면이 짧은 게 아니다. (차노 2026-08-18 「통으로 보여줘라」)
+        pass
     if total > 0:
         for asset, sec in sorted(secs_per.items()):
             if sec / total > MAX_ASSET_SHARE + 1e-6:
                 problems.append(f"{asset} 분량 {sec/total*100:.0f}% > {MAX_ASSET_SHARE*100:.0f}%")
+    # 장면 단위 최소 길이
+    scenes = {}
+    for cut in cuts:
+        st, en = cut_bounds(cut)
+        k = cut.get("scene", id(cut))
+        if k in scenes: scenes[k][1] = max(scenes[k][1], en)
+        else: scenes[k] = [st, en, str(cut.get("clip", "")).strip()]
+    for k, v in scenes.items():
+        ln = v[1] - v[0]
+        if 0 < ln < MIN_CUT_SEC - 1e-6:
+            problems.append(f"장면 {k}({v[2] or '검정'}) {ln:.2f}초 < {MIN_CUT_SEC}초")
     if persons and len(persons) < MIN_PERSONS:
         problems.append(f"등장 인물 {len(persons)}명 < {MIN_PERSONS}명")
     return problems
