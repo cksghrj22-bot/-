@@ -1,0 +1,74 @@
+{
+  "01_장마철떡짐": {
+    "manifest": "content/manifests/쇼츠_장마철떡짐_20260818.json",
+    "videoId": "ACrnNsD0quI",
+    "훅": [
+      "장마철 떡짐",
+      "습기 탓이 아닙니다"
+    ]
+  },
+  "02_숏컷어울림": {
+    "manifest": "content/manifests/쇼츠_숏컷어울림_20260818.json",
+    "videoId": "agN7Ljiu2WI",
+    "훅": [
+      "안 어울리는",
+      "얼굴은 없습니다"
+    ]
+  },
+  "03_알아서해주세요": {
+    "manifest": "content/manifests/쇼츠_알아서해주세요_20260818.json",
+    "videoId": "yEy7E3Zj7JI",
+    "훅": [
+      "알아서 해주세요",
+      "무서운 말일까"
+    ]
+  },
+  "04_20년째": {
+    "manifest": "content/manifests/쇼츠_20년째_20260818.json",
+    "videoId": "P30n4L24pn0",
+    "훅": [
+      "20년째 같은 일",
+      "안 지겨우세요?"
+    ]
+  },
+  "05_도박끝내기": {
+    "manifest": "content/manifests/쇼츠_도박끝내기_20260818.json",
+    "videoId": "sU3CX7qiglU",
+    "훅": [
+      "미용실이 도박이",
+      "되는 진짜 이유"
+    ]
+  },
+  "06_펌타버림": {
+    "manifest": "content/manifests/쇼츠_펌타버림_20260818.json",
+    "videoId": "Idhg0tmLDds",
+    "훅": [
+      "약이 아니라",
+      "순서에 탑니다"
+    ]
+  },
+  "07_커트의본질": {
+    "manifest": "content/manifests/쇼츠_커트의본질_20260818.json",
+    "videoId": "JONhQqGoD2w",
+    "훅": [
+      "각도가 아니라",
+      "흐름입니다"
+    ]
+  },
+  "08_여름쿨톤": {
+    "manifest": "content/manifests/쇼츠_여름쿨톤_20260818.json",
+    "videoId": "yu13UZG41pw",
+    "훅": [
+      "여름쿨톤",
+      "밝히면 안 되는 이유"
+    ]
+  },
+  "09_미용10년": {
+    "manifest": "content/manifests/쇼츠_미용10년_20260818.json",
+    "videoId": "IKqjb3zWqkU",
+    "훅": [
+      "미용 10년",
+      "누가 정했을까요"
+    ]
+  }
+}
