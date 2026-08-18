@@ -41,7 +41,8 @@ def main():
         c["end"] = spoken[i+1]["start"] if i + 1 < len(spoken) else c["end"]
     for c in cuts:
         if c.get("outro"):
-            c["start"] = spoken[-1]["end"]; c["end"] = round(c["start"] + 2.6, 3)
+            olen = max(2.6, 27.0 - spoken[-1]["end"])
+            c["start"] = spoken[-1]["end"]; c["end"] = round(c["start"] + olen, 3)
     man.write_text(json.dumps({"cuts": cuts}, ensure_ascii=False, indent=1))
     print("스냅 %d줄 · 총 %.2f초" % (moved, cuts[-1]["end"]))
     return 0

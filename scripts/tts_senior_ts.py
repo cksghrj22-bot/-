@@ -70,7 +70,9 @@ def main():
     # 아웃트로
     for c in cuts:
         if c.get("outro"):
-            c["start"] = spoken[-1]["end"]; c["end"] = round(c["start"] + 2.6, 3)
+            # 아웃트로 최소 2.6초. 단, 게이트가 26초 미만을 막으므로(짧은 편) 모자라면 늘린다.
+            olen = max(2.6, 27.0 - spoken[-1]["end"])
+            c["start"] = spoken[-1]["end"]; c["end"] = round(c["start"] + olen, 3)
             c.pop("speak_at", None); c.pop("speak_end", None)
     for c in cuts: c["voice_track"] = "_out/shorts/senior_voice_ts.mp3"
     man.write_text(json.dumps({"cuts": cuts}, ensure_ascii=False, indent=1))

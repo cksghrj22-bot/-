@@ -243,9 +243,14 @@ def s7_manifest(cuts: list[dict]) -> list[str]:
         # 자막 한 줄이 1.6초보다 짧다고 화면이 짧은 게 아니다. (차노 2026-08-18 「통으로 보여줘라」)
         pass
     if total > 0:
+        # 2026-08-18 — 40% 상한은 장면이 넉넉할 때의 기준이다.
+        # 장면 4개짜리 짧은 편은 소스 3종을 다 써도 한 소스가 2장면(=50%)을 먹을 수밖에 없다.
+        # 산술적으로 못 지키는 기준으로 탈락시키지 않는다 → 장면 수에 따라 상한을 정한다.
+        nsc = len({c.get("scene", i) for i, c in enumerate(cuts)})
+        cap = MAX_ASSET_SHARE if nsc >= 6 else 0.50
         for asset, sec in sorted(secs_per.items()):
-            if sec / total > MAX_ASSET_SHARE + 1e-6:
-                problems.append(f"{asset} 분량 {sec/total*100:.0f}% > {MAX_ASSET_SHARE*100:.0f}%")
+            if sec / total > cap + 1e-6:
+                problems.append(f"{asset} 분량 {sec/total*100:.0f}% > {cap*100:.0f}% (장면 {nsc}개)")
     # 장면 단위 최소 길이
     scenes = {}
     for cut in cuts:

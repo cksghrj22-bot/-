@@ -1,0 +1,11 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "broll_dirty_scan.py"
+  ],
+  "requested_by": "유튜브쇼츠방(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "send_유행.mp4                              44.2s  자막구간  30.0s ( 5곳)  ⚠️\nvideo-1949_singular_display.mov         176.3s  자막구간   0.0s ( 0곳)\nvideo-1961_singular_display.mov         180.3s  자막구간   0.0s ( 0곳)\n\n→ _broll_dirty.json 에 기록. gen_manifest 가 이 구간을 피한다.",
+  "completed_at": "2026-08-18T14:26:56.206450"
+}
