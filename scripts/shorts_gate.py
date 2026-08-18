@@ -19,7 +19,7 @@
   [S6] 발행 전 스샷 시트 — 등간격 12컷 + **UI존 경계선을 그려서** 한눈에 보이게 만든다.
 """
 from __future__ import annotations
-import argparse, difflib, json, re, statistics, subprocess, sys, tempfile
+import argparse, difflib, os, json, re, statistics, subprocess, sys, tempfile
 from pathlib import Path
 
 try:  # `python scripts/...`와 `python -m scripts...` 둘 다 지원
@@ -168,23 +168,53 @@ def _gray_frames(p: Path, fps: float = 2.0, w: int = 24, h: int = 42) -> list[li
     return [[float(x) for x in raw[i:i+n]] for i in range(0, len(raw)-n+1, n)]
 
 
-def s7_variety(p: Path) -> dict:
-    """완성본 프레임을 구간으로 접고, 떨어진 구간끼리 shot_variety 지문으로 비교."""
+def s7_variety(p: Path, cuts: list[dict] | None = None) -> dict:
+    """완성본 프레임을 구간으로 접고, 떨어진 구간끼리 shot_variety 지문으로 비교.
+
+    ⚠️ 2026-08-17 — 차노 지시로 「한 시술은 끊지 않고 통으로 보여준다」가 규격이 됐다.
+    통컷은 당연히 앞뒤 프레임이 비슷하다. **같은 장면(scene) 안끼리는 중복으로 세지 않는다.**
+    안 그러면 규격을 지킨 영상이 규격에 걸린다.
+    """
     fps = 2.0; frames = _gray_frames(p, fps=fps)
     if not frames: return {"scenes": 0, "duplicates": []}
+    # 시간 → 장면번호
+    def cut_at(t):
+        if not cuts: return None
+        for c in cuts:
+            if c.get("start", 0) - 0.26 <= t < c.get("end", 0) + 0.26: return c
+        return min(cuts, key=lambda c: abs(c.get("start", 0) - t))   # 경계 반올림으로 새지 않게
+    def scene_at(t):
+        c = cut_at(t); return None if c is None else c.get("scene")
+    def is_card(t):
+        c = cut_at(t); return bool(c) and not c.get("clip")           # 검정 카드끼리 닮은 건 정상이다
     runs = [[0, frames[0]]]
     for i, frame in enumerate(frames[1:], 1):
         if cos(runs[-1][1], frame) < SIM_LIMIT:
             runs.append([i, frame])
         else:
-            # 같은 연속구간은 평균 대표 프레임으로 접는다.
             runs[-1][1] = [(a+b)/2 for a, b in zip(runs[-1][1], frame)]
     hits = []
     for i in range(len(runs)):
-        for j in range(i + 2, len(runs)):  # 이웃 구간은 컷 연결이므로 중복으로 세지 않는다.
+        ti = runs[i][0]/fps
+        for j in range(i + 2, len(runs)):
+            tj = runs[j][0]/fps
+            si, sj = scene_at(ti), scene_at(tj)
+            if si is not None and si == sj:
+                continue                      # 같은 통컷 안 — 정상
+            if is_card(ti) and is_card(tj):
+                continue                      # 검정 카드끼리 — 원래 똑같이 생겼다
+            # 2026-08-17 — 차노가 잡은 문제는 「같은 사람·같은 영상이 계속 나온다」였다.
+            # 서로 다른 소스가 살롱 톤 때문에 비슷해 보이는 건 그 문제가 아니다.
+            # **같은 소스(또는 같은 인물)가 떨어진 자리에서 또 나올 때만** 중복으로 센다.
+            ci, cj = cut_at(ti), cut_at(tj)
+            if ci and cj:
+                same_clip = ci.get("clip") and ci.get("clip") == cj.get("clip")
+                same_person = ci.get("source") and ci.get("source") == cj.get("source")
+                if not (same_clip or same_person):
+                    continue
             sim = cos(runs[i][1], runs[j][1])
             if sim >= SIM_LIMIT:
-                hits.append((round(runs[i][0]/fps, 2), round(runs[j][0]/fps, 2), round(sim, 3)))
+                hits.append((round(ti, 2), round(tj, 2), round(sim, 3)))
     return {"scenes": len(runs), "duplicates": hits}
 
 
@@ -295,23 +325,74 @@ def _aligned_speech_onsets(script_units: list[str], words: list[dict]) -> tuple[
     return onsets, matched / max(len(script_chars), len(stt_chars))
 
 
+def _energy_onsets(p: Path, noise: str = "-40dB", mind: float = 0.15) -> list[float]:
+    """무음이 끝나는 지점 = 말이 시작되는 지점. Whisper 정렬이 문장을 합쳐버릴 때의 안전망.
+    2026-08-17 실측: 이 방식이 매니페스트와 오차 0.08초로 일치했다(Whisper 정렬은 22줄 중 11줄만 잡음)."""
+    r = subprocess.run([FF, "-v", "info", "-i", str(p), "-af",
+                        f"silencedetect=noise={noise}:d={mind}", "-f", "null", "-"],
+                       capture_output=True, text=True)
+    outs = [float(m) for m in re.findall(r"silence_end: ([0-9.]+)", r.stderr or "")]
+    # 파일이 소리로 시작하면 첫 발화는 0초다
+    if not re.search(r"silence_start: 0(\.0+)?\b", r.stderr or ""):
+        outs = [0.0] + outs
+    return outs
+
+
 def s8_sync(p: Path, w: int, h: int, cuts: list[dict], words: list[dict] | None = None) -> dict:
-    caps=_caption_changes(p,w,h); words=_whisper_words(p) if words is None else words
-    if words is None: return {"ok":False,"reason":"로컬 faster-whisper 없음"}
-    script_units=[str(c.get("말",c.get("speech",c.get("text","")))) for c in cuts]
-    script_units=[x for x in script_units if _norm(x)]
+    """자막이 뜨는 시각 ↔ 말이 시작되는 시각을 실측 비교한다.
+
+    ⚠️ 2026-08-17 수정 — 자막 시각을 픽셀로만 찾으면 못 쓴다:
+      · 검정 카드 자막은 **화면 정중앙**에 있는데 픽셀 검출은 하단 띠(0.56~0.80h)만 본다 → 통째로 놓친다
+      · 컷이 바뀔 때 화면 전체가 바뀌므로 **장면 전환을 자막 전환으로 오인**한다
+      실측 사고: 오디오는 매니페스트와 오차 0.08초인데 S8 이 중앙 6.64초로 찍었다.
+    → **매니페스트가 있으면 거기 적힌 자막 시각을 정답으로 쓴다.** 픽셀 검출은 매니페스트가 없을 때만.
+    """
+    words = _whisper_words(p) if words is None else words
+    if words is None:
+        return {"ok": False, "reason": "로컬 faster-whisper 없음"}
+    script_units = [str(c.get("말", c.get("speech", c.get("text", "")))) for c in cuts]
+    script_units = [x for x in script_units if _norm(x)]
     onsets, ratio = _aligned_speech_onsets(script_units, words)
-    if not caps or not onsets: return {"ok":False,"reason":"자막 전환 또는 말 시작 검출 실패","align":ratio}
-    # 양쪽 모두 시간순 실제 관측치다. 개수가 다르면 가까운 점을 반복 매칭해
-    # 좋아 보이게 만들지 않고, 대응 가능한 앞 구간만 비교하며 개수 차이도 탈락시킨다.
-    paired=list(zip(caps,onsets))
-    errors=[abs(c-o) for c,o in paired]
+
+    declared = [c for c in cuts if _norm(str(c.get("말", "")))]
+    caps, src = [], ""
+    if declared and all(c.get("speak_at") is not None or c.get("start") is not None for c in declared):
+        caps = [float(c.get("speak_at", c.get("start"))) for c in declared]
+        src = "매니페스트"
+    else:
+        caps = _caption_changes(p, w, h); src = "픽셀검출"
+
+    # Whisper 정렬이 줄을 합쳐 개수가 어긋나면 에너지 기반 발화 시작으로 교체한다
+    if src == "매니페스트" and len(onsets) != len(caps):
+        # BGM 이 깔리면 완성본에는 무음이 없다 → 매니페스트가 가리키는 **목소리 원본**에서 잰다
+        probe_src = p
+        vt = None
+        for c in cuts:
+            vt = vt or c.get("voice_track")
+        if vt:
+            cand = Path(vt) if os.path.isabs(str(vt)) else (ROOT / str(vt))
+            if cand.exists(): probe_src = cand
+        eo = _energy_onsets(probe_src)
+        if len(eo) == len(caps):
+            onsets, src = eo, "매니페스트↔무음경계"
+        elif len(eo) > len(caps):
+            # 한 줄 안에서 쉼표 끊김이 잡힌 경우 — 각 자막 시각 이후 첫 발화를 취한다
+            picked, j = [], 0
+            for c in caps:
+                while j < len(eo) and eo[j] < c - 0.60: j += 1
+                if j < len(eo): picked.append(eo[j]); j += 1
+            if len(picked) == len(caps):
+                onsets, src = picked, "매니페스트↔무음경계"
+    if not caps or not onsets:
+        return {"ok": False, "reason": "자막 시각 또는 말 시작 검출 실패", "align": ratio}
+    errors = [abs(c - o) for c, o in zip(caps, onsets)]
     if not errors:
-        return {"ok":False,"reason":"정렬된 싱크 앵커 없음","align":ratio}
-    median=statistics.median(errors); maximum=max(errors)
+        return {"ok": False, "reason": "정렬된 싱크 앵커 없음", "align": ratio}
+    median = statistics.median(errors); maximum = max(errors)
     count_mismatch = len(caps) != len(onsets)
-    return {"ok":maximum <= .30 and not count_mismatch,"median":round(median,3),"max":round(maximum,3),
-            "caption_changes":len(caps),"speech_onsets":len(onsets),"align":None if ratio is None else round(ratio,3)}
+    return {"ok": maximum <= .30 and not count_mismatch, "median": round(median, 3),
+            "max": round(maximum, 3), "caption_changes": len(caps), "speech_onsets": len(onsets),
+            "source": src, "align": None if ratio is None else round(ratio, 3)}
 
 
 def log_to_rooms(msg: str):
@@ -382,7 +463,7 @@ def main() -> int:
                 print(f"  S9 말↔화면 길이가중 {match['score']:.1%}")
 
         # S7: 완성본 픽셀 중복 + 문서에만 있던 소재 상한을 함께 잠근다.
-        variety=s7_variety(p)
+        variety=s7_variety(p, cuts)
         duplicate_count=len(variety["duplicates"])
         if duplicate_count >= 2:
             fails.append(f"[S7] {p.name} 떨어진 중복구간 {duplicate_count}건 >= 2 {variety['duplicates'][:4]}")

@@ -1,0 +1,8 @@
+{
+  "room": "유튜브쇼츠방",
+  "task": "드라이브 파일 다운로드 작업이다. 방금 성공한 것과 같은 수단(Codex Google Drive MCP 커넥터)을 써라. python3 urllib 직접 호출은 샌드박스 DNS 차단으로 실패하니 쓰지 마라. 저장 위치는 전부 ~/atnown-content-pipeline/_clips_pool/senior_new/ 이고, 파일명은 드라이브 원본 이름 그대로 둔다. 작은 것부터 순서대로 받아라. 목록(파일ID / 저장할 이름): 1lOnQ9rScFpyrbA2MitYim3FFQVnMFtFt / IMG_0848.MOV · 1JxdveYSyA4wHf5WCHs_8QrDHfh9J9M-W / IMG_9605.MOV · 1iYVCgEefO-IWDBY0KWS2eUsR_5pvenn- / send_유행.mp4 · 1mQ8GjzM1SpsdOXnUT2xtCYLW77RYIZxL / IMG_9604.MOV · 1MRtmdFyJ-Derz9Ih91NfqdFZhtJI9m-g / IMG_9608.MOV · 1LEMjak2Y7CPVK9qaAUEbxtbntYMPdIrB / IMG_9609.MOV · 1vmIjV4gwgr4MEaPbevlwBLpaReO_ge6I / IMG_7224.MOV · 1F7mGYg0uPsutNteRiFP2EqhHOt5Cf7OI / IMG_9610.MOV · 1KPTr3OS1XiQ3DU-Y3TRaC8GyvVfjAARm / 바비.mov . 받은 뒤 반드시 ls -l 로 실제 바이트 크기를 확인하고, 드라이브 표기 용량과 맞는지 대조해서 파일별로 [이름 / 실제바이트 / 일치여부] 를 보고하라. 0바이트이거나 크기가 다르면 실패로 적어라. 결과를 _out/shorts/_드라이브목록/senior_new_수거결과.txt 에도 저장하라. 파일 삭제·이동 금지, 다른 폴더 건드리지 마라. 추측 금지 — 실제 ls 출력만 적어라.",
+  "timeout": 900,
+  "status": "done",
+  "completed_at": "2026-08-17T23:07:08.631880",
+  "codex_result": "수거 결과: 7개 성공, 2개 실패.\n\n- IMG_9605.MOV / 10101422 / 일치\n- send_유행.mp4 / 16762411 / 일치\n- IMG_9604.MOV / 21687975 / 일치\n- IMG_0848.MOV / 24103098 / 일치\n- IMG_9608.MOV / 24585047 / 일치\n- IMG_9609.MOV / 27599029 / 일치\n- IMG_7224.MOV / 33738663 / 일치\n- IMG_9610.MOV / 4194304 / 실패\n- 바비.mov / 0 / 실패\n\n결과 파일: [senior_new_수거결과.txt](/Users/chanho/atnown-content-pipeline/_out/shorts/_드라이브목록/senior_new_수거결과.txt)\n"
+}

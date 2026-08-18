@@ -1,0 +1,9 @@
+{
+  "room": "코드방",
+  "title": "TTS 보이스 생성 (쇼츠 S7/S8/S9용)",
+  "task": "일레븐랩스 TTS로 쇼츠 보이스를 생성하라. 대상 대본: content/shorts/2026-07-16/ 아래 렌더 대기 중인 txt 파일들. 보이스 ID: 6bJjC, speed 1.05, 라임부호(prompts/06_나레이션_라임.md) 적용. 출력: 각 대본과 같은 폴더에 .mp3로. 생성 후 ls -la로 바이트 확인해서 0바이트 없는지 검증. 실패하면 에러 그대로 보고.",
+  "timeout": 600,
+  "status": "done",
+  "completed_at": "2026-08-17T23:25:24.015478",
+  "codex_result": "실패. MP3 생성 0개.\n\n`urllib.error.URLError: <urlopen error [Errno 8] nodename nor servname provided, or not known>`\n\nElevenLabs API 도메인 네트워크 차단 상태입니다. 생성된 0바이트 파일도 없습니다.\n"
+}

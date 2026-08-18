@@ -1,0 +1,41 @@
+senior_new 2차 수거 결과
+실행일: 2026-08-17
+저장 위치: /Users/chanho/atnown-content-pipeline/_clips_pool/senior_new/
+방법: Codex Google Drive MCP 커넥터 google_drive_fetch(download_raw_file=true, include_base64=false)
+
+1) 1F7mGYg0uPsutNteRiFP2EqhHOt5Cf7OI / IMG_9610.MOV
+- 커넥터 응답: Action completed.
+- Drive 메타데이터 file_size_bytes: 71364904
+- ls -l: -rw-------@ 1 chanho staff 4194304 Aug 17 23:06 _clips_pool/senior_new/IMG_9610.MOV
+- 판정: 실패 — 로컬 실제 바이트 4194304가 Drive 메타데이터 71364904와 불일치(부분 파일). 삭제하지 않음.
+- ffprobe(로컬 부분 파일): width=3840, height=2160, duration=24.935000초, r_frame_rate=30/1, avg_frame_rate=149600/4987
+
+2) 1N0HucuiuzMeIF65eyvs_K9nleYswCEdr / 쇼트으.mov
+- 커넥터 응답: Action completed.
+- Drive 메타데이터 file_size_bytes: 134318641
+- ls -l: ls: _clips_pool/senior_new/쇼트으.mov: No such file or directory
+- 커넥터가 반환한 원본 파일명(NFD): 쇼트으.mov
+- NFD 이름 ls -l: ls: _clips_pool/senior_new/쇼트으.mov: No such file or directory
+- 판정: 실패 — 로컬 파일이 생성되지 않음.
+- ffprobe: 실행 대상 없음.
+
+3) 1PitlCk8C_qBJH25PjWD4NSyOLf7Z5mJO / IMG_2471.MOV
+- 커넥터 응답: Action completed.
+- Drive 메타데이터 file_size_bytes: 248462939
+- ls -l: ls: _clips_pool/senior_new/IMG_2471.MOV: No such file or directory
+- 판정: 실패 — 로컬 파일이 생성되지 않음.
+- ffprobe: 실행 대상 없음.
+
+4) 1TGtqaApkyFoaz7OAxGOpgGCvbTTTqxTb / video-1949_singular_display.mov
+- 커넥터 오류(원문): HTTPException: 413: File too large to download: 337769322 bytes exceeds the 268435456-byte limit.
+- ls -l: ls: _clips_pool/senior_new/video-1949_singular_display.mov: No such file or directory
+- 판정: 실패 — 커넥터 268435456바이트 제한 초과. 건너뜀.
+- ffprobe: 실행 대상 없음.
+
+5) 1RmOAUYJFFjJ4LryWo_h8rE2BC50tJTbT / video-1961_singular_display.mov
+- 커넥터 오류(원문): HTTPException: 413: File too large to download: 345848274 bytes exceeds the 268435456-byte limit.
+- ls -l: ls: _clips_pool/senior_new/video-1961_singular_display.mov: No such file or directory
+- 판정: 실패 — 커넥터 268435456바이트 제한 초과. 건너뜀.
+- ffprobe: 실행 대상 없음.
+
+요약: 완전 다운로드 0/5. 부분 파일 1개(IMG_9610.MOV, 4194304바이트)는 삭제·이동하지 않았음.

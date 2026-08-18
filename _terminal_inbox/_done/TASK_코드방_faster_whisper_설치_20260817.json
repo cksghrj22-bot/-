@@ -1,0 +1,9 @@
+{
+  "room": "코드방",
+  "title": "faster-whisper 설치 (S8 게이트용)",
+  "task": "faster-whisper 패키지를 설치하라. pip3 install faster-whisper. 설치 후 python3 -c \"from faster_whisper import WhisperModel; print('OK')\" 로 확인. 실패하면 에러 그대로 보고.",
+  "timeout": 300,
+  "status": "done",
+  "completed_at": "2026-08-17T23:25:53.603322",
+  "codex_result": "설치 실패.\n\n```text\nerror: externally-managed-environment\n```\n\n검증 결과:\n\n```text\nModuleNotFoundError: No module named 'faster_whisper'\n```\n"
+}

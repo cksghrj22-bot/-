@@ -1,0 +1,26 @@
+조회 수단: Codex Google Drive MCP 커넥터(search + list_folder) — 성공
+조회 기준: 2026-08-17, 용량은 1 MB = 1,000,000 bytes, 수정일은 KST
+상위 폴더: 앳나운_영상 (1zcbcM9iTX1LFmZKY5sBwUEAos7e9-nLe)
+확인 사항: 상위 폴더 바로 아래에 이름이 같은 '사모님' 폴더가 2개 있어 둘 다 조회함.
+
+[사모님 폴더 1 / 1YZsQyxrMhtlT1LEFBCtJF9704e2xCry3 / 파일 16개]
+[파일ID / 파일명 / 용량MB / 수정일]
+[1PitlCk8C_qBJH25PjWD4NSyOLf7Z5mJO / IMG_2471.MOV / 248.46 MB / 2026-08-10 14:53:34.401 KST]
+[1N0HucuiuzMeIF65eyvs_K9nleYswCEdr / 쇼트으.mov / 134.32 MB / 2026-08-10 14:51:45.270 KST]
+[1KPTr3OS1XiQ3DU-Y3TRaC8GyvVfjAARm / 바비.mov / 94.78 MB / 2026-08-10 14:50:18.581 KST]
+[1F1wJuvV9QGiOsS6r01O9BwWWcQP7MKgF / 바비.mov / 94.78 MB / 2026-08-10 14:49:38.666 KST]
+[1F7mGYg0uPsutNteRiFP2EqhHOt5Cf7OI / IMG_9610.MOV / 71.36 MB / 2026-08-10 14:48:33.227 KST]
+[1vmIjV4gwgr4MEaPbevlwBLpaReO_ge6I / IMG_7224.MOV / 33.74 MB / 2026-08-10 14:48:09.194 KST]
+[1LEMjak2Y7CPVK9qaAUEbxtbntYMPdIrB / IMG_9609.MOV / 27.60 MB / 2026-08-10 14:47:45.277 KST]
+[1MRtmdFyJ-Derz9Ih91NfqdFZhtJI9m-g / IMG_9608.MOV / 24.59 MB / 2026-08-10 14:47:33.985 KST]
+[1lOnQ9rScFpyrbA2MitYim3FFQVnMFtFt / IMG_0848.MOV / 24.10 MB / 2026-08-10 14:47:16.377 KST]
+[1mQ8GjzM1SpsdOXnUT2xtCYLW77RYIZxL / IMG_9604.MOV / 21.69 MB / 2026-08-10 14:47:05.700 KST]
+[1iYVCgEefO-IWDBY0KWS2eUsR_5pvenn- / send_유행.mp4 / 16.76 MB / 2026-08-10 14:46:49.756 KST]
+[1JxdveYSyA4wHf5WCHs_8QrDHfh9J9M-W / IMG_9605.MOV / 10.10 MB / 2026-08-10 14:46:36.583 KST]
+[1wcbJMn8-tzs3JifYmqIgVM9PHHXHXxRa / IMG_6472.PNG / 1.73 MB / 2026-08-10 14:46:29.225 KST]
+[1Nti9mqZ2WSDfINu4dRcEFiZVDrJ4cbIS / IMG_6124.PNG / 0.15 MB / 2026-08-10 14:46:25.739 KST]
+[1RmOAUYJFFjJ4LryWo_h8rE2BC50tJTbT / video-1961_singular_display.mov / 345.85 MB / 2026-08-09 15:05:58.292 KST]
+[1TGtqaApkyFoaz7OAxGOpgGCvbTTTqxTb / video-1949_singular_display.mov / 337.77 MB / 2026-08-09 15:05:23.058 KST]
+
+[사모님 폴더 2 / 1CopdI0O4T9bgwE9kP5gHVz62Db_gJmne / 파일 0개]
+(비어 있음)

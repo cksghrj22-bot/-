@@ -13,16 +13,26 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 CFG  = json.loads((ROOT / "secrets/elevenlabs.json").read_text())
 OUT  = ROOT / "_out/shorts/_voice"
-PAD_HEAD, PAD_TAIL = 0.12, 0.34      # 말 앞뒤 여백 — 컷이 말에 딱 붙어 숨 막히지 않게
-# 2026-08-10 실사고: speed 1.12 로 합성해 리듬이 깨졌다 → 정본 1.05
+PAD_HEAD, PAD_TAIL = 0.24, 0.30   # 2026-08-18 차노 "컷과 컷 편집 첫음절 묵음" → 머리 여백 2배      # 말 앞뒤 여백 — 컷이 말에 딱 붙어 숨 막히지 않게
+# 2026-08-10 에 1.12 로 리듬이 깨진 적이 있어 1.05 로 내렸으나,
+# 2026-08-18 차노 판정 "너무 느려 지루해" → 1.12 복귀. 느리면 안 보고 나간다.
 VS = {"stability": 0.42, "similarity_boost": 0.85, "style": 0.15,
-      "use_speaker_boost": True, "speed": 1.05}
+      "use_speaker_boost": True, "speed": 1.12}   # 2026-08-18 차노 "너무 느려 지루해" → 1.05 → 1.12
 
 def dur(p):
     r = subprocess.run(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0",str(p)],
                        capture_output=True, text=True)
     try: return float(r.stdout)
     except: return 0.0
+
+def trim_silence(src, dst):
+    """앞뒤 무음을 잘라낸다. 합성본마다 리드인이 들쭉날쭉해 첫음절이 컷 경계에 먹혔다."""
+    r = subprocess.run(["ffmpeg","-v","error","-i",str(src),"-af",
+        "silenceremove=start_periods=1:start_silence=0.02:start_threshold=-45dB:"
+        "detection=peak,areverse,"
+        "silenceremove=start_periods=1:start_silence=0.02:start_threshold=-45dB:detection=peak,areverse",
+        "-ar","44100","-b:a","128k",str(dst),"-y"], capture_output=True)
+    return dst if (r.returncode == 0 and dst.exists() and dst.stat().st_size > 800) else src
 
 def tts(text, dest, prev="", nxt=""):
     if dest.exists() and dest.stat().st_size > 1000:
@@ -34,6 +44,9 @@ def tts(text, dest, prev="", nxt=""):
         "xi-api-key": CFG["api_key"], "Content-Type": "application/json"})
     with urllib.request.urlopen(req, timeout=180) as r:
         dest.write_bytes(r.read())
+    t = trim_silence(dest, dest.with_name("t_" + dest.name))
+    if t != dest:
+        t.replace(dest)
     d = dur(dest)
     print("  ✅ %-30s %.2f초  %d bytes" % (dest.name, d, dest.stat().st_size), flush=True)
     return d

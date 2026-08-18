@@ -1,0 +1,8 @@
+{
+  "room": "전략기획및개인업무",
+  "task": "scripts/codex_dispatch.py 가 방금 수정됐다(샌드박스 네트워크 허용 플래그 --sandbox danger-full-access 추가). 구 코드가 메모리에 떠 있으니 데몬을 재기동해야 새 코드가 물린다. 1) 현재 떠 있는 codex_dispatch 프로세스를 찾아서 종료한다 (pgrep -f codex_dispatch). 2) 다시 띄운다 (기존 기동 방식 그대로 — launchd plist 가 있으면 launchctl kickstart, 없으면 nohup python3 scripts/codex_dispatch.py &). 3) logs/codex_dispatch.log 에 '디스패처 시작'이 새로 찍히는지 확인해서 보고. 4) 재기동 후 검증: 셸에서 'curl -sS -o /dev/null -w %{http_code} https://oauth2.googleapis.com/token' 을 실행해 응답 코드를 그대로 적어라. 000/Could not resolve 가 아니라 숫자가 나오면 성공이다.",
+  "timeout": 300,
+  "status": "done",
+  "completed_at": "2026-08-18T08:26:04.532840",
+  "codex_result": "재기동 실패.\n\n- 현재 PID: `39414`\n- LaunchAgent: `com.atnown.codex-dispatch`\n- 실패 사유: `Operation not permitted`\n- 새 `디스패처 시작` 로그: 없음\n- curl 응답: `000` (`Could not resolve host`)\n"
+}

@@ -1,0 +1,11 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "install_whisper.py"
+  ],
+  "requested_by": "유튜브쇼츠방(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "$ /opt/homebrew/opt/python@3.14/bin/python3.14 -m pip install -q faster-whisper\n ay restore the old behavior of pip by passing\n    the '--break-system-packages' flag to pip, or by adding\n    'break-system-packages = true' to your pip.conf file. The latter\n    will permanently disable this error.\n    \n    If you disable this error, we STRONGLY recommend that you additionally\n    pass the '--user' flag to pip, or set 'user = true' in your pip.conf\n    file. Failure to do this can result in a broken Homebrew installation.\n    \n    Read more about this behavior here: <https://peps.python.org/pep-0668/>\n\nnote: If you believe this is a mistake, please contact your Python installation or OS distribution provider. You can override this, at the risk of breaking your Python installation or OS, by passing --break-system-packages.\nhint: See PEP 668 for the detailed specification.\n\n$ /opt/homebrew/opt/python@3.14/bin/python3.14 -m pip install -q --break-system-packages faster-whisper\n \nimport OK — 모델 내려받는 중(small)\n✅ faster-whisper 준비 완료",
+  "completed_at": "2026-08-18T08:47:16.735074"
+}

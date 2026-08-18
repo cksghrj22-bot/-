@@ -1,0 +1,14 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "shorts_gate.py",
+    "_out/shorts/시니어_통합편_v6_완성_20260817.mp4",
+    "--manifest",
+    "content/manifests/쇼츠_시니어_통합편_v5_20260817.json"
+  ],
+  "requested_by": "유튜브쇼츠방(코워크)",
+  "status": "failed",
+  "returncode": 1,
+  "result": "== 쇼츠 게이트: 시니어_통합편_v6_완성_20260817.mp4 ==\n  1080x1920  1181952/39403  51.31s  audio=1\n  S9 말↔화면 길이가중 100.0%\n  UI존(y>1540) 깨끗\n\n[stderr]\n[AVFilterGraph @ 0xb5cc08780] No such filter: 'drawtext'\nError opening output file _out/shorts/_review/_gate_시니어_통합편_v6_완성_20260817/sheet_00.jpg.\nError opening output files: Filter not found\nTraceback (most recent call last):\n  File \"/Users/chanho/atnown-content-pipeline/scripts/shorts_gate.py\", line 475, in <module>\n    raise SystemExit(main())\n                     ~~~~^^\n  File \"/Users/chanho/atnown-content-pipeline/scripts/shorts_gate.py\", line 433, in main\n    subprocess.run([FF, \"-y\", \"-hide_banner\", \"-loglevel\", \"error\", \"-ss\", f\"{t:.2f}\",\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                    \"-i\", str(p), \"-frames:v\", \"1\",\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<4 lines>...\n                            f\"scale={thumb_w}:{thumb_h}\"),\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                    \"-q:v\", \"4\", str(tmp / f\"sheet_{i:02d}.jpg\")], check=True)\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py\", line 578, in run\n    raise CalledProcessError(retcode, process.args,\n                             output=stdout, stderr=stderr)\nsubprocess.CalledProcessError: Command '['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-ss', '2.14', '-i', '_out/shorts/시니어_통합편_v6_완성_20260817.mp4', '-frames:v', '1', '-vf', \"drawbox=x=0:y=1540:w=1080:h=380:color=red@0.9:t=4,drawtext=text='2.1s':x=10:y=10:fontsize=28:fontcolor=yellow:box=1:boxcolor=black@0.7,scale=240:426\", '-q:v', '4', '_out/shorts/_review/_gate_시니어_통합편_v6_완성_20260817/sheet_00.jpg']' returned non-zero exit status 8.",
+  "completed_at": "2026-08-18T08:48:10.735671"
+}

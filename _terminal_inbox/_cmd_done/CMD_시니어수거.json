@@ -1,0 +1,11 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "drive_pull_senior.py"
+  ],
+  "requested_by": "유튜브쇼츠방(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "토큰 발급 OK\n상위 폴더 후보: [('앳나운_옵시디언_볼트', '13llK24E1OBu-UY306J92NiPTyElIBJsT'), ('앳나운_산출물', '14ec8WIUnhSGormvO0Z8HsnzqIlnp8syG'), ('앳나운로고', '1B50SzcbK045jQFt68ZIt4r3Bxq-j0geq'), ('앳나운_지식', '1KMUpb0AaqTwFJJI9DSxWuyUL9fH1OzGp'), ('앳나운_영상', '1zcbcM9iTX1LFmZKY5sBwUEAos7e9-nLe'), ('앳나운_콘텐츠허브', '1G4urrIg3bELG8MEbhcIdFYAWlEqrXafL'), ('앳나운철학_질문_2026-07-17', '1cNNwCGvuduJgZSaLVk3k_hVgnUMOpdL4'), ('앳나운_교육', '1MxT8EJWrSoBEp70g3o9gLcVBTvcu6-g8'), ('앳나운_영상정리_2026-07-12', '1HFc4uK37qFl-BnnuD1twSBAGg5NC6f1x'), ('앳나운_음성', '1hn_ROYUtz1h8qvCmdcg5KrQb4dSWxxyG'), ('앳나운시험', '1QWJUK3ZHkqo92JrF6Zm3rz-7nLBErCYP'), ('5/7 프레임펌 앳나운튜브', '15NaBSxJ0whOk9VT8EBTRLSY7d_iFHsmO'), ('앳나운로고', '1SSP57lbFuR7hy1b5uFrV_Z-qlDd4Cms4'), ('앳나운로고', '1uHjHon-nmQA80qlzWEhFzKvPkCI8KCp5')]\n\n[앳나운_영상 / 사모님] 영상 0개\n\n[앳나운_영상 / 사모님] 영상 14개\n건너뜀(이미 완전함): IMG_9605.MOV\n건너뜀(이미 완전함): send_유행.mp4\n건너뜀(이미 완전함): IMG_9604.MOV\n건너뜀(이미 완전함): IMG_0848.MOV\n건너뜀(이미 완전함): IMG_9608.MOV\n건너뜀(이미 완전함): IMG_9609.MOV\n건너뜀(이미 완전함): IMG_7224.MOV\n✅ IMG_9610.MOV  71364904 bytes\n✅ 바비.mov  94778181 bytes\n건너뜀(이미 완전함): 바비.mov\n✅ 쇼트으.mov  134318641 bytes\n✅ IMG_2471.MOV  248462939 bytes\n✅ video-1949_singular_display.mov  337769322 bytes\n✅ video-1961_singular_display.mov  345848274 bytes\n\n=== 완료: 성공 14 · 실패 0 ===\n    24103098  IMG_0848.MOV\n   248462939  IMG_2471.MOV\n    33738663  IMG_7224.MOV\n    21687975  IMG_9604.MOV\n    10101422  IMG_9605.MOV\n    24585047  IMG_9608.MOV\n    27599029  IMG_9609.MOV\n    71364904  IMG_9610.MOV\n    16762411  send_유행.mp4\n   337769322  video-1949_singular_display.mov\n   345848274  video-1961_singular_display.mov\n   134318641  쇼트으.mov\n    94778181  바비.mov",
+  "completed_at": "2026-08-18T08:28:20.122873"
+}

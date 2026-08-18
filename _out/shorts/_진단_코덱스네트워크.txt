@@ -1,0 +1,147 @@
+(1) cat ~/.codex/config.toml
+notify = [
+    "/Users/chanho/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient",
+    "turn-ended",
+]
+service_tier = "default"
+
+[marketplaces.openai-bundled]
+last_updated = "2026-08-13T14:12:15Z"
+source_type = "local"
+source = "/Users/chanho/.codex/.tmp/bundled-marketplaces/openai-bundled"
+
+[marketplaces.openai-primary-runtime]
+last_updated = "2026-08-16T02:50:12Z"
+source_type = "local"
+source = "/Users/chanho/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."remotion@openai-curated"]
+enabled = true
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = true
+
+[plugins."visualize@openai-bundled"]
+enabled = true
+
+[plugins."sites@openai-bundled"]
+enabled = true
+
+[plugins."template-creator@openai-primary-runtime"]
+enabled = true
+
+[features]
+js_repl = false
+
+[mcp_servers.node_repl]
+args = []
+command = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+startup_timeout_sec = 120
+
+[mcp_servers.node_repl.env]
+NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+NODE_REPL_TRUSTED_CODE_PATHS = "/Users/chanho/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+CODEX_HOME = "/Users/chanho/.codex"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "8e86beb821b9afc846211798e0113bd4b9e79312dfcd135eb447bdb154f64071"
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
+NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = "Control desktop apps on macOS through Computer Use."
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.803.61601"
+CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
+
+[mcp_servers.computer-use]
+command = "./Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient"
+args = ["mcp"]
+cwd = "."
+enabled = false
+
+[desktop]
+conversationDetailMode = "STEPS_COMMANDS"
+sansFontSize = 14
+codeFontSize = 13
+ambient-suggestions-enabled = true
+followUpQueueMode = "queue"
+dock-icon-preference = "codex-system"
+preventSleepWhileRunning = true
+keepRemoteControlAwakeWhilePluggedIn = true
+
+[projects."/Users/chanho/Documents/Codex/2026-06-02/files-mentioned-by-the-user-dji"]
+trust_level = "trusted"
+
+[projects."/Users/chanho/Documents/Codex/2026-08-04/github-cli-gh-codex"]
+trust_level = "trusted"
+
+[projects."/Users/chanho/atnown-repo"]
+trust_level = "trusted"
+
+[projects."/Users/chanho/atnown-content-pipeline"]
+trust_level = "trusted"
+
+[projects."/Users/chanho"]
+trust_level = "trusted"
+
+[projects."/"]
+trust_level = "trusted"
+
+[projects."/Users/chanho/Documents/Codex/2026-08-16/new-chat"]
+trust_level = "trusted"
+
+[projects."/Users/chanho/Documents/ChatGPT/atnown-content-pipeline"]
+trust_level = "trusted"
+
+[shell_environment_policy]
+inherit = "core"
+
+[shell_environment_policy.set]
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "8e86beb821b9afc846211798e0113bd4b9e79312dfcd135eb447bdb154f64071"
+NODE_REPL_TRUSTED_CODE_PATHS = "/Users/chanho/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING = "1"
+
+(2) codex --version
+WARNING: proceeding, even though we could not create PATH aliases: Operation not permitted (os error 1)
+codex-cli 0.147.0
+
+(3) python3 -c "import socket;print(socket.getaddrinfo('oauth2.googleapis.com',443))"
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import socket;print(socket.getaddrinfo('oauth2.googleapis.com',443))
+                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 987, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 8] nodename nor servname provided, or not known
+
+(4) curl -sS -o /dev/null -w '%{http_code}' https://oauth2.googleapis.com/token
+curl: (6) Could not resolve host: oauth2.googleapis.com
+000
+
+(5) scutil --dns 2>/dev/null | head -12
+No DNS configuration available
+
+(6) env | grep -i -E 'proxy|CODEX|SANDBOX'
+CODEX_CI=1
+CODEX_PERMISSION_PROFILE=:workspace
+CODEX_SANDBOX=seatbelt
+CODEX_SANDBOX_NETWORK_DISABLED=1
+CODEX_THREAD_ID=01a00ffd-6d1c-7070-b40d-22910618d5a4
+NODE_REPL_TRUSTED_CODE_PATHS=/Users/chanho/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules
+PATH=/opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-path:/Users/chanho/.local/bin:/Users/chanho/.local/bin:/Users/chanho/.local/bin:/Users/chanho/.local/bin:/Users/chanho/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Users/chanho/.codex/tmp/arg0/codex-arg0Q0SeFS:/opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-path
+CODEX_MANAGED_BY_NPM=1
+CODEX_MANAGED_PACKAGE_ROOT=/opt/homebrew/lib/node_modules/@openai/codex

@@ -1,0 +1,8 @@
+{
+  "room": "유튜브쇼츠방",
+  "task": "드라이브 다운로드. Codex Google Drive MCP 커넥터를 써라(python3 urllib 은 샌드박스 DNS 차단으로 실패한다). 저장 위치 ~/atnown-content-pipeline/_clips_pool/senior_new/ , 파일명 원본 그대로. 대용량이니 하나씩 순서대로 받고 각각 끝날 때마다 ls -l 로 실제 바이트를 확인해서 적어라. 목록(파일ID / 이름): 1F7mGYg0uPsutNteRiFP2EqhHOt5Cf7OI / IMG_9610.MOV (71MB) · 1N0HucuiuzMeIF65eyvs_K9nleYswCEdr / 쇼트으.mov (134MB) · 1PitlCk8C_qBJH25PjWD4NSyOLf7Z5mJO / IMG_2471.MOV (248MB) · 1TGtqaApkyFoaz7OAxGOpgGCvbTTTqxTb / video-1949_singular_display.mov (338MB) · 1RmOAUYJFFjJ4LryWo_h8rE2BC50tJTbT / video-1961_singular_display.mov (346MB) . 커넥터가 대용량에서 실패하면 그 파일은 건너뛰고 어떤 에러였는지 그대로 적어라(추측 금지). 받은 파일마다 ffprobe 로 해상도·길이·fps 도 실측해 적어라. 결과를 _out/shorts/_드라이브목록/senior_new_2차수거.txt 에 저장하라. 삭제·이동 금지.",
+  "timeout": 1800,
+  "status": "done",
+  "completed_at": "2026-08-17T23:36:47.006396",
+  "codex_result": "완료했습니다.\n\n- 완전 다운로드: 0/5\n- 부분 파일: `IMG_9610.MOV` 4,194,304바이트\n- 338MB·346MB: 커넥터 256MB 제한으로 413 오류\n- 삭제·이동 없음\n- 결과: [senior_new_2차수거.txt](/Users/chanho/atnown-content-pipeline/_out/shorts/_드라이브목록/senior_new_2차수거.txt)\n"
+}
