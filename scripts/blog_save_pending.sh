@@ -5,6 +5,19 @@
 cd "$(dirname "$0")/.."
 ROOT="$PWD"
 
+# ── node 실행경로 확정 (LaunchAgent/디스패처는 PATH가 빈약해서 bare `node` 가 안 잡힌다) ──
+# 2026-08-17 실측: 본진 코덱스 임시저장 0/4 실패 원인 = "node 실행경로 오류"
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+NODE_BIN=""
+for c in "$(command -v node 2>/dev/null)" /opt/homebrew/bin/node /usr/local/bin/node /usr/bin/node "$HOME/.nvm/versions/node"/*/bin/node; do
+  [ -n "$c" ] && [ -x "$c" ] && { NODE_BIN="$c"; break; }
+done
+if [ -z "$NODE_BIN" ]; then
+  echo "⛔ node 를 못 찾았습니다. 설치 경로를 확인해 주세요 (brew install node)."
+  exit 1
+fi
+echo "· node: $NODE_BIN ($("$NODE_BIN" -v))"
+
 PARSED="_publish_jobs/blog_parsed"
 DONE="_publish_jobs/blog_done"
 STATE="_publish_jobs/blog_state.json"
@@ -18,8 +31,8 @@ mkdir -p "$DONE" "_cowork_sync/briefings" "_naver_profile"
 # 최초 1회 설치
 if [ ! -d node_modules/playwright ]; then
   echo "· 최초 1회 설치 중…"
-  npm i playwright >/tmp/naver_npm.log 2>&1
-  npx playwright install chrome >>/tmp/naver_npm.log 2>&1
+  "$(dirname "$NODE_BIN")/npm" i playwright >/tmp/naver_npm.log 2>&1
+  "$(dirname "$NODE_BIN")/npx" playwright install chrome >>/tmp/naver_npm.log 2>&1
 fi
 
 # 대기 잡 = blocks.json 있고, 상태대장에 '성공'으로 안 박힌 것
@@ -59,7 +72,7 @@ for J in $PENDING; do
   sleep 2
 
   JOB="$J" LOGIN_WAIT="${LOGIN_WAIT:-600}" FORMAT_BUDGET="${FORMAT_BUDGET:-180}" \
-    node scripts/naver_blog_save.mjs >>"/tmp/blog_save_$J.log" 2>&1
+    "$NODE_BIN" scripts/naver_blog_save.mjs >>"/tmp/blog_save_$J.log" 2>&1
 
   cat "$RESULT" >> "$OUT" 2>/dev/null
   echo "────────────" >> "$OUT"
@@ -73,7 +86,7 @@ sp = Path("_publish_jobs/blog_state.json")
 state = json.loads(sp.read_text(encoding="utf-8") or "{}")
 txt = Path("_cowork_sync/briefings/블로그_임시저장_결과.txt").read_text(encoding="utf-8") if Path("_cowork_sync/briefings/블로그_임시저장_결과.txt").exists() else ""
 def pick(k):
-    m = re.search(rf"^{k}:\s*(.*)$", txt, re.M)
+    m = re.search(rf"^{k}:[ \t]*(.*)$", txt, re.M)
     return (m.group(1).strip() if m else "")
 state[job] = {"상태": pick("상태"), "임시글URL": pick("임시글URL"),
               "막힌지점": pick("막힌지점"), "시각": __import__("datetime").datetime.now().strftime("%Y-%m-%d %H:%M")}

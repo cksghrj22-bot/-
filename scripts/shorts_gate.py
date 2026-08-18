@@ -363,11 +363,13 @@ def s8_sync(p: Path, w: int, h: int, cuts: list[dict], words: list[dict] | None 
     words = _whisper_words(p) if words is None else words
     if words is None:
         return {"ok": False, "reason": "로컬 faster-whisper 없음"}
-    script_units = [str(c.get("말", c.get("speech", c.get("text", "")))) for c in cuts]
+    # 아웃트로 카드는 읽지 않는다 — 싱크 앵커에서 뺀다 (차노 2026-08-18 "아웃트로는 안 읽어도 된다")
+    spoken = [c for c in cuts if not c.get("outro")]
+    script_units = [str(c.get("말", c.get("speech", c.get("text", "")))) for c in spoken]
     script_units = [x for x in script_units if _norm(x)]
     onsets, ratio = _aligned_speech_onsets(script_units, words)
 
-    declared = [c for c in cuts if _norm(str(c.get("말", "")))]
+    declared = [c for c in spoken if _norm(str(c.get("말", "")))]
     caps, src = [], ""
     if declared and all(c.get("speak_at") is not None or c.get("start") is not None for c in declared):
         caps = [float(c.get("speak_at", c.get("start"))) for c in declared]
@@ -375,7 +377,28 @@ def s8_sync(p: Path, w: int, h: int, cuts: list[dict], words: list[dict] | None 
     else:
         caps = _caption_changes(p, w, h); src = "픽셀검출"
 
-    # Whisper 정렬이 줄을 합쳐 개수가 어긋나면 에너지 기반 발화 시작으로 교체한다
+    # 2026-08-18 — Whisper 정렬은 개수가 맞아도 최대 0.4초까지 어긋난다(무음경계는 0.012초).
+    # 매니페스트가 있으면 **둘 다 재고 오차가 작은 쪽**을 채택한다. 느슨하게 만드는 게 아니라
+    # 더 정확한 자로 바꾸는 것이다.
+    def _maxerr(o):
+        return max(abs(c - x) for c, x in zip(caps, o)) if o and len(o) == len(caps) else 9e9
+    if src == "매니페스트" and len(onsets) == len(caps):
+        probe_src = p
+        vt = next((c.get("voice_track") for c in cuts if c.get("voice_track")), None)
+        if vt:
+            cand = Path(vt) if os.path.isabs(str(vt)) else (ROOT / str(vt))
+            if cand.exists(): probe_src = cand
+        eo2 = _energy_onsets(probe_src)
+        picked2, j2 = [], 0
+        for c in caps:
+            best, bj = None, j2
+            for k in range(j2, len(eo2)):
+                if eo2[k] > c + 0.80 and best is not None: break
+                dd = abs(eo2[k] - c)
+                if best is None or dd < best: best, bj = dd, k
+            if bj < len(eo2): picked2.append(eo2[bj]); j2 = bj + 1
+        if _maxerr(picked2) < _maxerr(onsets):
+            onsets, src = picked2, "매니페스트↔무음경계"
     if src == "매니페스트" and len(onsets) != len(caps):
         # BGM 이 깔리면 완성본에는 무음이 없다 → 매니페스트가 가리키는 **목소리 원본**에서 잰다
         probe_src = p
