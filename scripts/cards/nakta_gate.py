@@ -48,7 +48,9 @@ EDGE_STD_L = 7.0            # 좌측정렬이므로 왼쪽 끝은 거의 안 흔
 EDGE_STD_R = 22.0           # 오른쪽 끝(글자폭)은 조금 흔들린다
 LONG_TEXT  = 22             # 이보다 길면 「부연」 — 최대 크기로 두면 안 된다
 MAX_BOX_H  = 0.22           # 박스 높이 상한(캔버스 대비) — 머리카락 덩어리 차단
-VIDEO_SEC = (3.0, 5.0)
+# 2026-08-18 차노 지시 「아니야 2초 괜찮아」 → 하한 3.0 → 2.0.
+# 08-15 쇼츠 길이규격 폐기와 같은 원칙: **길이 맞추려고 늘리거나 늦추지 않는다. 길이는 내용이 정한다.**
+VIDEO_SEC = (2.0, 5.0)
 
 
 # ── 박스 검출 ────────────────────────────────────────────────
@@ -296,7 +298,8 @@ def main() -> int:
         warns.append("[N5] 시안 0장 — 흰/검정만 반복하면 밋밋 (정본: 2~3장 시안)")
 
     # N7 영상 길이
-    for v in sorted(tgt.glob("*.mp4")):
+    # `_` 로 시작하는 건 슬라이드가 아니라 부속물(이어보기·시트) — 이미지와 같은 규칙
+    for v in sorted(v for v in tgt.glob("*.mp4") if not v.name.startswith("_")):
         sec = video_seconds(v)
         if sec is None:
             warns.append(f"[N7] {v.name} 길이 미측정 (ffprobe 없음)")

@@ -69,35 +69,45 @@ def _fit_font(text, role, size, x):
         font_size -= 2
     return F("NanumSquareRoundEB.ttf", font_size)
 
-def render(photo, lines, out, size=58, top=0.30, left=0.07):
-    """카드 1장 렌더 + **박스 좌표 사이드카**(<out>.meta.json) 기록.
+def build_overlay(canvas_size, lines, size=58, top=0.30, left=0.07):
+    """자막 박스·글자만 그린 투명 레이어와 메타를 돌려준다.
 
-    게이트가 픽셀에서 박스를 되짚어 추정하면 머리카락·옷을 박스로 오인한다(2026-08-18 실측).
-    그릴 때 이미 아는 좌표를 남기면 게이트가 정확히 검사한다.
+    영상 슬라이드도 **이 함수를 쓴다.** 사진용/영상용으로 그리는 코드가 갈리면
+    규격이 두 벌이 되고, 게이트가 보는 메타와 화면이 어긋난다.
     """
-    base = photo.convert("RGBA")
-    ov = Image.new("RGBA", base.size, (0, 0, 0, 0))
+    cw, ch = canvas_size
+    ov = Image.new("RGBA", (cw, ch), (0, 0, 0, 0))
     d = ImageDraw.Draw(ov)
-    x0 = int(W * left); y = int(H * top)
-    meta = {"canvas": [W, H], "top": top, "left": left, "base_size": size, "boxes": []}
+    x0 = int(cw * left); y = int(ch * top)
+    meta = {"canvas": [cw, ch], "top": top, "left": left, "base_size": size, "boxes": []}
     for i, (role, text) in enumerate(lines):
         if not text:
             continue
         box, txt = STYLES.get(role, STYLES["설정"])
-        bx = x0 + i * STEP                    # 계단
+        bx = x0 + i * STEP
         fnt = _fit_font(text, role, size, bx)
         bb = d.textbbox((0, 0), text, font=fnt)
-        tw, th = bb[2]-bb[0], bb[3]-bb[1]
-        bw, bh = tw + 2*PAD_X, th + 2*PAD_Y
-        d.rectangle([bx, y, bx+bw, y+bh], fill=box)          # 직각 박스, 글자폭
-        d.text((bx + PAD_X - bb[0], y + PAD_Y - bb[1]), text, font=fnt, fill=txt)  # 좌측정렬
-        meta["boxes"].append({
-            "role": role, "text": text, "font_size": fnt.size,
-            "rect": [int(bx), int(y), int(bx + bw), int(y + bh)],
-        })
+        tw, th = bb[2] - bb[0], bb[3] - bb[1]
+        bw, bh = tw + 2 * PAD_X, th + 2 * PAD_Y
+        d.rectangle([bx, y, bx + bw, y + bh], fill=box)
+        d.text((bx + PAD_X - bb[0], y + PAD_Y - bb[1]), text, font=fnt, fill=txt)
+        meta["boxes"].append({"role": role, "text": text, "font_size": fnt.size,
+                              "rect": [int(bx), int(y), int(bx + bw), int(y + bh)]})
         y += bh + GAP
+    return ov, meta
+
+
+def render(photo, lines, out, size=58, top=0.30, left=0.07):
+    """카드 1장 렌더 + 박스 좌표 사이드카(<out>.meta.json).
+
+    그리는 일은 build_overlay 가 한다 — 영상 슬라이드와 **같은 코드**를 쓰기 위해서다.
+    """
+    base = photo.convert("RGBA")
+    ov, meta = build_overlay(base.size, lines, size=size, top=top, left=left)
     Image.alpha_composite(base, ov).convert("RGB").save(out, quality=92)
     _meta_path(out).write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+    return meta
+
 
 if __name__ == "__main__":
     O = os.path.join(HERE, "_out", "nakta"); os.makedirs(O, exist_ok=True)
