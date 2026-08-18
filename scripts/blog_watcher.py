@@ -19,7 +19,9 @@ from datetime import datetime
 ROOT = Path(__file__).parent.parent
 PARSED = ROOT / "_publish_jobs/blog_parsed"
 DONE = ROOT / "_publish_jobs/blog_done"
+SKIPPED = ROOT / "_publish_jobs/blog_skipped"
 LOG = ROOT / "data/blog_watcher.log"
+MAX_RETRIES = 3  # 3번 실패하면 스킵
 
 def log(msg):
     ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -41,6 +43,8 @@ def get_pending_jobs():
                 jobs.append(d.name)
     return sorted(jobs)
 
+FAIL_COUNT = {}  # 잡별 실패 횟수 추적
+
 def run_blog_save(job_name):
     """naver_blog_save.mjs 실행"""
     log(f"📝 블로그 저장 시작: {job_name}")
@@ -55,17 +59,39 @@ def run_blog_save(job_name):
         env={**dict(__import__('os').environ), **env}
     )
 
+    output = result.stdout + result.stderr
+
     if result.returncode == 0:
         log(f"✅ 완료: {job_name}")
-        # 완료된 잡 이동
         DONE.mkdir(exist_ok=True)
         src = PARSED / job_name
         dst = DONE / f"{job_name}_{datetime.now().strftime('%H%M')}"
         src.rename(dst)
+        FAIL_COUNT.pop(job_name, None)
         return True
     else:
-        log(f"❌ 실패: {job_name}")
-        log(f"   {result.stderr[:500]}")
+        # 중복 감지 시 즉시 스킵
+        if "중복" in output or "duplicate" in output.lower():
+            log(f"⏭️ 스킵 (중복): {job_name}")
+            SKIPPED.mkdir(exist_ok=True)
+            src = PARSED / job_name
+            dst = SKIPPED / f"{job_name}_dup"
+            src.rename(dst)
+            FAIL_COUNT.pop(job_name, None)
+            return False
+
+        # 일반 실패 - 재시도 카운트
+        FAIL_COUNT[job_name] = FAIL_COUNT.get(job_name, 0) + 1
+        log(f"❌ 실패 ({FAIL_COUNT[job_name]}/{MAX_RETRIES}): {job_name}")
+
+        if FAIL_COUNT[job_name] >= MAX_RETRIES:
+            log(f"⏭️ 스킵 (최대 재시도 초과): {job_name}")
+            SKIPPED.mkdir(exist_ok=True)
+            src = PARSED / job_name
+            dst = SKIPPED / f"{job_name}_fail"
+            src.rename(dst)
+            FAIL_COUNT.pop(job_name, None)
+
         return False
 
 def watch():

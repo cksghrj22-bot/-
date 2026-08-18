@@ -1,26 +1,13 @@
 {
-  "job": "20260815_예쁨1편_예쁘다는건뭘까",
-  "title": "차노 에세이 1 | 예쁘다는 건 뭘까",
+  "job": "20260815_두상_세련미",
+  "title": "한남동미용실 커트 | 두상이 작아야 세련돼 보입니다",
   "color": "ff008c",
-  "mode": "new",
+  "mode": "",
   "existing": 0,
   "deleted": 0,
-  "applied": {
-    "title": "차노 에세이 1 | 예쁘다는 건 뭘까",
-    "savedText": true,
-    "font": true,
-    "body19": true,
-    "center": true,
-    "savedGlobal": true,
-    "paragraphs": 122,
-    "heading": 5,
-    "center_n": 1,
-    "small": 4,
-    "bold": 3,
-    "point": 2,
-    "titleFinal": "차노 에세이 1 | 예쁘다는 건 뭘까",
-    "savedFinal": true
-  },
-  "skipped": [],
-  "error": null
+  "applied": {},
+  "skipped": [
+    "예약발행 중복 1건: 한남동미용실 커트 | 두상이 작아야 세련돼 보입니다"
+  ],
+  "error": "예약발행 중복 1건"
 }

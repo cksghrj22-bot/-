@@ -1,0 +1,12 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "tts_senior_ts.py",
+    "content/manifests/쇼츠_시니어_통합편_v8.json"
+  ],
+  "requested_by": "유튜브쇼츠방(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "오디오 680899 bytes · 글자 305개\n총 45.54초 · 말 42.49초 · 무음 32구간 합계 18.10초 (최장 3.45초)\n매니페스트 갱신: 쇼츠_시니어_통합편_v8.json",
+  "completed_at": "2026-08-18T09:31:02.215486"
+}

@@ -1,0 +1,7 @@
+{
+  "room": "교육디렉터방",
+  "task": "cd ~/atnown-content-pipeline && echo '[1] 도달성 확인' && curl -s -o /dev/null -w 'gemini=%{http_code}\\n' --max-time 20 https://generativelanguage.googleapis.com/ ; echo '[2] 생성+재빌드' ; python3 scripts/edu_nanobanana_819.py ; echo '[3] 실측' ; ls -l content/교육/2026-08-19_일본_이미지분류체계/img/ ; python3 -c \"from pptx import Presentation; print('슬라이드', len(Presentation('content/교육/2026-08-19_일본_이미지분류체계/L5_일본_이미지분류체계.pptx').slides), '장')\"",
+  "timeout": 900,
+  "note": "재시도. 지난 실행(2026-08-17 21:47)은 codex_result 에 'DNS 오류'로 이미지 0/4, npm 도 실패했다 → 실행 환경에 외부망이 없었다는 뜻. 이번엔 [1]에서 도달성부터 찍는다. gemini= 값이 000 이면 그 환경에는 인터넷이 없는 것이니 즉시 그렇게 보고하고 중단할 것(재시도 금지). 200/404 등 응답이 오면 [2] 진행. 성공 판정: img/nb_cover.png + nb_case1~3.png 4개 실재 AND 슬라이드 15장. 둘 중 하나라도 아니면 실패로 보고.",
+  "status": "processing"
+}

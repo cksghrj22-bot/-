@@ -12,8 +12,7 @@
     python3 scripts/edu_nanobanana_819.py --only-img # 이미지만
     python3 scripts/edu_nanobanana_819.py --only-deck# 덱만 (이미지 이미 있을 때)
 
-화풍 정본: knowledge/규격_나노바나나_매듭화풍_박제.md
-  따뜻한 크림 종이 · 흑백 연필/잉크 에디토리얼 · 정면 일관 인물 · **이미지 안 글자 금지**
+화풍: 따뜻한 크림 종이 · 연필/옅은 잉크 · 정면 · 세 도판의 얼굴을 동일하게(비교용) · 이미지 안 글자 금지
 """
 import argparse, base64, json, subprocess, sys, urllib.error, urllib.request
 from pathlib import Path
@@ -26,34 +25,41 @@ MODEL = "gemini-2.5-flash-image"        # = 나노바나나
 
 # 모든 프롬프트에 공통으로 붙는 화풍 잠금줄 (매번 지어내지 말 것 — 정본이다)
 STYLE = (
-    "Editorial fashion illustration in black ink and graphite pencil on warm cream paper. "
-    "Fine confident linework, soft shading, muted monochrome with a faint warm beige tone. "
-    "Single front-facing Korean woman, calm neutral expression, shoulders up, consistent face across the set. "
-    "Plain warm cream background with generous empty space. "
-    "ABSOLUTELY NO text, no letters, no words, no numbers, no watermark, no signature anywhere in the image. "
-    "No color other than cream paper and black/grey ink."
+    "Soft editorial illustration in graphite pencil and light ink wash on warm cream paper. "
+    "Gentle linework, quiet shading, muted monochrome with a faint warm beige tone. "
+    "A single Korean woman seen from the front, calm neutral expression, head and shoulders, "
+    "the same face and proportions across the whole set so the images can be compared side by side. "
+    "Plain warm cream background, generous empty space, no props, no accessories. "
+    "ABSOLUTELY NO text, letters, words, numbers, watermark or signature anywhere in the image. "
+    "No color other than cream paper and soft grey-black pencil."
 )
 
 PROMPTS = {
+    # 표지: 인물 없이, 좌표 개념을 나타내는 조용한 추상 도판
     "nb_cover.png": (
-        "A woman seen from the front, hair falling cleanly, eyes forward and thoughtful — "
-        "the moment before a consultation begins. Vertical portrait composition, 3:4, "
-        "figure placed slightly right with wide empty cream space on the left. " + STYLE
+        "A quiet abstract illustration of a two-axis coordinate plane: one horizontal line and one "
+        "vertical line crossing at the centre, two faint concentric circles around the crossing point, "
+        "and a few small dots scattered in the quadrants. Graphite pencil on warm cream paper, "
+        "very minimal, lots of empty space, vertical 3:4 composition. "
+        "ABSOLUTELY NO text, letters, words or numbers anywhere in the image."
     ),
+    # 도판 1 — 세미롱 / 매끈 / 끝 안말음 / 시스루 앞머리
     "nb_case1.png": (
-        "Hair look 'CLEAR / ROMANTIC': semi-long hair, smooth glossy texture, "
-        "soft one-curl turned inward at the ends, light airy see-through fringe across the forehead. "
-        "Gentle, clean, youthful impression. Square composition, head and shoulders. " + STYLE
+        "Hairstyle reference drawing: semi-long hair reaching just below the shoulders, smooth glossy "
+        "texture, the ends curving gently inward toward the neck, light wispy see-through fringe across "
+        "the forehead. Square composition, head and shoulders, front view. " + STYLE
     ),
+    # 도판 2 — 세미~롱 / 매끈 / 스트레이트 / 앞머리 없음
     "nb_case2.png": (
-        "Hair look 'CHIC / MODERN': semi-long to long hair, perfectly straight and sleek, "
-        "sharp blunt ends with one barely-there inward curve at the very tip, no fringe, "
-        "center parted and tucked. Cool, composed, urban impression. Square composition, head and shoulders. " + STYLE
+        "Hairstyle reference drawing: long straight hair falling well past the shoulders, very smooth and "
+        "sleek, blunt even ends, centre parting with no fringe, hair tucked behind so the forehead is fully "
+        "visible. Square composition, head and shoulders, front view. " + STYLE
     ),
+    # 도판 3 — 단발 / 결 살아있는 질감 / 끝 바깥 방향 / 일자 앞머리
     "nb_case3.png": (
-        "Hair look 'DYNAMIC / WILD': short bob at jaw length, deliberately rough choppy texture, "
-        "ends bent outward at a sharp angle, heavy straight-across blunt fringe covering the eyebrows. "
-        "Strong, defiant, graphic impression on a round soft face. Square composition, head and shoulders. " + STYLE
+        "Hairstyle reference drawing: short bob ending at the jawline, visibly textured and slightly choppy, "
+        "the ends flicking outward away from the face, heavy straight-across blunt fringe covering the "
+        "eyebrows. Square composition, head and shoulders, front view. " + STYLE
     ),
 }
 
@@ -143,4 +149,4 @@ if __name__ == "__main__":
         if not build_deck():
             sys.exit(1)
         print(f"✅ {DECK_DIR / 'L5_일본_이미지분류체계.pptx'}")
-        print("   확인: 표지 우측 인물 / 케이스 3인 슬라이드(9장째)가 붙었는지")
+        print("   확인: 표지 우측 도판 / 「참고 도판」 슬라이드가 붙어 15장이 되었는지")

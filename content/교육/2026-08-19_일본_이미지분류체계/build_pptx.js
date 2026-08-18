@@ -1,310 +1,386 @@
+/* 앳나운 아카데미 · L5 「일본 이미지분류체계」 학습자료 생성기
+   성격: 정보 전달용 중립 자료. 주장·지시·단정 표현을 쓰지 않는다.
+   이미지: img/ 안의 파일이 있으면 얹고, 없으면 그 자리를 비워 레이아웃이 그대로 성립한다. */
 const pptxgen = require('pptxgenjs');
-const fs = require('fs');
-const path = require('path');
+const fs = require('fs'), path = require('path');
 
-const INK="111111", CREAM="F7F5F1", GOLD="A8895E", GRAY="9B958C", LINE="E4DFD6", WHITE="FFFFFF";
+const INK="111111", CREAM="F7F5F1", GOLD="A8895E", GRAY="9B958C",
+      LINE="E4DFD6", WHITE="FFFFFF", BODY="444444", MUTE="666666";
 const SERIF="Cambria", SANS="Calibri";
-const IMG = (f)=> {
-  const p = path.join(__dirname,'img',f);
-  return fs.existsSync(p) ? p : null;
-};
+const IMG = f => { const p = path.join(__dirname,'img',f); return fs.existsSync(p) ? p : null; };
 
 const pres = new pptxgen();
-pres.layout = 'LAYOUT_WIDE';           // 13.3 x 7.5
+pres.layout = 'LAYOUT_WIDE';                 // 13.3 x 7.5
 pres.author = 'AT NOWN ACADEMY';
-pres.title  = 'L5 일본 이미지분류체계';
-const W=13.3, H=7.5;
+pres.title  = '일본 이미지분류체계 — 학습자료';
+pres.subject= 'L5 · 2026-08-19';
+const W = 13.3;
 
-// ── 공통 조각 ─────────────────────────────────────
+/* ── 공통 요소 ─────────────────────────────── */
 function mono(s, dark){
   const c = dark ? CREAM : INK;
-  s.addText("AN", {x:0.55,y:0.38,w:0.34,h:0.34,fontFace:SERIF,fontSize:13,bold:true,color:c,align:'center',valign:'middle',margin:0,
-    line:{color:c,width:1}, shape:pres.ShapeType.roundRect, rectRadius:0.04});
-  s.addText("ATNOWN ACADEMY · L5", {x:1.0,y:0.38,w:4,h:0.34,fontFace:SANS,fontSize:8.5,bold:true,color:dark?GRAY:GRAY,charSpacing:2.6,valign:'middle',margin:0});
+  s.addText("AN",{x:0.55,y:0.38,w:0.34,h:0.34,fontFace:SERIF,fontSize:13,bold:true,color:c,
+    align:'center',valign:'middle',margin:0,line:{color:c,width:1},
+    shape:pres.ShapeType.roundRect,rectRadius:0.04});
+  s.addText("ATNOWN ACADEMY · 학습자료",{x:1.0,y:0.38,w:5,h:0.34,fontFace:SANS,fontSize:8.5,
+    bold:true,color:GRAY,charSpacing:2.4,valign:'middle',margin:0});
 }
-function tag(s, t){
-  s.addText(t, {x:W-1.75,y:0.38,w:1.2,h:0.34,fontFace:SANS,fontSize:8.5,bold:true,color:CREAM,align:'center',valign:'middle',margin:0,
-    fill:{color:INK}, shape:pres.ShapeType.roundRect, rectRadius:0.17});
+function pageNo(s,n,total){
+  s.addText(`${n} / ${total}`,{x:W-1.7,y:0.38,w:1.15,h:0.34,fontFace:SANS,fontSize:9,
+    color:GRAY,align:'right',valign:'middle',margin:0});
 }
-function kicker(s, t){
-  s.addText(t, {x:0.55,y:0.95,w:9,h:0.28,fontFace:SANS,fontSize:9.5,bold:true,color:GOLD,charSpacing:2.4,margin:0,valign:'middle'});
+function kicker(s,t){
+  s.addText(t,{x:0.55,y:0.95,w:9,h:0.28,fontFace:SANS,fontSize:9.5,bold:true,color:GOLD,
+    charSpacing:2.2,margin:0,valign:'middle'});
 }
-function title(s, runs, y){
-  s.addText(runs, {x:0.55,y:y||1.35,w:11.5,h:1.1,fontFace:SERIF,fontSize:38,bold:true,color:INK,margin:0,valign:'top',lineSpacing:44});
+function title(s,runs,y){
+  s.addText(runs,{x:0.55,y:y||1.32,w:11.9,h:0.85,fontFace:SERIF,fontSize:33,bold:true,
+    color:INK,margin:0,valign:'top',lineSpacing:40});
 }
-function cross(s, cx, cy, r, col){   // 좌표 모티프
-  s.addShape(pres.ShapeType.line,{x:cx-r,y:cy,w:r*2,h:0,line:{color:col||LINE,width:0.75}});
-  s.addShape(pres.ShapeType.line,{x:cx,y:cy-r,w:0,h:r*2,line:{color:col||LINE,width:0.75}});
+function lead(s,t,y,w){
+  s.addText(t,{x:0.55,y:y,w:w||11.9,h:0.75,fontFace:SANS,fontSize:12.5,color:BODY,
+    margin:0,lineSpacing:22});
 }
-
-// ── 1. 표지 ───────────────────────────────────────
-{
-  const s = pres.addSlide(); s.background = {color:INK};
-  mono(s,true);
-  const cov=IMG('nb_cover.png');
-  if(cov){
-    s.addImage({path:cov,x:8.75,y:1.05,w:4.05,h:5.4,transparency:12});
-  } else {
-    cross(s, 10.9, 3.6, 1.9, "3A342C");
-    s.addShape(pres.ShapeType.ellipse,{x:10.15,y:2.85,w:1.5,h:1.5,line:{color:GOLD,width:1},fill:{color:INK}});
-    s.addText("YOU", {x:10.15,y:2.85,w:1.5,h:1.5,fontFace:SANS,fontSize:9,bold:true,color:GOLD,align:'center',valign:'middle',charSpacing:2,margin:0});
-  }
-  s.addText([
-    {text:"일본 ", options:{color:CREAM}},
-    {text:"이미지분류", options:{color:GOLD}},
-    {text:"체계", options:{color:CREAM}},
-  ], {x:0.85,y:2.45,w:8.6,h:1.9,fontFace:SERIF,fontSize:54,bold:true,margin:0,valign:'middle',lineSpacing:60});
-  s.addText("손님의 말을 시술로 옮기는 번역기", {x:0.85,y:4.35,w:8,h:0.4,fontFace:SANS,fontSize:16,color:CREAM,margin:0});
-  s.addText("WARM · COOL · SOFT · HARD   |   CHILD · ADULT · CURVE · STRAIGHT",
-    {x:0.85,y:4.9,w:9,h:0.32,fontFace:SANS,fontSize:9.5,bold:true,color:GRAY,charSpacing:1.8,margin:0});
-  s.addText("2026. 08. 19 (수)  07:30 – 09:30   ·   L5   ·   차노", {x:0.85,y:6.35,w:9,h:0.35,fontFace:SANS,fontSize:11,color:GRAY,margin:0});
-  s.addNotes("워드월 10분으로 연다. 구글폼 2문항: ①이미지란 ______다 ②손님 이미지를 잘못 읽어 어긋났던 경험. 오늘의 주인공은 질문 화면이다.");
+function note(s,label,text,x,y,w,h){
+  s.addText([{text:label+"\n",options:{bold:true,color:GOLD,fontSize:10.5,charSpacing:1.2}},
+             {text:text,options:{fontSize:11.5,color:BODY}}],
+    {x:x,y:y,w:w,h:h,fontFace:SANS,margin:0.15,lineSpacing:19,valign:'middle',
+     fill:{color:WHITE},line:{color:LINE,width:0.75}});
+}
+const HAS_CASES = !!(IMG('nb_case1.png') && IMG('nb_case2.png') && IMG('nb_case3.png'));
+const TOTAL = HAS_CASES ? 15 : 14;
+let pg = 0;
+function slide(dark){
+  const s = pres.addSlide();
+  s.background = {color: dark ? INK : CREAM};
+  mono(s,dark); pg++;
+  if(!dark) pageNo(s,pg,TOTAL);
+  return s;
 }
 
-// ── 2. WHY ────────────────────────────────────────
+/* ── 1. 표지 ───────────────────────────────── */
 {
-  const s = pres.addSlide(); s.background={color:CREAM};
-  mono(s); tag(s,"WHY"); kicker(s,"오늘 이걸 배우는 이유");
-  title(s,[{text:'"청순하게 해주세요"는\n',options:{color:INK}},{text:"주문서가 아니다.",options:{color:GOLD}}]);
-  s.addText("그 말은 좌표다. 좌표로 옮기기 전까지 정해진 건 아무것도 없다.\n같은 단어를 손님과 내가 다른 그림으로 상상하는 순간, 그 시술은 이미 어긋나 있다.",
-    {x:0.55,y:3.05,w:7.1,h:0.9,fontFace:SANS,fontSize:13,color:"555555",margin:0,lineSpacing:22});
-  const rows=[
-    ["감각을 말로 주고받기 위해","일본이 이미지를 나눈 이유는 취향 놀이가 아니다"],
-    ["좌표가 없으면 상담은 매번 운","좌표가 있으면 결과가 재현된다"],
-    ["L5 시험 기준 = 상담력","좌표를 말로 설명하는 게 곧 상담력이다"],
+  const s = slide(true);
+  const cov = IMG('nb_cover.png') || IMG('fig_cover.png');
+  if(cov) s.addImage({path:cov,x:8.7,y:0.95,w:4.1,h:5.55,transparency:8});
+  s.addText([{text:"일본 ",options:{color:CREAM}},{text:"이미지분류체계",options:{color:GOLD}}],
+    {x:0.85,y:2.35,w:7.6,h:1.0,fontFace:SERIF,fontSize:46,bold:true,margin:0,valign:'middle'});
+  s.addText("이미지를 나타내는 말을 좌표로 정리하는 방법",
+    {x:0.85,y:3.5,w:7.6,h:0.4,fontFace:SANS,fontSize:16,color:CREAM,margin:0});
+  s.addText("일본에서 정리된 두 가지 분류 체계와, 그것이 헤어디자인 상담에서 어떻게 쓰이는지를 정리한 학습자료입니다.",
+    {x:0.85,y:4.05,w:7.4,h:0.7,fontFace:SANS,fontSize:11.5,color:GRAY,margin:0,lineSpacing:20});
+  s.addText("2026. 08. 19 (수)   ·   L5   ·   앳나운 아카데미",
+    {x:0.85,y:6.3,w:8,h:0.35,fontFace:SANS,fontSize:11,color:GRAY,margin:0});
+  s.addNotes("이 자료는 두 가지 분류 체계를 소개하는 정보 자료입니다. 각 체계의 출처와 구성, 그리고 헤어 요소와 연결되는 지점을 순서대로 다룹니다.");
+}
+
+/* ── 2. 목차 ───────────────────────────────── */
+{
+  const s = slide(); kicker(s,"이 자료에서 다루는 내용");
+  title(s,[{text:"목차",options:{color:INK}}]);
+  const toc=[
+    ["01","이미지분류체계의 배경","어떤 필요에서 만들어졌고 어디에 쓰이는지"],
+    ["02","언어 이미지 스케일 (NCD)","두 개의 축과 16개 이미지 카테고리"],
+    ["03","얼굴타입 분류","두 개의 축과 8개 타입, 타입별 특징"],
+    ["04","두 체계에서 겹치는 용어","같은 단어가 서로 다른 축 위에 놓이는 경우"],
+    ["05","헤어 요소로 옮겨 볼 때의 항목","길이 · 질감 · 컬 · 컬러 · 앞머리"],
   ];
-  rows.forEach((r,i)=>{
-    const y=4.2+i*0.92;
-    s.addShape(pres.ShapeType.ellipse,{x:0.55,y:y+0.06,w:0.44,h:0.44,fill:{color:GOLD}});
-    s.addText(String(i+1),{x:0.55,y:y+0.06,w:0.44,h:0.44,fontFace:SERIF,fontSize:13,bold:true,color:CREAM,align:'center',valign:'middle',margin:0});
-    s.addText(r[0],{x:1.2,y:y,w:5.2,h:0.32,fontFace:SANS,fontSize:14,bold:true,color:INK,margin:0,valign:'middle'});
-    s.addText(r[1],{x:1.2,y:y+0.33,w:6.6,h:0.3,fontFace:SANS,fontSize:11,color:GRAY,margin:0,valign:'middle'});
+  toc.forEach((t,i)=>{
+    const y = 2.5 + i*0.88;
+    s.addText(t[0],{x:0.55,y:y,w:0.7,h:0.4,fontFace:SERIF,fontSize:18,bold:true,color:GOLD,margin:0,valign:'middle'});
+    s.addText(t[1],{x:1.35,y:y,w:4.6,h:0.4,fontFace:SANS,fontSize:16,bold:true,color:INK,margin:0,valign:'middle'});
+    s.addText(t[2],{x:6.1,y:y,w:6.6,h:0.4,fontFace:SANS,fontSize:12,color:MUTE,margin:0,valign:'middle'});
+    if(i<toc.length-1) s.addShape(pres.ShapeType.line,{x:0.55,y:y+0.62,w:12.2,h:0,line:{color:LINE,width:0.75}});
   });
-  s.addText("01",{x:11.2,y:5.7,w:1.6,h:1.3,fontFace:SERIF,fontSize:84,bold:true,color:"E8E1D5",align:'right',margin:0});
-  s.addNotes("메인 예상 질문. 한 줄 답 → 실제 사례 → 원리 한 장 순서로 답한다. '연예인 누구요?' 한 마디가 좌표를 확정시킨다는 것까지.");
+  s.addNotes("전체 흐름을 먼저 안내합니다. 02·03이 각 체계의 소개, 04·05가 두 체계를 함께 볼 때의 참고 항목입니다.");
 }
 
-// ── 3. A축 ────────────────────────────────────────
+/* ── 3. 배경 ───────────────────────────────── */
 {
-  const s = pres.addSlide(); s.background={color:CREAM};
-  mono(s); tag(s,"AXIS A"); kicker(s,"언어 이미지 스케일 · NCD");
-  title(s,[{text:"손님이 ",options:{color:INK}},{text:"원하는 것",options:{color:GOLD}}]);
-  s.addText("일본컬러디자인연구소가 만든 색·형용사 좌표.\n가로 WARM ↔ COOL, 세로 SOFT ↔ HARD.\n보조축으로 CLEAR ↔ GRAYISH(맑음↔탁함)가 있다.\n\n형용사도 색도 질감도 전부 이 판 위에 얹힌다.",
-    {x:0.55,y:2.5,w:4.0,h:2.0,fontFace:SANS,fontSize:12.5,color:"444444",margin:0,lineSpacing:21});
-  s.addText([
-    {text:"외울 것은 축뿐이다.\n",options:{bold:true,color:INK,fontSize:13}},
-    {text:"위는 밝고 가볍고 여리다 · 아래는 어둡고 무겁고 세다\n왼쪽은 따뜻해 사람 냄새가 난다 · 오른쪽은 차갑고 정돈돼 있다",options:{fontSize:11,color:"555555"}},
-  ],{x:0.55,y:4.85,w:4.05,h:1.5,fontFace:SANS,margin:0.14,lineSpacing:18,valign:'middle',fill:{color:WHITE},line:{color:GOLD,width:0.75}});
-  const a=IMG('map_a.png'); if(a) s.addImage({path:a,x:5.62,y:1.62,w:7.1,h:5.4});
-  s.addNotes("16칸 이름을 순서대로 읊게 하지 말 것. 그 순간 암기 과목이 된다. 축만 잡아주고 애들 손님 케이스를 즉석에서 올려본다.");
-}
-
-// ── 4. B축 ────────────────────────────────────────
-{
-  const s = pres.addSlide(); s.background={color:CREAM};
-  mono(s); tag(s,"AXIS B"); kicker(s,"얼굴타입 8분류");
-  title(s,[{text:"손님이 ",options:{color:INK}},{text:"이미 가진 것",options:{color:GOLD}}]);
-  const b=IMG('map_b.png'); if(b) s.addImage({path:b,x:0.5,y:2.45,w:6.05,h:4.6});
-  s.addText("일본 미용에서 상담에 쓰는 얼굴 인상 좌표.\n세로 아이 ↔ 어른, 가로 곡선 ↔ 직선.",
-    {x:7.7,y:2.45,w:5.1,h:0.7,fontFace:SANS,fontSize:12.5,color:"444444",margin:0,lineSpacing:21});
-  s.addText([
-    {text:"얼굴형이 아니라 얼굴 인상이다.\n",options:{bold:true,color:INK,fontSize:13}},
-    {text:"계란형·사각형 이야기가 아니다. 우리가 읽는 건 윤곽이 아니라 그 사람이 주는 인상이다.",options:{fontSize:11,color:"555555"}},
-  ],{x:7.7,y:3.35,w:5.1,h:1.25,fontFace:SANS,margin:0.14,lineSpacing:18,valign:'middle',fill:{color:WHITE},line:{color:GOLD,width:0.75}});
-  s.addText([
-    {text:"손님이 자기 얼굴을 잘못 알고 있으면?\n",options:{bold:true,color:GOLD,fontSize:12}},
-    {text:'"지금까지 제일 마음에 들었던 머리 사진 있으세요?"\n과거 좌표가 미래 좌표보다 정확하다.',options:{fontSize:11.5,color:"444444"}},
-  ],{x:7.7,y:4.95,w:5.1,h:1.3,fontFace:SANS,margin:0,lineSpacing:19,valign:'top'});
-  s.addNotes("얼굴형(윤곽)과 얼굴타입(인상)의 차이를 반드시 짚는다. 애들이 제일 많이 헷갈리는 지점.");
-}
-
-// ── 5. 8타입 표 ───────────────────────────────────
-{
-  const s = pres.addSlide(); s.background={color:CREAM};
-  mono(s); tag(s,"AXIS B"); kicker(s,"8타입 · 안전한 실루엣");
-  title(s,[{text:"어울림은 ",options:{color:INK}},{text:"안전선",options:{color:GOLD}},{text:"이다",options:{color:INK}}]);
-  const head=["타입","인상","안전한 실루엣","기본 컬러 방향"];
-  const body=[
-    ["큐트 · 아이×곡선","동글고 친근함","숏~세미 · 안말음 · 컬 앞머리","핑크 · 베이지"],
-    ["액티브 큐트 · 아이×곡선강","발랄·개성","숏~세미 · 뚜렷한 라인 · 일자뱅","오렌지 · 체리 · 블랙"],
-    ["프레시 · 아이×직선","산뜻·중성","숏~세미 · 스트레이트 / 겉말음","애쉬 · 베이지"],
-    ["쿨 캐주얼 · 아이×직선강","보이시·시크","울프 · 러프한 결","한색 · 올리브"],
-    ["페미닌 · 어른×곡선","화사·여성","세미~롱 · 웨이브 · 컬 앞머리","베이지 · 로즈브라운"],
-    ["소프트 엘레강트 · 어른×중간","단정·부드러움","숏보브~세미 · 굵은 원컬","내추럴 · 애쉬"],
-    ["엘레강트 · 어른×직선약","또렷·세련","롱 · 큰 웨이브 · 앞머리 없음","브라운 계열"],
-    ["쿨 · 어른×직선","샤프·도회적","세미~롱 스트레이트","그레이 · 라벤더 그레이지"],
+  const s = slide(); kicker(s,"01. 배경");
+  title(s,[{text:"이미지분류체계는 ",options:{color:INK}},{text:"감각을 말로 옮기기 위한 정리 방식",options:{color:GOLD}},{text:"입니다",options:{color:INK}}]);
+  lead(s,"「청순한」 「시크한」 「내추럴한」 같은 말은 사람마다 떠올리는 그림이 조금씩 다릅니다. 일본에서는 색채·디자인 분야를 중심으로 이런 이미지 형용사를 좌표 위에 배치해 정리하는 방식이 발전했고, 이후 미용·패션 상담에서도 참고 자료로 쓰이고 있습니다.",2.4);
+  const cards=[
+    ["쓰이는 곳","색채 계획 · 제품 디자인 · 인테리어 · 패션 · 미용 상담"],
+    ["정리 방식","형용사를 두 개의 축 위에 배치해 서로의 거리를 눈으로 확인"],
+    ["참고할 때","정답표가 아니라, 대화를 맞춰 보기 위한 공통 지도로 사용"],
   ];
-  const rows=[head.map(t=>({text:t,options:{bold:true,color:GOLD,fontSize:9.5,charSpacing:1.4}}))]
-    .concat(body.map(r=>r.map((t,i)=>({text:t,options:{bold:i===0,color:i===3?GOLD:(i===0?INK:"444444"),fontSize:11}}))));
-  s.addTable(rows,{x:0.55,y:2.5,w:12.2,colW:[3.3,2.0,4.0,2.9],border:{type:'solid',color:LINE,pt:0.5},
-    fontFace:SANS,rowH:0.44,valign:'middle',margin:0.08,fill:{color:CREAM}});
-  s.addText("안전을 알아야 의도적으로 어길 수 있다.",{x:0.55,y:6.72,w:9,h:0.35,fontFace:SANS,fontSize:12,bold:true,color:INK,margin:0});
-  s.addNotes("이 표를 외우게 하지 말 것. '안전선'이라는 개념만 남기면 된다. 어기는 판단이 L5의 일이라는 걸 다음 장에서 잇는다.");
-}
-
-// ── 6. 다리 (다크) ────────────────────────────────
-{
-  const s = pres.addSlide(); s.background={color:INK};
-  mono(s,true);
-  s.addText("THE BRIDGE",{x:0,y:1.7,w:W,h:0.3,fontFace:SANS,fontSize:9.5,bold:true,color:GOLD,charSpacing:2.6,align:'center',margin:0});
-  s.addText([{text:"두 판은 ",options:{color:CREAM}},{text:"같은 단어",options:{color:GOLD}},{text:"를 쓴다",options:{color:CREAM}}],
-    {x:0,y:2.25,w:W,h:0.9,fontFace:SERIF,fontSize:42,bold:true,align:'center',margin:0});
-  s.addText("엘레강트 · 캐주얼 · 쿨 — 겹치는 단어가 두 판을 잇는 다리다.",
-    {x:0,y:3.3,w:W,h:0.35,fontFace:SANS,fontSize:13,color:GRAY,align:'center',margin:0});
-  const cards=[["A 판","원하는 것","손님의 동경 · 무드"],["B 판","가진 것","얼굴이 이미 말하는 것"]];
   cards.forEach((c,i)=>{
-    const x=3.55+i*3.3;
-    s.addShape(pres.ShapeType.rect,{x:x,y:4.05,w:2.9,h:1.35,fill:{color:"1C1A17"},line:{color:"3A342C",width:0.75}});
-    s.addText(c[0],{x:x,y:4.2,w:2.9,h:0.24,fontFace:SANS,fontSize:9,bold:true,color:GOLD,charSpacing:2,align:'center',margin:0});
-    s.addText(c[1],{x:x,y:4.5,w:2.9,h:0.4,fontFace:SANS,fontSize:17,bold:true,color:CREAM,align:'center',margin:0});
-    s.addText(c[2],{x:x,y:4.95,w:2.9,h:0.3,fontFace:SANS,fontSize:10.5,color:GRAY,align:'center',margin:0});
+    const x = 0.55 + i*4.1;
+    s.addShape(pres.ShapeType.rect,{x:x,y:3.85,w:3.85,h:1.85,fill:{color:WHITE},line:{color:LINE,width:0.75}});
+    s.addText(c[0],{x:x+0.25,y:4.1,w:3.35,h:0.32,fontFace:SANS,fontSize:13.5,bold:true,color:GOLD,margin:0});
+    s.addText(c[1],{x:x+0.25,y:4.5,w:3.35,h:1.0,fontFace:SANS,fontSize:11.5,color:BODY,margin:0,lineSpacing:19});
   });
-  s.addText("↔",{x:6.45,y:4.5,w:0.4,h:0.4,fontFace:SANS,fontSize:18,bold:true,color:GOLD,align:'center',valign:'middle',margin:0});
-  s.addText([{text:"디자인이란, 그 ",options:{color:CREAM}},{text:"거리",options:{color:GOLD}},{text:"를 다루는 일이다.",options:{color:CREAM}}],
-    {x:0,y:5.85,w:W,h:0.6,fontFace:SERIF,fontSize:26,bold:true,align:'center',margin:0});
-  s.addNotes("좁히면 어울리고, 벌리면 개성이 된다. 벌리는 건 L5의 영역 — 손님이 감당할 수 있을 때만.");
+  note(s,"이 자료의 범위","여기서는 두 체계의 구성과 용어를 소개하는 데까지를 다룹니다. 실제 시술 판단은 모발 상태·생활 조건 등 다른 정보와 함께 종합적으로 검토하게 됩니다.",0.55,6.0,12.2,1.0);
+  s.addNotes("체계의 목적이 '분류 자체'가 아니라 '대화를 맞추는 것'에 있다는 점을 소개합니다.");
 }
 
-// ── 7. 방법 5단계 ─────────────────────────────────
+/* ── 4. 두 체계 개요 ───────────────────────── */
 {
-  const s = pres.addSlide(); s.background={color:CREAM};
-  mono(s); tag(s,"METHOD"); kicker(s,"오늘의 전부");
-  title(s,[{text:"말 → 좌표 → 거리 → ",options:{color:INK}},{text:"변수",options:{color:GOLD}},{text:" → 확인",options:{color:INK}}]);
-  const st=[["01","말","손님 단어를 그대로 받아적는다.\n내 말로 바꾸지 않는다"],
-            ["02","좌표","A판에 찍는다.\n애매하면 \"연예인 누구요?\""],
-            ["03","거리","B판(얼굴)과 얼마나 먼가.\n좁힐지 벌릴지 판단한다"],
-            ["04","변수","길이 · 질감 · 컬 · 컬러 · 앞머리\n다섯 개로 번역한다"],
-            ["05","확인","변수 5개를 말로 되읽어 준다.\n그게 계약이다"]];
-  st.forEach((c,i)=>{
-    const x=0.55+i*2.47;
-    s.addShape(pres.ShapeType.ellipse,{x:x,y:2.75,w:0.62,h:0.62,fill:{color:i===3?GOLD:CREAM},line:{color:GOLD,width:1}});
-    s.addText(c[0],{x:x,y:2.75,w:0.62,h:0.62,fontFace:SERIF,fontSize:14,bold:true,color:i===3?CREAM:GOLD,align:'center',valign:'middle',margin:0});
-    s.addText(c[1],{x:x,y:3.55,w:2.2,h:0.4,fontFace:SANS,fontSize:17,bold:true,color:INK,margin:0});
-    s.addText(c[2],{x:x,y:4.02,w:2.2,h:1.0,fontFace:SANS,fontSize:10.5,color:"666666",margin:0,lineSpacing:16});
+  const s = slide(); kicker(s,"01. 배경");
+  title(s,[{text:"이 자료에서는 ",options:{color:INK}},{text:"두 가지 체계",options:{color:GOLD}},{text:"를 함께 살펴봅니다",options:{color:INK}}]);
+  const two=[
+    ["A","언어 이미지 스케일","NCD (일본컬러디자인연구소)",
+      "가로축 WARM ↔ COOL\n세로축 SOFT ↔ HARD\n보조축 CLEAR ↔ GRAYISH",
+      "이미지 형용사 16개를 좌표에 배치합니다. 색·질감·분위기를 함께 놓고 볼 수 있어, 손님이 말한 표현이 어느 쪽 성격인지 가늠할 때 참고합니다."],
+    ["B","얼굴타입 분류","일본 미용 상담에서 쓰이는 8분류",
+      "세로축 아이 인상 ↔ 어른 인상\n가로축 곡선 ↔ 직선",
+      "얼굴이 주는 인상을 8가지로 나눕니다. 윤곽(계란형·사각형 등)과는 다른 기준이며, 타입별로 자주 어울린다고 소개되는 실루엣이 정리되어 있습니다."],
+  ];
+  two.forEach((t,i)=>{
+    const x = 0.55 + i*6.25;
+    s.addShape(pres.ShapeType.rect,{x:x,y:2.45,w:5.95,h:4.25,fill:{color:WHITE},line:{color:LINE,width:0.75}});
+    s.addShape(pres.ShapeType.ellipse,{x:x+0.28,y:2.7,w:0.5,h:0.5,fill:{color:GOLD}});
+    s.addText(t[0],{x:x+0.28,y:2.7,w:0.5,h:0.5,fontFace:SERIF,fontSize:14,bold:true,color:CREAM,align:'center',valign:'middle',margin:0});
+    s.addText(t[1],{x:x+0.95,y:2.7,w:4.7,h:0.32,fontFace:SANS,fontSize:17,bold:true,color:INK,margin:0,valign:'middle'});
+    s.addText(t[2],{x:x+0.95,y:3.04,w:4.7,h:0.26,fontFace:SANS,fontSize:10.5,color:GRAY,margin:0,valign:'middle'});
+    s.addText(t[3],{x:x+0.3,y:3.55,w:5.35,h:1.0,fontFace:SANS,fontSize:12,bold:true,color:GOLD,margin:0.12,lineSpacing:20,
+      fill:{color:CREAM}});
+    s.addText(t[4],{x:x+0.3,y:4.75,w:5.35,h:1.7,fontFace:SANS,fontSize:11.5,color:BODY,margin:0,lineSpacing:19});
   });
+  s.addNotes("두 체계는 서로 다른 것을 봅니다. A는 이미지 표현 자체를, B는 얼굴이 주는 인상을 분류합니다.");
+}
+
+/* ── 5. A축 좌표판 ─────────────────────────── */
+{
+  const s = slide(); kicker(s,"02. 언어 이미지 스케일 (NCD)");
+  title(s,[{text:"두 개의 축으로 ",options:{color:INK}},{text:"이미지 형용사",options:{color:GOLD}},{text:"를 배치합니다",options:{color:INK}}]);
   s.addText([
-    {text:"시안의 함정  ",options:{bold:true,color:GOLD,fontSize:12,charSpacing:1.4}},
-    {text:"시안에는 결과만 있고 변수가 없다. 시안을 받았으면 거기서 변수 5개를 뽑아 말로 확인해야 계약이 된다. \"이거요\" 하고 끄덕이는 건 계약이 아니다.",options:{fontSize:12,color:"444444"}},
-  ],{x:0.55,y:5.55,w:12.2,h:0.95,fontFace:SANS,margin:0.16,lineSpacing:20,valign:'middle',fill:{color:WHITE},line:{color:GOLD,width:0.75}});
-  s.addNotes("이 다섯 칸이 오늘 수업의 전부다. 나머지는 이걸 굴리는 연습.");
+    {text:"가로축 · WARM ↔ COOL\n",options:{bold:true,fontSize:13,color:INK}},
+    {text:"따뜻한 쪽과 차가운 쪽. 색온도뿐 아니라 분위기의 온도도 함께 봅니다.\n\n",options:{fontSize:11.5,color:BODY}},
+    {text:"세로축 · SOFT ↔ HARD\n",options:{bold:true,fontSize:13,color:INK}},
+    {text:"위쪽은 밝고 가벼운 느낌, 아래쪽은 어둡고 무게감 있는 느낌으로 정리됩니다.\n\n",options:{fontSize:11.5,color:BODY}},
+    {text:"보조축 · CLEAR ↔ GRAYISH\n",options:{bold:true,fontSize:13,color:INK}},
+    {text:"맑고 선명한 쪽과 탁하고 차분한 쪽을 구분합니다. 시크·엘레강트·클래식·댄디는 GRAYISH 쪽에 놓이는 것으로 소개됩니다.",options:{fontSize:11.5,color:BODY}},
+  ],{x:0.55,y:2.4,w:4.5,h:3.3,fontFace:SANS,margin:0,lineSpacing:19,valign:'top'});
+  note(s,"참고","축의 위치는 절대적인 값이 아니라 상대적인 배치입니다. 자료마다 좌표가 조금씩 다르게 소개되기도 합니다.",0.55,5.9,4.5,1.05);
+  const a = IMG('map_a.png'); if(a) s.addImage({path:a,x:6.05,y:2.12,w:6.7,h:5.09});
+  s.addNotes("16칸의 이름보다 두 축의 방향을 먼저 안내하면 이해가 빠릅니다.");
 }
 
-// ── 8. 케이스 3 ───────────────────────────────────
+/* ── 6~7. A 카테고리 설명 ──────────────────── */
+const CATS = [
+  ["로맨틱","ROMANTIC","부드럽고 달콤한 느낌. 밝고 여린 색조와 가벼운 질감이 함께 놓입니다."],
+  ["프리티","PRETTY","귀엽고 발랄한 느낌. 따뜻하고 선명한 색조가 중심입니다."],
+  ["클리어","CLEAR","맑고 산뜻한 느낌. 투명감 있는 밝은 색조가 특징으로 소개됩니다."],
+  ["내추럴","NATURAL","자연스럽고 편안한 느낌. 중간 밝기의 부드러운 색조가 놓입니다."],
+  ["캐주얼","CASUAL","경쾌하고 활동적인 느낌. 따뜻하고 선명한 색조가 함께 쓰입니다."],
+  ["쿨 캐주얼","COOL CASUAL","산뜻하면서 시원한 느낌. 차가운 계열의 밝은 색조가 중심입니다."],
+  ["엘레강트","ELEGANT","우아하고 단정한 느낌. 중간 톤에 차분한 색조가 놓입니다."],
+  ["시크","CHIC","절제되고 세련된 느낌. 탁하고 차분한 색조 쪽에 배치됩니다."],
+  ["다이나믹","DYNAMIC","힘 있고 활동적인 느낌. 진하고 강한 색조가 함께 놓입니다."],
+  ["와일드","WILD","거칠고 자연스러운 느낌. 어둡고 따뜻한 색조가 중심입니다."],
+  ["고저스","GORGEOUS","화려하고 풍성한 느낌. 깊이 있는 진한 색조가 놓입니다."],
+  ["에스닉","ETHNIC","토속적이고 개성 있는 느낌. 따뜻하고 어두운 색조가 특징입니다."],
+  ["클래식","CLASSIC","전통적이고 안정된 느낌. 차분하고 어두운 색조가 놓입니다."],
+  ["댄디","DANDY","정돈되고 단정한 느낌. 차가우면서 어두운 색조 쪽입니다."],
+  ["모던","MODERN","간결하고 도시적인 느낌. 차갑고 명암 대비가 뚜렷한 쪽입니다."],
+  ["포멀","FORMAL","격식 있고 단정한 느낌. 차갑고 어두운 색조에 배치됩니다."],
+];
+[[0,8,"위쪽 · SOFT 계열에서 중간까지"],[8,16,"아래쪽 · HARD 계열"]].forEach(([a,b,sub],idx)=>{
+  const s = slide(); kicker(s,"02. 언어 이미지 스케일 (NCD)");
+  title(s,[{text:"16개 이미지 카테고리 ",options:{color:INK}},{text:`(${idx+1}/2)`,options:{color:GOLD}}]);
+  s.addText(sub,{x:0.55,y:2.15,w:8,h:0.3,fontFace:SANS,fontSize:11.5,color:GRAY,margin:0});
+  CATS.slice(a,b).forEach((c,i)=>{
+    const col = i % 2, row = Math.floor(i/2);
+    const x = 0.55 + col*6.25, y = 2.6 + row*1.15;
+    s.addShape(pres.ShapeType.rect,{x:x,y:y,w:5.95,h:0.98,fill:{color:WHITE},line:{color:LINE,width:0.75}});
+    s.addText(c[0],{x:x+0.25,y:y+0.13,w:2.2,h:0.3,fontFace:SANS,fontSize:14,bold:true,color:INK,margin:0,valign:'middle'});
+    s.addText(c[1],{x:x+2.4,y:y+0.16,w:3.3,h:0.26,fontFace:SANS,fontSize:9,bold:true,color:GOLD,charSpacing:1.3,margin:0,valign:'middle'});
+    s.addText(c[2],{x:x+0.25,y:y+0.46,w:5.45,h:0.42,fontFace:SANS,fontSize:10.5,color:MUTE,margin:0,lineSpacing:15});
+  });
+  s.addNotes("카테고리 이름은 참고용입니다. 자료에 따라 번역어가 조금씩 다르게 쓰이기도 합니다.");
+});
+
+/* ── 8. B축 좌표판 ─────────────────────────── */
 {
-  const s = pres.addSlide(); s.background={color:CREAM};
-  mono(s); tag(s,"CASE"); kicker(s,"예시 3 · 과제와 같은 포맷");
-  title(s,[{text:"실제로 ",options:{color:INK}},{text:"이렇게",options:{color:GOLD}},{text:" 굴린다",options:{color:INK}}]);
+  const s = slide(); kicker(s,"03. 얼굴타입 분류");
+  title(s,[{text:"얼굴이 주는 ",options:{color:INK}},{text:"인상",options:{color:GOLD}},{text:"을 두 축으로 나눕니다",options:{color:INK}}]);
+  const b = IMG('map_b.png'); if(b) s.addImage({path:b,x:0.5,y:2.45,w:6.05,h:4.6});
+  s.addText([
+    {text:"세로축 · 아이 인상 ↔ 어른 인상\n",options:{bold:true,fontSize:13,color:INK}},
+    {text:"이목구비의 배치와 얼굴의 세로 길이 등에서 받는 인상을 기준으로 나눕니다.\n\n",options:{fontSize:11.5,color:BODY}},
+    {text:"가로축 · 곡선 ↔ 직선\n",options:{bold:true,fontSize:13,color:INK}},
+    {text:"윤곽선과 이목구비의 형태가 둥근 쪽인지 각진 쪽인지를 기준으로 나눕니다.",options:{fontSize:11.5,color:BODY}},
+  ],{x:7.0,y:2.5,w:5.75,h:2.1,fontFace:SANS,margin:0,lineSpacing:19,valign:'top'});
+  note(s,"얼굴형과는 다른 기준입니다","계란형·사각형처럼 윤곽을 나누는 분류와는 다릅니다. 여기서는 윤곽보다 전체적으로 받는 인상을 기준으로 삼습니다.",7.0,4.75,5.75,1.15);
+  note(s,"참고하면 좋은 질문","「지금까지 마음에 들었던 머리 사진이 있으신가요?」처럼 과거의 경험을 물어보면, 인상에 대한 서로의 기준을 맞추는 데 도움이 됩니다.",7.0,6.05,5.75,1.0);
+  s.addNotes("얼굴형(윤곽)과 얼굴타입(인상)은 서로 다른 분류라는 점을 안내합니다.");
+}
+
+/* ── 9. B 8타입 표 ─────────────────────────── */
+{
+  const s = slide(); kicker(s,"03. 얼굴타입 분류");
+  title(s,[{text:"8개 타입과 ",options:{color:INK}},{text:"자주 소개되는 실루엣",options:{color:GOLD}}]);
+  s.addText("아래 내용은 일본 미용 자료에서 타입별로 자주 함께 소개되는 경향을 정리한 것입니다. 개인차가 있어 참고 항목으로 보시면 됩니다.",
+    {x:0.55,y:2.12,w:12.2,h:0.32,fontFace:SANS,fontSize:11,color:GRAY,margin:0});
+  const head=["타입","축","받는 인상","자주 소개되는 길이·질감","자주 소개되는 컬러"];
+  const body=[
+    ["큐트","아이 × 곡선","동그랗고 친근한","숏~세미 · 끝 안말음 · 컬 앞머리","핑크 · 베이지"],
+    ["액티브 큐트","아이 × 곡선(강)","발랄하고 개성 있는","숏~세미 · 또렷한 라인 · 일자뱅","오렌지 · 체리 · 블랙"],
+    ["프레시","아이 × 직선","산뜻하고 중성적인","숏~세미 · 스트레이트 / 겉말음","애쉬 · 베이지"],
+    ["쿨 캐주얼","아이 × 직선(강)","보이시하고 시원한","울프 · 결이 살아있는 질감","한색 · 올리브"],
+    ["페미닌","어른 × 곡선","화사하고 부드러운","세미~롱 · 웨이브 · 컬 앞머리","베이지 · 로즈브라운"],
+    ["소프트 엘레강트","어른 × 중간","단정하고 온화한","숏보브~세미 · 굵은 원컬","내추럴 · 애쉬"],
+    ["엘레강트","어른 × 직선(약)","또렷하고 세련된","롱 · 큰 웨이브 · 앞머리 없음","브라운 계열"],
+    ["쿨","어른 × 직선","샤프하고 도회적인","세미~롱 · 스트레이트","그레이 · 라벤더 그레이지"],
+  ];
+  const rows=[head.map(t=>({text:t,options:{bold:true,color:GOLD,fontSize:9.5,charSpacing:1.3}}))]
+    .concat(body.map(r=>r.map((t,i)=>({text:t,options:{bold:i===0,color:i===4?GOLD:(i===0?INK:BODY),fontSize:10.5}}))));
+  s.addTable(rows,{x:0.55,y:2.6,w:12.2,colW:[2.05,1.95,2.1,3.9,2.2],
+    border:{type:'solid',color:LINE,pt:0.5},fontFace:SANS,rowH:0.44,valign:'middle',
+    margin:0.08,fill:{color:CREAM}});
+  s.addNotes("표의 내용은 경향이며 개인차가 큽니다. 참고 항목으로 안내합니다.");
+}
+
+/* ── 10. 겹치는 용어 ───────────────────────── */
+{
+  const s = slide(); kicker(s,"04. 두 체계를 함께 볼 때");
+  title(s,[{text:"같은 단어가 ",options:{color:INK}},{text:"두 체계 모두",options:{color:GOLD}},{text:"에 등장합니다",options:{color:INK}}]);
+  lead(s,"엘레강트 · 쿨 캐주얼 · 쿨처럼 겹치는 이름이 있습니다. 다만 A는 이미지 표현을, B는 얼굴 인상을 가리키므로 같은 이름이라도 설명하는 대상이 다릅니다. 두 자료를 함께 볼 때 참고하시면 좋습니다.",2.35);
+  const ov=[
+    ["엘레강트","중간 톤의 우아하고 단정한 이미지","어른 인상에 직선이 약간 섞인 얼굴 타입"],
+    ["쿨 캐주얼","차가운 계열의 산뜻하고 경쾌한 이미지","아이 인상에 직선이 뚜렷한 얼굴 타입"],
+    ["쿨","모던·포멀과 인접한 차가운 영역","어른 인상에 직선이 뚜렷한 얼굴 타입"],
+  ];
+  s.addText("용어",{x:0.75,y:3.5,w:2.2,h:0.3,fontFace:SANS,fontSize:9.5,bold:true,color:GOLD,charSpacing:1.4,margin:0});
+  s.addText("A · 언어 이미지 스케일에서",{x:3.15,y:3.5,w:4.6,h:0.3,fontFace:SANS,fontSize:9.5,bold:true,color:GOLD,charSpacing:1.2,margin:0});
+  s.addText("B · 얼굴타입 분류에서",{x:8.15,y:3.5,w:4.6,h:0.3,fontFace:SANS,fontSize:9.5,bold:true,color:GOLD,charSpacing:1.2,margin:0});
+  ov.forEach((o,i)=>{
+    const y = 3.95 + i*0.95;
+    s.addShape(pres.ShapeType.rect,{x:0.55,y:y,w:12.2,h:0.82,fill:{color:WHITE},line:{color:LINE,width:0.75}});
+    s.addText(o[0],{x:0.75,y:y,w:2.3,h:0.82,fontFace:SANS,fontSize:14,bold:true,color:INK,margin:0,valign:'middle'});
+    s.addText(o[1],{x:3.15,y:y,w:4.85,h:0.82,fontFace:SANS,fontSize:11.5,color:BODY,margin:0,valign:'middle'});
+    s.addText(o[2],{x:8.15,y:y,w:4.4,h:0.82,fontFace:SANS,fontSize:11.5,color:BODY,margin:0,valign:'middle'});
+  });
+  s.addNotes("이름이 겹쳐 혼동되기 쉬운 부분이라 따로 정리했습니다.");
+}
+
+/* ── 11. 다섯 가지 항목 ────────────────────── */
+{
+  const s = slide(); kicker(s,"05. 헤어 요소로 옮겨 볼 때");
+  title(s,[{text:"이미지를 시술 항목으로 옮길 때 ",options:{color:INK}},{text:"살펴보는 다섯 가지",options:{color:GOLD}}]);
+  lead(s,"이미지를 나타내는 말은 그대로는 시술 지시가 되지 않기 때문에, 상담에서는 보통 아래 다섯 항목으로 나누어 확인합니다. 항목별로 정리해 두면 서로 떠올린 그림을 맞춰 보기 쉬워집니다.",2.35);
+  const v=[
+    ["길이","숏 · 보브 · 미디엄 · 세미롱 · 롱","전체 인상의 무게중심을 정하는 항목입니다."],
+    ["질감","매끈함 · 자연스러움 · 거친 결","같은 길이라도 인상이 크게 달라지는 항목입니다."],
+    ["컬","스트레이트 · 원컬 · 웨이브 · 끝 방향","안쪽·바깥쪽 방향까지 함께 확인합니다."],
+    ["컬러","밝기 · 색조(웜/쿨) · 채도","A 스케일의 가로축과 직접 연결되는 항목입니다."],
+    ["앞머리","없음 · 시스루 · 일자 · 흘림","얼굴 인상 변화가 가장 크게 나타나는 항목입니다."],
+  ];
+  v.forEach((c,i)=>{
+    const x = 0.55 + i*2.47;
+    s.addShape(pres.ShapeType.rect,{x:x,y:3.5,w:2.28,h:2.85,fill:{color:WHITE},line:{color:LINE,width:0.75}});
+    s.addShape(pres.ShapeType.ellipse,{x:x+0.22,y:3.72,w:0.5,h:0.5,fill:{color:CREAM},line:{color:GOLD,width:1}});
+    s.addText(String(i+1),{x:x+0.22,y:3.72,w:0.5,h:0.5,fontFace:SERIF,fontSize:13,bold:true,color:GOLD,align:'center',valign:'middle',margin:0});
+    s.addText(c[0],{x:x+0.22,y:4.35,w:1.9,h:0.34,fontFace:SANS,fontSize:16,bold:true,color:INK,margin:0});
+    s.addText(c[1],{x:x+0.22,y:4.75,w:1.9,h:0.72,fontFace:SANS,fontSize:10,color:GOLD,margin:0,lineSpacing:15});
+    s.addText(c[2],{x:x+0.22,y:5.5,w:1.9,h:0.7,fontFace:SANS,fontSize:10,color:MUTE,margin:0,lineSpacing:15});
+  });
+  note(s,"참고","사진 자료를 함께 볼 때는 결과 이미지만 보는 대신 위 다섯 항목이 각각 어떻게 되어 있는지 함께 확인하면, 이야기한 내용을 서로 같은 그림으로 맞추기 쉬워집니다.",0.55,6.55,12.2,0.72);
+  s.addNotes("다섯 항목은 상담 기록지의 칸과 동일하게 구성되어 있습니다.");
+}
+
+/* ── 12. 정리 예시 ─────────────────────────── */
+{
+  const s = slide(); kicker(s,"05. 헤어 요소로 옮겨 볼 때");
+  title(s,[{text:"정리 ",options:{color:INK}},{text:"예시",options:{color:GOLD}}]);
+  s.addText("실제 상담에서 나온 표현을 앞의 항목들로 옮겨 적어 본 예시입니다. 하나의 정답이 아니라 정리 방식의 예로 보시면 됩니다.",
+    {x:0.55,y:2.12,w:12.2,h:0.32,fontFace:SANS,fontSize:11,color:GRAY,margin:0});
   const cs=[
-    ['"청순하게요"',"WARM–SOFT · CLEAR","큐트 (아이×곡선)","가깝다 → 좁힌다",
-     "세미롱 · 결 매끈 · 끝 원컬 안말음 · 베이지 · 시스루뱅",
-     "'청순'이 \"어려 보이게\"인지 \"정돈되게\"인지 갈린다. 되물어야 좌표가 확정된다"],
-    ['"시크하게요"',"COOL–HARD · GRAYISH","쿨 (어른×직선)","가깝다 → 5% 남긴다",
-     "세미~롱 · 매끈 · 스트레이트 · 그레이지 · 앞머리 없음",
-     "100% 맞추면 차가워 보인다. 끝에 살짝 C컬 하나만 남겨 사람 온도를 만든다"],
-    ['"센 언니처럼요"',"WARM–HARD · 다이나믹","큐트 (아이×곡선)","멀다 → 일부러 벌린다",
-     "단발 · 질감 거칠게 · 끝 꺾임 · 어두운 애쉬 · 일자뱅",
-     "부조화가 개성이 되려면 손님이 감당해야 한다. 직업·나이·아침 관리시간을 먼저 묻는다"],
+    ["「청순한 느낌으로」","A · WARM–SOFT, CLEAR 부근","B · 큐트 (아이 × 곡선)",
+     "세미롱 / 매끈한 질감 / 끝 안말음 원컬 / 베이지 / 시스루 앞머리",
+     "같은 표현이라도 「어려 보이는 쪽」과 「정돈된 쪽」으로 나뉘는 경우가 있어, 어느 쪽에 가까운지 함께 확인해 두면 좋습니다."],
+    ["「시크한 느낌으로」","A · COOL–HARD, GRAYISH 부근","B · 쿨 (어른 × 직선)",
+     "세미~롱 / 매끈한 질감 / 스트레이트 / 그레이지 / 앞머리 없음",
+     "끝부분에 아주 약한 곡선을 남기는 방식도 함께 소개됩니다. 인상이 차분해지는 정도를 조절할 때 참고하는 부분입니다."],
+    ["「강한 느낌으로」","A · WARM–HARD, 다이나믹 부근","B · 큐트 (아이 × 곡선)",
+     "단발 / 결이 살아있는 질감 / 끝 바깥 방향 / 어두운 애쉬 / 일자 앞머리",
+     "표현하고 싶은 이미지와 얼굴 인상이 서로 멀리 놓이는 경우입니다. 이런 경우에는 관리 시간이나 생활 조건도 함께 확인하게 됩니다."],
   ];
   cs.forEach((c,i)=>{
-    const x=0.55+i*4.1, w=3.85;
-    s.addShape(pres.ShapeType.rect,{x:x,y:2.5,w:w,h:4.1,fill:{color:WHITE},line:{color:LINE,width:0.75}});
-    s.addText(c[0],{x:x+0.22,y:2.72,w:w-0.44,h:0.4,fontFace:SANS,fontSize:16,bold:true,color:INK,margin:0});
-    s.addText([{text:"A 좌표  ",options:{color:GOLD,bold:true,fontSize:8.5,charSpacing:1.2}},{text:c[1],options:{color:"444444",fontSize:11}}],
-      {x:x+0.22,y:3.2,w:w-0.44,h:0.34,fontFace:SANS,margin:0,valign:'middle'});
-    s.addText([{text:"B 얼굴  ",options:{color:GOLD,bold:true,fontSize:8.5,charSpacing:1.2}},{text:c[2],options:{color:"444444",fontSize:11}}],
-      {x:x+0.22,y:3.56,w:w-0.44,h:0.34,fontFace:SANS,margin:0,valign:'middle'});
-    s.addText(c[3],{x:x+0.22,y:3.98,w:w-0.44,h:0.34,fontFace:SANS,fontSize:12,bold:true,color:i===2?GOLD:INK,margin:0,valign:'middle'});
-    s.addText("변수 5",{x:x+0.22,y:4.42,w:w-0.44,h:0.22,fontFace:SANS,fontSize:8.5,bold:true,color:GOLD,charSpacing:1.2,margin:0});
-    s.addText(c[4],{x:x+0.22,y:4.66,w:w-0.44,h:0.8,fontFace:SANS,fontSize:10.5,color:"444444",margin:0,lineSpacing:16});
-    s.addText([{text:"함정  ",options:{color:GOLD,bold:true,fontSize:8.5,charSpacing:1.2}},{text:c[5],options:{color:"666666",fontSize:10}}],
-      {x:x+0.22,y:5.52,w:w-0.44,h:0.95,fontFace:SANS,margin:0,lineSpacing:15,valign:'top'});
+    const x = 0.55 + i*4.1, w = 3.85;
+    s.addShape(pres.ShapeType.rect,{x:x,y:2.6,w:w,h:4.3,fill:{color:WHITE},line:{color:LINE,width:0.75}});
+    s.addText(c[0],{x:x+0.22,y:2.82,w:w-0.44,h:0.36,fontFace:SANS,fontSize:14.5,bold:true,color:INK,margin:0});
+    s.addText(c[1],{x:x+0.22,y:3.28,w:w-0.44,h:0.28,fontFace:SANS,fontSize:10.5,color:BODY,margin:0,valign:'middle'});
+    s.addText(c[2],{x:x+0.22,y:3.58,w:w-0.44,h:0.28,fontFace:SANS,fontSize:10.5,color:BODY,margin:0,valign:'middle'});
+    s.addText("다섯 항목",{x:x+0.22,y:4.0,w:w-0.44,h:0.24,fontFace:SANS,fontSize:8.5,bold:true,color:GOLD,charSpacing:1.2,margin:0});
+    s.addText(c[3],{x:x+0.22,y:4.26,w:w-0.44,h:0.85,fontFace:SANS,fontSize:10.5,color:BODY,margin:0,lineSpacing:16});
+    s.addText("참고",{x:x+0.22,y:5.2,w:w-0.44,h:0.24,fontFace:SANS,fontSize:8.5,bold:true,color:GOLD,charSpacing:1.2,margin:0});
+    s.addText(c[4],{x:x+0.22,y:5.46,w:w-0.44,h:1.25,fontFace:SANS,fontSize:10,color:MUTE,margin:0,lineSpacing:15});
   });
-  s.addNotes("3번이 오늘의 핵심 케이스. 벌리는 판단 = 상담력 = L5 시험 기준. 여기서 시간을 제일 많이 쓴다.");
+  s.addNotes("세 예시 모두 '이렇게 정리해 볼 수 있다'는 예시입니다. 실제로는 모발 상태와 생활 조건을 함께 확인합니다.");
 }
 
-// ── 8-B. 세 사람, 세 좌표 (나노바나나 이미지가 있을 때만) ──
-{
-  const c1=IMG('nb_case1.png'), c2=IMG('nb_case2.png'), c3=IMG('nb_case3.png');
-  if(c1&&c2&&c3){
-    const s = pres.addSlide(); s.background={color:CREAM};
-    mono(s); tag(s,"CASE"); kicker(s,"같은 다섯 변수, 다른 좌표");
-    title(s,[{text:"세 사람, ",options:{color:INK}},{text:"세 좌표",options:{color:GOLD}}]);
-    const cap=[
-      ["청순","WARM–SOFT · CLEAR","좁힌 결과"],
-      ["시크","COOL–HARD · GRAYISH","5% 남긴 결과"],
-      ["센 언니","WARM–HARD · 다이나믹","일부러 벌린 결과"],
-    ];
-    [c1,c2,c3].forEach((img,i)=>{
-      const x=0.55+i*4.1, w=3.85;
-      s.addImage({path:img,x:x,y:2.45,w:w,h:3.3});
-      s.addText(cap[i][0],{x:x,y:5.95,w:w,h:0.4,fontFace:SANS,fontSize:19,bold:true,color:INK,margin:0});
-      s.addText(cap[i][1],{x:x,y:6.4,w:w,h:0.28,fontFace:SANS,fontSize:10,bold:true,color:GOLD,charSpacing:1.2,margin:0});
-      s.addText(cap[i][2],{x:x,y:6.7,w:w,h:0.28,fontFace:SANS,fontSize:10.5,color:GRAY,margin:0});
-    });
-    s.addNotes("같은 다섯 변수(길이·질감·컬·컬러·앞머리)를 어떻게 돌리느냐로 좌표가 옮겨간다는 걸 눈으로 보여주는 장.");
-  }
+/* ── 12-B. 참고 도판 (이미지가 준비된 경우에만) ── */
+if(HAS_CASES){
+  const s = slide(); kicker(s,"05. 헤어 요소로 옮겨 볼 때");
+  title(s,[{text:"참고 ",options:{color:INK}},{text:"도판",options:{color:GOLD}}]);
+  s.addText("앞 장의 세 예시를 그림으로 나타낸 것입니다. 길이·질감·컬·앞머리가 각각 어떻게 다른지 비교해 보실 수 있습니다.",
+    {x:0.55,y:2.12,w:12.2,h:0.32,fontFace:SANS,fontSize:11,color:GRAY,margin:0});
+  const cap=[
+    ["「청순한 느낌으로」","세미롱 · 매끈함 · 끝 안말음 · 시스루 앞머리"],
+    ["「시크한 느낌으로」","세미~롱 · 매끈함 · 스트레이트 · 앞머리 없음"],
+    ["「강한 느낌으로」","단발 · 결이 살아있는 질감 · 끝 바깥 방향 · 일자 앞머리"],
+  ];
+  [1,2,3].forEach((n,i)=>{
+    const x = 0.55 + i*4.1, w = 3.85;
+    s.addShape(pres.ShapeType.rect,{x:x,y:2.6,w:w,h:4.3,fill:{color:WHITE},line:{color:LINE,width:0.75}});
+    s.addImage({path:IMG(`nb_case${n}.png`),x:x+0.15,y:2.75,w:w-0.3,h:2.85});
+    s.addText(cap[i][0],{x:x+0.25,y:5.75,w:w-0.5,h:0.34,fontFace:SANS,fontSize:14,bold:true,color:INK,margin:0});
+    s.addText(cap[i][1],{x:x+0.25,y:6.15,w:w-0.5,h:0.62,fontFace:SANS,fontSize:10.5,color:MUTE,margin:0,lineSpacing:16});
+  });
+  s.addNotes("도판은 이해를 돕기 위한 예시 그림입니다. 실제 결과는 모발 상태에 따라 달라집니다.");
 }
 
-// ── 9. 우리 서사 ──────────────────────────────────
+/* ── 13. 형용사 대조표 ─────────────────────── */
 {
-  const s = pres.addSlide(); s.background={color:CREAM};
-  mono(s); tag(s,"AT NOWN"); kicker(s,"왜 하필 지금 이 수업인가");
-  title(s,[{text:"오늘은 ",options:{color:INK}},{text:"바닥판",options:{color:GOLD}},{text:"이다",options:{color:INK}}]);
-  const k=[["8/23 · L3","질감마스터 1","SOFT ↔ HARD 를 가위로 만드는 법"],
-           ["8/27 · L4","형용사 이론","이 좌표 위에 말을 얹는 수업"],
-           ["9/22 · L5","퍼스널컬러와 구조","이 좌표 위에 색을 얹는 수업. NCD는 원래 색 체계다"],
-           ["11/6 · L5","골격과 구조커트","이 좌표 위에 몸을 얹는 수업"]];
-  k.forEach((c,i)=>{
-    const x=0.55+(i%2)*6.25, y=2.6+Math.floor(i/2)*1.75;
-    s.addShape(pres.ShapeType.rect,{x:x,y:y,w:5.95,h:1.5,fill:{color:WHITE},line:{color:LINE,width:0.75}});
-    s.addText(c[0],{x:x+0.28,y:y+0.2,w:5.4,h:0.24,fontFace:SANS,fontSize:9,bold:true,color:GOLD,charSpacing:1.6,margin:0});
-    s.addText(c[1],{x:x+0.28,y:y+0.5,w:5.4,h:0.36,fontFace:SANS,fontSize:16,bold:true,color:INK,margin:0});
-    s.addText(c[2],{x:x+0.28,y:y+0.92,w:5.4,h:0.42,fontFace:SANS,fontSize:11,color:"666666",margin:0,lineSpacing:15});
-  });
-  s.addText("Four classes, one map.",{x:0.55,y:6.35,w:8,h:0.45,fontFace:SERIF,fontSize:22,italic:true,color:GOLD,margin:0});
-  s.addNotes("오늘이 따로 노는 수업이 아니라는 걸 반드시 붙인다. 애들이 '이거 왜 배워요'를 안 묻게 되는 지점.");
+  const s = slide(); kicker(s,"부록");
+  title(s,[{text:"상담에서 자주 나오는 ",options:{color:INK}},{text:"이미지 표현",options:{color:GOLD}}]);
+  s.addText("손님이 쓰는 우리말 표현과, 두 체계에서 가까운 위치에 놓이는 이름을 나란히 정리했습니다.",
+    {x:0.55,y:2.12,w:12.2,h:0.32,fontFace:SANS,fontSize:11,color:GRAY,margin:0});
+  const head=["자주 쓰이는 표현","가까운 A 카테고리","축 방향","함께 언급되는 요소"];
+  const body=[
+    ["청순한 · 단정한","클리어 · 엘레강트","SOFT 쪽, 맑은 계열","매끈한 질감 · 밝은 베이지"],
+    ["여성스러운 · 화사한","로맨틱 · 페미닌 계열","WARM–SOFT","웨이브 · 로즈 계열 컬러"],
+    ["자연스러운 · 편안한","내추럴","중앙 부근","과하지 않은 층 · 중간 밝기"],
+    ["시크한 · 세련된","시크 · 모던","COOL–HARD, 탁한 계열","스트레이트 · 그레이 계열"],
+    ["도시적인 · 깔끔한","모던 · 포멀","COOL–HARD","블런트 라인 · 무채색"],
+    ["개성 있는 · 강한","다이나믹 · 와일드","WARM–HARD","거친 결 · 어두운 톤"],
+    ["귀여운 · 발랄한","프리티 · 캐주얼","WARM 쪽, 밝은 계열","짧은 길이 · 컬 앞머리"],
+    ["고급스러운 · 우아한","엘레강트 · 고저스","중간~아래, 차분한 계열","큰 웨이브 · 브라운 계열"],
+  ];
+  const rows=[head.map(t=>({text:t,options:{bold:true,color:GOLD,fontSize:9.5,charSpacing:1.3}}))]
+    .concat(body.map(r=>r.map((t,i)=>({text:t,options:{bold:i===0,color:i===0?INK:BODY,fontSize:11}}))));
+  s.addTable(rows,{x:0.55,y:2.6,w:12.2,colW:[3.2,3.2,3.0,2.8],border:{type:'solid',color:LINE,pt:0.5},
+    fontFace:SANS,rowH:0.45,valign:'middle',margin:0.08,fill:{color:CREAM}});
+  s.addNotes("대응 관계는 참고용입니다. 같은 표현도 손님에 따라 다른 위치에 놓일 수 있습니다.");
 }
 
-// ── 10. 공부법 + 과제 ─────────────────────────────
+/* ── 14. 정리 · 출처 ───────────────────────── */
 {
-  const s = pres.addSlide(); s.background={color:CREAM};
-  mono(s); tag(s,"HOMEWORK"); kicker(s,"공부하는 법 · 그리고 과제");
-  title(s,[{text:"감이 아니라 ",options:{color:INK}},{text:"기록",options:{color:GOLD}},{text:"으로 는다",options:{color:INK}}]);
-  const p=[["한 손님 = 한 좌표 기록","말 → 좌표 → 얼굴타입 → 거리 → 변수 5개 → 결과 사진. 여섯 칸"],
-           ["인스타 100장 좌표 찍기","저장한 시안을 A판에 흩뿌려 봐라 — 몰린 곳이 내 한계이자 내 시그니처다"],
-           ["질문하는 법","\"뭐 해드려요?\" 가 아니라 \"이렇게 좌표 찍었는데, 좁혀야 할까요 벌려야 할까요?\""]];
-  p.forEach((r,i)=>{
-    const y=2.55+i*0.88;
-    s.addShape(pres.ShapeType.ellipse,{x:0.55,y:y+0.08,w:0.4,h:0.4,line:{color:GOLD,width:1},fill:{color:CREAM}});
-    s.addText(String(i+1),{x:0.55,y:y+0.08,w:0.4,h:0.4,fontFace:SERIF,fontSize:12,bold:true,color:GOLD,align:'center',valign:'middle',margin:0});
-    s.addText(r[0],{x:1.15,y:y,w:5.0,h:0.32,fontFace:SANS,fontSize:14,bold:true,color:INK,margin:0,valign:'middle'});
-    s.addText(r[1],{x:1.15,y:y+0.33,w:11.5,h:0.34,fontFace:SANS,fontSize:11,color:"666666",margin:0,valign:'middle'});
+  const s = slide(); kicker(s,"정리");
+  title(s,[{text:"오늘 살펴본 ",options:{color:INK}},{text:"내용",options:{color:GOLD}}]);
+  const sum=[
+    ["언어 이미지 스케일 (A)","WARM↔COOL, SOFT↔HARD 두 축과 보조축 CLEAR↔GRAYISH 위에 16개 이미지 카테고리가 배치됩니다."],
+    ["얼굴타입 분류 (B)","아이↔어른, 곡선↔직선 두 축 위에 8개 타입이 놓이며, 타입별로 자주 소개되는 실루엣이 정리되어 있습니다."],
+    ["함께 볼 때","이름이 겹치는 용어가 있어 어느 체계의 이름인지 확인하면 혼동을 줄일 수 있습니다."],
+    ["헤어 요소로 옮길 때","길이 · 질감 · 컬 · 컬러 · 앞머리 다섯 항목으로 나누어 정리하는 방식이 함께 소개됩니다."],
+  ];
+  sum.forEach((c,i)=>{
+    const y = 2.4 + i*1.0;
+    s.addShape(pres.ShapeType.ellipse,{x:0.55,y:y+0.08,w:0.42,h:0.42,fill:{color:CREAM},line:{color:GOLD,width:1}});
+    s.addText(String(i+1),{x:0.55,y:y+0.08,w:0.42,h:0.42,fontFace:SERIF,fontSize:12,bold:true,color:GOLD,align:'center',valign:'middle',margin:0});
+    s.addText(c[0],{x:1.2,y:y,w:3.6,h:0.32,fontFace:SANS,fontSize:14,bold:true,color:INK,margin:0,valign:'middle'});
+    s.addText(c[1],{x:4.9,y:y,w:7.85,h:0.62,fontFace:SANS,fontSize:11.5,color:BODY,margin:0,lineSpacing:19,valign:'top'});
   });
-  s.addShape(pres.ShapeType.rect,{x:0.55,y:5.3,w:12.2,h:1.55,fill:{color:INK}});
-  s.addText("과제 · 다음 수업까지",{x:0.85,y:5.5,w:6,h:0.28,fontFace:SANS,fontSize:9.5,bold:true,color:GOLD,charSpacing:2,margin:0});
+  s.addShape(pres.ShapeType.rect,{x:0.55,y:6.4,w:12.2,h:0.72,fill:{color:WHITE},line:{color:LINE,width:0.75}});
   s.addText([
-    {text:"① 분류체계 요약 1장 — 축 2개 + 칸 이름. 안 보고 그린다\n",options:{}},
-    {text:"② 실제 손님 예시 3건 — 말 → 좌표 → 거리 → 변수 5개 → 결과",options:{}},
-  ],{x:0.85,y:5.85,w:8.5,h:0.8,fontFace:SANS,fontSize:13,color:CREAM,margin:0,lineSpacing:22});
-  s.addText("실패 케이스는 감점 없음.\n왜 어긋났는지 쓰면 오히려 가점.",{x:9.6,y:5.8,w:3.0,h:0.9,fontFace:SANS,fontSize:11,color:GOLD,margin:0,lineSpacing:17,align:'right'});
-  s.addNotes("채점 기준을 미리 공개한다. 축이 맞나 / 말을 그대로 옮겼나 / 거리 판단에 이유가 있나 / 변수 5개가 다 찼나.");
+    {text:"참고 자료   ",options:{bold:true,color:GOLD,fontSize:9.5,charSpacing:1.3}},
+    {text:"日本カラーデザイン研究所 「イメージスケール」 · 岩手県立大学 감성공학 강의자료 · 顔タイプ診断® 관련 일본 미용 자료",options:{fontSize:10.5,color:MUTE}},
+  ],{x:0.75,y:6.4,w:11.8,h:0.72,fontFace:SANS,margin:0,valign:'middle'});
+  s.addNotes("자료의 출처를 함께 안내합니다. 더 자세한 내용은 각 원자료에서 확인할 수 있습니다.");
 }
 
-// ── 11. 클로징 (다크) ─────────────────────────────
-{
-  const s = pres.addSlide(); s.background={color:INK};
-  mono(s,true);
-  cross(s, 6.65, 3.15, 1.5, "3A342C");
-  s.addText("CLOSING",{x:0,y:1.55,w:W,h:0.3,fontFace:SANS,fontSize:9.5,bold:true,color:GOLD,charSpacing:2.6,align:'center',margin:0});
-  s.addText([{text:"체계를 ",options:{color:CREAM}},{text:"외우지",options:{color:GOLD}},{text:" 마라",options:{color:CREAM}}],
-    {x:0,y:2.65,w:W,h:0.95,fontFace:SERIF,fontSize:44,bold:true,align:'center',margin:0});
-  s.addText("좌표는 손님 앞에서 꺼내는 자가 아니다. 내 머릿속 지도다.\n지도를 보여주는 사람은 길을 모르는 사람이다.",
-    {x:0,y:3.8,w:W,h:0.8,fontFace:SANS,fontSize:13,color:GRAY,align:'center',margin:0,lineSpacing:24});
-  s.addText([{text:"이미지 분류는 취향 놀이가 아니라,\n손님 말을 시술로 옮기는 ",options:{color:CREAM}},{text:"번역기",options:{color:GOLD}},{text:"다.",options:{color:CREAM}}],
-    {x:0,y:5.0,w:W,h:1.1,fontFace:SERIF,fontSize:27,bold:true,align:'center',margin:0,lineSpacing:38});
-  s.addText("AT NOWN ACADEMY · L5 IMAGE CLASSIFICATION · 2026.08.19 · CHANO",
-    {x:0,y:6.8,w:W,h:0.3,fontFace:SANS,fontSize:8.5,bold:true,color:"4A443B",charSpacing:2.4,align:'center',margin:0});
-  s.addNotes("워드월로 돌아간다. '지금 다시 쓰면, 이미지란 ______다?' 시작 화면과 비교. 남은 질문은 8/27 형용사 이론 소재로 회수.");
-}
-
-pres.writeFile({fileName:'/tmp/edu819/L5_일본_이미지분류체계.pptx'}).then(f=>console.log("WROTE",f));
+pres.writeFile({fileName: path.join(__dirname,'L5_일본_이미지분류체계.pptx')})
+  .then(f=>console.log("WROTE",f));

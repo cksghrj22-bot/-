@@ -12,6 +12,11 @@ import os, sys, json
 from PIL import Image, ImageDraw, ImageFont
 HERE = os.path.dirname(os.path.abspath(__file__))
 FONTS = os.path.join(HERE, "fonts")
+def _meta_path(out):
+    from pathlib import Path as _P
+    return _P(str(out)).with_suffix(".meta.json")
+
+
 def F(name, size): return ImageFont.truetype(os.path.join(FONTS, name), size)
 
 W, H = 1080, 1350
@@ -49,10 +54,16 @@ def _fit_font(text, role, size, x):
     return F("NanumSquareRoundEB.ttf", font_size)
 
 def render(photo, lines, out, size=58, top=0.30, left=0.07):
+    """카드 1장 렌더 + **박스 좌표 사이드카**(<out>.meta.json) 기록.
+
+    게이트가 픽셀에서 박스를 되짚어 추정하면 머리카락·옷을 박스로 오인한다(2026-08-18 실측).
+    그릴 때 이미 아는 좌표를 남기면 게이트가 정확히 검사한다.
+    """
     base = photo.convert("RGBA")
     ov = Image.new("RGBA", base.size, (0, 0, 0, 0))
     d = ImageDraw.Draw(ov)
     x0 = int(W * left); y = int(H * top)
+    meta = {"canvas": [W, H], "top": top, "left": left, "base_size": size, "boxes": []}
     for i, (role, text) in enumerate(lines):
         if not text:
             continue
@@ -64,8 +75,13 @@ def render(photo, lines, out, size=58, top=0.30, left=0.07):
         bw, bh = tw + 2*PAD_X, th + 2*PAD_Y
         d.rectangle([bx, y, bx+bw, y+bh], fill=box)          # 직각 박스, 글자폭
         d.text((bx + PAD_X - bb[0], y + PAD_Y - bb[1]), text, font=fnt, fill=txt)  # 좌측정렬
+        meta["boxes"].append({
+            "role": role, "text": text, "font_size": fnt.size,
+            "rect": [int(bx), int(y), int(bx + bw), int(y + bh)],
+        })
         y += bh + GAP
     Image.alpha_composite(base, ov).convert("RGB").save(out, quality=92)
+    _meta_path(out).write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
 
 if __name__ == "__main__":
     O = os.path.join(HERE, "_out", "nakta"); os.makedirs(O, exist_ok=True)

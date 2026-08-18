@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-08-18T09:34:10.747590",
+  "daemons": {
+    "cowork_multi_watch": "❌",
+    "renderwatch2": "✅",
+    "terminal_watcher": "❌",
+    "codex_dispatch": "❌",
+    "blogwatch": "✅",
+    "health_daemon": "❌",
+    "daily_system_check": "✅",
+    "naver_sync": "❌",
+    "cowork_bridge": "❌"
+  },
+  "tokens": {
+    "gdrive": "✅",
+    "elevenlabs": "✅",
+    "youtube": "✅"
+  },
+  "git": "✅",
+  "disk": "✅ 162GB 여유",
+  "queues": {
+    "터미널인박스": "1건 대기"
+  },
+  "issues": [
+    "데몬 cowork_multi_watch 중지",
+    "데몬 terminal_watcher 중지",
+    "데몬 codex_dispatch 중지",
+    "데몬 health_daemon 중지",
+    "데몬 naver_sync 중지",
+    "데몬 cowork_bridge 중지"
+  ]
+}

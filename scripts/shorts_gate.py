@@ -337,9 +337,10 @@ def _aligned_speech_onsets(script_units: list[str], words: list[dict]) -> tuple[
     return onsets, matched / max(len(script_chars), len(stt_chars))
 
 
-def _energy_onsets(p: Path, noise: str = "-40dB", mind: float = 0.15) -> list[float]:
+def _energy_onsets(p: Path, noise: str = "-38dB", mind: float = 0.07) -> list[float]:
     """무음이 끝나는 지점 = 말이 시작되는 지점. Whisper 정렬이 문장을 합쳐버릴 때의 안전망.
-    2026-08-17 실측: 이 방식이 매니페스트와 오차 0.08초로 일치했다(Whisper 정렬은 22줄 중 11줄만 잡음)."""
+    2026-08-17 실측: 이 방식이 매니페스트와 오차 0.08초로 일치했다(Whisper 정렬은 22줄 중 11줄만 잡음).
+    2026-08-18: 줄 사이 여백을 0.54→0.16초로 줄이자 d=0.15 로는 경계를 놓쳤다 → 0.07 로 내림."""
     r = subprocess.run([FF, "-v", "info", "-i", str(p), "-af",
                         f"silencedetect=noise={noise}:d={mind}", "-f", "null", "-"],
                        capture_output=True, text=True)
@@ -388,11 +389,18 @@ def s8_sync(p: Path, w: int, h: int, cuts: list[dict], words: list[dict] | None 
         if len(eo) == len(caps):
             onsets, src = eo, "매니페스트↔무음경계"
         elif len(eo) > len(caps):
-            # 한 줄 안에서 쉼표 끊김이 잡힌 경우 — 각 자막 시각 이후 첫 발화를 취한다
+            # 한 줄 안에서 쉼표로 끊긴 지점까지 잡힌다. 각 자막 시각에 **가장 가까운** 발화를
+            # 순서를 지키며 고른다. (2026-08-18: 「이후 첫 발화」로 뽑으면 쉼표 끊김에 걸려
+            #  한 줄만 0.58초 어긋났다. 오디오 자체는 중앙 0.029초로 정확했다.)
             picked, j = [], 0
             for c in caps:
-                while j < len(eo) and eo[j] < c - 0.60: j += 1
-                if j < len(eo): picked.append(eo[j]); j += 1
+                best, bj = None, j
+                for k in range(j, len(eo)):
+                    if eo[k] > c + 0.80 and best is not None: break
+                    dd = abs(eo[k] - c)
+                    if best is None or dd < best:
+                        best, bj = dd, k
+                picked.append(eo[bj]); j = bj + 1
             if len(picked) == len(caps):
                 onsets, src = picked, "매니페스트↔무음경계"
     if not caps or not onsets:
