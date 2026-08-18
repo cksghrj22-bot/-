@@ -27,13 +27,24 @@ def main():
     eo = onsets(voice)
     spoken = [c for c in cuts if not c.get("outro")]
     moved = 0
-    for c in spoken:
+    # ⚠️ 2026-08-18 (차노 "ep04 약간 싱크 밀린다") —
+    #    전엔 줄마다 「가장 가까운 무음경계」를 독립적으로 골랐다.
+    #    쉼표가 많은 편(ep04: 발화점 44개/자막 8줄)에서는 **한 줄 안의 쉼표 끊김**에 붙어버렸다.
+    #    → 순서를 지키고(앞 줄이 쓴 지점은 다시 못 씀), **앞 줄 발화가 끝난 뒤**만 후보로 본다.
+    used = 0.0
+    for k, c in enumerate(spoken):
         a = c["speak_at"]
-        near = [x for x in eo if abs(x - a) <= WIN]
-        if not near: continue
+        floor = used + 0.05
+        if k: floor = max(floor, spoken[k-1].get("speak_end", 0) - 0.15)
+        near = [x for x in eo if x >= floor and abs(x - a) <= WIN]
+        if not near:
+            near = [x for x in eo if abs(x - a) <= WIN]     # 없으면 제약 풀고 최근접
+        if not near:
+            used = max(used, a); continue
         b = min(near, key=lambda x: abs(x - a))
-        if abs(b - a) > 0.015:
+        if abs(b - a) > 0.05:
             c["speak_at"] = round(b, 3); moved += 1
+        used = max(used, c["speak_at"])
     # 컷 경계 재계산 — 이전 줄 끝과 다음 줄 시작의 중간
     for i, c in enumerate(spoken):
         c["start"] = 0.0 if i == 0 else round((spoken[i-1]["speak_end"] + c["speak_at"]) / 2, 3)
@@ -41,8 +52,9 @@ def main():
         c["end"] = spoken[i+1]["start"] if i + 1 < len(spoken) else c["end"]
     for c in cuts:
         if c.get("outro"):
-            olen = max(2.6, 27.0 - spoken[-1]["end"])
+            olen = max(2.6, 27.4 - spoken[-1]["end"])   # 게이트 하한 26초 + 크로스페이드 0.7 + 여유
             c["start"] = spoken[-1]["end"]; c["end"] = round(c["start"] + olen, 3)
+            c.pop("xf_applied", None)
     man.write_text(json.dumps({"cuts": cuts}, ensure_ascii=False, indent=1))
     print("스냅 %d줄 · 총 %.2f초" % (moved, cuts[-1]["end"]))
     return 0

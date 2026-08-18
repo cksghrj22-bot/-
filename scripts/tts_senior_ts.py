@@ -24,7 +24,26 @@ def main():
     man = Path(sys.argv[1])
     d = json.loads(man.read_text()); cuts = d["cuts"]
     spoken = [c for c in cuts if not c.get("outro")]      # 아웃트로는 읽지 않는다
-    lines = [c["말"] for c in spoken]
+    # 발음 교정 — 자막(말)은 그대로, **읽기용 표기만** 바꾼다.
+    # 차노 2026-08-18: "같은 장마에도 를 왜 같은 장매도 라고 읽지?"
+    #   받침 뒤 「에」가 앞 글자와 붙어 뭉개진다 → 사전에서 띄어쓰기로 끊어준다.
+    pron = {}
+    pf = ROOT / "content/발음사전.json"
+    if pf.exists():
+        raw = json.loads(pf.read_text())
+        pron = {k: v for k, v in raw.items() if not k.startswith("_")}
+        # ⭐ 규칙 자동 전개 — 「어간+기」를 「어간 끼」로. 단어를 하나씩 넣지 않는다.
+        #    차노 2026-08-18: "똑같은 실수를 몇 번 반복하는 거야?" → 어간만 넣으면 조사 조합이 다 커버된다.
+        for stem in raw.get("_끼어간", []):
+            for josa in raw.get("_조사", [""]):
+                pron["%s기%s" % (stem, josa)] = "%s 끼%s" % (stem, josa)
+    # 긴 것부터 치환해야 「노란기의」가 「노란기」+「의」로 쪼개지지 않는다
+    pron = dict(sorted(pron.items(), key=lambda kv: -len(kv[0])))
+    def say_of(c):
+        t = c.get("읽기") or c["말"]
+        for a, b in pron.items(): t = t.replace(a, b)
+        return t
+    lines = [say_of(c) for c in spoken]
     # 개행으로 이으면 모델이 문단 쉼(최대 3.4초)을 넣는다 → 한 칸 띄어쓰기로 잇는다.
     # 문장 끝 마침표가 자연스러운 쉼을 이미 준다.
     text = " ".join(lines)
@@ -38,7 +57,10 @@ def main():
     with urllib.request.urlopen(req, timeout=300) as r:
         res = json.loads(r.read())
 
-    out = ROOT / "_out/shorts/senior_voice_ts.mp3"
+    # ⚠️ 2026-08-18 — 전 편이 senior_voice_ts.mp3 **한 파일을 덮어쓰고** 있었다.
+    #    그래서 편을 다시 뽑을 때마다 앞 편의 음성이 날아가고, 검증도 남의 음성과 대조됐다.
+    #    매니페스트 이름으로 분리한다.
+    out = ROOT / ("_out/shorts/_voice/%s.mp3" % man.stem)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_bytes(base64.b64decode(res["audio_base64"]))
     al = res.get("alignment") or res.get("normalized_alignment") or {}
@@ -71,10 +93,11 @@ def main():
     for c in cuts:
         if c.get("outro"):
             # 아웃트로 최소 2.6초. 단, 게이트가 26초 미만을 막으므로(짧은 편) 모자라면 늘린다.
-            olen = max(2.6, 27.0 - spoken[-1]["end"])
+            olen = max(2.6, 27.4 - spoken[-1]["end"])   # 게이트 하한 26초 + 크로스페이드 0.7 + 여유
             c["start"] = spoken[-1]["end"]; c["end"] = round(c["start"] + olen, 3)
+            c.pop("xf_applied", None)
             c.pop("speak_at", None); c.pop("speak_end", None)
-    for c in cuts: c["voice_track"] = "_out/shorts/senior_voice_ts.mp3"
+    for c in cuts: c["voice_track"] = "_out/shorts/_voice/%s.mp3" % man.stem
     man.write_text(json.dumps({"cuts": cuts}, ensure_ascii=False, indent=1))
 
     tot = cuts[-1]["end"]

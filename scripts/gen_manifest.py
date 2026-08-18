@@ -15,11 +15,17 @@ from pathlib import Path
 
 ROOT   = Path(__file__).resolve().parent.parent
 POOL   = ROOT / "_clips_pool/senior_new"
+POOL2  = ROOT / "_clips_pool/문방구"          # 영상문방구 — 차노 승인분만
+OKLIST = ROOT / "_out/shorts/_문방구_승인.json"
+TONE   = ROOT / "_out/shorts/_broll_tone.json"
+TONE_TARGET = 11.0   # 채널 기준 톤(R-B). 전 편을 이 근처로 모은다
+TONE_GLOBAL = 9.0    # 기준에서 이만큼까지만 허용 (+2 ~ +20)
+TONE_BAND = 5.0   # 한 편 안에서 허용하는 톤(R-B) 폭 — 8 로는 +12 와 +20 이 한 편에 섞였다
 LEDGER = ROOT / "_out/shorts/_broll_ledger.json"
 # ⛔ B롤로 쓰면 안 되는 파일 — **자막이 이미 구워진 완성본**이다.
 #    2026-08-18 실사고: send_유행 을 소재로 쓴 2편이 S5(UI존 자막 침범)로 탈락했다.
 EXCLUDE = {"send_유행.mp4"}
-SEG    = 6.0      # 한 장면에 예약하는 길이(초) — 통컷 여유분
+SEG    = 3.6      # 한 장면 예약 길이 — 문방구 클립 상당수가 짧아 6초로는 못 쓴다(2026-08-18)
 HEAD   = 0.3      # 클립 맨 앞 여백
 
 def dur(p):
@@ -35,14 +41,19 @@ def load_ledger():
     return {}
 
 def pool(only=None):
-    """소스 목록 — 긴 것부터. 짧은 건 한 편에 한 번씩만 돈다."""
+    """소스 목록. senior_new + 문방구(승인분).
+    ⚠️ 문방구 소스는 톤이 어긋날 수 있어 **차노 승인 목록**(_문방구_승인.json)에 든 것만 쓴다."""
+    cands = [f for f in sorted(POOL.iterdir())]
+    if OKLIST.exists():
+        ok = set(json.loads(OKLIST.read_text()))
+        cands += [f for f in sorted(POOL2.iterdir()) if f.name in ok]
     out = []
-    for f in sorted(POOL.iterdir()):
+    for f in cands:
         if f.suffix.lower() not in (".mov", ".mp4"): continue
         if f.name in EXCLUDE: continue
         if only and f.name not in only: continue
         d = dur(f)
-        if d >= 2.0: out.append((f.name, d))
+        if d >= 4.0: out.append((str(f.relative_to(ROOT/"_clips_pool")), d))
     out.sort(key=lambda x: -x[1])
     return out
 
@@ -82,8 +93,13 @@ def main():
     if not srcs:
         print("⛔ 소재 없음"); return 1
 
-    cuts, scene, si = [], 0, 0
+    import hashlib
+    # 편마다 소스 순서를 다르게 — 안 그러면 전 편이 같은 그림으로 시작한다(차노 2026-08-18)
+    si0 = int(hashlib.md5(Path(dst).stem.encode()).hexdigest()[:6], 16)
+    cuts, scene, si = [], 0, si0
     used_here = []
+    tone = json.loads(TONE.read_text()) if TONE.exists() else {}
+    band = [None]   # 이 편의 기준 톤
     exhausted = []
     for i, say in enumerate(says, 1):
         new_scene = (i % 2 == 1) or (i in cards) or ((i-1) in cards)
@@ -94,12 +110,26 @@ def main():
             else:
                 clip = inn = None
                 # 한 편 안에서 같은 소스가 40% 를 넘지 않게 — **이 편에서 아직 안 쓴 것부터** 고른다
-                for pref in (True, False):
+                # 톤 밴드 — 차노 2026-08-18 "중간부터 끝까지 너무 빨간톤".
+                # 편 안에서 톤이 튀면 눈이 불편하다. **첫 클립 톤 ±TONE_BAND 안에서만** 고른다.
+                for stage in (0, 1, 2):
+                    pref = (stage == 0)
                     for _ in range(len(srcs)):
                         name, total = srcs[si % len(srcs)]; si += 1
                         if pref and name in used_here: continue
+                        t = tone.get(name)
+                        # 채널 기준 톤 — 편끼리도 톤이 갈리면 몰아 볼 때 눈이 불편하다
+                        # (차노 2026-08-18 "중간부터 끝까지 너무 빨간톤")
+                        if stage < 2 and t is not None and abs(t - TONE_TARGET) > TONE_GLOBAL:
+                            continue
+                        lim = TONE_BAND if stage == 0 else (TONE_BAND * 1.6 if stage == 1 else 1e9)
+                        if band[0] is not None and t is not None and abs(t - band[0]) > lim:
+                            continue
                         got = take(led, name, total)
-                        if got is not None: clip, inn = name, got; break
+                        if got is not None:
+                            clip, inn = name, got
+                            if band[0] is None and t is not None: band[0] = t
+                            break
                         if name not in exhausted: exhausted.append(name)
                     if clip: break
                 if clip: used_here.append(clip)

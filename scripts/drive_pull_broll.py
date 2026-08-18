@@ -11,6 +11,8 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT  = ROOT / "_clips_pool/senior_new"
 CRED = ROOT / "secrets/gdrive.json"
 EXT  = (".mov", ".mp4", ".m4v")
+MAXMB   = 120      # 이보다 큰 건 건너뛴다 — 한 편에 못 쓸 만큼 길고 받는 데만 몇 분 걸린다
+BUDGET  = 420      # 한 번에 최대 7분만 받는다. 나머지는 다음 회차(2시간마다)에 이어받는다
 
 def token():
     c = json.loads(CRED.read_text())
@@ -58,6 +60,8 @@ def download(f, tok):
     return "ok" if (not want or got == want) else "size-mismatch(%d/%d)" % (got, want)
 
 def main():
+    import time
+    t0 = time.time()
     OUT.mkdir(parents=True, exist_ok=True)
     tok = token()
     roots = [f for f in q("mimeType='application/vnd.google-apps.folder' and trashed=false "
@@ -68,6 +72,10 @@ def main():
         for f in walk(root["id"], tok):
             if f["id"] in seen: continue
             seen.add(f["id"])
+            if int(f.get("size", 0)) > MAXMB*1048576: continue
+            if time.time() - t0 > BUDGET:
+                print("(시간 예산 %ds 소진 — 다음 회차에 이어받음)" % BUDGET, flush=True)
+                break
             try:
                 st = download(f, tok)
             except Exception as e:

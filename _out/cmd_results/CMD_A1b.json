@@ -1,0 +1,12 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "run_queue.py",
+    "장마철떡짐"
+  ],
+  "requested_by": "유튜브쇼츠방(코워크)",
+  "status": "done",
+  "returncode": 0,
+  "result": "=== 장마철떡짐 ===\n⓪ 발음 게이트\n✅ 발음 게이트 통과 (8줄)\n① 통 TTS + 글자 타임스탬프\n② 발음 시작 스냅\n②-B 싱크 검증\n✅ 싱크 검증 통과 (8줄, 허용 0.30초)\n③ 장면 통컷 렌더\n④ 아웃트로 크로스페이드 0.7초\n⛔ ffmpeg -v error -i /tmp/_ms_main.mp4 -i /tmp/_ms_outro.mp4 -filter_complex [0][1]xfade=transition=fade:duration=0.70:offset=26.081,fade=t=out:st=27.981:d=0.7[v] \n [fc#0 @ 0x9f0c18000] Stream specifier '' in filtergraph description [0][1]xfade=transition=fade:duration=0.70:offset=26.081,fade=t=out:st=27.981:d=0.7[v] matches no streams.\nError binding filtergraph inputs/outputs: Invalid argument\n\n\n\n===== 요약 =====\n  장마철떡짐          탈락/오류",
+  "completed_at": "2026-08-19T00:14:16.585763"
+}

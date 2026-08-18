@@ -1,0 +1,11 @@
+{
+  "cmd": "python_script",
+  "args": [
+    "broll_refresh.py"
+  ],
+  "requested_by": "유튜브쇼츠방(코워크)",
+  "status": "failed",
+  "returncode": 1,
+  "result": "── drive_pull_broll.py ──\n\n[stderr]\nTraceback (most recent call last):\n  File \"/Users/chanho/atnown-content-pipeline/scripts/broll_refresh.py\", line 55, in <module>\n    sys.exit(main())\n             ~~~~^^\n  File \"/Users/chanho/atnown-content-pipeline/scripts/broll_refresh.py\", line 35, in main\n    run(\"drive_pull_broll.py\")\n    ~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/chanho/atnown-content-pipeline/scripts/broll_refresh.py\", line 26, in run\n    r = subprocess.run([sys.executable, str(ROOT/\"scripts\"/name)] + list(args),\n                       capture_output=True, text=True, cwd=str(ROOT), timeout=540)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py\", line 557, in run\n    stdout, stderr = process.communicate(input, timeout=timeout)\n                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py\", line 1221, in communicate\n    stdout, stderr = self._communicate(input, endtime, timeout)\n                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py\", line 2154, in _communicate\n    self._check_timeout(endtime, orig_timeout, stdout, stderr)\n    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py\", line 1268, in _check_timeout\n    raise TimeoutExpired(\n    ...<2 lines>...\n            stderr=b''.join(stderr_seq) if stderr_seq else None)\nsubprocess.TimeoutExpired: Command '['/opt/homebrew/opt/python@3.14/bin/python3.14', '/Users/chanho/atnown-content-pipeline/scripts/drive_pull_broll.py']' timed out after 540 seconds",
+  "completed_at": "2026-08-18T23:04:09.580211"
+}
