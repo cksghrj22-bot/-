@@ -22,6 +22,7 @@ def F(name, size): return ImageFont.truetype(os.path.join(FONTS, name), size)
 W, H = 1080, 1350
 PAD_X, PAD_Y = 22, 16
 GAP = 49
+LONG_TEXT = 22       # 이보다 길면 「부연」 — 줄인다 (nakta_gate.LONG_TEXT 와 동일)
 STEP = 46            # 계단 들여쓰기
 STYLES = {
     "설정": ((255, 255, 255, 240), (20, 20, 20)),
@@ -38,13 +39,28 @@ def placeholder():
     d.text((int(W*.60), int(H*.66)), "피사체", font=F("NanumSquareRoundB.ttf", 40), fill=(232, 228, 222))
     return im
 
-def _role_size(size, role):
+def _role_size(size, role, text=""):
+    """글자 크기 위계 — 정본 「글자 크기 위계 개정2」(형 확정 2026-08-10).
+
+      질문(설정) + 짧은 단언문 = 크게.  긴 부연·설명 = 작게.
+      "결론은 무조건 작게"가 아니라 **핵심 단언은 크게, 긴 부연만 작게.**
+
+    2026-08-18: 이 함수가 역할·길이와 무관하게 원본 size 를 그대로 돌려주고 있었다.
+    그래서 전 슬라이드 글자가 같은 크기로 나갔다(정본이 금지한 「신문」).
+    dict 를 넘기면 예전처럼 역할별 고정값이 이긴다.
+    """
     if isinstance(size, dict):
         return size.get(role, size.get("default", 58))
-    return size
+    # 임계 22자 = nakta_gate.LONG_TEXT 와 같은 값. 렌더러와 게이트가 어긋나면 안 된다.
+    n = len(text or "")
+    if n <= LONG_TEXT:         # 질문·핵심 단언 = 크게 (역할 무관)
+        return size
+    if n <= LONG_TEXT + 8:     # 조금 긴 설명
+        return max(36, int(size * 0.79))
+    return max(32, int(size * 0.69))   # 긴 부연
 
 def _fit_font(text, role, size, x):
-    font_size = _role_size(size, role)
+    font_size = _role_size(size, role, text)
     while font_size > 30:
         fnt = F("NanumSquareRoundEB.ttf", font_size)
         bb = ImageDraw.Draw(Image.new("RGBA", (1, 1))).textbbox((0, 0), text, font=fnt)

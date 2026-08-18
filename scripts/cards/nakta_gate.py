@@ -46,6 +46,7 @@ BOX_FILL = 0.30             # 박스 전체: 글자 구멍 빼고 이 비율 이
 ROW_GAP  = 4                # 행 끊김 허용(글자 사이)
 EDGE_STD_L = 7.0            # 좌측정렬이므로 왼쪽 끝은 거의 안 흔들린다
 EDGE_STD_R = 22.0           # 오른쪽 끝(글자폭)은 조금 흔들린다
+LONG_TEXT  = 22             # 이보다 길면 「부연」 — 최대 크기로 두면 안 된다
 MAX_BOX_H  = 0.22           # 박스 높이 상한(캔버스 대비) — 머리카락 덩어리 차단
 VIDEO_SEC = (3.0, 5.0)
 
@@ -254,8 +255,15 @@ def main() -> int:
 
         # N6 크기 위계
         if d["src"] == "실측" and d["sizes"]:
-            if len(boxes) >= 2 and len(set(d["sizes"])) == 1:
-                fails.append(f"[N6] {p.name} 글자 크기 전부 {d['sizes'][0]} — 위계 없음(다 같은 크기 금지)")
+            # 정본: 「핵심 단언은 크게, **긴 부연만** 작게」 — 짧은 두 줄이 같은 크기인 건 위반이 아니다.
+            mx = max(d["sizes"])
+            big_long = [t for t, z in zip(d["texts"], d["sizes"])
+                        if z == mx and len(t) > LONG_TEXT]
+            if big_long:
+                fails.append(f"[N6] {p.name} 긴 부연({len(big_long[0])}자)이 최대 크기 {mx} — "
+                             f"길면 줄여야 함: 「{big_long[0][:20]}…」")
+            elif len(boxes) >= 3 and len(set(d["sizes"])) == 1:
+                warns.append(f"[N6] {p.name} 3줄 이상이 전부 {mx} — 위계 약함")
         else:
             hs = {(y1 - y0 + 1) // 8 for _, y0, _, y1 in boxes}
             if len(boxes) >= 2 and len(hs) == 1:
