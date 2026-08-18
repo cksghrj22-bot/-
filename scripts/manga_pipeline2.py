@@ -118,6 +118,8 @@ def assemble(panel: dict, raw: Path, out: Path):
     for k in ("badge", "title", "head", "body", "pin"):
         if panel.get(k):
             cmd += [f"--{k}", panel[k]]
+    for label in panel.get("label", []):
+        cmd += ["--label", label]
     subprocess.run(cmd, check=True)
 
 
@@ -148,6 +150,15 @@ def main():
             ok += 1
             continue
         prompt = f"{CHARACTER_LOCK}\n\n[이 컷]\n{panel['prompt']}"
+        # 악성곱슬 통합편 실생성 검수에서 반복된 오류를 컷별로 잠근다.
+        if "악성곱슬" in spec.get("title", ""):
+            corrections = {
+                3: "직파모는 위쪽 반은 곳고 아래쪽 반은 확실한 완만한 물결이어야 한다. 세 다발은 아래쪽 프레임 밖으로 계속 이어져 끝이 화면에 보이지 않게 해라. J자, C자, 고리, 고리 모양 머리끝을 절대 그리지 마라. 사람, 결이 마스코트, 얼굴, 장식은 아예 등장시키지 마라.",
+                4: "옆얼굴과 뒷모습이 함께 보이는 3/4 후면으로 그려라. 축모는 반드시 두 구역이 동시에 보여야 한다. 첫째는 화면 왼쪽에 노출된 귀의 바로 앞, 관자놀이 헤어라인. 둘째는 머리카락 가장 아래쪽 목덜미 헤어라인. 손은 두 구역을 가리지 말고 사이 머리만 들어라. 뒷머리 중앙에는 축모를 그리지 마라. 결이 마스코트, 얼굴 붙은 머리 장식, 주황색 캐릭터는 아예 등장시키지 마라.",
+                6: "좌우 인물 위에는 아무 라벨도 두지 마라. Before, After를 포함한 모든 글자와 숫자를 그리지 마라. 머리카락이나 몸에 얼굴 붙인 장식, 결이 마스코트, 주황색 캐릭터, 꽃, 장미를 아예 등장시키지 마라. 좌우 구분은 얇은 세로선만 사용해라.",
+            }
+            if n in corrections:
+                prompt += f"\n\n[추가 절대 교정]\n{corrections[n]}"
         print(f"🎨 c{n} {panel['name']} …")
         if not generate(prompt, raw, refs):
             print(f"  ❌ c{n} 실패")
