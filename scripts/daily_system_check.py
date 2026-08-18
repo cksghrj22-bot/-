@@ -27,12 +27,12 @@ def check_daemons():
     r = subprocess.run(["launchctl", "list"], capture_output=True, text=True)
     daemons = {}
     expected = [
-        "cowork_multi_watch", "renderwatch2", "terminal_watcher",
-        "codex_dispatch", "blogwatch", "health_daemon",
-        "daily_system_check", "naver_sync", "cowork_bridge"
+        "cowork-multi-watch", "renderwatch2", "codex-dispatch",
+        "blogwatch", "health-check", "master-pipeline",
+        "remote-cmd", "task-executor", "cowork-multi"
     ]
     for name in expected:
-        running = f"atnown.{name}" in r.stdout or f"com.atnown.{name}" in r.stdout
+        running = f"com.atnown.{name}" in r.stdout
         daemons[name] = "✅" if running else "❌"
     return daemons
 
