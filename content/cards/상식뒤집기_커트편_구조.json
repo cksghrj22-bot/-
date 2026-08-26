@@ -18,8 +18,8 @@
   "해시태그": "#앳나운메종한남 #앳나운 #차노쌤 #한남동미용실 #헤어디자이너 (5개)",
   "발행": true,
   "발행_지시": "2026-08-26 차노 「미용실 상식뒤집기 올려」",
-  "permalink": "https://www.instagram.com/p/Dce7e3MExW2/",
-  "발행_실측": "2026-08-26 09:30 KST · username atnown_chano · CAROUSEL_ALBUM 6장 · media_id 18113967874979297 · 정본 캡션으로 API 요청. Instagram 조회값은 연속 빈 줄을 1개로 정규화",
+  "permalink": "https://www.instagram.com/p/DcfJm1dmj7c/",
+  "발행_실측": "2026-08-26 11:34 KST · username atnown_chano · CAROUSEL_ALBUM 6장 · media_id 17955586887207712 · permalink https://www.instagram.com/p/DcfJm1dmj7c/ · c3 취소선 「볼륨 = 뿌리펌」·대문 「뿌리펌보다 / 모근 각도예요」 실물 통과 · publish 직전 최근 5건 중 10분 이내 6장 0건 · media_publish 1회 · 정본 캡션으로 API 요청. Instagram 조회값은 연속 빈 줄을 1개로 정규화",
   "재발행_중복_정리대기": {
     "중복_permalink": "https://www.instagram.com/p/Dce7oCOE1VV/",
     "media_id": "17903022126546670",
@@ -31,5 +31,12 @@
     "사유": "2026-08-26 — 차노가 준 캡션 대신 옛 숱치기 캡션으로 발행됨. 차노가 게시물 삭제. 재발행한다.",
     "폐기된_캡션_첫줄": "미용실에서 \"숱 쳐주세요\" 해보셨죠?",
     "삭제_확인": "2026-08-26 차노 「삭제는 했고」 — 구 게시물 삭제 완료"
-  }
+  },
+  "_폐기_이력": [
+    {
+      "permalink": "https://www.instagram.com/p/Dce7e3MExW2/",
+      "사유": "c3 구버전(볼륨=숯)이 올라감. 최신본으로 재발행"
+    }
+  ],
+  "카드_확정": "2026-08-26 — c3 「뿌리펌보다 모근 각도예요」 + 「비벼 말리기 100배」. 발행 폴더 갱신 완료"
 }
